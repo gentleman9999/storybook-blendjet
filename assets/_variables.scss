@@ -1,0 +1,26 @@
+
+$primary-purple: #373975;
+$primary-turquoise: #1E90BB;
+$primary-purple-tint: #F6F5FD;
+
+$secondary-purple-1: #2C2C77;
+$secondary-purple-2: #7F7FD1;
+$secondary-purple-3: #8291ED;
+$secondary-purple-4: #E0E0FF;
+
+$grayscale-black: #000000;
+$grayscale-gray: #999999;
+$grayscale-light-gray: #DDDDDD;
+$grayscale-offwhite: #F6F6F6;
+$grayscale-white: #FFFFFF;
+
+$primary-font: Medium;
+
+$border-radius: 25px;
+$text-small: 12px;
+
+$breakpoints: (
+  'small':  1024px,
+  
+  'large':  1200px
+) !default;

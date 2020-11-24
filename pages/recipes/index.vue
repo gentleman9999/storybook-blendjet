@@ -1,0 +1,381 @@
+<template>
+  <div class="recipes">
+    <div
+      v-if="page.fields.hero"
+      class="recipes__hero"
+      :style="`background-image: url('${page.fields.hero.fields.file.url}')`"
+    >
+      <h1 class="recipes__title">{{ page.fields.title }}</h1>
+    </div>
+    <div class="category-menu">
+      <div class="category-menu__inner">
+        <span
+          v-for="item in recipeMenu"
+          class="category-menu__link"
+          :to="`recipe-category/${item.handle}`"
+        >
+          {{ item.title }}
+        </span>
+      </div>
+    </div>
+    <div class="featured-recipes">
+      <div
+        v-for="featuredRecipe in featuredRecipeCategories"
+        class="recipe-section"
+      >
+        <div
+          class="recipe-section__hero"
+          :style="`background-image: url('${featuredRecipe.image}');`"
+        >
+          <h4 class="recipe-section__title">{{ featuredRecipe.title }}</h4>
+        </div>
+        <div v-if="featuredRecipe" class="recipe-section__recipes columns">
+          <div
+            v-for="recipe in featuredRecipe.recipes"
+            class="column"
+          >
+            <n-link :to="`/recipes/${recipe.fields.handle}`" class="recipe-teaser">
+              <div class="recipe-teaser__img" :style="`background-image: url('${recipe.fields.teaserImage.fields.file.url}')`"></div>
+              <h5 class="recipe-teaser__title">{{ recipe.fields.title }}</h5>
+              <div class="recipe-teaser__text">{{ recipe.fields.teaserText }}</div>
+            </n-link>
+          </div>
+        </div>
+        <!-- <div class="recipe-section__cta">
+          <n-link class="btn btn--solid-purple recipe-section__cta-link" :to="`/recipe-categories/${featuredRecipe.handle}`">Explore {{ featuredRecipe.title }} Recipes</n-link>
+        </div> -->
+      </div>
+    </div>
+    <div class="browse-recipes">
+      <h3 class="browse-recipes__title">Blend Endlessly</h3>
+      <div class="columns is-multiline browse-recipes__columns">
+        <div
+          v-for="recipe in allRecipes.items"
+          class="column is-one-quarter"
+        >
+          <n-link :to="`/recipes/${recipe.fields.handle}`" class="recipe-teaser">
+            <div class="recipe-teaser__img" :style="`background-image: url('${recipe.fields.teaserImage.fields.file.url}')`"></div>
+            <h5 class="recipe-teaser__title">{{ recipe.fields.title }}</h5>
+            <div class="recipe-teaser__text">{{ recipe.fields.teaserText }}</div>
+          </n-link>
+        </div>
+      </div>
+      <div v-if="indexed <= allRecipes.total" class="browse-recipes__load">
+        <button
+          class="btn btn--solid-purple browse-recipes__load-link"
+          @click="loadRecipes()"
+        >
+          Load More Recipes
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import { createClient } from '~/plugins/contentful';
+const client = createClient();
+
+export default {
+  data() {
+    return {
+      indexed: 12
+    }
+  },
+  head() {
+    let properties = {}
+    let meta = []
+    properties.title = 'BlendJet Portable Blender Recipes | Make Smoothies, Shakes and More'
+    meta.push({
+      hid: 'description',
+      name: 'description',
+      content: 'What recipes can you make with a BlendJet? From savory to sweet, here are the best BlendJet blender recipes. Come back often because we add a new BlendJet recipe every week! Try making these smoothies, shakes, cocktails, dips, and dressings in your BlendJet portable blender today.'
+    })
+
+    return {...properties, meta}
+  },
+  methods: {
+    async loadRecipes() {
+      let moreRecipes = await client.getEntries({
+        content_type: 'recipe',
+        skip: this.indexed,
+        limit: 12,
+        order: 'sys.createdAt'
+      })
+      .then(async (res) => {
+        this.indexed = this.indexed + 12
+        this.allRecipes.items = [...this.allRecipes.items, ...res.items]
+      })
+    }
+  },
+  async asyncData ({params}) {
+
+    // Get Recipe Blog Page
+    let recipe = await client.getEntries({
+      content_type: 'blog',
+      'fields.handle': 'recipes',
+    })
+    .then(async (res) => {
+      return res.items[0]
+    })
+
+    // Culprit
+    // Get Recipe Category Menu Items
+    let recipeMenu = await client.getEntries({
+      content_type: 'queue',
+      'fields.handle': 'recipe-category-menu',
+    })
+    .then(async (res) => {
+      const data = res.items[0]
+      let items = data.fields.items.map((item) => {
+        if (item && item.fields) {
+          return {
+            handle: item.fields.handle,
+            title: item.fields.title
+          }
+        }
+        return {}
+      })
+      return items
+    })
+
+    // Get Recipe Category Menu Items
+    let featuredRecipeCategories = await client.getEntries({
+      content_type: 'queue',
+      'fields.handle': 'featured-recipe-categories',
+    })
+    .then(async (res) => {
+      const data = res.items[0]
+      for (const [index, item] of data.fields.items.entries()) {
+        let recipes = await client.getEntries({
+          content_type: 'recipe',
+          'fields.category.sys.contentType.sys.id': 'recipeCategory',
+          'fields.category.fields.handle': item.fields.handle,
+          limit: 4,
+          order: 'sys.createdAt'
+        })
+        .then(async (res) => { return res.items })
+        data.fields.items[index].recipes = recipes
+      }
+      let items = data.fields.items.map((item) => {
+
+        return {
+          handle: item.fields.handle,
+          title: item.fields.title,
+          image: item.fields.hero.fields.file.url,
+          recipes: item.recipes
+        }
+      })
+      return items
+    })
+
+    // Browse Recipes
+    let allRecipes = await client.getEntries({
+      content_type: 'recipe',
+      limit: 12,
+      order: 'sys.createdAt'
+    })
+    .then(async (res) => {
+      return {
+        total: res.total,
+        items: res.items
+      }
+    })
+
+    return {
+      page: recipe,
+      recipeMenu,
+      featuredRecipeCategories,
+      allRecipes
+    }
+  }
+}
+
+</script>
+<style lang="scss" scoped>
+  .recipes {
+    &__hero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 300px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+
+      @media screen and (min-width: 768px) {
+        height: 500px;
+      }
+    }
+
+    &__title {
+      color: #fef7f1;
+      font-family: $primary-font;
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+
+      @media screen and (min-width: 1024px) {
+        font-size: 54px;
+        letter-spacing: 10px;
+      }
+    }
+  }
+  .category-menu {
+    @include gradient-primary-purple-turquoise(to left)
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 70px;
+      @include gradient-primary-purple-transparent(to left)
+    }
+
+    &__inner {
+      white-space: nowrap;
+      overflow-x: scroll;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      @media screen and (min-width: 1024px) {
+        display: flex;
+        justify-content: center;
+        min-width: 1024px;
+        white-space: normal;
+        overflow-x: visible;
+      }
+    }
+
+    &__link {
+      flex-grow: 1;
+      color: #fef7f1;
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 1.75px;
+      margin-right: 20px;
+
+      @media screen and (min-width: 1024px) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .featured-recipes {
+    margin-top: 30px;
+  }
+  .recipe-section {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 30px 0;
+
+    &__hero {
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+      margin: 0 .75rem;
+    }
+
+    &__title {
+      font-family: $primary-font;
+      font-size: 36px;
+      color: #fef7f1;
+      font-weight: 700;
+      letter-spacing: 6.67px;
+      text-transform: uppercase;
+    }
+
+    &__recipes {
+      margin: 30px 0;
+    }
+
+    &__cta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__cta-link {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+  .recipe-teaser {
+    &__img {
+      width: 100%;
+      padding-bottom: 75%;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    &__title {
+      font-family: $primary-font;
+      font-size: 16px;
+      color: $primary-purple
+    }
+
+    &__text {
+      font-size: 14px;
+      color: #666666;
+      line-height: 1.29em;
+      padding-bottom: 30px;
+    }
+  }
+
+  .browse-recipes {
+    margin: 0 auto;
+    padding: 30px 0 60px 0;
+    background: #f6f6f6;
+
+    &__title {
+      font-size: 32px;
+      font-style: italic;
+      letter-spacing: 5px;
+      color: $primary-purple;
+      text-transform: uppercase;
+      text-align: center;
+      font-weight: 700;
+      margin: 50px 0;
+    }
+
+    &__columns {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    &__load {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__load-link {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+</style>
