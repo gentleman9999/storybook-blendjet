@@ -10,7 +10,7 @@
 
       <transition name="fade">
         <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
-	      <div style="position: fixed;width:100%;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;">
+	      <div style="position: fixed;width:377px;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;">
 		      <div style="margin: 0 auto; text-align: center;">BLACK FRIDAY DEALS</div>
 		     </div>  
           <div class="mobile-upsell__container">
@@ -33,7 +33,7 @@
               
             </div>
             
-            	      <div style="position: fixed;width:100%;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 100px;z-index: 10000000;font-size:12px;font-family: 'Medium';line-height: 180px;bottom: 79px;pointer-events: none;">
+            	      <div style="position: fixed;width:377px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 100px;z-index: 10000000;font-size:12px;font-family: 'Medium';line-height: 180px;bottom: 79px;pointer-events: none;">
 		      		      <div style="margin: 0 auto; text-align: center;">
 		      <svg width="12px" height="12px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
