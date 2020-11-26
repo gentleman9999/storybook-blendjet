@@ -30,7 +30,7 @@
 
     </div>
     <div class="section__footer__made-with">
-      Created with love in california
+      Created with love in California
     </div>
     <div class="section__footer__social-media">
       <a class="section__footer__social-media__icon" href="https://instagram.com/BlendJet" target="_blank">
@@ -82,8 +82,9 @@
       <div class="section__footer__links__column">
         <nuxt-link to="/products/blendjet-2">BlendJet&nbsp;2</nuxt-link>
         <nuxt-link to="/products/blendjet-one">BlendJet&nbsp;One</nuxt-link>
-        <nuxt-link to="/products/banana-blueberry-jetpack-ready-to-blend-smoothie">Jetpacks</nuxt-link>
-        <nuxt-link to="/recipes">Recipes</nuxt-link>
+        <nuxt-link to="/products/banana-blueberry-jetpack-ready-to-blend-smoothie">JetPacks</nuxt-link>
+        <nuxt-link to="/products/jetsetter-insulated-tote">Tote</nuxt-link>
+       <nuxt-link to="/products/jetsetter-insulated-sleeve">Sleeve</nuxt-link>
         <!-- <nuxt-link to="/blog">BlendJet&nbsp;Blog</nuxt-link> -->
         <!-- <a>Store&nbsp;Locator</a> -->
       </div>
@@ -93,7 +94,7 @@
         <nuxt-link to="/our-story">Our&nbsp;Story</nuxt-link>
         <!-- <a>Press</a> -->
         <nuxt-link to="/reviews">Reviews</nuxt-link>
-        <a target="__blank" href="https://www.dropbox.com/sh/f2sydmq9c6jbfno/AAAuv73TnOx0-RDGH-GFGlFha?dl=0">Press Kit</a>
+        <nuxt-link to="/recipes">Recipes</nuxt-link>
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
