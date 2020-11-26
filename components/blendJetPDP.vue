@@ -1338,6 +1338,7 @@ export default {
         align-items: center;
         height: 50px;
         margin-bottom: 25px;
+		margin-top: 20px; //hack to fix shipping counter on BJ2 page
         border: none;
 
         @media screen and (max-width: 320px) {
@@ -1812,7 +1813,6 @@ export default {
 
         &__media {
           &__video {
-            height: 520px;
             width: 520px;
             object-fit: contain;
 
@@ -1902,7 +1902,7 @@ export default {
 
     @include respond-to('small') {
       width: auto;
-      height: 380px;
+      height: auto;
       border-radius: 0;
     }
 }

@@ -12,6 +12,11 @@ import Lightning from '~/components/svg/Lightning'
 import Charge from '~/components/svg/Charge'
 import Drop from '~/components/svg/Drop'
 import Leaf from '~/components/svg/Leaf'
+import Diamond from '~/components/svg/Diamond'
+import Mountain from '~/components/svg/Mountain'
+import Pocket from '~/components/svg/Pocket'
+import Snowflake from '~/components/svg/Snowflake'
+import Fabric from '~/components/svg/Fabric'
 
 export default {
   props: {
@@ -63,6 +68,26 @@ export default {
             mode = 'Leaf'
             break;
          }
+         case "Diamond": {
+            mode = 'Diamond'
+            break;
+         }
+         case "Mountain": {
+            mode = 'Mountain'
+            break;
+         }
+         case "Pocket": {
+            mode = 'Pocket'
+            break;
+         }
+        case "Snowflake": {
+            mode = 'Snowflake'
+            break;
+         }
+        case "Fabric": {
+            mode = 'Fabric'
+            break;
+         }
       }
 
       return mode
@@ -78,7 +103,12 @@ export default {
     Lightning,
     Charge,
     Drop,
-    Leaf
+    Leaf,
+    Diamond,
+    Mountain,
+    Pocket,
+    Snowflake,
+    Fabric
   }
 }
 </script>
