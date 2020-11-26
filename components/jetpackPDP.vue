@@ -1131,7 +1131,7 @@ export default {
 
   @include respond-to('small') {
     width: auto;
-    height: 380px;
+    height: auto;
     border-radius: 0;
   }
 }

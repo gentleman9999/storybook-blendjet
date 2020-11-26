@@ -1739,7 +1739,6 @@ export default {
 
         &__media {
           &__video {
-            height: 520px;
             width: 520px;
             object-fit: contain;
 
@@ -1823,7 +1822,7 @@ export default {
 
     @include respond-to('small') {
       width: auto;
-      height: 380px;
+      height: auto;
       border-radius: 0;
     }
 }
