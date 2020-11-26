@@ -9,20 +9,41 @@
       </div>
 
       <transition name="fade">
-        <div class="mobile-upsell" v-if="showUpsell">
+        <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
+	      <div style="position: fixed;width:100%;text-align: center;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:30px;font-family: 'Bold';line-height: 60px;">
+		      BLACK FRIDAY DEALS
+		     </div>  
           <div class="mobile-upsell__container">
-            <div class="mobile-upsell__close" @click="closeUpsellModal">
+            <div class="mobile-upsell__close" @click="closeUpsellModal" style="z-index: 1000000000;">
               <Close :color="'white'" />
             </div>
-            <div class="mobile-upsell__component-container">
+            <div class="mobile-upsell__component-container" style="padding-top:60px;">
               <div class="mobile-upsell__blendjet">
                 <BlendJetCart />
               </div>
               <div class="mobile-upsell__jetpacks">
                 <JetpackCart />
               </div>
+                  <div class="mobile-upsell__blendjet">
+                <ToteCart />
+              </div>
+                  <div class="mobile-upsell__blendjet">
+                <SleeveCart />
+              </div>
               
             </div>
+            
+            	      <div style="position: fixed;width:100%;text-align: center;background: -webkit-linear-gradient(transparent, #1E90BB);color:white;height: 100px;z-index: 10000000;font-size:12px;font-family: 'Medium';line-height: 180px;bottom: 79px;pointer-events: none;">
+		      <svg width="12px" height="12px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+</svg>
+		      SCROLL FOR MORE
+		      		       <svg width="12px" height="12px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+</svg>
+		     </div>  
             <div class="mobile-upsell__checkout">
               <cart-flyout-checkout-button  :checkoutText="'Continue to Checkout'" :showPrice="false" :class="[checkoutDisabled ? 'checkout-disabled' : null]" :key="1"/>
             </div>
@@ -135,6 +156,8 @@ import ShippingTime from '~/components/shippingTime'
 
 import BlendJetCart from '~/components/blendjetCart'
 import JetpackCart from '~/components/jetpackCart'
+import ToteCart from '~/components/toteCart'
+import SleeveCart from '~/components/sleeveCart'
 import Close from '~/components/svg/modalClose'
 
 // const routeapp = () => import('~/plugins/routeApp.js');
@@ -151,6 +174,8 @@ export default {
     ShippingTime,
     BlendJetCart,
     JetpackCart,
+    ToteCart,
+    SleeveCart,
     Close
   },
   mixins: [imageOptimize],
