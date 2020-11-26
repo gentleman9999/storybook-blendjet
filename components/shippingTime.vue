@@ -26,6 +26,8 @@
 <script>
 	
 var transitTime  = 3; // 3 days	
+var cutoffHour = 15; //3PM cutoff time
+var timezoneOffset = (new Date().getTimezoneOffset()/60)-8; //users offset from PST
 	
 export default {
   props: {
@@ -156,7 +158,8 @@ export default {
 
     shippingCountdown() {
       var now  = new Date();
-      const total = Date.parse(this.arrivalDate) - Date.parse(now);
+      const total = Date.parse(this.arrivalDate) - Date.parse(now)+((cutoffHour-timezoneOffset)*60*60*1000);
+	  console.log(total);
       let minutes = Math.floor( (total/1000/60) % 60 );
       let hours = Math.floor( (total/(1000*60*60)) % 24 );
       // const days = Math.floor( total/(1000*60*60*24) );

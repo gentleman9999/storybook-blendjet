@@ -16,6 +16,17 @@
           <product-price @DisplayPrice="setDisplayPrice" @Currency="setCurrency" v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
           <product-price v-show="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice" @CompareAtLocal="setCompareAtPrice"
               :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
+	              <div class="product-select__controls__price__installments" v-if="country == 'US'">
+            <afterpay-placement
+                  data-locale="en_US"
+                  :data-currency="currency"
+                  :data-amount="displayPrice"
+                  data-modal-theme="white"
+                  data-size="xs"
+                  data-logo-type="lockup"
+              ></afterpay-placement>
+          </div>
+
         </div>
       </div>
       <div class="product-select__image-carousel">
@@ -51,6 +62,17 @@
             <product-price v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
             <product-price v-if="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice"
                 :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
+	          <div class="product-select__controls__price__installments" v-if="country == 'US'">
+              <afterpay-placement
+                  data-locale="en_US"
+                  :data-currency="currency"
+                  :data-amount="displayPrice"
+                  data-modal-theme="white"
+                  data-size="xs"
+                  data-logo-type="lockup"
+              ></afterpay-placement>
+            </div>
+
           </div>
         </div>
 
@@ -94,7 +116,7 @@
 
 
         <div class="product-select__controls__shipping-notification">
-          <!-- <ShippingTime /> -->
+          <ShippingTime />
         </div>
         <div class="product-select__controls__payments">
           <div v-if="applePay" class="pay-with-modal__container__apple apple-pay-with" @click="expressCheckout">
