@@ -65,7 +65,7 @@ export default {
   mixins: [imageOptimize],
   async mounted() {
     this.product = await this.$nacelle.data.product({handle: 'blendjet-2'})
-    this.selectedVariant = this.product.variants[Math.floor(Math.random()*this.product.variants.length)]
+    this.selectedVariant = this.product.variants[0]
   },
   methods: {
     updateVariant(newVariant) {
