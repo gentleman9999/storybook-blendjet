@@ -1,8 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-        BlendJet 2 Black Friday Deal<br/> <span style="font-size: 75%;color:gold;">15% off 1 - 20% off 2 - 25% off 3+</span>
-    </div>
+       Jetsetter Insulated Sleeve<br/> <span style="font-size: 75%;color:gold;">15% off 1 - 20% off 2 - 25% off 3+</span>    </div>
     <div class="blendjet-image">
       <transition name="fade">
         <img class="blendjet-image__img" :src="optimizeSource({url:selectedVariant.featuredMedia.src})"/>
@@ -64,7 +63,7 @@ export default {
   },
   mixins: [imageOptimize],
   async mounted() {
-    this.product = await this.$nacelle.data.product({handle: 'blendjet-2'})
+    this.product = await this.$nacelle.data.product({handle: 'jetsetter-insulated-sleeve'})
     this.selectedVariant = this.product.variants[0]
   },
   methods: {
