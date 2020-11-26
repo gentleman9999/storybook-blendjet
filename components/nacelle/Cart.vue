@@ -14,7 +14,7 @@
 		      BLACK FRIDAY DEALS
 		     </div>  
           <div class="mobile-upsell__container">
-            <div class="mobile-upsell__close" @click="closeUpsellModal" style="z-index: 1000000000;">
+            <div class="mobile-upsell__close" @click="closeUpsellModal" style="z-index: 1000000000;position: fixed;top:0;right:0;">
               <Close :color="'white'" />
             </div>
             <div class="mobile-upsell__component-container" style="padding-top:60px;">
@@ -44,7 +44,7 @@
   <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
 </svg>
 		     </div>  
-            <div class="mobile-upsell__checkout">
+            <div class="mobile-upsell__checkout" style="z-index:100000001;">
               <cart-flyout-checkout-button  :checkoutText="'Continue to Checkout'" :showPrice="false" :class="[checkoutDisabled ? 'checkout-disabled' : null]" :key="1"/>
             </div>
           </div>
