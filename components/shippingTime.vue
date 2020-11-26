@@ -1,26 +1,34 @@
 <template>
   <div class="shipping-container" v-if="!disabled">
     <div v-if="size ==='short'" class="small-size">
-      <span v-if="product !== 'blendjet-2'">{{shortDate}}</span>
+      <span v-if="product !== 'blendjet-X'">Arrives {{shortDate}}</span> <!-- change X to 2 to apply fixed date -->
       <span v-else>11/16 - 11/24</span>
     </div>
     <div v-else class="normal-size">
       <div class="normal-size__label">
-        <span v-if="product !== 'blendjet-2'">Want it by {{arrivalDate}}?</span>
+        <span v-if="product !== 'blendjet-'">Want it by {{arrivalDate}}?</span>
         
         <!-- <span> -->
         
       </div>
       <div class="normal-size__countdown" v-if="size !=='short'">
-        <span v-if="product === 'blendjet-2'"> Ships by 11/16 - 11/24 </span>
+        <span v-if="product === 'blendjet-X'"> Ships by 11/16 - 11/24 </span> <!-- change X to 2 to apply fixed date -->
         <!-- <span v-if="product === 'blendjet-2'"> {{shortDate}} </span> -->
-        <span v-else >Order within {{remaining.hours}} hours {{remaining.minutes}} minutes</span>
+        <!-- hack by Ryan to show right verbage and time offset by 24 hours (shipping cutoff is 3PM PST) -->
+        <span v-if="24-remaining.hours === 0">Order within {{60-remaining.minutes}} minutes</span>
+        <span v-else-if="24-remaining.hours === 1">Order within {{24-remaining.hours}} hour {{60-remaining.minutes}} minutes</span>
+        <span v-else >Order within {{24-remaining.hours}} hours {{60-remaining.minutes}} minutes</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+	
+var transitTime  = 3; // 3 days	
+var cutoffHour = 15; //3PM cutoff time
+var timezoneOffset = (new Date().getTimezoneOffset()/60)-8; //users offset from PST
+	
 export default {
   props: {
     size: {
@@ -53,20 +61,20 @@ export default {
   computed: {
     arrivalDate() {
       var now  = new Date();
-      now.setDate(now.getDate() + 1)
+      now.setDate(now.getDate())
       now.setHours(16);
       now.setMinutes(0);
       now.setMilliseconds(0);
-      return this.businessDaysFromDate(now, 2).toLocaleString(this.locale, this.options)
+      return this.businessDaysFromDate(now, transitTime).toLocaleString(this.locale, this.options)
     },
     shortDate() {
-       var now  = new Date();
-      now.setDate(now.getDate() + 1)
+      var now  = new Date();
+      now.setDate(now.getDate())
       now.setHours(16);
       now.setMinutes(0);
       now.setMilliseconds(0);
       
-      return this.businessDaysFromDate(now, 2).toLocaleString(this.locale, {day: 'numeric', month: 'numeric'})
+      return this.businessDaysFromDate(now, transitTime).toLocaleString(this.locale, {day: 'numeric', month: 'numeric'})
     }
   },
 
@@ -91,15 +99,15 @@ export default {
 
     isBusinessDay (date) {
       var dayOfWeek = date.getDay();
-      if(dayOfWeek === 0 || dayOfWeek === 6) {
-        // Weekend
+      if(dayOfWeek === 0) {
+        // Sunday
         return false;
       }
 
       let holidays = [
-        '12/31+5', // New Year's Day on a saturday celebrated on previous friday
+        '12/31+5', // New Year's Day on a Saturday celebrated on previous Friday
         '1/1',     // New Year's Day
-        '1/2+1',   // New Year's Day on a sunday celebrated on next monday
+        '1/2+1',   // New Year's Day on a Sunday celebrated on next Monday
         '1-3/1',   // Birthday of Martin Luther King, third Monday in January
         '2-3/1',   // Washington's Birthday, third Monday in February
         '5~1/1',   // Memorial Day, last Monday in May
@@ -150,7 +158,8 @@ export default {
 
     shippingCountdown() {
       var now  = new Date();
-      const total = Date.parse(this.arrivalDate) - Date.parse(now);
+      const total = Date.parse(this.arrivalDate) - Date.parse(now)+((cutoffHour-timezoneOffset)*60*60*1000);
+	  console.log(total);
       let minutes = Math.floor( (total/1000/60) % 60 );
       let hours = Math.floor( (total/(1000*60*60)) % 24 );
       // const days = Math.floor( total/(1000*60*60*24) );
