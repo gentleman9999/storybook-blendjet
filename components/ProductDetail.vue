@@ -1706,7 +1706,6 @@ export default {
 
         &__media {
           &__video {
-            height: 520px;
             width: 520px;
             object-fit: contain;
 
@@ -1801,7 +1800,7 @@ export default {
 
     @include respond-to('small') {
       width: auto;
-      height: 380px;
+      height: auto;
       border-radius: 0;
     }
 }
@@ -1809,7 +1808,6 @@ export default {
 .reviews {
   height: auto;
   padding: 20px;
-  // height: 900px;
 }
 
 .fade-enter-active {
