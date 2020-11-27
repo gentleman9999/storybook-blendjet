@@ -25,10 +25,10 @@
                 <JetpackCart />
               </div>
                   <div class="mobile-upsell__blendjet">
-                <ToteCart />
+                <SleeveCart />
               </div>
                   <div class="mobile-upsell__blendjet">
-                <SleeveCart />
+                <ToteCart />
               </div>
               
             </div>
@@ -157,8 +157,8 @@ import ShippingTime from '~/components/shippingTime'
 
 import BlendJetCart from '~/components/blendjetCart'
 import JetpackCart from '~/components/jetpackCart'
-import ToteCart from '~/components/toteCart'
 import SleeveCart from '~/components/sleeveCart'
+import ToteCart from '~/components/toteCart'
 import Close from '~/components/svg/modalClose'
 
 // const routeapp = () => import('~/plugins/routeApp.js');
@@ -175,8 +175,8 @@ export default {
     ShippingTime,
     BlendJetCart,
     JetpackCart,
-    ToteCart,
     SleeveCart,
+    ToteCart,
     Close
   },
   mixins: [imageOptimize],

@@ -103,3 +103,9 @@ font-weight: bold;	width: 100%;	margin: 0;
 }
 
 /* END Added by Ryan for BFCM */
+
+// Ryan edit to make sure product title doesn't expand mobile cart
+@media(max-width:576px) {
+.product-details__title {max-width: 150px;}
+.cart-container {max-width: 377px;}
+}
