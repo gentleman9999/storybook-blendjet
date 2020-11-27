@@ -97,7 +97,7 @@ SCROLL FOR MORE
                   <div class="mobile-upsell__blendjet">
                 <SleeveCart />
               </div>
-                  <div class="mobile-upsell__blendjet">
+                  <div class="mobile-upsell__blendjet" style="padding-bottom: 20px;">
                 <ToteCart />
               </div>
               
