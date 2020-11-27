@@ -112,8 +112,7 @@ font-weight: bold;	width: 100%;	margin: 0;
 
 
 //hack by Ryan to fix cart on smaller screens
-@media only screen 
-and (max-device-width : 768px) {
+@media (max-device-width : 768px) {
 
 .ipadFix {
 	max-width: 287px;
@@ -122,8 +121,7 @@ and (max-device-width : 768px) {
 }
 
 //hack by Ryan to fix cart on iPad Pro
-@media only screen 
-and (min-device-width : 769px) 
+@media (min-device-width : 769px) 
 and (max-device-width : 1024px) {
 
 .ipadFix {
