@@ -1,13 +1,83 @@
 <template>
   <transition name="fade">
     <div class="cart-container" v-if="cartVisible">
+
+<!--
+      <div v-if="!isMobile" style="background: black;height: 100px;color:white;position: absolute;text-align: center;font-size:42px;line-height: 100px;width:calc(100% - 394px);">
+	      BLACK FRIDAY DEALS
+      </div>	    
+
+  
       <div v-if="!isMobile" class="jetpack-upsell" >
-        <JetpackCart />
-      </div>
-      <div v-if="!isMobile" class="blendjet-upsell" > 
         <BlendJetCart />
       </div>
+      
+      <div v-if="!isMobile" class="blendjet-upsell" > 
+        <JetpackCart />
+      </div>
+      
+      <div v-if="!isMobile" class="jetpack-upsell" >
+        <SleeveCart />
+      </div>
+      
+      <div v-if="!isMobile" class="blendjet-upsell" > 
+        <ToteCart />
+      </div>
+-->
 
+      <transition name="fade">
+        <div v-if="!isMobile" style="z-index: 100000000;">
+	      <div style="position: fixed;width:446px;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;" class="ipadFix">
+		      <div style="margin: 0 auto; text-align: center;">BLACK FRIDAY DEALS</div>
+		     </div>  
+          <div class="mobile-upsell__container"  style="overflow: auto;height: 100%;padding-top:40px;">
+            <div class="mobile-upsell__component-container">
+              <div class="mobile-upsell__blendjet" style="height: unset;">
+                <BlendJetCart />
+              </div>
+              <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
+                <JetpackCart />
+              </div>
+                  <div class="mobile-upsell__blendjet" style="height: unset;">
+                <SleeveCart />
+              </div>
+                  <div class="mobile-upsell__blendjet" style="height: unset;padding-bottom: 40px;">
+                <ToteCart />
+              </div>
+              
+              <div style="background: #1E90BB;z-index: 9999;width:100%;height:50px;position: relative;box-shadow: 0 0 50px 50px #1E90BB;"></div>
+              
+            </div>
+            
+            	      <div style="position: fixed;width:446px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 200px;z-index: 10000000;font-size:18px;font-family: 'Medium';line-height: 180px;bottom: 0;pointer-events: none;z-index: 99;" class="ipadFix">
+		      		      <div style="margin: 0 auto; text-align: center;line-height: 320px;">	      		      
+		      <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+</svg>
+SCROLL FOR MORE
+		      		       <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+</svg>
+		     </div>
+ 	     </div>  
+ 	     
+ 	     
+          </div>
+        </div>
+      </transition>
+      
+
+
+
+
+
+
+
+
+
+      
       <transition name="fade">
         <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
 	      <div style="position: fixed;width:377px;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;">
