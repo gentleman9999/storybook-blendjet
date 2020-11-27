@@ -109,7 +109,7 @@ export default {
   &__img {
     height: 300px;
     @include respond-to('small') {
-      height: 130px;
+      height: 250px;
     }
   }
   @include respond-to('small') {
