@@ -109,3 +109,23 @@ font-weight: bold;	width: 100%;	margin: 0;
 .product-details__title {max-width: 150px;}
 .cart-container {max-width: 377px;}
 }
+
+
+//hack by Ryan to fix cart on smaller screens
+@media (max-device-width : 768px) {
+
+.ipadFix {
+	max-width: 287px;
+}
+
+}
+
+//hack by Ryan to fix cart on iPad Pro
+@media (min-device-width : 769px) 
+and (max-device-width : 1024px) {
+
+.ipadFix {
+	max-width: 306px;
+}
+
+}
