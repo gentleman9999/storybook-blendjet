@@ -17,7 +17,7 @@
         </div>
         <transition name="slideUp">
           <div v-if="loaded" class="section__hero-banner__cta__button" role="button" @click="$router.push('/products/blendjet-2')">
-            Get yours today
+            Get Yours Today
           </div>
         </transition>
       </div>
@@ -35,6 +35,19 @@
 
       </div>
     </div>
+    	  <!-- START BFCM -->
+	<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+		<div class="canvas-bfcm">
+			<div class="col-bfcm">
+				<span class="entry-title-bfcm">Black Friday Sale!</span>
+				<span class="content-split-element-bfcm">15% Off 1</span>
+				<span class="content-split-element-bfcm">20% Off 2</span>
+				<span class="content-split-element-bfcm">25% Off 3+</span>
+				<span class="simple-text-bfcm">Not Available Anywhere Else <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
+			</div>
+		</div>
+	</div>
+<!-- END BFCM -->
       <div class="section section__as-seen-on">
         <Ticker type="asSeenOn"/>
       </div>
@@ -48,6 +61,12 @@
         <div class="section section__jetpacks"  >
           <transition name="fade">
              <Jetpacks  />
+           </transition>
+        </div>
+
+        <div class="section section__jetpacks"  >
+          <transition name="fade">
+             <Jetsetter  />
            </transition>
         </div>
 
@@ -93,6 +112,7 @@ import PageContent from '~/components/nacelle/PageContent'
 import Ticker from '~/components/ticker'
 import debounce from 'lodash.debounce'
 import Jetpacks from '~/components/jetpacks'
+import Jetsetter from '~/components/jetsetter'
 import RecipesList from '~/components/recipes-list'
 const Instagram = () => import ('~/components/instagram')
 import BlendJetDemo from '~/components/blendjetDemo'
@@ -124,6 +144,7 @@ export default nmerge({
     Ticker,
     RecipesList,
     Jetpacks,
+    Jetsetter,
     Instagram,
     BlendJetDemo,
     FreeShippingMarquee
