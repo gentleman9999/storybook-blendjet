@@ -123,7 +123,7 @@ export default {
       showIndicator(arr) {
           if(this.screenWidth > 1024 ) {
             if (arr.length > 2) {
-              this.indicatorVisible = true
+              this.indicatorVisible = false
             } else {
               this.indicatorVisible = false
             }
@@ -142,7 +142,7 @@ export default {
           this.indicatorVisible = true
           } else if(window.innerWidth >= 1024 && window.innerWidth < 1400) {
             this.itemsToShow = 2
-            this.indicatorVisible = true
+            this.indicatorVisible = false
           } else {
             this.itemsToShow = 2
             this.indicatorVisible = false
@@ -191,7 +191,7 @@ export default {
         vm.indicatorVisible = true
         } else if(window.innerWidth >= 1024 && window.innerWidth < 1400) {
           vm.itemsToShow = 2
-          vm.indicatorVisible = true
+          vm.indicatorVisible = false
         } else {
           vm.itemsToShow = 2
           vm.indicatorVisible = false
