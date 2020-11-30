@@ -58,7 +58,8 @@ export default {
 .modal-wrapper {
   position: relative;
   overflow: hidden;
-  border: 1px solid #f5f5f5;
+  border: none;
+/* Tweaked by Ryan because it added a border to the bottom of the site */
 }
 
 img {

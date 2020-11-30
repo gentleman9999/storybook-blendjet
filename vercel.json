@@ -21,6 +21,11 @@
       "permanent": true
     },
     {
+      "source": "/tools/:match*",
+      "destination": "https://shop.blendjet.com/tools/:match*",
+      "permanent": true
+    },
+    {
       "source": "/blogs/news/([^/]+)",
       "destination": "/blog/$1",
       "permanent": true

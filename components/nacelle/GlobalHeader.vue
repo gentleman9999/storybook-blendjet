@@ -211,7 +211,7 @@ export default {
       screenWidth: 0,
       logoFill: '#373975',
       jetpackMenuVisible: false,
-      freeShippingMessage: 'BLACK FRIDAY SALE - SAVE UP TO 25%',
+      freeShippingMessage: 'CYBER MONDAY SALE - SAVE UP TO 25%',
       navColor: 'white',
       scrollY: 0,
       scrollTarget: 200,
@@ -312,7 +312,7 @@ export default {
         const localPrice = await Axios(config)
           .then((res) => {
             if(res.data.Country !== 'US') {
-              this.freeShippingMessage = "BLACK FRIDAY SALE + FREE WORLDWIDE S&H"
+              this.freeShippingMessage = "CYBER MONDAY SALE + FREE WORLDWIDE S&H"
               localStorage.setItem('ww', 'true')
             } else {
               localStorage.setItem('ww', 'false')
