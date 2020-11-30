@@ -1026,10 +1026,10 @@ export default {
       }
 
       &__img {
-        height: 169px;
+        height: 200px;
         width: 169px;
         object-fit: cover;
-        object-position: center;
+        object-position: center bottom;
       }
 
       &__img-mobile {
@@ -1089,7 +1089,7 @@ export default {
       }
 
       &__tag {
-        max-width: 120px;
+        max-width: 125px;
         margin-bottom: 21px;
       }
 
@@ -1149,7 +1149,8 @@ export default {
           height: 134px;
           object-fit: cover;
           margin: 0 auto;
-          display: block
+          display: block;
+          border-radius: 12px;
         }
 
       }
