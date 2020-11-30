@@ -1,7 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-                               <a href="/products/blendjet-2" style="color:white;">BlendJet 2 Black Friday Deal</a><br/> <span style="font-size: 75%;color:gold;">15% off 1 - 20% off 2 - 25% off 3+</span>
+                               <a href="/products/blendjet-2" style="color:white;">BlendJet 2 Cyber Deal</a><br/> <span style="font-size: 75%;color:gold;">15% off 1 - 20% off 2 - 25% off 3+</span>
     </div>
     <div class="blendjet-image">
       <transition name="fade">
@@ -82,6 +82,9 @@ export default {
 <style lang="scss" scoped>
 .blendjet-container {
   padding-top: 15px;
+  @media(min-width:769px) {
+	  width: 446px;
+}
 }
  .text-block {
   font-family: Bold;
