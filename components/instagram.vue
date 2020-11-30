@@ -64,7 +64,7 @@
         :pause-info="false"
         :progress="false"
         :animated="'fade'"
-        :arrow-hover="true"
+        :arrow-hover="false"
         :interval="4000"
         >
         <b-carousel-item v-for="(testimonial, i) in testimonials" :key="i">
