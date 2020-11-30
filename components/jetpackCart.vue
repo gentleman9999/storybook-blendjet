@@ -1,7 +1,7 @@
 <template>
   <div class="jetpack-container" v-if="product && jetpacks">
     <div class="text-block">
-                               <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Try JetPack Variety Pack</a><br/> <span style="font-size: 75%;color:gold;">12 Ready-to-Blend Smoothies</span>
+                               <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Try JetPack Variety Pack</a><br/> <span style="font-size: 75%;color:gold;">6 Ready-to-Blend Smoothies</span>
     </div>
     <div class="jetpack-image">
       <transition name="fade">
@@ -137,11 +137,11 @@ export default {
       if(check) {
         this.toggleSubscriptions(true)
         this.subscriptionChecked = true
-        this.displayPrice = (this.subUnitDisplayPrice * 12) 
+        this.displayPrice = (this.subUnitDisplayPrice * 6) 
       } else {
         this.toggleSubscriptions(false)
         this.subscriptionChecked = false
-        this.displayPrice = (this.unitDisplayPrice * 12) 
+        this.displayPrice = (this.unitDisplayPrice * 6) 
       }
     },
     toggleSubscriptions(sub) {
@@ -234,7 +234,7 @@ export default {
               this.symbol = res.data.Symbol
               this.subUnitDisplayPrice = res.data.ConsumerPrices[0]
               this.unitDisplayPrice = res.data.ConsumerPrices[1]
-              this.subscriptionChecked ? this.displayPrice = this.subUnitDisplayPrice * 12 : this.displayPrice = this.unitDisplayPrice * 12
+              this.subscriptionChecked ? this.displayPrice = this.subUnitDisplayPrice * 6 : this.displayPrice = this.unitDisplayPrice * 6
             }
           })
           .catch((res) => {
@@ -254,7 +254,7 @@ export default {
           image: jetpack.featuredMedia,
           title: jetpack.title,
           variant,
-          quantity: 2 * this.quantity,
+          quantity: 1 * this.quantity,
           productId: jetpack.id,
           handle: jetpack.handle,
           vendor: jetpack.vendor,
