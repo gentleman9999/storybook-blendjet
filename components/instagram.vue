@@ -60,7 +60,7 @@
         :arrow="true"
         :repeat="true"
         :indicator="true"
-        :autoplay="false"
+        :autoplay="true"
         :pause-info="false"
         :progress="false"
         :animated="'fade'"
@@ -319,18 +319,21 @@ export default {
 }
 
 .testimonial-card {
+ display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
   color: $primary-purple;
   font-family: BoldItalic;
   font-size: 29px;
   line-height: 1.14;
   letter-spacing: 1px;
   padding: 4rem;
-  min-height: 500px;
+  min-height: 670px;
 @media (min-width: 980px) {
   min-height: 460px;
   }
-
-  
 }
 
 .text {
