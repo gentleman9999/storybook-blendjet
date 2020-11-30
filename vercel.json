@@ -21,8 +21,8 @@
       "permanent": true
     },
     {
-      "source": "/tools/([^/]+)",
-      "destination": "https://shop.blendjet.com/tools/$1",
+      "source": "/tools/:match*",
+      "destination": "https://shop.blendjet.com/tools/:match*",
       "permanent": true
     },
     {
