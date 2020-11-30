@@ -5,7 +5,7 @@ const contentful = require('contentful')
 require('dotenv').config()
 
 function contentfulRoutes() {
-  // Get routes we care about from Contentful
+  // Get routes we care about from Contentful -test
   const client = contentful.createClient({
     space:  process.env.CTF_SPACE_ID,
     accessToken: process.env.CTF_CDA_ACCESS_TOKEN

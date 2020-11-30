@@ -25,7 +25,7 @@
 
 <script>
 	
-var transitTime  = 3; // 3 days	
+var transitTime  = 6; // 3 days	
 var cutoffHour = 15; //3PM cutoff time
 var timezoneOffset = (new Date().getTimezoneOffset()/60)-8; //users offset from PST
 	
