@@ -1,5 +1,7 @@
 <template>
-  <span :class="priceStyle">{{ symbol + displayPrice }}</span>
+  <span v-if="symbol === null" :class="priceStyle">{{ displayPrice + ' ' + currency }}</span>
+  <span v-else :class="priceStyle">{{ symbol + displayPrice }}</span>
+
 </template>
 
 <script>
@@ -85,6 +87,7 @@ export default {
           }
           
           vm.symbol = res.data.Symbol
+          vm.currency = res.data.Currency
           vm.$emit('Country',  res.data.Country)
           vm.$emit('DisplayPrice', vm.displayPrice)
           vm.$emit('Currency', res.data.Currency)

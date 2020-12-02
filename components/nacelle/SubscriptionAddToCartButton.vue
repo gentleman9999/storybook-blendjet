@@ -220,7 +220,13 @@ export default {
             if(!res.data.ConsumerPrices[0]) {
               vm.subPrice = `${res.data.Symbol}${(Number(_vprice) * this.quantity).toFixed(2)}`
             } else {
-              vm.subPrice = `${res.data.Symbol}${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)}`
+
+				if(res.data.Symbol == null){
+					vm.subPrice = `${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)} ${res.data.Currency}`
+				}
+				else {
+					vm.subPrice = `${res.data.Symbol}${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)}`
+	            }
             }
             
             this.defaultText = `Add to Cart - ${vm.subPrice}`,
