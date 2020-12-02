@@ -75,7 +75,12 @@ export default {
               let quantTotal = Number(item * this.lineItems[i].quantity)
               return acc + quantTotal
             }, 0)
-            this.displayPrice = `${res.data.Symbol}${localSubtotal.toFixed(2)}`
+				if(res.data.Symbol == null){
+					this.displayPrice = `${localSubtotal.toFixed(2)} ${res.data.Currency}`
+				}
+				else {
+					this.displayPrice = `${res.data.Symbol}${localSubtotal.toFixed(2)}`
+	            }
           }
 
           this.$emit('Country', res.data.Country)

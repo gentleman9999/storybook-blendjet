@@ -205,10 +205,17 @@ export default {
         }
         const localPrice = await Axios(config)
           .then((res) => {
+	          
             if(!res.data.ConsumerPrices[0]) {
               this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
             } else {
-              this.displayPrice = `${res.data.Symbol}${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(2)}`
+	        //Ryan's fix with Michael's help for UAE and some currency symbols	          
+				if(res.data.Symbol == null){
+					this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(2)} ${res.data.Currency}`
+				}
+				else {
+					this.displayPrice = `${res.data.Symbol}${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(2)}`
+            	}
             }
             this.defaultText = `Add to Cart - ${this.displayPrice}`,
             this.buttonText = `Add to Cart - ${this.displayPrice}`          

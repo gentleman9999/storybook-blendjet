@@ -28,8 +28,13 @@
         </div>
       </div>
       <div class="add-to-cart-container">
-        <div class="variety-button" v-if="variety" @click="addVarietyPackToCart">
-          Add to cart -&nbsp; {{symbol}}{{(displayPrice * this.quantity).toFixed(2)}}
+        <div v-if="variety" class="variety-button" @click="addVarietyPackToCart">
+			<span v-if="symbolDefault === null">	        
+	          Add to cart -&nbsp;{{(displayPrice * this.quantity).toFixed(2)}} {{symbol}}
+	        </span>
+	        <span v-else>
+	          Add to cart -&nbsp;{{symbol}}{{(displayPrice * this.quantity).toFixed(2)}}
+	        </span>
         </div>
         <!-- <SubscriptionAddToCartButton
           :product="product"
@@ -232,6 +237,8 @@ export default {
             if(!res.data.ConsumerPrices[0]) {
             } else {
               this.symbol = res.data.Symbol
+              this.symbolDefault = res.data.Symbol;
+              		if(this.symbol == null){this.symbol = res.data.Currency}
               this.subUnitDisplayPrice = res.data.ConsumerPrices[0]
               this.unitDisplayPrice = res.data.ConsumerPrices[1]
               this.subscriptionChecked ? this.displayPrice = this.subUnitDisplayPrice * 6 : this.displayPrice = this.unitDisplayPrice * 6
