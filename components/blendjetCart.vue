@@ -1,7 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-                               <a href="/products/blendjet-2" style="color:white;">BlendJet 2 Cyber Deal</a><br/> <span style="font-size: 75%;color:gold;">15% off 1 - 20% off 2 - 25% off 3+</span>
+                               <a href="/products/blendjet-2" style="color:white;">BlendJet 2 Cyber Deal</a><br/> <span style="font-size: 75%;color:gold;">10% off 1 - 15% off 2 - 20% off 3+</span>
     </div>
     <div class="blendjet-image">
       <transition name="fade">
