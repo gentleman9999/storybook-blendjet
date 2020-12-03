@@ -142,7 +142,10 @@
           </div>
         </div>
 
-        <div class="product-select__controls__shipping-notification">
+       <div v-if="country === 'US'" class="product-select__controls__shipping-notification">
+          <ShippingTime />
+        </div>
+		<div v-else class="product-select__controls__shipping-notification">
           <ShippingTime />
         </div>
         <div class="product-select__controls__payments">
