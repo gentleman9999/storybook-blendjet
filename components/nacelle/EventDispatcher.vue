@@ -111,6 +111,8 @@ export default {
       if (typeof this.snaptr !== 'undefined') {
         this.snaptr('init', process.env.SNAP_ID)
         this.snaptr('track', 'PAGE_VIEW')
+        this.snaptr('init', 'e52aa5a4-67c5-48ab-8bf6-418523957576')
+        this.snaptr('track', 'PAGE_VIEW')
       }
     },
     googleAnalyticsPageView() {
