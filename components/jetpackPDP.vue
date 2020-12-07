@@ -87,7 +87,7 @@
             </div>
           </div>
           <div class="product-select__controls__shipping-notification">
-            <ShippingTime :product="'jetpack'"/>
+            <ShippingTime :product="'jetpack'" :country="country"/>
           </div>
          <hr class="product-select__controls__divider" />
 
@@ -408,6 +408,10 @@ export default {
   mixins: [imageOptimize],
   props: {
     product: {
+      type: Object,
+      default: () => {}
+    },
+      country: {
       type: Object,
       default: () => {}
     },

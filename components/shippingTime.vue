@@ -1,31 +1,36 @@
 <template>
+
+
+
   <div class="shipping-container" v-if="!disabled">
     <div v-if="size ==='short'" class="small-size">
-      <span v-if="product !== 'blendjet-X'">Arrives {{shortDate}}</span> <!-- change X to 2 to apply fixed date -->
-      <span v-else>11/16 - 11/24</span>
+      <span v-if="country == 'US'">Arrives {{shortDate}}</span> <!-- change X to 2 to apply fixed date -->
+      <span v-else>Ships by {{shortDate}}</span>
     </div>
     <div v-else class="normal-size">
       <div class="normal-size__label">
-        <span v-if="product !== 'blendjet-'">Want it by {{arrivalDate}}?</span>
-        
-        <!-- <span> -->
-        
+        <span v-if="country == 'US'">Want it by {{arrivalDate}}?</span>
+        <span v-else>Order now and it ships by</span>
       </div>
       <div class="normal-size__countdown" v-if="size !=='short'">
-        <span v-if="product === 'blendjet-X'"> Ships by 11/16 - 11/24 </span> <!-- change X to 2 to apply fixed date -->
-        <!-- <span v-if="product === 'blendjet-2'"> {{shortDate}} </span> -->
-        <!-- hack by Ryan to show right verbage and time offset by 24 hours (shipping cutoff is 3PM PST) -->
+	  	<span v-if="country == 'US'">
         <span v-if="24-remaining.hours === 0">Order within {{60-remaining.minutes}} minutes</span>
         <span v-else-if="24-remaining.hours === 1">Order within {{24-remaining.hours}} hour {{60-remaining.minutes}} minutes</span>
         <span v-else >Order within {{24-remaining.hours}} hours {{60-remaining.minutes}} minutes</span>
+	  	</span>
+	  	<span v-else>
+	  	  <span>{{arrivalDate}}</span>
+	  	</span>
       </div>
     </div>
   </div>
 </template>
 
+<!-- Order now and it ships within 16 hours 20 minutes -->
+
 <script>
-	
-var transitTime  = 6; // 3 days	
+
+var transitTime  = 10; // US ARRIVAL DATE
 var cutoffHour = 15; //3PM cutoff time
 var timezoneOffset = (new Date().getTimezoneOffset()/60)-8; //users offset from PST
 	
@@ -38,6 +43,10 @@ export default {
     product: {
       type: String,
       default: 'blendjet-2'
+    },
+      country: {
+      type: String,
+      default: ''
     }
   },
   data() {

@@ -116,7 +116,7 @@
 
 
         <div class="product-select__controls__shipping-notification">
-          <ShippingTime />
+          <ShippingTime :country="country"/>
         </div>
         <div class="product-select__controls__payments">
           <div v-if="applePay" class="pay-with-modal__container__apple apple-pay-with" @click="expressCheckout">
@@ -200,7 +200,7 @@
               :key="3"
             />
             <div class="mobile-variant-select__shipping">
-              <!-- <ShippingTime /> -->
+          <ShippingTime :country="country"/>
             </div>
           </div>
         </transition>
@@ -289,7 +289,7 @@
                   {{currentVariant.title}}
                 </div>
                 <div class="dropbtn__text__shipping">
-                  <!-- <ShippingTime :size="'short'" :product="'blendjet-2'" /> -->
+                  <ShippingTime :size="'short'" :country="country"/>
                 </div>
               </div>
               <div class="dropbtn__caret-down">
@@ -508,6 +508,10 @@ export default {
   mixins: [imageOptimize, availableOptions, allOptionsSelected],
   props: {
     product: {
+      type: Object,
+      default: () => {}
+    },
+     country: {
       type: Object,
       default: () => {}
     },

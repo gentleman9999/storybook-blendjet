@@ -152,7 +152,7 @@
 
         </div>
         <div class="product-select__controls__shipping-notification">
-          <ShippingTime :product="'blendjet-one'"/>
+          <ShippingTime :product="'blendjet-one'" :country="country"/>
         </div>
         <div class="product-select__controls__payments">
           <div v-if="applePay" class="pay-with-modal__container__apple apple-pay-with" @click="expressCheckout">
@@ -328,7 +328,7 @@
                   {{currentVariant.title}}
                 </div>
                 <div class="dropbtn__text__shipping">
-                  <ShippingTime :size="'short'" :product="'blendjet-one'" />
+                <ShippingTime :size="'short'" :product="'blendjet-one'" :country="country"/>
                 </div>
               </div>
               <div class="dropbtn__caret-down">
