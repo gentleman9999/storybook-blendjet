@@ -7,7 +7,7 @@ function updateSettings() {
 
         window.localStorage.setItem('ghostmonitor_settings', JSON.stringify(settings))
 
-        if (window.localStorage.getItem('recart_useLocalSettings') != true) {
+        if (window.localStorage.getItem('recart_useLocalSettings') !== 'true') {
             window.localStorage.setItem('recart_useLocalSettings', 'true')
             window.alert('This window is going to be reloaded to test Customer Chat')
             window.location.reload()
