@@ -794,15 +794,17 @@ export default {
 
       if (entry && entry.fields) {
         // Product Hero Images
-        entry.fields.variants.forEach((node) => {
-          if (node.fields.heroImages) {
-            vm.variantMedia[node.fields.title] = {
-              heroImages: node.fields.heroImages.map((image) => {
-                return `${image.fields.file.url}?w=2100`
-              })
+        if (entry.fields.variants) {
+          entry.fields.variants.forEach((node) => {
+            if (node.fields.heroImages) {
+              vm.variantMedia[node.fields.title] = {
+                heroImages: node.fields.heroImages.map((image) => {
+                  return `${image.fields.file.url}?w=2100`
+                })
+              }
             }
-          }
-        })
+          })
+        }
 
         // Product Descriptions
         if (entry.fields.productDescription) {
