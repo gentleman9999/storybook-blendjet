@@ -8,9 +8,7 @@
           {{product.title}}
         </div>
         <div class="product-select__controls__rating" >
-          <n-link :to="{ path: '/products/blendjet-2', hash:'#reviews'}">
             <loox-product-rating :product="product" />
-          </n-link>
         </div>
         <div class="product-select__controls__price">
           <product-price @Country="setCoutry" @DisplayPrice="setDisplayPrice" @Currency="setCurrency" v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
@@ -51,9 +49,7 @@
             {{product.title}}
           </div>
           <div class="product-select__controls__rating">
-            <n-link :to="{ path: '/products/blendjet-2', hash:'#reviews'}">
               <loox-product-rating :product="product" />
-            </n-link>
           </div>
           <div class="product-select__controls__price">
             <product-price v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>

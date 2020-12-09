@@ -8,9 +8,7 @@
           {{ product.title }}
         </div>
         <div class="product-select__controls__rating" >
-          <n-link :to="{ path: '/products/' + $route.params.productHandle, hash:'#reviews'}">
             <loox-product-rating :product="product" />
-          </n-link>
         </div>
         <div class="product-select__controls__price">
           <product-price @DisplayPrice="setDisplayPrice" @Currency="setCurrency" v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
@@ -54,9 +52,7 @@
             {{ product.title }}
           </div>
           <div class="product-select__controls__rating">
-            <n-link :to="{ path: '/products/' + $route.params.productHandle, hash:'#reviews'}">
               <loox-product-rating :product="product" />
-            </n-link>
           </div>
           <div class="product-select__controls__price">
             <product-price v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
