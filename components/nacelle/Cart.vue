@@ -41,6 +41,9 @@
                   <div class="mobile-upsell__blendjet" style="height: unset;">
                 <SleeveCart />
               </div>
+                <div class="mobile-upsell__blendjet" style="height: unset;">
+                <BookCart />
+              </div>
                   <div class="mobile-upsell__blendjet" style="height: unset;padding-bottom: 40px;">
                 <ToteCart />
               </div>
@@ -97,6 +100,9 @@ SCROLL FOR MORE
                   <div class="mobile-upsell__blendjet">
                 <SleeveCart />
               </div>
+                  <div class="mobile-upsell__blendjet">
+                <BookCart />
+              </div>              
                   <div class="mobile-upsell__blendjet" style="padding-bottom: 20px;">
                 <ToteCart />
               </div>
@@ -228,6 +234,7 @@ import ShippingTime from '~/components/shippingTime'
 import BlendJetCart from '~/components/blendjetCart'
 import JetpackCart from '~/components/jetpackCart'
 import SleeveCart from '~/components/sleeveCart'
+import BookCart from '~/components/bookCart'
 import ToteCart from '~/components/toteCart'
 import Close from '~/components/svg/modalClose'
 
@@ -246,6 +253,7 @@ export default {
     BlendJetCart,
     JetpackCart,
     SleeveCart,
+    BookCart,
     ToteCart,
     Close
   },
