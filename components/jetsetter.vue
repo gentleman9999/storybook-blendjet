@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="title-container">
-<h1 class="jetsetter-title">Jetsetter Sleeve & Tote</h1>
+<h1 class="jetsetter-title">Accessories</h1>
     </div>
+<!--
     <div class="title-container__subheading">
       READY, SET, JETSET!
     </div>
+-->
     <!-- <div class="jetpack-tabs">
       <Tabs :tabItems="['smoothies', 'protein smoothies', 'lattes']" @activeTab="jetpackTabChange"/>
     </div> -->
@@ -29,7 +31,7 @@
             </div>
             <div class="card-content" >
               <div class="content">
-                <p class="title is-6 jetpack-title" :style="titleStyle" @click="$router.push(`/products/${props.list.handle}`)">{{ props.list.title.split('-')[0].trim()}}</p>
+                <p class="title is-6 jetpack-title" :style="titleStyle" @click="$router.push(`/products/${props.list.handle}`)">{{ props.list.title }}</p>
               </div>
             </div>
           </div>
@@ -141,10 +143,10 @@ export default {
           this.itemsToShow = 1
           this.indicatorVisible = true
           } else if(window.innerWidth >= 1024 && window.innerWidth < 1400) {
-            this.itemsToShow = 2
+            this.itemsToShow = 3
             this.indicatorVisible = false
           } else {
-            this.itemsToShow = 2
+            this.itemsToShow = 3
             this.indicatorVisible = false
           }
       },
@@ -153,12 +155,10 @@ export default {
       //Needs update for additional colors
       getBGColor(item) {
         let title = item.toLowerCase();
-        if(title.includes('tote')) {
+        if(title.includes('book')) {
           return 'linear-gradient(146deg, #7f7fd1 100%, #7f7fd1 100%)'
-        } else if(title.includes('sleeve')) {
-          return 'linear-gradient(146deg, #E0E0FF 100%, #E0E0FF 100%)'
         } else {
-          return 'none'
+          return 'linear-gradient(146deg, #E0E0FF 100%, #E0E0FF 100%)'
         }
       },
       jetpackTabChange(value) {
@@ -190,10 +190,10 @@ export default {
         vm.itemsToShow = 1
         vm.indicatorVisible = true
         } else if(window.innerWidth >= 1024 && window.innerWidth < 1400) {
-          vm.itemsToShow = 2
+          vm.itemsToShow = 3
           vm.indicatorVisible = false
         } else {
-          vm.itemsToShow = 2
+          vm.itemsToShow = 3
           vm.indicatorVisible = false
         }
       })
