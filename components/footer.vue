@@ -83,8 +83,8 @@
         <nuxt-link to="/products/blendjet-2">BlendJet&nbsp;2</nuxt-link>
         <nuxt-link to="/products/blendjet-one">BlendJet&nbsp;One</nuxt-link>
         <nuxt-link to="/products/banana-blueberry-jetpack-ready-to-blend-smoothie">JetPacks</nuxt-link>
+        <nuxt-link to="/products/jetsetter-insulated-sleeve">Sleeve</nuxt-link>
         <nuxt-link to="/products/jetsetter-insulated-tote">Tote</nuxt-link>
-       <nuxt-link to="/products/jetsetter-insulated-sleeve">Sleeve</nuxt-link>
         <!-- <nuxt-link to="/blog">BlendJet&nbsp;Blog</nuxt-link> -->
         <!-- <a>Store&nbsp;Locator</a> -->
       </div>
@@ -95,6 +95,7 @@
         <!-- <a>Press</a> -->
         <nuxt-link to="/reviews">Reviews</nuxt-link>
         <nuxt-link to="/recipes">Recipes</nuxt-link>
+        <nuxt-link to="/products/recipe-book">Recipe Book</nuxt-link>
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
@@ -116,6 +117,7 @@
         <a href="mailto:support@blendjet.com">Contact&nbsp;Us</a>
         <a href="tel:1-844-588-1555">1&#8209;844&#8209;588&#8209;1555</a>
         <a href="https://blendjet.brandchamp.io/apply">Ambassador&nbsp;Program</a>
+        <a href="/wholesale">Wholesale</a>        
       </div>
     </div>
 
