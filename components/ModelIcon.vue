@@ -17,6 +17,12 @@ import Mountain from '~/components/svg/Mountain'
 import Pocket from '~/components/svg/Pocket'
 import Snowflake from '~/components/svg/Snowflake'
 import Fabric from '~/components/svg/Fabric'
+import Dressing from '~/components/svg/Dressing'
+import Cafe from '~/components/svg/Cafe'
+import Milkshake from '~/components/svg/Milkshake'
+import HappyHour from '~/components/svg/HappyHour'
+import Protein from '~/components/svg/Protein'
+import Fruit from '~/components/svg/Fruit'
 
 export default {
   props: {
@@ -88,6 +94,30 @@ export default {
             mode = 'Fabric'
             break;
          }
+        case "Dressing": {
+            mode = 'Dressing'
+            break;
+         }         
+        case "Cafe": {
+            mode = 'Cafe'
+            break;
+         }
+        case "Milkshake": {
+            mode = 'Milkshake'
+            break;
+         }
+        case "Protein": {
+            mode = 'Protein'
+            break;
+         }
+        case "HappyHour": {
+            mode = 'HappyHour'
+            break;
+         }
+        case "Fruit": {
+            mode = 'Fruit'
+            break;
+         }         
       }
 
       return mode
@@ -108,7 +138,13 @@ export default {
     Mountain,
     Pocket,
     Snowflake,
-    Fabric
+    Fabric,
+    Dressing,
+    Cafe,
+    Milkshake,
+    Protein,
+    HappyHour,
+    Fruit
   }
 }
 </script>

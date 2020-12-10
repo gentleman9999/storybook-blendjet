@@ -89,7 +89,7 @@ export default {
       subUnitDisplayPrice: 2.99,
       unitDisplayPrice: 3.99,
       subscriptionChecked: true,
-      displayPrice: 35.88,
+      displayPrice: 17.94,
       localizedUnitPrice: '2.99',
       symbol: '$'
     }
