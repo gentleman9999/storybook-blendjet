@@ -35,6 +35,9 @@
               <div class="mobile-upsell__blendjet" style="height: unset;">
                 <BlendJetCart />
               </div>
+              <div class="mobile-upsell__blendjet" style="height: unset;">
+                <BlendJetOneCart />
+              </div>              
               <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
                 <JetpackCart />
               </div>
@@ -94,6 +97,9 @@ SCROLL FOR MORE
               <div class="mobile-upsell__blendjet">
                 <BlendJetCart />
               </div>
+              <div class="mobile-upsell__blendjet">
+                <BlendJetOneCart />
+              </div>              
               <div class="mobile-upsell__jetpacks">
                 <JetpackCart />
               </div>
@@ -232,6 +238,7 @@ import CartItem from '~/components/nacelle/CartItem'
 import ShippingTime from '~/components/shippingTime'
 
 import BlendJetCart from '~/components/blendjetCart'
+import BlendJetOneCart from '~/components/blendjetOneCart'
 import JetpackCart from '~/components/jetpackCart'
 import SleeveCart from '~/components/sleeveCart'
 import BookCart from '~/components/bookCart'
@@ -251,6 +258,7 @@ export default {
     CartItem,
     ShippingTime,
     BlendJetCart,
+    BlendJetOneCart,    
     JetpackCart,
     SleeveCart,
     BookCart,
