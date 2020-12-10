@@ -95,7 +95,7 @@
         <!-- <a>Press</a> -->
         <nuxt-link to="/reviews">Reviews</nuxt-link>
         <nuxt-link to="/recipes">Recipes</nuxt-link>
-        <nuxt-link to="/recipe-book">Recipe Book</nuxt-link>
+        <nuxt-link to="/products/recipe-book">Recipe Book</nuxt-link>
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
