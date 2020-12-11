@@ -10,13 +10,13 @@
     </div>
     <div class="add-to-cart-controls">
       <div class="blendjet-dropdown">
-        <CartDropdown 
-          :items="product.variants"
-          :product="selectedVariant"
-          @update:blendjet="updateVariant"
-          :label="'Color'"
-          :productType="'blendjet'"
-        />
+		<CartDropdown 
+		  :items="variants"
+		  :product="selectedVariant"
+		  @update:blendjet="updateVariant"
+		  :label="'Color'"
+		  :productType="'blendjet'"
+		/>
       </div>
       <div class="quantity-select">
         <div class="quantity-select__label">Quantity:</div> 
@@ -55,6 +55,7 @@ export default {
       product: null,
       selectedVariant: null,
       quantity: 1,
+      variants: [],
     }
   },
   components: {
@@ -63,10 +64,11 @@ export default {
     ProductAddToCartButton,
   },
   mixins: [imageOptimize],
-  async mounted() {
-    this.product = await this.$nacelle.data.product({handle: 'blendjet-one'})
-    this.selectedVariant = this.product.variants[0]
-  },
+	async mounted() {
+	  this.product = await this.$nacelle.data.product({handle: 'blendjet-one'})
+	  this.variants = this.product.variants.filter((variant) => variant.availableForSale)
+	  this.selectedVariant = this.variants[0]
+	},
   methods: {
     updateVariant(newVariant) {
       this.selectedVariant = newVariant;
