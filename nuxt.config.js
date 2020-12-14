@@ -138,7 +138,7 @@ export default {
     "@nacelle/nacelle-klaviyo-nuxt-module",
     // ['nuxt-buefy', { css: false, materialDesignIcons: false }],
 
-    ["@recart/nacelle-nuxt-module", , { recartSiteId: '5b18bf7940348200075173e6' }]
+    ["@recart/nacelle-nuxt-module", { recartSiteId: '5b18bf7940348200075173e6' }]
   ],
 
 
