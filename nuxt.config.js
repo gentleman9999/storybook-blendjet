@@ -83,9 +83,6 @@ export default {
       { src: '/scripts/optimonk.js', body: true, defer:true},
       { src: '/scripts/gtm.js'},
       // { src: 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=NhVDeY', async: true},
-      { src: 'https://cdn.ghostmonitor.com/messenger/loader.js', body: true, async: true},
-      { src: 'https://cdn.ghostmonitor.com/loader.js?domain=blendjet.com&account=5b18bf7940348200075173e6&hasGMInitParams=1', body: true, async: true},
-      { src: 'https://api.recart.com/tracking/v2/settings/5b18bf7940348200075173e6/settings.js', body: true, async: true},
       { src: 'https://cdn.weglot.com/weglot.min.js', async: true},
       { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true}
 
@@ -138,8 +135,10 @@ export default {
     '@nuxtjs/svg',
     '@nacelle/nacelle-loox-nuxt-module',
     'vue-social-sharing/nuxt',
-    "@nacelle/nacelle-klaviyo-nuxt-module"
+    "@nacelle/nacelle-klaviyo-nuxt-module",
     // ['nuxt-buefy', { css: false, materialDesignIcons: false }],
+
+    ["@recart/nacelle-nuxt-module", , { recartSiteId: '5b18bf7940348200075173e6' }]
   ],
 
 
