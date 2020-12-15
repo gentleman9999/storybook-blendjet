@@ -130,6 +130,9 @@ export default {
       if(title.includes('JetPack')) {
         return title.split('-')[0].trim()
       }
+      if(title.includes('Book')) {
+        return title.split('- Recipe Book')[0].trim()
+      }
       if(title.includes('Extend')) {
         return 'Extend Protection Plan'
       }
@@ -140,7 +143,10 @@ export default {
     },
     formatVariantTitle(title) {
       if(title === 'Default Title') {
-        return 'JetPack Smoothie'
+	      if(this.item.title.includes('Book')) {
+	        return 'Recipe Book';
+	      }
+	      else{return 'JetPack Smoothie';}
       }
       return title
     },
