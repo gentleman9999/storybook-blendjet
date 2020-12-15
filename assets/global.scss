@@ -512,3 +512,11 @@ button.button.is-primary {
 //     bottom: 24px !important;
 //   }
 // }
+
+// pushed up
+.fb_dialog_content > iframe:first-of-type {
+    bottom: 84px !important;
+}
+.fb_dialog_content > iframe:last-of-type {
+	bottom: 128px !important;
+}
