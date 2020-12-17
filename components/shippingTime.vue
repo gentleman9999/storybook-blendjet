@@ -4,7 +4,7 @@
 
   <div class="shipping-container" v-if="!disabled">
     <div v-if="size ==='short'" class="small-size">
-      <span v-if="country == 'US'">Arrives {{shortDate}}</span> <!-- change X to 2 to apply fixed date -->
+      <span v-if="country == 'US'">Arrives 12/24</span> <!-- change X to 2 to apply fixed date -->
       <span v-else>Ships by {{shortDate}}</span>
     </div>
     <div v-else class="normal-size">
