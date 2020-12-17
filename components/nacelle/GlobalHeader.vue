@@ -211,7 +211,7 @@ export default {
       screenWidth: 0,
       logoFill: '#373975',
       jetpackMenuVisible: false,
-      freeShippingMessage: 'HOLIDAY SALE - SAVE UP TO 20%',
+      freeShippingMessage: 'ARRIVES BEFORE CHRISTMAS',
       navColor: 'white',
       scrollY: 0,
       scrollTarget: 200,
