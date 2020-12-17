@@ -64,7 +64,7 @@ export const actions = {
       throw new Error('Cannot checkout with an empty cart')
     }
 
-    let checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId })
+    let checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId, metafields: this.$recart.getMetafieldsForCheckout() })
     if (checkout && checkout.completed) {
       checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
     }
