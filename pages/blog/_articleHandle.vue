@@ -66,6 +66,7 @@
             <!-- </div> -->
             <div class="column is-9 content">
               <blog-article-content :article="article" :products="products">
+              {{ article.excerpt }}
                 <!-- Extra HTML added after content -->
                 <nuxt-link :to="`/${blogHandle}/`" class="breadcrumb-back">Go Back</nuxt-link>
               </blog-article-content>
