@@ -29,7 +29,7 @@
     "@nuxtjs/bulma": "^1.2.7",
     "@nuxtjs/dotenv": "^1.3.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
-    "@recart/nacelle-nuxt-module": "^0.1.0",
+    "@recart/nacelle-nuxt-module": "^0.1.1",
     "animate.css": "^4.1.0",
     "axios": "^0.20.0",
     "buefy": "^0.9.3",
