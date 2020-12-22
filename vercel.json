@@ -1558,6 +1558,11 @@
       "source": "/guide",
       "destination": "/user-guide/blendjet-2",
       "permanent": true
+    },
+    {
+      "source": "/blogs/recipes/blendjet-recipe-jen-selters-homemade-hummus",
+      "destination": "/recipes/jen-selters-homemade-hummus",
+      "permanent": true
     }
   ]
 }
