@@ -302,8 +302,6 @@
       "destination": "/our-story",
       "permanent": true
     },
-    { "source": "/patent", "destination": "/trademarks", "permanent": true },
-    { "source": "/patents", "destination": "/trademarks", "permanent": true },
     {
       "source": "/JenJetPacks",
       "destination": "/collections/jetpack-ready-to-blend-smoothies?utm_source=JenSelterJetPack",
@@ -1611,6 +1609,11 @@
     },
     {
       "source": "/pages/patents",
+      "destination": "/patents",
+      "permanent": true
+    },
+    {
+      "source": "/pages/trademarks",
       "destination": "/trademarks",
       "permanent": true
     },
