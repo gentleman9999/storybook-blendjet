@@ -302,8 +302,6 @@
       "destination": "/our-story",
       "permanent": true
     },
-    { "source": "/patent", "destination": "/trademarks", "permanent": true },
-    { "source": "/patents", "destination": "/trademarks", "permanent": true },
     {
       "source": "/JenJetPacks",
       "destination": "/collections/jetpack-ready-to-blend-smoothies?utm_source=JenSelterJetPack",
@@ -1557,6 +1555,86 @@
     {
       "source": "/guide",
       "destination": "/user-guide/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/recipes/blendjet-recipe-jen-selters-homemade-hummus",
+      "destination": "/recipes/jen-selters-homemade-hummus",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/recipes/rum-punch",
+      "destination": "/recipes/citrus-rum-punch",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/recipes/spring-citrus-salad-dressing",
+      "destination": "/recipes/citrus-salad-dressing",
+      "permanent": true
+    },
+    {
+      "source": "/recipes/strawberry-orange-refresher",
+      "destination": "/recipes",
+      "permanent": true
+    },
+    {
+      "source": "/pages/kathryn-o-malley",
+      "destination": "/our-story",
+      "permanent": true
+    },
+    {
+      "source": "/pages/contact",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/refund-policy",
+      "destination": "/returns",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/news/diy-popsicles-summer-popsicle-pick-me-up",
+      "destination": "/recipes/jetpack-smoothie-popsicles",
+      "permanent": true
+    },
+    {
+      "source": "/pages/tutorials",
+      "destination": "/user-guide/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/pages/faqs",
+      "destination": "/faqs",
+      "permanent": true
+    },
+    {
+      "source": "/pages/patents",
+      "destination": "/patents",
+      "permanent": true
+    },
+    {
+      "source": "/pages/trademarks",
+      "destination": "/trademarks",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/news/start-a-healthy-smoothie-habit",
+      "destination": "/recipes",
+      "permanent": true
+    },
+    {
+      "source": "/pages/about-us",
+      "destination": "/our-story",
+      "permanent": true
+    },
+    {
+      "source": "/pages/satisfaction-guarantee",
+      "destination": "/returns",
+      "permanent": true
+    },
+    {
+      "source": "/blog/good-in-bed-recipes-for-breakfast-in-bed",
+      "destination": "/recipes",
       "permanent": true
     }
   ]
