@@ -30,6 +30,13 @@
               {{ page.fields.alert }}
             </div>
           </div>
+
+          <div class="safety-warning" style="border-color: #cccccc !important;">
+            <div class="safety-warning__text">          
+          <a href="https://shop.blendjet.com/pages/tutorials">Click here for the BlendJet One Guide.</a>
+            </div>
+          </div>
+
           <!-- <div class="table-of-contents">
             <div class="table-of-contents__row">
               <div class="table-of-contents__cell">
