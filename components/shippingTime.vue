@@ -4,22 +4,22 @@
 
   <div class="shipping-container" v-if="!disabled">
     <div v-if="size ==='short'" class="small-size">
-      <span v-if="country == 'xxUS'">Arrives {{shortDate}}</span> <!-- change X to 2 to apply fixed date -->
-      <span v-else>Ships by {{shortDate}}</span>
+      <span v-if="country == 'xxxUS'">Arrives 1/5</span> <!-- change X to 2 to apply fixed date -->
+      <span v-else>Ships by 1/5</span>
     </div>
     <div v-else class="normal-size">
       <div class="normal-size__label">
-        <span v-if="country == 'xxUS'">Want it by {{arrivalDate}}?</span>
+        <span v-if="country == 'xxxUS'">Want it by Tuesday, January 5?</span>
         <span v-else>Order now and it ships by</span>
       </div>
       <div class="normal-size__countdown" v-if="size !=='short'">
-	  	<span v-if="country == 'xxUS'">
+	  	<span v-if="country == 'xxxUS'">
         <span v-if="24-remaining.hours === 0">Order within {{60-remaining.minutes}} minutes</span>
         <span v-else-if="24-remaining.hours === 1">Order within {{24-remaining.hours}} hour {{60-remaining.minutes}} minutes</span>
         <span v-else >Order within {{24-remaining.hours}} hours {{60-remaining.minutes}} minutes</span>
 	  	</span>
 	  	<span v-else>
-	  	  <span>{{arrivalDate}}</span>
+	  	  <span>Tuesday, January 5</span>
 	  	</span>
       </div>
     </div>
