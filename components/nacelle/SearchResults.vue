@@ -64,6 +64,7 @@ export default {
             return  typeof result.item !== 'undefined' &&
                     result.item.vendor !== 'Extend' && 
                     !result.item.title.includes('Auto Delivery') &&
+                    !result.item.title.includes('Starter Kit') &&
                     !result.item.title.includes('DHL')
           })
           .map(result => result.item)
