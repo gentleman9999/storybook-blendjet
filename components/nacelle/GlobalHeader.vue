@@ -211,7 +211,7 @@ export default {
       screenWidth: 0,
       logoFill: '#373975',
       jetpackMenuVisible: false,
-      freeShippingMessage: 'HOLIDAY SALE - SAVE UP TO 20%',
+      freeShippingMessage: 'FREE 2-DAY SHIPPING',
       navColor: 'white',
       scrollY: 0,
       scrollTarget: 200,
@@ -312,7 +312,7 @@ export default {
         const localPrice = await Axios(config)
           .then((res) => {
             if(res.data.Country !== 'US') {
-              this.freeShippingMessage = "HOLIDAY SALE + FREE WORLDWIDE S&H"
+              this.freeShippingMessage = "FREE WORLDWIDE S&H"
               localStorage.setItem('ww', 'true')
             } else {
               localStorage.setItem('ww', 'false')
