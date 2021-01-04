@@ -14,7 +14,7 @@
         <p>Were you looking for <a href="https://blendjet.com/products/blendjet-2"><img src="https://cdn.shopify.com/s/files/1/0066/4433/4658/files/award.png?v=1593589428"> BlendJet 2?</a><br/>
           Or did you want to try our <a href="https://blendjet.com/collections/jetpack-ready-to-blend-smoothies">JetPacks?</a></p>
         <p>You can start back at the  <a href="https://blendjet.com/"><i class="fa fa-home" aria-hidden="true"></i>  beginning</a> (sometimes that's the best place to start).<br/>
-          And we're  <a href="https://blendjet.com/pages/contact"><i class="fa fa-envelope" aria-hidden="true" style="font-size: 14px;"></i>  here for you</a> if you have any questions.</p>
+          And we're  <a href="mailto:support@blendjet.com"><i class="fa fa-envelope" aria-hidden="true" style="font-size: 14px;"></i>  here for you</a> if you have any questions.</p>
         <!-- <p>If you already have a BlendJet One, we have some great <a href="https://blendjet.com/pages/tutorials"><img src="https://cdn.shopify.com/s/files/1/0066/4433/4658/files/bulb.png?v=1593589422" style="width: 11px;"> tips</a> for you!</p> -->
       </div>
     </div>
