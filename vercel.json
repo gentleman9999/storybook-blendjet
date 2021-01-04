@@ -1633,6 +1633,11 @@
       "permanent": true
     },
     {
+      "source": "/pages/blendjet-ambassador-agreement",
+      "destination": "/ambassador-agreement",
+      "permanent": true
+    },
+    {
       "source": "/blog/good-in-bed-recipes-for-breakfast-in-bed",
       "destination": "/recipes",
       "permanent": true
