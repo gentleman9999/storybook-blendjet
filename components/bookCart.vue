@@ -1,7 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-            <a href="/products/recipe-book" style="color:white;">NEW BlendJet Recipe Book</a><br/> <span style="font-size: 75%;color:gold;">Hardcover + 50 Delicious Recipes</span>
+            <a href="/products/recipe-book" style="color:white;">NEW BlendJet Recipe Book</a><br/> <span style="font-size: 75%;color:gold;">10% off 1 - 12% off 2 - 15% off 3+</span>
     </div>
     <div class="blendjet-image">
       <transition name="fade">
