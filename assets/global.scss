@@ -113,7 +113,9 @@ html {
   width: 100vw;
   overflow-x: hidden;
 }
-
+body {
+  overflow-x: hidden;
+}
 h1 {
   font-family: 'BoldItalic';
   line-height: 54px;

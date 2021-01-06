@@ -407,7 +407,6 @@ export default {
 
     innerMaxWidth() {
       if(this.location !== 'homepage' && this.location !== 'brand-ambassador') {
-        console.log('Ho Ami eikhane')
         return 'max-width: 520px'
       }
     },
