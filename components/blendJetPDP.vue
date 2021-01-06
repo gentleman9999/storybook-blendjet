@@ -475,7 +475,7 @@
                 <li>15+ Blends Per 1 Hour Charge</li>
                 <li>Water-resistant USB-C Port</li>
                 <li>4000 mAh Rechargeable Battery</li>
-                <li>7.4V Electric Motor Spins 275 Times Per Second</li>
+                <li>5V Electric Motor Spins 275 Times Per Second</li>
                 <li>6-Point Stainless Steel Blade</li>
                 <li>Durable Built-In Carrying Strap</li>
               </ul>
