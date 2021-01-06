@@ -242,7 +242,17 @@
             :textColor="textColor"
             :title="title"
             :subtitle="subtitle"
+            :superHeading="superHeading"
+            :shortDescript="shortDescription"
           >
+            <h6
+              class="superHeading"
+              :style="
+                textColor && textColor.length > 0 ? `color: ${textColor}` : ''
+              "
+            >
+              {{ superHeading }}
+            </h6>
             <h1
               
               :class="titleClass"
@@ -261,16 +271,28 @@
             >
               {{ subtitle }}
             </h3>
+            <p
+            class="shortDescription"
+            :style="
+              textColor && textColor.length > 0 ? `color: ${textColor}` : ''
+            "
+            >{{ shortDescription }}</p>
           </slot>
           <slot
             name="cta"
             :ctaUrl="ctaUrl"
             :ctaText="ctaText"
             :ctaHandler="ctaHandler"
+            :ctaTwoUrl="ctaTwoUrl"
+            :ctaTwoText="ctaTwoText"
+            :ctaTwoHandler="ctaTwoHandler"
           >
             <p class="cta-container" v-if="ctaText.length > 0">
               <cta-button :to="ctaUrl" @clicked="ctaHandler">{{
                 ctaText
+              }}</cta-button>
+              <cta-button :to="ctaTwoUrl" @clicked="ctaTwoHandler">{{
+                ctaTwoText
               }}</cta-button>
             </p>
           </slot>
@@ -325,6 +347,14 @@ export default {
       type: String,
       default: ''
     },
+    superHeading: {
+      type: String,
+      default: ''
+    },
+    shortDescription: {
+      type: String,
+      default: ''
+    },
     ctaText: {
       type: String,
       default: ''
@@ -334,6 +364,18 @@ export default {
       default: ''
     },
     ctaHandler: {
+      type: Function,
+      default: () => {}
+    },
+    ctaTwoText: {
+      type: String,
+      default: ''
+    },
+    ctaTwoUrl: {
+      type: String,
+      default: ''
+    },
+    ctaTwoHandler: {
       type: Function,
       default: () => {}
     },
@@ -364,7 +406,8 @@ export default {
     },
 
     innerMaxWidth() {
-      if(this.location !== 'homepage') {
+      if(this.location !== 'homepage' && this.location !== 'brand-ambassador') {
+        console.log('Ho Ami eikhane')
         return 'max-width: 520px'
       }
     },
@@ -374,6 +417,8 @@ export default {
         return 'title-homepage'
       } else if(this.location.toLowerCase() === 'collection') {
         return 'title-collection'
+      } else if(this.location.toLowerCase() === 'brand-ambassador') {
+        return 'title-homepage'
       } else {
         return 'title'
       }
@@ -449,6 +494,18 @@ export default {
 .cta-container {
   display: flex;
   justify-content: center;
+  .cta-button:last-child {
+    margin-left: 15px;
+    @media (max-width: 551px) {
+      margin-left: 0;
+      margin-top: 15px;
+    }
+  }
+
+  @media (max-width: 551px) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 .hero-background {
   position: absolute;
@@ -537,6 +594,20 @@ export default {
   margin-bottom: 25px;
   margin-top: 10px;
 
+}
+
+.superHeading {
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+} 
+
+.shortDescription {
+  max-width: 840px;
+  margin: 0 auto 40px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 
