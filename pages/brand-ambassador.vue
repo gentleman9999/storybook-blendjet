@@ -217,7 +217,9 @@ export default {
         lineHeight: '1.17',
         letterSpacing: '1.75px',
         textTransform: 'uppercase'
-      }
+      },
+      metaTitle: '',
+      metaDescription: ''
     }
   },
   methods: {
@@ -244,11 +246,33 @@ export default {
     Collapse
   },
   mixins: [imageOptimize],
+  head() {
+    let properties = {}
+    let meta = []
+    const mdescription = this.metaDescription
+    const title = this.metaTitle
+    if(title.length) {
+      properties.title = title
+    }
+
+    if(mdescription.length) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: mdescription
+      })
+    }
+    
+    return {...properties, meta}
+    
+  },
   async mounted() {
     this.screenWidth = window.innerWidth;
     const vm = this
     this.ambassadors = await client.getEntry('2Vziod8PXesNjq3SAZwh20')
     .then((res) => {
+      this.metaTitle = res.fields.metaInfo.fields.metaTitle
+      this.metaDescription = res.fields.metaInfo.fields.metaDescription
       let arr = res.fields.ambassadorsTiles;
       return arr
     })
