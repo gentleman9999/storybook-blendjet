@@ -493,6 +493,9 @@ export default {
 .cta-container {
   display: flex;
   justify-content: center;
+  .cta-button {
+    font-family: $modern-bold;
+  }
   .cta-button:last-child {
     margin-left: 15px;
     @media (max-width: 551px) {
@@ -543,7 +546,7 @@ export default {
 
 .title-homepage {
   font-size: 54px;
-  font-family: Medium;
+  font-family: $modern-bold;
   letter-spacing: 10px;
   text-transform: uppercase;
   line-height: 1;
@@ -600,6 +603,7 @@ export default {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin-bottom: 15px;
+  font-family: $modern-bold;
 } 
 
 .shortDescription {
@@ -607,7 +611,9 @@ export default {
   margin: 0 auto 40px;
   font-size: 14px;
   font-weight: 400;
+  font-family: $modern-regular;
 }
 
 
 </style>
+

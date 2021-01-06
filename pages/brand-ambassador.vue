@@ -209,9 +209,9 @@ export default {
       },
       titleStyle: {
         textAlign: 'center',
-        color: '#373795',
-        fontSize: '12px',
-        fontFamily: 'Bold',
+        color: '#000000',
+        fontSize: '16px',
+        fontFamily: 'ModernEra-Bold',
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: '1.17',
@@ -288,13 +288,14 @@ export default {
   text-align: center;
   max-width: 570px;
   margin: 0 auto;
+  font-family: $modern-regular;
 }
 
 .image-tile--section-heading h3 {
   font-size: 28px;
   color: #000;
   text-transform: uppercase;
-  font-family: Medium;
+  font-family: $modern-medium;
   letter-spacing: 1.5px;
   margin: 0 0 20px;
 }
@@ -325,7 +326,7 @@ export default {
 }
 
 .image-tile--heading {
-  font-family: 'Medium';
+  font-family: $modern-medium;
   font-size: 16px;
 }
 
@@ -381,11 +382,14 @@ export default {
   color: #fff;
   background-color: $primary-purple;
   line-height: 45px;
+  font-family: $modern-medium;
 }
-
+.works-section--single-tile-content {
+  font-family: $modern-regular;
+}
 .works-section--single-tile-content h4 {
   font-size: 16px;
-  font-family: 'Medium';
+  font-family: $modern-medium;
   text-transform: uppercase;
   margin-bottom: 10px;
 }
@@ -407,6 +411,7 @@ export default {
   background-color: $primary-purple;
   color: #fff;
   letter-spacing: 2.5px;
+  font-family: $modern-bold;
 }
 
 .single--actions .cta-container .cta-button:last-child {
@@ -455,7 +460,7 @@ export default {
 .c-heading {
   text-transform: uppercase;
   font-size: 18px;
-  font-family: Medium;
+  font-family: $modern-bold;
   color: $primary-purple;
   letter-spacing: 2px;
 }
@@ -464,5 +469,6 @@ export default {
   font-size: 14px;
   font-weight: 400;
   color: #000;
+  font-family: $modern-regular;
 }
 </style>
