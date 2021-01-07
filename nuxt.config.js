@@ -136,6 +136,7 @@ export default {
     '@nacelle/nacelle-loox-nuxt-module',
     'vue-social-sharing/nuxt',
     "@nacelle/nacelle-klaviyo-nuxt-module",
+    "nuxt-robots-module",
     // ['nuxt-buefy', { css: false, materialDesignIcons: false }],
 
     ["@recart/nacelle-nuxt-module", { recartSiteId: '5b18bf7940348200075173e6' }]
@@ -184,6 +185,20 @@ export default {
 
       return [...routesOnly, ...recipes]
     }
+  },
+  robots: {
+    UserAgent: "*",
+    Disallow: [
+      '/cart*', 
+      '/account/login',
+      '/account/register',
+      '/a*',
+      '/privacy-policy',
+      '/trademarks',
+      '/returns',
+      '/terms-of-service',
+      '/collections/frontpage'
+    ]
   },
 
   /*

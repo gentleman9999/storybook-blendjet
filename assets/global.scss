@@ -95,6 +95,39 @@ $speed-slower: 250ms !default;
   unicode-range: U+25-26;
 }
 
+@font-face {
+  font-family: 'ModernEra-Regular';
+  src: url('./fonts/ModernEra-Regular.eot');
+  src: url('./fonts/ModernEra-Regular.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/ModernEra-Regular.svg#ModernEra-Regular') format('svg'),
+       url('./fonts/ModernEra-Regular.woff') format('woff'),
+       url('./fonts/ModernEra-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ModernEra-Medium';
+  src: url('./fonts/ModernEra-Medium.eot');
+  src: url('./fonts/ModernEra-Medium.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/ModernEra-Medium.svg#ModernEra-Medium') format('svg'),
+       url('./fonts/ModernEra-Medium.woff') format('woff'),
+       url('./fonts/ModernEra-Medium.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ModernEra-Bold';
+  src: url('./fonts/ModernEra-Bold.eot');
+  src: url('./fonts/ModernEra-Bold.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/ModernEra-Bold.svg#ModernEra-Bold') format('svg'),
+       url('./fonts/ModernEra-Bold.woff') format('woff'),
+       url('./fonts/ModernEra-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 // h1,
 // h2,
 // h3,
@@ -113,7 +146,9 @@ html {
   width: 100vw;
   overflow-x: hidden;
 }
-
+body {
+  overflow-x: hidden;
+}
 h1 {
   font-family: 'BoldItalic';
   line-height: 54px;
