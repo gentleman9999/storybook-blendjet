@@ -44,7 +44,7 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
-      if (process.browser && window.FB) {
+      if (window.FB) {
         window.FB.CustomerChat.show(false)
       }
     }
@@ -57,7 +57,7 @@ export default {
     }
   },
   mounted() {
-    if (process.browser && window && window.FB) {
+    if (window.FB) {
       window.FB.CustomerChat.hide()
     }
   }
