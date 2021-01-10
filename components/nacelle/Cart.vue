@@ -290,6 +290,10 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
+
+      if(window.FB) {
+        window.FB.CustomerChat.show(false)
+      }
     },
     handleCheckoutDisable(value) {
       this.checkoutDisabled = value
@@ -321,13 +325,17 @@ export default {
         this.checkoutDisabled = false
       }
     },
-    // cartVisible() {
-    //   if(this.cartVisible) {
-    //     document.body.style.overflowY = 'hidden'
-    //   } else {
-    //     document.body.style.overflowY = 'scroll'
-    //   }
-    // },
+    cartVisible(newValue) {
+      // if(this.cartVisible) {
+      //   document.body.style.overflowY = 'hidden'
+      // } else {
+      //   document.body.style.overflowY = 'scroll'
+      // }
+
+      if (newValue && window.FB) {
+         window.FB.CustomerChat.hide()
+      }
+    },
     cartSubtotal() {
       // console.log('cart balance getter', this.cartBalance)
       if(!this.cartBalance) {
