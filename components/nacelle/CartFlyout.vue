@@ -44,6 +44,9 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
+      if (process.browser && window.FB) {
+        window.FB.CustomerChat.show(false)
+      }
     }
   },
   watch: {
@@ -51,6 +54,11 @@ export default {
       if (newValue.length == 0) {
         this.hideCart()
       }
+    }
+  },
+  mounted() {
+    if (process.browser && window && window.FB) {
+      window.FB.CustomerChat.hide()
     }
   }
 }

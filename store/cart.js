@@ -142,17 +142,10 @@ export const mutations = {
 
   showCart(state) {
     state.cartVisible = true
-    if (process.browser && window && window.FB) {
-      window.FB.CustomerChat.hide()
-    }
   },
 
   hideCart(state) {
-    // console.log('hide cart')
     state.cartVisible = false
-    if (process.browser && window && window.FB) {
-      window.FB.CustomerChat.show(false)
-    }
   },
 
   toggleCart(state) {
