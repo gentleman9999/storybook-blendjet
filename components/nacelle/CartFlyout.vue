@@ -44,9 +44,10 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
-      if (window.FB) {
-        window.FB.CustomerChat.show(false)
-      }
+
+      console.log('inside handleClose')
+
+      window.FB && window.FB.CustomerChat.show(false)
     }
   },
   watch: {
@@ -54,11 +55,13 @@ export default {
       if (newValue.length == 0) {
         this.hideCart()
       }
-    }
-  },
-  mounted() {
-    if (window.FB) {
-      window.FB.CustomerChat.hide()
+    },
+    cartVisible(newValue) {
+      console.log('cartVisible')
+
+      if (newValue) {
+        window.FB && window.FB.CustomerChat.hide()
+      }
     }
   }
 }
