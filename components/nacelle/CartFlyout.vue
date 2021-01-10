@@ -44,23 +44,12 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
-
-      console.log('inside handleClose')
-
-      window.FB && window.FB.CustomerChat.show(false)
     }
   },
   watch: {
     lineItems(newValue) {
       if (newValue.length == 0) {
         this.hideCart()
-      }
-    },
-    cartVisible(newValue) {
-      console.log('cartVisible')
-
-      if (newValue) {
-        window.FB && window.FB.CustomerChat.hide()
       }
     }
   }
