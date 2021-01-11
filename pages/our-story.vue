@@ -374,6 +374,9 @@ export default {
         }
       ],
 
+      metaTitle: '',
+      metaDescription: ''
+
 
     }
   },
@@ -423,8 +426,27 @@ export default {
     },
 
   },
-  async asyncData() {
+  head() {
+    let properties = {}
+    let meta = []
+    const mdescription = this.metaDescription
+    const title = this.metaTitle
+    if(title.length) {
+      properties.title = title
+    }
 
+    if(mdescription.length) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: mdescription
+      })
+    }
+    
+    return {...properties, meta}
+    
+  },
+  async asyncData() {
     let ourStory = await client.getEntry('4RIljQvzSmaaa8i2QyfgTY')
     .then(async (res) => {
       let leadershipList = []
@@ -441,6 +463,12 @@ export default {
     return { page: ourStory }
   },
   async mounted() {
+    const vm = this
+    await client.getEntry('4RIljQvzSmaaa8i2QyfgTY')
+    .then((res) => {
+      this.metaTitle = res.fields.metaInfo.fields.metaTitle
+      this.metaDescription = res.fields.metaInfo.fields.metaDescription
+    })
     this.handleResize()
     window.onresize = () => {
       this.handleResize()

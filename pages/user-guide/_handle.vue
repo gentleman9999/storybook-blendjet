@@ -176,6 +176,12 @@ import { BLOCKS, MARKS } from '@contentful/rich-text-types';
 import { createClient } from '~/plugins/contentful.js'
 const client = createClient();
 export default {
+  data() {
+    return {
+      metaTitle: '',
+      metaDescription: ''
+    }
+  },
   components: {
     Info,
     Collapse,
@@ -186,6 +192,26 @@ export default {
     RichTextRenderer
   },
   mixins: [ImageOptimize],
+  head() {
+    let properties = {}
+    let meta = []
+    const mdescription = this.metaDescription
+    const title = this.metaTitle
+    if(title.length) {
+      properties.title = title
+    }
+
+    if(mdescription.length) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: mdescription
+      })
+    }
+    
+    return {...properties, meta}
+    
+  },
   async asyncData({params}) {
     let userGuide = await client.getEntries({
       content_type: 'userGuide',
@@ -208,6 +234,14 @@ export default {
     })
 
     return { page: userGuide }
+  },
+  async mounted() {
+    const vm = this
+    await client.getEntry('DtNqBDOvFbHUSxyOK3IMM')
+    .then((res) => {
+      this.metaTitle = res.fields.metaInfo.fields.metaTitle
+      this.metaDescription = res.fields.metaInfo.fields.metaDescription
+    })
   },
   computed: {
     doRenders() {

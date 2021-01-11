@@ -12,12 +12,51 @@
 <script>
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
 import getPage from '~/mixins/getPage'
+import { createClient } from '~/plugins/contentful.js'
+const client = createClient();
 
 export default {
+  data() {
+    return {
+      metaTitle: '',
+      metaDescription: ''
+    }
+  },
   components: {
     RichTextRenderer
   },
-  mixins: [getPage()]
+  mixins: [getPage()],
+  head() {
+    let properties = {}
+    let meta = []
+    const mdescription = this.metaDescription
+    const title = this.metaTitle
+    if(title.length) {
+      properties.title = title
+    }
+
+    if(mdescription.length) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: mdescription
+      })
+    }
+    
+    return {...properties, meta}
+    
+  }, 
+  async mounted() {
+    const vm = this
+    await client.getEntries({
+      content_type: 'page',
+    'fields.handle': this.$route.params.pageHandle,
+    })
+    .then((res) => {
+      this.metaTitle = res.items[0].fields.metaInfo.fields.metaTitle
+      this.metaDescription = res.items[0].fields.metaInfo.fields.metaDescription
+    })
+  },
 }
 </script>
 

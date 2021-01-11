@@ -160,11 +160,42 @@ export default {
   },
   data() {
     return {
-      path: undefined
+      path: undefined,
+      metaTitle: '',
+      metaDescription: ''
     }
   },
-  mounted() {
+  head() {
+    let properties = {}
+    let meta = []
+    const mdescription = this.metaDescription
+    const title = this.metaTitle
+    if(title.length) {
+      properties.title = title
+    }
+
+    if(mdescription.length) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: mdescription
+      })
+    }
+    
+    return {...properties, meta}
+    
+  },
+  async mounted() {
     this.path = window.location.href
+    const vm = this
+    await client.getEntries({
+      content_type: 'recipe',
+      'fields.handle': this.$route.params.handle,
+    })
+    .then((res) => {
+      this.metaTitle = res.items[0].fields.metaInfo.fields.metaTitle
+      this.metaDescription = res.items[0].fields.metaInfo.fields.metaDescription
+    })
   },
   async asyncData ({params}) {
     let recipe = await client.getEntries({
