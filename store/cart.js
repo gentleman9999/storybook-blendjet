@@ -145,7 +145,6 @@ export const mutations = {
   },
 
   hideCart(state) {
-    // console.log('hide cart')
     state.cartVisible = false
   },
 
