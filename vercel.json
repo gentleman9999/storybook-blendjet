@@ -1648,7 +1648,7 @@
       "permanent": true
     },
     {
-      "source": "/pages/JetPack-review",
+      "source": "/pages/JetPack-Review",
       "destination": "/jetpack-review",
       "permanent": true
     }
