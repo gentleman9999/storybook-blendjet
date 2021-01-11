@@ -30,7 +30,7 @@
 
 <script>
 
-var transitTime  = 2; // US ARRIVAL DATE
+var transitTime  = 1; // US ARRIVAL DATE
 var cutoffHour = 15; //3PM cutoff time
 var timezoneOffset = (new Date().getTimezoneOffset()/60)-8; //users offset from PST
 	
