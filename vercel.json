@@ -1641,6 +1641,16 @@
       "source": "/blog/good-in-bed-recipes-for-breakfast-in-bed",
       "destination": "/recipes",
       "permanent": true
+    },
+    {
+      "source": "/pages/jetpack-review",
+      "destination": "/jetpack-review",
+      "permanent": true
+    },
+    {
+      "source": "/pages/JetPack-review",
+      "destination": "/jetpack-review",
+      "permanent": true
     }
   ]
 }
