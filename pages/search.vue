@@ -210,8 +210,30 @@ export default {
       searchResultsNumber: null,
       results: null,
       viewAll: false,
-      rating: 4.8
+      rating: 4.8,
+      metaTitle: 'Search BlendJet.com - BlendJet®',
+      metaDescription: 'Our search feature helps you quickly find what you\'re looking for on BlendJet.com, and even offers suggestions and updates results as you type in your query.'
     }
+  },
+  head() {
+    let properties = {}
+    let meta = []
+    const mdescription = this.metaDescription
+    const title = this.metaTitle
+    if(title.length) {
+      properties.title = title
+    }
+
+    if(mdescription.length) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: mdescription
+      })
+    }
+    
+    return {...properties, meta}
+    
   }, 
   components: {
     SearchBox,

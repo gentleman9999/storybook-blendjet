@@ -195,6 +195,33 @@
 <script>
 import Collapse from '~/components/collapse'
 export default {
+  data() {
+    return {
+      metaTitle: 'FAQs - Frequently Asked Questions - BlendJet®',
+      metaDescription: 'You can find answers to the most commonly asked questions here including information about BlendJet, our products, shipping, warranty, cleaning, and more.'
+    }
+  },
+
+  head() {
+    let properties = {}
+    let meta = []
+    const mdescription = this.metaDescription
+    const title = this.metaTitle
+    if(title.length) {
+      properties.title = title
+    }
+
+    if(mdescription.length) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: mdescription
+      })
+    }
+    
+    return {...properties, meta}
+    
+  },
 
   components: {
     Collapse

@@ -84,11 +84,11 @@ export default {
   head() {
     let properties = {}
     let meta = []
-    properties.title = 'BlendJet Portable Blender Recipes | Make Smoothies, Shakes and More'
+    properties.title = 'BlendJet® Recipe Videos - New Videos Weekly'
     meta.push({
       hid: 'description',
       name: 'description',
-      content: 'What recipes can you make with a BlendJet? From savory to sweet, here are the best BlendJet blender recipes. Come back often because we add a new BlendJet recipe every week! Try making these smoothies, shakes, cocktails, dips, and dressings in your BlendJet portable blender today.'
+      content: 'Enjoy 100s of quick video recipes designed for making the very best smoothies, shakes, dips, dressings, and more in your BlendJet blender. New recipes weekly!'
     })
 
     return {...properties, meta}
