@@ -1966,6 +1966,146 @@
       "source": "/details.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/pages/terms-of-service",
+      "destination": "/terms-of-service",
+      "permanent": true
+    },
+    {
+      "source": "/mocha-chia-jetpack-ready-to-blend-smoothie?ref=loox-item",
+      "destination": "/products/mocha-chia-jetpack-ready-to-blend-smoothie",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-logo-beanie",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/privacy-policy",
+      "destination": "/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-gradient-logo-t-shirt-unisex",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/discount/Health/?redirect=%2Fproducts%2Fblendjet-one%3Futm_source%3DHealth",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/patents",
+      "destination": "/trademarks",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/news/",
+      "destination": "/recipes",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/discount/ladies/?redirect=%2Fproducts%2Fblendjet-one%3Futm_source%3DLadies-Roadmap-Podcast",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/a/l/pt/pages/team",
+      "destination": "/our-story",
+      "permanent": true
+    },
+    {
+      "source": "/account/register",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/tutorials",
+      "destination": "/user-guide/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/pages/contact",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/account/login",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-womens-racerback-tank",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/satisfaction-guarantee",
+      "destination": "/returns",
+      "permanent": true
+    },
+    {
+      "source": "/pages/about-us",
+      "destination": "/our-story",
+      "permanent": true
+    },
+    {
+      "source": "/banana-blueberry-jetpack-ready-to-blend-smoothie?ref=loox-item",
+      "destination": "/products/banana-blueberry-jetpack-ready-to-blend-smoothie",
+      "permanent": true
+    },
+    {
+      "source": "/account",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-swirl-hat",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/faqs",
+      "destination": "/faqs",
+      "permanent": true
+    },
+    {
+      "source": "/recipes/spring-citrus-salad-dressing",
+      "destination": "/recipes/citrus-salad-dressing",
+      "permanent": true
+    },
+    {
+      "source": "/tel:18445881555",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/JetPack",
+      "destination": "/products/banana-blueberry-jetpack-ready-to-blend-smoothie",
+      "permanent": true
+    },
+    {
+      "source": "/recipes/rum-punch",
+      "destination": "/recipes/citrus-rum-punch",
+      "permanent": true
+    },
+    {
+      "source": "/blog/barista-101-make-better-coffee-drinks-at-home",
+      "destination": "/recipes",
+      "permanent": true
+    },
+    {
+      "source": "/recipes/barista-101-make-better-coffee-drinks-at-home",
+      "destination": "/recipes",
+      "permanent": true
     }
   ]
 }
