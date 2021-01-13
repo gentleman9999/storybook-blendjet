@@ -166,7 +166,7 @@
       "permanent": true
     },
     {
-      "source": "/one.",
+      "source": "/one",
       "destination": "/products/blendjet-one",
       "permanent": true
     },
@@ -1668,16 +1668,6 @@
       "permanent": true
     },
     {
-      "source": "/cebehdgf/cyfaewfg-baf/",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/afjf/gbxf-b-evc-fbfl-ubzfzbef-evccvat-fbhdf-efdvcff",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/pages/prop-65",
       "destination": "/",
       "permanent": true
@@ -1693,21 +1683,6 @@
       "permanent": true
     },
     {
-      "source": "/cybtf/afjf/cyfaewfg-duvyy-aha-ebgf-avtug-vefbf-bg-ubzf",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/efdvcff/ebytbab-ayhaal-juvccfe-dbaaff",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/efdvcff/vdfe-zbgdub-ybggf",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/discount/",
       "destination": "/",
       "permanent": true
@@ -1718,32 +1693,7 @@
       "permanent": true
     },
     {
-      "source": "/collections/cmVwbGFjZW",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/afjf/fbfl-cbfg-jbexbhg-fzbbguvff-ufbygul-efdvcff-gb-dubatf-lbhe-cbel",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/afjf/tbbe-va-cfe-efdvcff-abe-cefbxabfg-va-cfe",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/efdvcff",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/pages/thank-you",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/syed-aftab",
       "destination": "/",
       "permanent": true
     },
@@ -1758,16 +1708,6 @@
       "permanent": true
     },
     {
-      "source": "/cybtf/afjf/",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/efdvcff/jbgfezfyba-ibexb-fyhfuvf",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/products/blendjet-gradient-logo-t-shirt-unisex",
       "destination": "/",
       "permanent": true
@@ -1778,17 +1718,7 @@
       "permanent": true
     },
     {
-      "source": "/6644334658/digital_wallets/dialog",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/blendje",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/efdvcff/vdfe-tbyefa-zvyx-ybggf",
       "destination": "/",
       "permanent": true
     },
@@ -1808,28 +1738,13 @@
       "permanent": true
     },
     {
-      "source": "/products/blendjet-oneSJ9",
-      "destination": "/products/blendjet-one",
-      "permanent": true
-    },
-    {
       "source": "/products/copy-of-blendjet-swirl-shirt-ladies",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/products/YmFuYW5hLW",
       "destination": "/",
       "permanent": true
     },
     {
       "source": "/tip",
       "destination": "/user-guide/blendjet-2",
-      "permanent": true
-    },
-    {
-      "source": "/404",
-      "destination": "/",
       "permanent": true
     },
     {
@@ -1858,16 +1773,6 @@
       "permanent": true
     },
     {
-      "source": "/cybtf/efdvcff/cyfaefe-vdfe-dbaaff",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/cybtf/efdvcff/fgebjcfeel-zbetbevgb-fzbbguvf",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/pages/as-seen-on-new",
       "destination": "/",
       "permanent": true
@@ -1878,17 +1783,7 @@
       "permanent": true
     },
     {
-      "source": "/products/blendjet-one__",
-      "destination": "/products/blendjet-one",
-      "permanent": true
-    },
-    {
       "source": "/products/blendjet-womens-racerback-tank",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/products/routeins",
       "destination": "/",
       "permanent": true
     },
@@ -1918,16 +1813,6 @@
       "permanent": true
     },
     {
-      "source": "/products/bW9jaGEtY2",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/products/dHJvcGljYW",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/tips.",
       "destination": "/user-guide/blendjet-2",
       "permanent": true
@@ -1938,7 +1823,7 @@
       "permanent": true
     },
     {
-      "source": "/www.blendjet.com/",
+      "source": "/www.blendjet.com",
       "destination": "/",
       "permanent": true
     },
@@ -1953,158 +1838,8 @@
       "permanent": true
     },
     {
-      "source": "/cybtf/efdvcff/aebmfa-yfzbabef/",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/dbyyfdgvbaf/wfgcbdx-efbel-gb-cyfae-fzbbguvff",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/details.html",
       "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/pages/terms-of-service",
-      "destination": "/terms-of-service",
-      "permanent": true
-    },
-    {
-      "source": "/mocha-chia-jetpack-ready-to-blend-smoothie?ref=loox-item",
-      "destination": "/products/mocha-chia-jetpack-ready-to-blend-smoothie",
-      "permanent": true
-    },
-    {
-      "source": "/products/blendjet-logo-beanie",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/pages/privacy-policy",
-      "destination": "/privacy-policy",
-      "permanent": true
-    },
-    {
-      "source": "/products/blendjet-gradient-logo-t-shirt-unisex",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/discount/Health/?redirect=%2Fproducts%2Fblendjet-one%3Futm_source%3DHealth",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/pages/patents",
-      "destination": "/trademarks",
-      "permanent": true
-    },
-    {
-      "source": "/blogs/news/",
-      "destination": "/recipes",
-      "permanent": true
-    },
-    {
-      "source": "/contact",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/discount/ladies/?redirect=%2Fproducts%2Fblendjet-one%3Futm_source%3DLadies-Roadmap-Podcast",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/a/l/pt/pages/team",
-      "destination": "/our-story",
-      "permanent": true
-    },
-    {
-      "source": "/account/register",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/pages/tutorials",
-      "destination": "/user-guide/blendjet-2",
-      "permanent": true
-    },
-    {
-      "source": "/pages/contact",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/account/login",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/products/blendjet-womens-racerback-tank",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/pages/satisfaction-guarantee",
-      "destination": "/returns",
-      "permanent": true
-    },
-    {
-      "source": "/pages/about-us",
-      "destination": "/our-story",
-      "permanent": true
-    },
-    {
-      "source": "/banana-blueberry-jetpack-ready-to-blend-smoothie?ref=loox-item",
-      "destination": "/products/banana-blueberry-jetpack-ready-to-blend-smoothie",
-      "permanent": true
-    },
-    {
-      "source": "/account",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/products/blendjet-swirl-hat",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/pages/faqs",
-      "destination": "/faqs",
-      "permanent": true
-    },
-    {
-      "source": "/recipes/spring-citrus-salad-dressing",
-      "destination": "/recipes/citrus-salad-dressing",
-      "permanent": true
-    },
-    {
-      "source": "/tel:18445881555",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/JetPack",
-      "destination": "/products/banana-blueberry-jetpack-ready-to-blend-smoothie",
-      "permanent": true
-    },
-    {
-      "source": "/recipes/rum-punch",
-      "destination": "/recipes/citrus-rum-punch",
-      "permanent": true
-    },
-    {
-      "source": "/blog/barista-101-make-better-coffee-drinks-at-home",
-      "destination": "/recipes",
-      "permanent": true
-    },
-    {
-      "source": "/recipes/barista-101-make-better-coffee-drinks-at-home",
-      "destination": "/recipes",
       "permanent": true
     }
   ]
