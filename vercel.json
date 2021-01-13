@@ -1651,6 +1651,11 @@
       "source": "/pages/JetPack-Review",
       "destination": "/jetpack-review",
       "permanent": true
+    },
+    {
+      "source": "/products/blendjet-2-press-kit",
+      "destination": "/products/blendjet-2",
+      "permanent": true
     }
   ]
 }
