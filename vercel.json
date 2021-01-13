@@ -1656,6 +1656,316 @@
       "source": "/products/blendjet-2-press-kit",
       "destination": "/products/blendjet-2",
       "permanent": true
+    },
+    {
+      "source": "/pages/JetPack-Review",
+      "destination": "/products/banana-blueberry-jetpack-ready-to-blend-smoothie",
+      "permanent": true
+    },
+    {
+      "source": "/team.html",
+      "destination": "/our-story",
+      "permanent": true
+    },
+    {
+      "source": "/cebehdgf/cyfaewfg-baf/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/afjf/gbxf-b-evc-fbfl-ubzfzbef-evccvat-fbhdf-efdvcff",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/prop-65",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-logo-beanie",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/afjf/cyfaewfg-duvyy-aha-ebgf-avtug-vefbf-bg-ubzf",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff/ebytbab-ayhaal-juvccfe-dbaaff",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff/vdfe-zbgdub-ybggf",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/discount/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/a/l/es/products/blendjet-one",
+      "destination": "/products/blendjet-one",
+      "permanent": true
+    },
+    {
+      "source": "/collections/cmVwbGFjZW",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/afjf/fbfl-cbfg-jbexbhg-fzbbguvff-ufbygul-efdvcff-gb-dubatf-lbhe-cbel",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/afjf/tbbe-va-cfe-efdvcff-abe-cefbxabfg-va-cfe",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/thank-you",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/syed-aftab",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/a/l/de/products/blendjet-one",
+      "destination": "/products/blendjet-one",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/recipes/tagged/blendjet-recipe",
+      "destination": "/recipes",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/afjf/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff/jbgfezfyba-ibexb-fyhfuvf",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-gradient-logo-t-shirt-unisex",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-swirl-hat",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/6644334658/digital_wallets/dialog",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blendje",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff/vdfe-tbyefa-zvyx-ybggf",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/discount/FRESH",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/FL",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-coffee-mug",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-oneSJ9",
+      "destination": "/products/blendjet-one",
+      "permanent": true
+    },
+    {
+      "source": "/products/copy-of-blendjet-swirl-shirt-ladies",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/YmFuYW5hLW",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tip",
+      "destination": "/user-guide/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/404",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/404",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/a/l/pt/products/blendjet-one",
+      "destination": "/products/blendjet-one",
+      "permanent": true
+    },
+    {
+      "source": "/blendjet-2",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/collections/jetpack-ready-to-blend-smoothiesha",
+      "destination": "/products/banana-blueberry-jetpack-ready-to-blend-smoothie",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff/cyfaefe-vdfe-dbaaff",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff/fgebjcfeel-zbetbevgb-fzbbguvf",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/as-seen-on-new",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-one__",
+      "destination": "/products/blendjet-one",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-one__",
+      "destination": "/products/blendjet-one",
+      "permanent": true
+    },
+    {
+      "source": "/products/blendjet-womens-racerback-tank",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/routeins",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/replacement",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/test",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/a/l/it/products/blendjet-one",
+      "destination": "/products/blendjet-one",
+      "permanent": true
+    },
+    {
+      "source": "/discount/WELCOME10",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/guide",
+      "destination": "/user-guide/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/products/bW9jaGEtY2",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/dHJvcGljYW",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tips.",
+      "destination": "/user-guide/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/womanshealth",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/www.blendjet.com/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blend10",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/BUYMEONE",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cybtf/efdvcff/aebmfa-yfzbabef/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/dbyyfdgvbaf/wfgcbdx-efbel-gb-cyfae-fzbbguvff",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/details.html",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }
