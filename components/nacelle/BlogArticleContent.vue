@@ -67,12 +67,12 @@ export default {
   },
   computed: {
     content() {
-      // if (this.article) {
-      //   return this.contentHtml(this.article.fields.content)
-      // }
-
-      if (this.article.fields.content) {
+      if (this.article && this.article.source === 'contentful') {
         return this.contentHtml(this.article.fields.content)
+      }
+
+      if (this.article.content) {
+        return this.article.content
       }
 
       return ''
