@@ -327,10 +327,6 @@ export default {
       type: Boolean,
       default: true
     },
-    isGradient: {
-      type: String,
-      default: ''
-    },
     imageUrl: {
       type: String,
       default: ''
