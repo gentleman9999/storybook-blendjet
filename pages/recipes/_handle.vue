@@ -137,6 +137,7 @@
     <NutritionModal :content="nutritionfacts"/>
   </div>
 </template>
+
 <script>
 import JetpackCrossSell from '~/components/jetpackCrossSell'
 import FacebookFilled from '~/components/svg/FacebookFilled'

@@ -99,74 +99,209 @@
         </div>
         <div class="faq-container">
           <div class="faq-section">
-            <Collapse>
-              <template v-slot:collapsed>
-                <div class="c-heading">Who Can Become a part of the BlendJet Ambassador Program? </div>
-              </template>
-              <template v-slot:expanded>
-                <div class="faq-expand">
-                  <b>We look for the following characteristics in our ambassadors:</b>
-                  <p>1. A social media presence that portrays a positive outlook and desire to share healthy habits with the world through high-quality images and videos.</p>
-                  <p>2. A minimum of 10,000 followers on Instagram, YouTube, or Facebook, or a minimum of 4,000 followers on Tik-Tok.</p> 
-                  <p>3. An average engagement rate of 4% per post.</p>
-                </div>
-              </template>
-            </Collapse>
+            <details>
+              <summary>
+                Who Can Become a part of the BlendJet Ambassador Program?
+                <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>+</title>
+                  <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="M-BlendJet-UserGuide-2-BlendJet-GLow" transform="translate(-360.000000, -3708.000000)" fill="#373795">
+                          <g id="A-Mode" transform="translate(20.000000, 2999.000000)">
+                              <g id="Pulse-Mode-" transform="translate(0.000000, 690.000000)">
+                                  <g id="+" transform="translate(340.000000, 19.000000)">
+                                      <rect id="Rectangle" x="6" y="0" width="2" height="14"></rect>
+                                      <rect id="Rectangle-Copy-2" transform="translate(7.000000, 7.000000) rotate(-270.000000) translate(-7.000000, -7.000000) " x="6" y="0" width="2" height="14"></rect>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+                <svg class="minus" width="10px" height="14px" viewBox="0 0 10 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>BG Copy</title>
+                  <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="D-BlendJet-Cart" transform="translate(-1191.000000, -138.000000)" fill="#373795">
+                          <g id="Cart" transform="translate(1046.000000, 0.000000)">
+                              <g id="Products" transform="translate(17.000000, 54.000000)">
+                                  <g id="BlendJet" transform="translate(22.000000, 19.000000)">
+                                      <g id="Qty" transform="translate(96.000000, 54.000000)">
+                                          <rect id="BG-Copy" x="10" y="11" width="10" height="2"></rect>
+                                      </g>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+              </summary>
+              <b>We look for the following characteristics in our ambassadors:</b>
+              <p><span>1.</span> A social media presence that portrays a positive outlook and desire to share healthy habits with the world through high-quality images and videos.</p>
+              <p><span>2.</span> A minimum of 10,000 followers on Instagram, YouTube, or Facebook, or a minimum of 4,000 followers on Tik-Tok.</p> 
+              <p><span>3.</span> An average engagement rate of 4% per post.</p>
+            </details>
           </div>
           <div class="faq-section">
-            <Collapse>
-              <template v-slot:collapsed>
-                <div class="c-heading">How do I receive my first free BlendJet? </div>
-              </template>
-              <template v-slot:expanded>
-                <div class="faq-expand">
-                  <p>1.After receiving your acceptance email, register at the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a></p>
-                  <p>2. If you've already registered, you can access the portal from the <a href="https://blendjet.brandchamp.io/login" target="_blank">Login Page.</a></p> 
-                  <p>3. Once inside, fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> When you have completed your profile, and it has been approved, you will see a code to order your FREE BlendJet + 3 JetPack Smoothies <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">HERE!</a></p>
-                </div>
-              </template>
-            </Collapse>
+            <details>
+              <summary>
+                How do I receive my first free BlendJet?
+                <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>+</title>
+                  <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="M-BlendJet-UserGuide-2-BlendJet-GLow" transform="translate(-360.000000, -3708.000000)" fill="#373795">
+                          <g id="A-Mode" transform="translate(20.000000, 2999.000000)">
+                              <g id="Pulse-Mode-" transform="translate(0.000000, 690.000000)">
+                                  <g id="+" transform="translate(340.000000, 19.000000)">
+                                      <rect id="Rectangle" x="6" y="0" width="2" height="14"></rect>
+                                      <rect id="Rectangle-Copy-2" transform="translate(7.000000, 7.000000) rotate(-270.000000) translate(-7.000000, -7.000000) " x="6" y="0" width="2" height="14"></rect>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+                <svg class="minus" width="10px" height="14px" viewBox="0 0 10 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>BG Copy</title>
+                  <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="D-BlendJet-Cart" transform="translate(-1191.000000, -138.000000)" fill="#373795">
+                          <g id="Cart" transform="translate(1046.000000, 0.000000)">
+                              <g id="Products" transform="translate(17.000000, 54.000000)">
+                                  <g id="BlendJet" transform="translate(22.000000, 19.000000)">
+                                      <g id="Qty" transform="translate(96.000000, 54.000000)">
+                                          <rect id="BG-Copy" x="10" y="11" width="10" height="2"></rect>
+                                      </g>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+              </summary>
+              <p><span>1.</span> After receiving your acceptance email, register at the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a></p>
+              <p><span>2.</span> If you've already registered, you can access the portal from the <a href="https://blendjet.brandchamp.io/login" target="_blank">Login Page.</a></p> 
+              <p><span>3.</span> Once inside, fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> When you have completed your profile, and it has been approved, you will see a code to order your FREE BlendJet + 3 JetPack Smoothies <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">HERE!</a></p>
+            </details>
           </div>
           <div class="faq-section">
-            <Collapse>
-              <template v-slot:collapsed>
-                <div class="c-heading">How do I complete activities and earn points? </div>
-              </template>
-              <template v-slot:expanded>
-                <div class="faq-expand">
-                  <p>1. First, register in the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a> and fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> to receive your Free BlendJet. </p>
-                  <p>2. <a href="https://blendjet.brandchamp.io/login" target="_blank">Login.</a> and click on the <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">Activities</a> tab to complete and submit fun BlendJet Ambassador activities. Be sure to read and follow all instructions! </p> 
-                  <p>3. When you've completed an activity and it's been approved, you'll be credited with reward points! </p>
-                  <p>4. Redeem your rewards points for exclusive products and cash bonuses in our <a href="https://blendjet.brandchamp.io/#/rewards/catalog" target="_blank">Rewards Store!</a> (New rewards are being added all the time!)</p>
-                </div>
-              </template>
-            </Collapse>
+            <details>
+              <summary>
+                How do I complete activities and earn points?
+                <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>+</title>
+                  <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="M-BlendJet-UserGuide-2-BlendJet-GLow" transform="translate(-360.000000, -3708.000000)" fill="#373795">
+                          <g id="A-Mode" transform="translate(20.000000, 2999.000000)">
+                              <g id="Pulse-Mode-" transform="translate(0.000000, 690.000000)">
+                                  <g id="+" transform="translate(340.000000, 19.000000)">
+                                      <rect id="Rectangle" x="6" y="0" width="2" height="14"></rect>
+                                      <rect id="Rectangle-Copy-2" transform="translate(7.000000, 7.000000) rotate(-270.000000) translate(-7.000000, -7.000000) " x="6" y="0" width="2" height="14"></rect>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+                <svg class="minus" width="10px" height="14px" viewBox="0 0 10 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>BG Copy</title>
+                  <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="D-BlendJet-Cart" transform="translate(-1191.000000, -138.000000)" fill="#373795">
+                          <g id="Cart" transform="translate(1046.000000, 0.000000)">
+                              <g id="Products" transform="translate(17.000000, 54.000000)">
+                                  <g id="BlendJet" transform="translate(22.000000, 19.000000)">
+                                      <g id="Qty" transform="translate(96.000000, 54.000000)">
+                                          <rect id="BG-Copy" x="10" y="11" width="10" height="2"></rect>
+                                      </g>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+              </summary>
+              <p><span>1.</span> First, register in the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a> and fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> to receive your Free BlendJet. </p>
+              <p><span>2.</span> <a href="https://blendjet.brandchamp.io/login" target="_blank">Login.</a> and click on the <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">Activities</a> tab to complete and submit fun BlendJet Ambassador activities. Be sure to read and follow all instructions! </p> 
+              <p><span>3.</span> When you've completed an activity and it's been approved, you'll be credited with reward points! </p>
+              <p><span>4.</span> Redeem your rewards points for exclusive products and cash bonuses in our <a href="https://blendjet.brandchamp.io/#/rewards/catalog" target="_blank">Rewards Store!</a> (New rewards are being added all the time!)</p>
+            </details>
           </div>
           <div class="faq-section">
-            <Collapse>
-              <template v-slot:collapsed>
-                <div class="c-heading">How do I receive a commission on referrals? </div>
-              </template>
-              <template v-slot:expanded>
-                <div class="faq-expand">
-                  <p>1. After you have been accepted into the program, you will receive an email that includes your personal discount code and link to share with your followers. You can also find your code and link <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a></p>
-                  <p>2. Every time someone uses your code, or follows your link, and makes a purchase on www.blendjet.com, you will receive $5 per qualifying order, as long as they do not return the item in 30 days! Keep track of all your referral sales <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a> </p> 
-                  <p>3. Payments for approved referral commissions are made through PayPal by the 5th business day of every month (there may be occasional delays due to holidays). Make sure to add your PayPal account email address when you register so that your payment is not delayed! If you do not have a PayPal account, head to paypal.com to create your free account.</p>
-                </div>
-              </template>
-            </Collapse>
+            <details>
+              <summary>
+                How do I receive a commission on referrals?
+                <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>+</title>
+                  <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="M-BlendJet-UserGuide-2-BlendJet-GLow" transform="translate(-360.000000, -3708.000000)" fill="#373795">
+                          <g id="A-Mode" transform="translate(20.000000, 2999.000000)">
+                              <g id="Pulse-Mode-" transform="translate(0.000000, 690.000000)">
+                                  <g id="+" transform="translate(340.000000, 19.000000)">
+                                      <rect id="Rectangle" x="6" y="0" width="2" height="14"></rect>
+                                      <rect id="Rectangle-Copy-2" transform="translate(7.000000, 7.000000) rotate(-270.000000) translate(-7.000000, -7.000000) " x="6" y="0" width="2" height="14"></rect>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+                <svg class="minus" width="10px" height="14px" viewBox="0 0 10 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>BG Copy</title>
+                  <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="D-BlendJet-Cart" transform="translate(-1191.000000, -138.000000)" fill="#373795">
+                          <g id="Cart" transform="translate(1046.000000, 0.000000)">
+                              <g id="Products" transform="translate(17.000000, 54.000000)">
+                                  <g id="BlendJet" transform="translate(22.000000, 19.000000)">
+                                      <g id="Qty" transform="translate(96.000000, 54.000000)">
+                                          <rect id="BG-Copy" x="10" y="11" width="10" height="2"></rect>
+                                      </g>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+              </summary>
+              <p><span>1.</span> After you have been accepted into the program, you will receive an email that includes your personal discount code and link to share with your followers. You can also find your code and link <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a></p>
+              <p><span>2.</span> Every time someone uses your code, or follows your link, and makes a purchase on www.blendjet.com, you will receive $5 per qualifying order, as long as they do not return the item in 30 days! Keep track of all your referral sales <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a></p> 
+              <p><span>3.</span> Payments for approved referral commissions are made through PayPal by the 5th business day of every month (there may be occasional delays due to holidays). Make sure to add your PayPal account email address when you register so that your payment is not delayed! If you do not have a PayPal account, head to paypal.com to create your free account.</p>
+            </details>
           </div>
           <div class="faq-section">
-            <Collapse>
-              <template v-slot:collapsed>
-                <div class="c-heading">What are the terms and conditions? </div>
-              </template>
-              <template v-slot:expanded>
-                <div class="faq-expand">
-                  <p>Please read the <a href="https://blendjet.com/ambassador-agreement">terms & conditions</a> you must agree to in order to be a part of the BlendJet Brand Ambassador Program. </p>
-                </div>
-              </template>
-            </Collapse>
+            <details>
+              <summary>
+                What are the terms and conditions?
+                <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>+</title>
+                  <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="M-BlendJet-UserGuide-2-BlendJet-GLow" transform="translate(-360.000000, -3708.000000)" fill="#373795">
+                          <g id="A-Mode" transform="translate(20.000000, 2999.000000)">
+                              <g id="Pulse-Mode-" transform="translate(0.000000, 690.000000)">
+                                  <g id="+" transform="translate(340.000000, 19.000000)">
+                                      <rect id="Rectangle" x="6" y="0" width="2" height="14"></rect>
+                                      <rect id="Rectangle-Copy-2" transform="translate(7.000000, 7.000000) rotate(-270.000000) translate(-7.000000, -7.000000) " x="6" y="0" width="2" height="14"></rect>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+                <svg class="minus" width="10px" height="14px" viewBox="0 0 10 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>BG Copy</title>
+                  <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="D-BlendJet-Cart" transform="translate(-1191.000000, -138.000000)" fill="#373795">
+                          <g id="Cart" transform="translate(1046.000000, 0.000000)">
+                              <g id="Products" transform="translate(17.000000, 54.000000)">
+                                  <g id="BlendJet" transform="translate(22.000000, 19.000000)">
+                                      <g id="Qty" transform="translate(96.000000, 54.000000)">
+                                          <rect id="BG-Copy" x="10" y="11" width="10" height="2"></rect>
+                                      </g>
+                                  </g>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+              </summary>
+              <p>Please read the <a href="https://blendjet.com/ambassador-agreement">terms & conditions</a> you must agree to in order to be a part of the BlendJet Brand Ambassador Program.</p>
+            </details>
           </div>
         </div>
       </div>
@@ -205,13 +340,14 @@ export default {
       },
       imageStyle: {
         height: '280px',
-        width: 'auto'
+        width: 'auto',
+        borderRadius: '10px'
       },
       titleStyle: {
         textAlign: 'center',
         color: '#000000',
         fontSize: '16px',
-        fontFamily: 'ModernEra-Bold',
+        fontFamily: 'Bold',
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: '1.17',
@@ -232,7 +368,9 @@ export default {
     setWidthData() {
       if(window.innerWidth < 600) {
       this.itemsToShow = 1
-      } else if(window.innerWidth >= 600 && window.innerWidth < 1024) {
+      } else if(window.innerWidth >= 600 && window.innerWidth <= 1024) {
+        this.itemsToShow = 2
+      } else if (window.innerWidth > 1024 && window.innerWidth < 1200) {
         this.itemsToShow = 3
       } else {
         this.itemsToShow = 4
@@ -312,14 +450,14 @@ export default {
   text-align: center;
   max-width: 570px;
   margin: 0 auto;
-  font-family: $modern-regular;
+  font-family: 'Regular';
 }
 
 .image-tile--section-heading h3 {
   font-size: 28px;
   color: #000;
   text-transform: uppercase;
-  font-family: $modern-medium;
+  font-family: 'Medium';
   letter-spacing: 1.5px;
   margin: 0 0 20px;
 }
@@ -350,7 +488,7 @@ export default {
 }
 
 .image-tile--heading {
-  font-family: $modern-medium;
+  font-family: 'Medium';
   font-size: 16px;
 }
 
@@ -406,14 +544,14 @@ export default {
   color: #fff;
   background-color: $primary-purple;
   line-height: 45px;
-  font-family: $modern-medium;
+  font-family: 'Medium';
 }
 .works-section--single-tile-content {
-  font-family: $modern-regular;
+  font-family: 'Regular';
 }
 .works-section--single-tile-content h4 {
   font-size: 16px;
-  font-family: $modern-medium;
+  font-family: 'Medium';
   text-transform: uppercase;
   margin-bottom: 10px;
 }
@@ -435,7 +573,7 @@ export default {
   background-color: $primary-purple;
   color: #fff;
   letter-spacing: 2.5px;
-  font-family: $modern-bold;
+  font-family: 'Bold';
 }
 
 .single--actions .cta-container .cta-button:last-child {
@@ -453,7 +591,7 @@ export default {
 }
 
 .faq--section {
-  padding: 0 0 140px;
+  padding: 0 15px 140px;
   @media (max-width: 600px) {
     padding: 0 15px 70px 15px;
   }
@@ -470,29 +608,64 @@ export default {
   background-color: #f6f5fd;
   border-radius: 20px;
   padding: 50px;
+  @media (max-width: 767px) { 
+    padding: 25px;
+  }
 }
 
-.faq--section.brand-ambassador-faqs .faq-container .faq-section .collapse-panel {
+summary::-webkit-details-marker {
+  display: none;
+}
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details summary {
+  text-transform: uppercase;
+  font-size: 18px;
+  font-family: 'Bold';
+  color: $primary-purple;
+  letter-spacing: 2px;
+  padding: 25px 0;
+  @media (max-width: 600px) {
+    font-size: 16px;
+  } 
+}
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details {
   background-color: transparent;
   border-bottom: 1px solid #e0e0ff;
   border-radius: 0;
 }
-
-.faq--section.brand-ambassador-faqs .faq-container .faq-section:last-child .collapse-panel {
+.faq--section.brand-ambassador-faqs .faq-container .faq-section:first-child details summary {
+  padding-top: 0;
+}
+.faq--section.brand-ambassador-faqs .faq-container .faq-section:last-child details {
   border-bottom: none;
+  summary {
+    padding-bottom: 0;
+  }
 }
-.c-heading {
-  text-transform: uppercase;
-  font-size: 18px;
-  font-family: $modern-bold;
-  color: $primary-purple;
-  letter-spacing: 2px;
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details summary:focus {
+  outline: none;
 }
-.faq--section.brand-ambassador-faqs .faq-container .faq-section .collapse-panel p,
-.faq--section.brand-ambassador-faqs .faq-container .faq-section .collapse-panel b {
+
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details summary .minus {
+  display: none;
+}
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details[open] summary .plus {
+  display: none;
+}
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details[open] summary .minus {
+  display: inline;
+}
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details p,
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details b {
   font-size: 14px;
   font-weight: 400;
   color: #000;
-  font-family: $modern-regular;
+  font-family: 'Regular';
+  margin: 0 0 15px;
 }
+.faq--section.brand-ambassador-faqs .faq-container .faq-section details b {
+  font-size: 16px;
+  display: block;
+  font-family: 'Bold';
+}
+
 </style>
