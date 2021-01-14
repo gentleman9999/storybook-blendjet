@@ -613,7 +613,7 @@ export default {
   }
 }
 
-summary::-webkit-details-marker {
+summary::marker,summary::-webkit-details-marker {
   display: none;
 }
 .faq--section.brand-ambassador-faqs .faq-container .faq-section details summary {
@@ -623,6 +623,7 @@ summary::-webkit-details-marker {
   color: $primary-purple;
   letter-spacing: 2px;
   padding: 25px 0;
+  list-style-type: none;
   @media (max-width: 600px) {
     font-size: 16px;
   } 

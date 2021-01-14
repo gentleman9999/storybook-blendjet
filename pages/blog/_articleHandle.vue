@@ -65,7 +65,7 @@
               </blog-article-header> -->
             <!-- </div> -->
             <div class="column is-9 content">
-              <blog-article-content :article="article" :products="products">
+              <blog-article-content :article="article" :products="products" :content="article.content">
               {{ article.excerpt }}
                 <!-- Extra HTML added after content -->
                 <nuxt-link :to="`/${blogHandle}/`" class="breadcrumb-back">Go Back</nuxt-link>

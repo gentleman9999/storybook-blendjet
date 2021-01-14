@@ -1,5 +1,5 @@
 <template>
-  <section :class="bannerClasses" :data-gradient="dataGradient">
+  <section :class="bannerClasses" :data-gradient="isGradient">
     <slot
       name="background"
       :mobileBackgroundImgUrl="mobileBackgroundImgUrl"
@@ -327,7 +327,7 @@ export default {
       type: Boolean,
       default: true
     },
-    dataGradient: {
+    isGradient: {
       type: String,
       default: ''
     },
@@ -414,7 +414,7 @@ export default {
       }
     },
 
-    dataGradient() {
+    isGradient() {
       if ( this.location.toLowerCase() === 'brand-ambassador' ) {
         return 'yes';
       }
