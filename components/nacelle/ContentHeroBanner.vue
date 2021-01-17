@@ -1,5 +1,5 @@
 <template>
-  <section :class="bannerClasses">
+  <section :class="bannerClasses" :data-gradient="isGradient">
     <slot
       name="background"
       :mobileBackgroundImgUrl="mobileBackgroundImgUrl"
@@ -401,13 +401,18 @@ export default {
       const mobileHeightClass = this.mobileFullHeight
         ? 'is-mobile-fullheight'
         : ''
-
       return `hero nacelle is-${this.size} is-align-${this.alignment} ${mobileHeightClass}`
     },
 
     innerMaxWidth() {
       if(this.location !== 'homepage' && this.location !== 'brand-ambassador') {
         return 'max-width: 520px'
+      }
+    },
+
+    isGradient() {
+      if ( this.location.toLowerCase() === 'brand-ambassador' ) {
+        return 'yes';
       }
     },
 
@@ -494,7 +499,7 @@ export default {
   display: flex;
   justify-content: center;
   .cta-button {
-    font-family: $modern-bold;
+    font-family: 'Bold';
   }
   .cta-button:last-child {
     margin-left: 15px;
@@ -546,7 +551,7 @@ export default {
 
 .title-homepage {
   font-size: 54px;
-  font-family: $modern-bold;
+  font-family: 'Bold';
   letter-spacing: 10px;
   text-transform: uppercase;
   line-height: 1;
@@ -603,15 +608,36 @@ export default {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin-bottom: 15px;
-  font-family: $modern-bold;
+  font-family: 'Bold';
 } 
 
 .shortDescription {
   max-width: 840px;
   margin: 0 auto 40px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 400;
-  font-family: $modern-regular;
+  font-family: 'Regular';
+}
+
+[data-gradient="yes"] {
+  position: relative;
+  &::after {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    content: "";
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, #0381a2), color-stop(100%, #554d99));
+    background-image: linear-gradient(to right, #0381a2 0%, #554d99 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF0381A2', endColorstr='#FF554D99', GradientType=1);
+    opacity: .7;
+  }
+  .hero-body {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 

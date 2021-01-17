@@ -87,7 +87,7 @@ export default {
   height: 54px;
   display: flex;
   align-items: center;
-  padding-left: 29px;
+  padding-left: 25px;
   position: relative;
 }
 

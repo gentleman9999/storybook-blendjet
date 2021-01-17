@@ -128,9 +128,9 @@
       <nuxt-link to="/trademarks">Trademarks</nuxt-link>
       <nuxt-link to="/terms-of-service">Terms&nbsp;of&nbsp;Use</nuxt-link>
       <nuxt-link to="/privacy-policy">Privacy&nbsp;Policy</nuxt-link>
-      <div class="section__footer__legal__copyright is-hidden-mobile">©2020&nbsp;BlendJet</div>
+      <div class="section__footer__legal__copyright is-hidden-mobile">©2021&nbsp;BlendJet</div>
     </div>
-    <div class="section__footer__legal__copyright is-hidden-desktop">©2020&nbsp;BlendJet</div>
+    <div class="section__footer__legal__copyright is-hidden-desktop">©2021&nbsp;BlendJet</div>
   </div>
 </template>
 
