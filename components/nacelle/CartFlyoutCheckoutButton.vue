@@ -69,23 +69,33 @@ export default {
         }
 */
 
-        //RYAN MOD - Set cookie for USD_only if USD in the URL - for Google feed reviewers
-        if (window.location.href.indexOf("USD") > -1) {
-			document.cookie = 'USD_only';
+		//START OF RYAN MOD to override currency
+
+        //See if currency override exists in URL in param _rchcur
+        if (new URLSearchParams(window.location.search).has('_rchcur')) {
+			document.cookie = '_rchcur=' + new URLSearchParams(window.location.search).get('_rchcur');
         }
+
+        //See if currency override exists in URL in param currency     
+        if (new URLSearchParams(window.location.search).has('currency')) {
+			document.cookie = '_rchcur=' + new URLSearchParams(window.location.search).get('currency');
+        }        
        
-        //RYAN MOD - if cookie for USD_only is found - block Reach from changing the prices from USD - this is a hack that should be fixed
-		if(!document.cookie.includes('USD_only')){
+        //if cookie for _rchcur is found 
+		if(document.cookie.includes('_rchcur')){
 			var config = {
-		    	method: 'get',
-				url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
+			    method: 'get',
+			    url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=`+document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop()+`&MerchantPrices=${price}`,
 		    }
 		}
 		else {
-			var config = null;
+			var config = {
+		    	method: 'get',
+				url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
+		    }			
 		}
 		//END OF RYAN MOD
-
+		
       const localPrice = await Axios(config)
         .then((res) => {
           if(!res.data.ConsumerPrices[0]) {
