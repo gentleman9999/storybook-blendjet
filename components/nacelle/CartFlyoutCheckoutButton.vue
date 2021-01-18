@@ -62,10 +62,30 @@ export default {
           priceData
         ))
       
-      const config = {
-        method: 'get',
-        url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
-      }
+/*
+        const config = {
+          method: 'get',
+          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
+        }
+*/
+
+        //RYAN MOD - Set cookie for USD_only if USD in the URL - for Google feed reviewers
+        if (window.location.href.indexOf("USD") > -1) {
+			document.cookie = 'USD_only';
+        }
+       
+        //RYAN MOD - if cookie for USD_only is found - block Reach from changing the prices from USD - this is a hack that should be fixed
+		if(!document.cookie.includes('USD_only')){
+			var config = {
+		    	method: 'get',
+				url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
+		    }
+		}
+		else {
+			var config = null;
+		}
+		//END OF RYAN MOD
+
       const localPrice = await Axios(config)
         .then((res) => {
           if(!res.data.ConsumerPrices[0]) {

@@ -215,6 +215,12 @@ export default {
           method: 'get',
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
         }
+
+        //RYAN MOD - Set cookie for USD_only if USD in the URL - for Google feed reviewers
+        if (window.location.href.indexOf("USD") > -1) {
+			document.cookie = 'USD_only';
+        }
+
         const localPrice = await Axios(config)
           .then((res) => {
             if(!res.data.ConsumerPrices[0]) {
@@ -228,9 +234,23 @@ export default {
 					vm.subPrice = `${res.data.Symbol}${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)}`
 	            }
             }
-            
-            this.defaultText = `Add to Cart - ${vm.subPrice}`,
-            this.buttonText = `Add to Cart - ${vm.subPrice}`  
+
+/*
+	            this.defaultText = `Add to Cart - ${vm.subPrice}`,
+	            this.buttonText = `Add to Cart - ${vm.subPrice}`
+
+*/
+
+        //RYAN MOD - Set cookie for USD_only if USD in the URL - for Google feed reviewers            
+            if(!document.cookie.includes('USD_only')){
+	            this.defaultText = `Add to Cart - ${vm.subPrice}`,
+	            this.buttonText = `Add to Cart - ${vm.subPrice}`
+            }
+			else {
+	            this.defaultText = `Add to Cart - $2.99`,
+	            this.buttonText = `Add to Cart - $2.99`  	            	            
+            }
+		//END RYAN MOD            
           })
           .catch((res) => {
             console.error('Currency Request Failed', res)
