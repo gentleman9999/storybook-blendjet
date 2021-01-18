@@ -103,6 +103,7 @@
         <nuxt-link to="/user-guide">User&nbsp;Guide</nuxt-link>
         <nuxt-link to="/faqs">FAQS</nuxt-link>
         <nuxt-link to="/returns">Returns&nbsp;&&nbsp;Guarantees</nuxt-link>
+        <nuxt-link to="/accessibility-statement">Accessibility Statement</nuxt-link>        
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">

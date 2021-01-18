@@ -306,7 +306,8 @@
             <div v-if="section.fields.video && section.fields.video.fields.file.contentType.includes('video')" class="media-content__main__details__content-block__media rounded-video-container" >
               <VideoContainer :source="section.fields.video.fields.file.url" class="media-content__main__details__content-block__media__video" />
             </div>
-            <div v-if="section.fields.video.fields.file.contentType.includes('images')" class="media-content__main__details__content-block__image">
+            <div v-if="section.fields.video && section.fields.video.fields.file.contentType.includes('image')" class="media-content__main__details__content-block__media rounded-video-container" >
+
               <img class="media-content__main__details__content-block__img" :src="optimizeSource({url: section.fields.video.fields.file.url})" />
             </div>
           </div>
