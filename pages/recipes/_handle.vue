@@ -129,11 +129,13 @@
       <div class="facebook__text">For more BlendJet recipes like this, and to share your own, join our BlendJet Recipes Facebook Group!</div>
       <a href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
     </div>
+<!--
     <div class="recipe__jetpacks jetpacks">
       <h3 class="jetpacks__text">Save Time With</h3>
       <h2 class="jetpacks__title">jetpack</h2>
       <JetpackCrossSell />
     </div>
+-->
     <NutritionModal :content="nutritionfacts"/>
   </div>
 
