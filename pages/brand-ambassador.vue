@@ -409,8 +409,10 @@ export default {
     const vm = this
     this.ambassadors = await client.getEntry('2Vziod8PXesNjq3SAZwh20')
     .then((res) => {
-      this.metaTitle = res.fields.metaInfo.fields.metaTitle
-      this.metaDescription = res.fields.metaInfo.fields.metaDescription
+      if ( res.fields.metaInfo ) {
+        this.metaTitle = res.fields.metaInfo.fields.metaTitle
+        this.metaDescription = res.fields.metaInfo.fields.metaDescription
+      }
       let arr = res.fields.ambassadorsTiles;
       return arr
     })
