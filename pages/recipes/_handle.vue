@@ -136,6 +136,7 @@
     </div>
     <NutritionModal :content="nutritionfacts"/>
   </div>
+
 </template>
 
 <script>
@@ -218,6 +219,58 @@ export default {
 
 
     return { page: recipe }
+  },
+  jsonld() {
+    console.log(this.page);
+    const recipeIngredients = this.page.fields.ingredients.map( item => {
+      return item.fields.title;
+    })
+
+    const recipeIns = this.page.fields.instructions.map( ins => {
+      return {
+        '@type' : 'HowToStep',
+        'text': ins
+      }
+    })
+    return {
+      '@context': 'https://schema.org/',
+      '@type': 'Recipe',
+      name: this.page.fields.title,
+      image: this.page.fields.teaserImage.fields.file.url,
+      description: this.page.fields.teaserText,
+      'authhor': {
+        '@type': 'Organization',
+        'name': 'BlendJet',
+        'url': 'https://blendjet.com/',
+        'logo': 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/blendjet-nav-logo-flat-r_39262df9-6538-43b5-90d3-8b7022adfc43_200x42.png',
+        'contactPoint': [{
+          '@type': 'ContactPoint',
+          'contactType': 'Customer Service',
+          'telephone': '+1 844-588-1555',
+          'email': 'support@blendjet.com'
+        }],
+        'sameAs': [
+          'https://www.instagram.com/BlendJet/',
+          'https://www.facebook.com/blendjet/',
+          'https://twitter.com/BlendJet',
+          'https://www.pinterest.com/blendjet/',
+          'https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w'
+        ]
+      },
+      dataPublished: this.page.sys.createdAt,
+      recipeCategory: this.page.fields.category.fields.title,
+      recipeIngredient: recipeIngredients,
+      recipeInstructions: recipeIns,
+      'video' : {
+        '@type' : 'VideoObject',
+        name: this.page.fields.title,
+        description: this.page.fields.teaserText,
+        thumbnailUrl: this.page.fields.teaserImage.fields.file.url,
+        uploadDate: this.page.sys.createdAt,
+        contentUrl: window.location.href,
+        embedUrl: this.page.fields.heroYouTube
+      }
+    }
   },
   computed: {
     nutritionfacts() {
