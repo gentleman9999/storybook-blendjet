@@ -291,7 +291,7 @@ export default {
     handleClose() {
       this.hideCart()
 
-      if(window.FB) {
+      if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
         window.FB.CustomerChat.show(false)
       }
     },
@@ -320,6 +320,10 @@ export default {
         this.checkoutDisabled = true
         if(this.isMobile) {
           this.hideCart()
+
+          if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
+            window.FB.CustomerChat.show(false)
+          }
         }
       } else {
         this.checkoutDisabled = false
@@ -332,8 +336,8 @@ export default {
       //   document.body.style.overflowY = 'scroll'
       // }
 
-      if (newValue && window.FB) {
-         window.FB.CustomerChat.hide()
+      if (newValue && window.FB && window.FB.CustomerChat && window.FB.CustomerChat.hide) {
+        window.FB.CustomerChat.hide()
       }
     },
     cartSubtotal() {

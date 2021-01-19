@@ -197,8 +197,10 @@ export default {
       'fields.handle': this.$route.params.handle,
     })
     .then((res) => {
-      this.metaTitle = res.items[0].fields.metaInfo.fields.metaTitle
-      this.metaDescription = res.items[0].fields.metaInfo.fields.metaDescription
+      if ( res.items[0].fields.metaInfo ) {
+        this.metaTitle = res.items[0].fields.metaInfo.fields.metaTitle
+        this.metaDescription = res.items[0].fields.metaInfo.fields.metaDescription
+      }
     })
   },
   async asyncData ({params}) {

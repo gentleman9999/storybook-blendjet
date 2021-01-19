@@ -153,7 +153,7 @@ export default {
      */
     stop (evt) {
       document.removeEventListener(evt.type, this.stop)
-      this.handler()
+      this?.handler()
       clearInterval(this.interval)
       this.interval = null
       this.handler = null

@@ -239,8 +239,10 @@ export default {
     const vm = this
     await client.getEntry('DtNqBDOvFbHUSxyOK3IMM')
     .then((res) => {
-      this.metaTitle = res.fields.metaInfo.fields.metaTitle
-      this.metaDescription = res.fields.metaInfo.fields.metaDescription
+      if ( res.fields.metaInfo ) {
+        this.metaTitle = res.fields.metaInfo.fields.metaTitle
+        this.metaDescription = res.fields.metaInfo.fields.metaDescription
+      }
     })
   },
   computed: {
