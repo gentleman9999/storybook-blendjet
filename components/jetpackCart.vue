@@ -1,7 +1,7 @@
 <template>
   <div class="jetpack-container" v-if="product && jetpacks">
     <div class="text-block">
-                               <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Try JetPack Variety Pack</a><br/> <span style="font-size: 75%;color:gold;">6 Ready-to-Blend Smoothies</span>
+      <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Try JetPack Variety Pack</a><br/> <span style="font-size: 75%;color:gold;">6 Ready-to-Blend Smoothies</span>
     </div>
     <div class="jetpack-image">
       <transition name="fade">
@@ -235,18 +235,8 @@ export default {
 */
 
 		//START OF RYAN MOD to override currency
-
-        //See if currency override exists in URL in param _rchcur
-        if (new URLSearchParams(window.location.search).has('_rchcur')) {
-			document.cookie = '_rchcur=' + new URLSearchParams(window.location.search).get('_rchcur');
-        }
-
-        //See if currency override exists in URL in param currency     
-        if (new URLSearchParams(window.location.search).has('currency')) {
-			document.cookie = '_rchcur=' + new URLSearchParams(window.location.search).get('currency');
-        }        
        
-        //if cookie for _rchcur is found 
+        //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
 		if(document.cookie.includes('_rchcur')){
 			var config = {
 			    method: 'get',

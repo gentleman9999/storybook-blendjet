@@ -78,6 +78,7 @@
   </div>
 </template>
 
+
 <script>
 import nmerge from 'nuxt-merge-asyncdata'
 import { mapGetters } from 'vuex'

@@ -129,13 +129,16 @@
       <div class="facebook__text">For more BlendJet recipes like this, and to share your own, join our BlendJet Recipes Facebook Group!</div>
       <a href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
     </div>
+<!--
     <div class="recipe__jetpacks jetpacks">
       <h3 class="jetpacks__text">Save Time With</h3>
       <h2 class="jetpacks__title">jetpack</h2>
       <JetpackCrossSell />
     </div>
+-->
     <NutritionModal :content="nutritionfacts"/>
   </div>
+
 </template>
 
 <script>
@@ -218,6 +221,59 @@ export default {
 
 
     return { page: recipe }
+  },
+  jsonld() {
+    //console.log(this.page);
+    const recipeIngredients = this.page.fields.ingredients.map( item => {
+      return item.fields.title;
+    })
+
+    const recipeIns = this.page.fields.instructions.map( ins => {
+      return {
+        '@type' : 'HowToStep',
+        'text': ins
+      }
+    })
+    return {
+      '@context': 'https://schema.org/',
+      '@type': 'Recipe',
+      name: this.page.fields.title,
+      image: this.page.fields.teaserImage.fields.file.url,
+      description: this.page.fields.teaserText,
+      'author': {
+        '@type': 'Organization',
+        'name': 'BlendJet',
+        'url': 'https://blendjet.com/',
+        'logo': 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-logo-gradient-2020.png?v=1579518683',
+        'contactPoint': [{
+          '@type': 'ContactPoint',
+          'contactType': 'Customer Service',
+          'telephone': '1-844-588-1555',
+          'email': 'support@blendjet.com'
+        }],
+        'sameAs': [
+          'https://www.instagram.com/BlendJet/',
+          'https://www.facebook.com/blendjet/',
+          'https://twitter.com/BlendJet',
+          'https://www.pinterest.com/blendjet/',
+          'https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w',
+          'https://www.youtube.com/blendjet'          
+        ]
+      },
+      datePublished: this.page.sys.createdAt,
+      recipeCategory: this.page.fields.category.fields.title,
+      recipeIngredient: recipeIngredients,
+      recipeInstructions: recipeIns,
+      'video' : {
+        '@type' : 'VideoObject',
+        name: this.page.fields.title,
+        description: this.page.fields.teaserText,
+        thumbnailUrl: this.page.fields.teaserImage.fields.file.url,
+        uploadDate: this.page.sys.createdAt,
+        'contentUrl': `https://blendjet.com/recipes/${this.page.fields.handle}`,
+        embedUrl: this.page.fields.heroYouTube
+      }
+    }
   },
   computed: {
     nutritionfacts() {
