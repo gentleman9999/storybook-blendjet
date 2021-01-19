@@ -221,7 +221,7 @@ export default {
     return { page: recipe }
   },
   jsonld() {
-    console.log(this.page);
+    //console.log(this.page);
     const recipeIngredients = this.page.fields.ingredients.map( item => {
       return item.fields.title;
     })
@@ -267,7 +267,7 @@ export default {
         description: this.page.fields.teaserText,
         thumbnailUrl: this.page.fields.teaserImage.fields.file.url,
         uploadDate: this.page.sys.createdAt,
-        contentUrl: window.location.href,
+        'contentUrl': `https://blendjet.com/recipes/${this.page.fields.handle}`,
         embedUrl: this.page.fields.heroYouTube
       }
     }
