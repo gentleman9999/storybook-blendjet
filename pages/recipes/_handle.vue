@@ -129,11 +129,13 @@
       <div class="facebook__text">For more BlendJet recipes like this, and to share your own, join our BlendJet Recipes Facebook Group!</div>
       <a href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
     </div>
+<!--
     <div class="recipe__jetpacks jetpacks">
       <h3 class="jetpacks__text">Save Time With</h3>
       <h2 class="jetpacks__title">jetpack</h2>
       <JetpackCrossSell />
     </div>
+-->
     <NutritionModal :content="nutritionfacts"/>
   </div>
 
@@ -242,11 +244,11 @@ export default {
         '@type': 'Organization',
         'name': 'BlendJet',
         'url': 'https://blendjet.com/',
-        'logo': 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/blendjet-nav-logo-flat-r_39262df9-6538-43b5-90d3-8b7022adfc43_200x42.png',
+        'logo': 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-logo-gradient-2020.png?v=1579518683',
         'contactPoint': [{
           '@type': 'ContactPoint',
           'contactType': 'Customer Service',
-          'telephone': '+1 844-588-1555',
+          'telephone': '1-844-588-1555',
           'email': 'support@blendjet.com'
         }],
         'sameAs': [
@@ -254,7 +256,8 @@ export default {
           'https://www.facebook.com/blendjet/',
           'https://twitter.com/BlendJet',
           'https://www.pinterest.com/blendjet/',
-          'https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w'
+          'https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w',
+          'https://www.youtube.com/blendjet'          
         ]
       },
       datePublished: this.page.sys.createdAt,
