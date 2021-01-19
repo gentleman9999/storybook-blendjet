@@ -7,6 +7,45 @@
     >
       <h1 class="recipes__title">{{ page.fields.title }}</h1>
     </div>
+    <div class="category-menu">
+      <div class="category-menu__inner">
+        <span
+          v-for="item in recipeMenu"
+          class="category-menu__link"
+          :to="`recipe-category/${item.handle}`"
+        >
+          {{ item.title }}
+        </span>
+      </div>
+    </div>
+    <div class="featured-recipes">
+      <div
+        v-for="featuredRecipe in featuredRecipeCategories"
+        class="recipe-section"
+      >
+        <div
+          class="recipe-section__hero"
+          :style="`background-image: url('${featuredRecipe.image}');`"
+        >
+          <h4 class="recipe-section__title">{{ featuredRecipe.title }}</h4>
+        </div>
+        <div v-if="featuredRecipe" class="recipe-section__recipes columns">
+          <div
+            v-for="recipe in featuredRecipe.recipes"
+            class="column"
+          >
+            <n-link :to="`/recipes/${recipe.fields.handle}`" class="recipe-teaser">
+              <div class="recipe-teaser__img" :style="`background-image: url('${recipe.fields.teaserImage.fields.file.url}')`"></div>
+              <h5 class="recipe-teaser__title">{{ recipe.fields.title }}</h5>
+              <div class="recipe-teaser__text">{{ recipe.fields.teaserText }}</div>
+            </n-link>
+          </div>
+        </div>
+        <!-- <div class="recipe-section__cta">
+          <n-link class="btn btn--solid-purple recipe-section__cta-link" :to="`/recipe-categories/${featuredRecipe.handle}`">Explore {{ featuredRecipe.title }} Recipes</n-link>
+        </div> -->
+      </div>
+    </div>
     <div class="browse-recipes">
       <h3 class="browse-recipes__title">Blend Endlessly</h3>
       <div class="columns is-multiline browse-recipes__columns">
@@ -133,7 +172,7 @@ export default {
     let allRecipes = await client.getEntries({
       content_type: 'recipe',
       limit: 12,
-      order: '-sys.createdAt'
+      order: 'sys.createdAt'
     })
     .then(async (res) => {
       return {
