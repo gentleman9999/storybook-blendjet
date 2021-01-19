@@ -67,14 +67,14 @@ export default {
   },
   computed: {
     content() {
-      console.log(this.article)
-      if (this.article) {
+
+      if (this.article && this.article.cmsSyncSource === 'contentful') {
         return this.contentHtml(this.article.fields.content)
       }
 
-      // if (this.article.content) {
-      //   return this.article.content
-      // }
+      if (this.article.content) {
+        return this.article.content
+      }
 
       return ''
     },
