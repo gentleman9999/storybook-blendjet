@@ -82,6 +82,7 @@ export default {
     script: [
       { src: '/scripts/optimonk.js', body: true, defer:true},
       { src: '/scripts/gtm.js'},
+      { src: '/scripts/currencycookie.js'},
       // { src: 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=NhVDeY', async: true},
       { src: 'https://cdn.weglot.com/weglot.min.js', async: true},
       { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true}
