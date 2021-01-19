@@ -116,6 +116,7 @@
     "lint-staged": "^10.2.10",
     "nodemon": "^2.0.2",
     "nuxt-generate-cluster": "^2.7.0",
+    "nuxt-jsonld": "^1.5.0",
     "nuxt-robots-module": "^1.5.1",
     "prettier": "^1.16.4",
     "serve": "^11.3.0",

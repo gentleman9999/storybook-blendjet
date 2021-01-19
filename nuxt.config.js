@@ -152,7 +152,8 @@ export default {
     "~/plugins/gtag.js",
     "~/plugins/pinterest-pixel.client.js",
     "~/plugins/snap-pixel.client.js",
-    '~/plugins/vue-mq.js'
+    '~/plugins/vue-mq.js',
+    '~/plugins/nuxt-jsonld'
   ],
 
   router: {
