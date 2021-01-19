@@ -238,7 +238,7 @@ export default {
       name: this.page.fields.title,
       image: this.page.fields.teaserImage.fields.file.url,
       description: this.page.fields.teaserText,
-      'authhor': {
+      'author': {
         '@type': 'Organization',
         'name': 'BlendJet',
         'url': 'https://blendjet.com/',
@@ -257,7 +257,7 @@ export default {
           'https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w'
         ]
       },
-      dataPublished: this.page.sys.createdAt,
+      datePublished: this.page.sys.createdAt,
       recipeCategory: this.page.fields.category.fields.title,
       recipeIngredient: recipeIngredients,
       recipeInstructions: recipeIns,
