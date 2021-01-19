@@ -67,13 +67,14 @@ export default {
   },
   computed: {
     content() {
+      console.log(this.article)
       if (this.article) {
         return this.contentHtml(this.article.fields.content)
       }
 
-      if (this.article.content) {
-        return this.article.content
-      }
+      // if (this.article.content) {
+      //   return this.article.content
+      // }
 
       return ''
     },
