@@ -10,7 +10,7 @@
     </div>
     <div v-else class="normal-size">
       <div class="normal-size__label">
-        <span v-if="country == 'xxxUS'">Want it by Thursday, January 28?</span>
+        <span v-if="country == 'xxxUS'">Want it by Friday, January 22?</span>
         <span v-else>Order now and it ships by</span>
       </div>
       <div class="normal-size__countdown" v-if="size !=='short'">
@@ -20,7 +20,7 @@
         <span v-else >Order within {{24-remaining.hours}} hours {{60-remaining.minutes}} minutes</span>
 	  	</span>
 	  	<span v-else>
-	  	  <span>Thursday, January 28</span>
+	  	  <span>Friday, January 22</span>
 <!-- 	  	  <span>{{arrivalDate}}</span> --> 
 	  	</span>
       </div>
