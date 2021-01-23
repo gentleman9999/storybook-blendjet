@@ -118,7 +118,7 @@
         <a href="mailto:support@blendjet.com">Contact&nbsp;Us</a>
         <a href="tel:1-844-588-1555">1&#8209;844&#8209;588&#8209;1555</a>
         <a href="https://blendjet.brandchamp.io/apply">Ambassador&nbsp;Program</a>
-        <a href="/wholesale">Wholesale</a>        
+        <a href="mailto:wholesale@blendjet.com">Wholesale</a>        
       </div>
     </div>
 
