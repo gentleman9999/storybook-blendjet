@@ -1841,6 +1841,11 @@
       "source": "/details.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/BBB",
+      "destination": "https://www.bedbathandbeyond.com/store/product/blendjet-reg-blendjet-2-portable-16-oz-blender/5541084",
+      "permanent": true
     }
   ]
 }
