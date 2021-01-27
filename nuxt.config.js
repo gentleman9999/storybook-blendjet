@@ -199,7 +199,9 @@ export default {
       '/trademarks',
       '/returns',
       '/terms-of-service',
-      '/collections/frontpage'
+      '/collections/frontpage',
+      '/search-results',
+      '/multi-model'
     ]
   },
 
