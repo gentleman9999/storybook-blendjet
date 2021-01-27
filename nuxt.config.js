@@ -194,12 +194,11 @@ export default {
       '/cart*', 
       '/account/login',
       '/account/register',
-      '/a*',
       '/privacy-policy',
-      '/trademarks',
-      '/returns',
       '/terms-of-service',
-      '/collections/frontpage'
+      '/collections/frontpage',
+      '/search-results',
+      '/multi-model'
     ]
   },
 
