@@ -44,12 +44,20 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
+
+      if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
+        window.FB.CustomerChat.show(false)
+      }
     }
   },
   watch: {
     lineItems(newValue) {
       if (newValue.length == 0) {
         this.hideCart()
+
+        if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
+          window.FB.CustomerChat.show(false)
+        }
       }
     }
   }

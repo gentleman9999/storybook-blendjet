@@ -5,11 +5,12 @@
   <div class="shipping-container" v-if="!disabled">
     <div v-if="size ==='short'" class="small-size">
       <span v-if="country == 'xxxUS'">Arrives {{shortDate}}</span> <!-- change X to 2 to apply fixed date -->
-      <span v-else>Ships by {{shortDate}}</span>
+<!--       <span v-else>Ships by 1/28</span> -->
+      <span v-else>Ships by {{shortDate}}</span>      
     </div>
     <div v-else class="normal-size">
       <div class="normal-size__label">
-        <span v-if="country == 'xxxUS'">Want it by Friday, January 8?</span>
+        <span v-if="country == 'xxxUS'">Want it by Friday, January 22?</span>
         <span v-else>Order now and it ships by</span>
       </div>
       <div class="normal-size__countdown" v-if="size !=='short'">
@@ -19,7 +20,8 @@
         <span v-else >Order within {{24-remaining.hours}} hours {{60-remaining.minutes}} minutes</span>
 	  	</span>
 	  	<span v-else>
-	  	  <span>{{arrivalDate}}</span>
+<!-- 	  	  <span>Friday, January 22</span> -->
+	  	  <span>{{arrivalDate}}</span> 
 	  	</span>
       </div>
     </div>
@@ -30,7 +32,7 @@
 
 <script>
 
-var transitTime  = 1; // US ARRIVAL DATE
+var transitTime  = 0; // US ARRIVAL DATE
 var cutoffHour = 15; //3PM cutoff time
 var timezoneOffset = (new Date().getTimezoneOffset()/60)-8; //users offset from PST
 	
@@ -108,8 +110,8 @@ export default {
 
     isBusinessDay (date) {
       var dayOfWeek = date.getDay();
-      if(dayOfWeek === 0) {
-        // Sunday
+      if(dayOfWeek === 0 || dayOfWeek === 6) {
+        // Sunday or Saturday
         return false;
       }
 
