@@ -192,7 +192,13 @@ export default {
 
     return {
       ...properties,
-      meta
+      meta,
+      link: [
+        {
+          rel: 'canonical',
+          href: `http://blendjet.com${this.$route.path}` 
+        }
+      ]
     }
   }
 }
