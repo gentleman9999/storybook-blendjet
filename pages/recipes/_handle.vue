@@ -81,17 +81,20 @@
     </div>
     <div v-if="page.fields.media" class="recipe__media recipe-images">
       <client-only>
-        <ShareNetwork
-          network="pinterest"
-          class="recipe-images__item recipe-images__item--left"
-          :style="`background-image: url('${page.fields.media[0].fields.file.url}');`"
-          :url="path"
-          :title="page.fields.title"
-          :media="page.fields.media[0].fields.file.url"
-        >
-          <PinterestFilled class="recipe-images__pinterest"/>
-        </ShareNetwork>
-        <ShareNetwork
+        <div v-for="media in page.fields.media" :key="media.sys.id">
+          <ShareNetwork
+            network="pinterest"
+            class="recipe-images__item recipe-images__item--left"
+            :style="`background-image: url('${media.fields.file.url}');`"
+            :url="path"
+            :title="page.fields.title"
+            :media="media.fields.file.url"
+          >
+            <PinterestFilled class="recipe-images__pinterest"/>
+          </ShareNetwork>
+        </div>
+        <!-- <ShareNetwork
+          v-if="page.fields.media[1].fields.file.url"
           network="pinterest"
           class="recipe-images__item recipe-images__item--right"
           :style="`background-image: url('${page.fields.media[1].fields.file.url}');`"
@@ -100,7 +103,7 @@
           :media="page.fields.media[1].fields.file.url"
         >
           <PinterestFilled class="recipe-images__pinterest"/>
-        </ShareNetwork>
+        </ShareNetwork> -->
       </client-only>
     </div>
     <div class="recipe__instructions instructions">
@@ -197,6 +200,7 @@ export default {
       'fields.handle': this.$route.params.handle,
     })
     .then((res) => {
+      console.log(res);
       if ( res.items[0].fields.metaInfo ) {
         this.metaTitle = res.items[0].fields.metaInfo.fields.metaTitle
         this.metaDescription = res.items[0].fields.metaInfo.fields.metaDescription
