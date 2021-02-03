@@ -10,7 +10,7 @@
           </picture>
         </div>
         <div class="blendjet-demo__title-block__subtitle">
-          We created game-changing technology that lets you make fresh smoothies, shakes or mixed drinks wherever you go.
+          The BlendJet 2 portable blender delivers game-changing technology that lets you make fresh smoothies, shakes, or mixed drinks wherever you go.
         </div>
         <div class="blendjet-demo__mobile-value-props" v-if="screenWidth < 768">
           <BlendjetFeatures />

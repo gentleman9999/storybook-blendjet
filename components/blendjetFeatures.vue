@@ -120,7 +120,7 @@
             Self-Cleaning
           </div>
           <div class="features-text-block__text">
-            Just add water, soap & blend. Rinse & you’re ready to go!
+            Just add water, soap & blend. Rinse and you’re ready to go! The BlendJet 2 portable blender is the world’s most convenient blender.
           </div>
         </div>
       </div>
