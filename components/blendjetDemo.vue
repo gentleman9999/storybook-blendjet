@@ -6,7 +6,7 @@
         </h1>
         <div class="mobile-demo">
           <picture>
-            <img :src="demo" class="mobile-demo__image" />
+            <img :src="demo" class="mobile-demo__image" alt="BlendJet 2 in Black Color" />
           </picture>
         </div>
         <div class="blendjet-demo__title-block__subtitle">
@@ -19,7 +19,7 @@
     <div class="blendjet-demo__display">
       <!-- placeholder for future animation -->
       <div class="blendjet-demo__display__animation">
-        <img class="blendjet-demo__display__animation__img" :src="demo"/>
+        <img class="blendjet-demo__display__animation__img" :src="demo" alt="BlendJet 2 in Black Color"/>
       </div>
       <div class="blendjet-demo__display__value-props">
         <BlendjetFeatures />

@@ -196,7 +196,7 @@ export default {
       link: [
         {
           rel: 'canonical',
-          href: `http://blendjet.com${this.$route.path}` 
+          href: `https://blendjet.com${this.$route.path}` 
         }
       ]
     }

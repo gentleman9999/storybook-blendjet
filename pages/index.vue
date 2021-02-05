@@ -78,7 +78,7 @@
         <div class="section__recipes__explore">
             <div class="section__recipes__explore__container">
               <picture>
-                <img class="section__recipes__explore__image" :src="optimizeSource({url: `${images.blendEndlessly}?w=800`})" >
+                <img class="section__recipes__explore__image" :src="optimizeSource({url: `${images.blendEndlessly}?w=800`})" alt="BlendJet 2 - The Portable Blender in different colors">
               </picture>
             
               <div class="section__recipes__explore__content">
