@@ -9,52 +9,52 @@
     <div v-show="loaded">
       <marquee-text :repeat="2" :duration="45">
           <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Boston-Globe.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Boston-Globe.png" alt="The Boston Globe Logo"/>
           </span>
           <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Cosmopolitan.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Cosmopolitan.png" alt="Cosmopolitan Logo"/>
           </span>
           <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/delish.png" />
+            <img class="ticker__img" src="/images/asSeenOn/delish.png" alt="Delish Logo"/>
           </span>
           <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Ellen.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Ellen.png" alt="The Ellen DeGeneres Show Logo"/>
           </span>
           <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Essence.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Essence.png" alt="Essence Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Good-Housekeeping.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Good-Housekeeping.png" alt="Good Housekeeping Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/HBO.png" />
+            <img class="ticker__img" src="/images/asSeenOn/HBO.png" alt="HBO Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Health.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Health.png" alt="Health Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Kelly-Clarkson-Show.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Kelly-Clarkson-Show.png" alt="The Kelly Clarkson Show Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Martha-Stewart-Living.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Martha-Stewart-Living.png" alt="Matha Stewart Living Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/New-York.png" />
+            <img class="ticker__img" src="/images/asSeenOn/New-York.png" alt="New York Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Silicon-Valley.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Silicon-Valley.png" alt="Silicon Valley Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/The-Doctors.png" />
+            <img class="ticker__img" src="/images/asSeenOn/The-Doctors.png" alt="The Doctors Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Today.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Today.png" alt="Today Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Wired.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Wired.png" alt="Wired Logo"/>
           </span>
             <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Yahoo-News.png" />
+            <img class="ticker__img" src="/images/asSeenOn/Yahoo-News.png" alt="Yahoo News Logo"/>
           </span>
       </marquee-text>
     </div>
