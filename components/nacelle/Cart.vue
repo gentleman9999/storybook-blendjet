@@ -87,7 +87,7 @@ SCROLL FOR MORE
       
       <transition name="fade">
         <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
-	      <div style="position: fixed;width:377px;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;">
+	      <div style="position: fixed;width:377px;background-color: palevioletred;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;">
 		      <div style="margin: 0 auto; text-align: center;">VALENTINE'S SALE</div>
 		     </div>  
           <div class="mobile-upsell__container">
