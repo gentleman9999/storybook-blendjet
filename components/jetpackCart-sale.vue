@@ -3,7 +3,7 @@
     <div class="text-block">
       <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Want FREE JetPacks?</a><br/> <span style="font-size: 75%;color:gold;">Included With Each BlendJet</span>
     <br/>
-<span style="font-size: 50%;color:white;">Discount Applied at Checkout</span>  
+<span style="font-size: 75%;color:white;">Discount Applied at Checkout</span>  
       
     </div>
     <div class="jetpack-image">
@@ -63,7 +63,7 @@
         /> -->
        
       </div>
-      <p style="text-align: center;color:white;font-size:75%;padding-top:5px;">You can cancel anytime.</p>      
+      <div style="text-align: center;color:white;margin-bottom:10px;font-size:75%;padding-top:5px;">You can cancel anytime.</div> 
     </div>
   </div>
 </template>
