@@ -1,7 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-            <a href="/products/jetsetter-insulated-tote" style="color:white;">Jetsetter Insulated Tote</a><br/> <span style="font-size: 75%;color:gold;">10% off 1 - 12% off 2 - 15% off 3+</span>
+            <a href="/products/jetsetter-insulated-tote" style="color:white;">Jetsetter Insulated Tote</a><br/> <span style="font-size: 75%;color:gold;">Tote-ally Cool Way to Jet Around</span>
     </div>
     <div class="blendjet-image">
       <transition name="fade">

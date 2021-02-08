@@ -1,7 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-            <a href="/products/jetsetter-insulated-sleeve" style="color:white;">Jetsetter Insulated Sleeve</a><br/> <span style="font-size: 75%;color:gold;">10% off 1 - 12% off 2 - 15% off 3+</span>    </div>
+            <a href="/products/jetsetter-insulated-sleeve" style="color:white;">Jetsetter Insulated Sleeve</a><br/> <span style="font-size: 75%;color:gold;">Protect BlendJet + Stay Cool</span>    </div>
     <div class="blendjet-image">
       <transition name="fade">
         <img class="blendjet-image__img" :src="optimizeSource({url:selectedVariant.featuredMedia.src})"/>
