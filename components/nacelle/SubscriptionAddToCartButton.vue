@@ -284,8 +284,8 @@ export default {
           metafields: cartMeta
         }
 
-        this.setButtonText()
         this.addLineItem(lineItem)
+        this.setButtonText()
         this.showCart()
       }
     }
