@@ -95,14 +95,11 @@ SCROLL FOR MORE
               <Close :color="'white'" />
             </div>
             <div class="mobile-upsell__component-container" style="padding-top:60px;">
-              <div class="mobile-upsell__blendjet">
-                <BlendJetCart />
-              </div>
-              <div class="mobile-upsell__blendjet">
-                <BlendJetOneCart />
-              </div>              
               <div class="mobile-upsell__jetpacks">
                 <JetpackCart />
+              </div>
+              <div class="mobile-upsell__blendjet">
+                <BlendJetCart />
               </div>
                   <div class="mobile-upsell__blendjet">
                 <SleeveCart />
@@ -113,7 +110,10 @@ SCROLL FOR MORE
                   <div class="mobile-upsell__blendjet" style="padding-bottom: 20px;">
                 <ToteCart />
               </div>
-              
+              <div class="mobile-upsell__blendjet">
+                <BlendJetOneCart />
+              </div>                            
+
             </div>
             
             	      <div style="position: fixed;width:377px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 100px;z-index: 10000000;font-size:12px;font-family: 'Medium';line-height: 180px;bottom: 79px;pointer-events: none;">
