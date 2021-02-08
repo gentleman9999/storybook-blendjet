@@ -27,30 +27,31 @@
 
       <transition name="fade">
         <div v-if="!isMobile" style="z-index: 100000000;">
-	      <div style="position: fixed;width:446px;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;" class="ipadFix">
-		      <div style="margin: 0 auto; text-align: center;">NEW YEAR'S SALE</div>
-		     </div>  
+	      <div style="position: fixed;width:446px;background-color: palevioletred;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;" class="ipadFix">
+		      <div style="margin: 0 auto; text-align: center;">VALENTINE'S SALE</div>
+		     </div>
+		     
           <div class="mobile-upsell__container"  style="overflow: auto;height: 100%;padding-top:40px;">
             <div class="mobile-upsell__component-container">
-              <div class="mobile-upsell__blendjet" style="height: unset;">
-                <BlendJetCart />
-              </div>
-              <div class="mobile-upsell__blendjet" style="height: unset;">
-                <BlendJetOneCart />
-              </div>              
               <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
                 <JetpackCart />
               </div>
-                  <div class="mobile-upsell__blendjet" style="height: unset;">
+              <div class="mobile-upsell__blendjet" style="height: unset;">
+                <BlendJetCart />
+              </div>
+			  <div class="mobile-upsell__blendjet" style="height: unset;">
                 <SleeveCart />
               </div>
                 <div class="mobile-upsell__blendjet" style="height: unset;">
                 <BookCart />
               </div>
-                  <div class="mobile-upsell__blendjet" style="height: unset;padding-bottom: 40px;">
+              <div class="mobile-upsell__blendjet" style="height: unset;padding-bottom: 40px;">
                 <ToteCart />
               </div>
-              
+              <div class="mobile-upsell__blendjet" style="height: unset;">
+                <BlendJetOneCart />
+              </div>              
+
               <div style="background: #1E90BB;z-index: 9999;width:100%;height:50px;position: relative;box-shadow: 0 0 50px 50px #1E90BB;"></div>
               
             </div>
@@ -87,7 +88,7 @@ SCROLL FOR MORE
       <transition name="fade">
         <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
 	      <div style="position: fixed;width:377px;background-color: black;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;">
-		      <div style="margin: 0 auto; text-align: center;">NEW YEAR'S SALE</div>
+		      <div style="margin: 0 auto; text-align: center;">VALENTINE'S SALE</div>
 		     </div>  
           <div class="mobile-upsell__container">
             <div class="mobile-upsell__close" @click="closeUpsellModal" style="z-index: 1000000000;position: fixed;top:0;right:0;">
@@ -239,7 +240,7 @@ import ShippingTime from '~/components/shippingTime'
 
 import BlendJetCart from '~/components/blendjetCart'
 import BlendJetOneCart from '~/components/blendjetOneCart'
-import JetpackCart from '~/components/jetpackCart'
+import JetpackCart from '~/components/jetpackCart-sale'
 import SleeveCart from '~/components/sleeveCart'
 import BookCart from '~/components/bookCart'
 import ToteCart from '~/components/toteCart'
