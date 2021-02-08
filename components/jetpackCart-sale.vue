@@ -32,13 +32,13 @@
         </div>
       </div>
 -->
-      <div class="add-to-cart-container">
+      <div class="add-to-cart-container" :class="buttonClass">
         <div v-if="variety" class="variety-button" @click="addVarietyPackToCart">
-			<span v-if="this.subscriptionChecked">	        
-	          Add 6 FREE JetPacks to Cart
+			<span v-if="this.subscriptionChecked" class="inner--text">	        
+	          {{ buttonSubscriptionText }}
 	        </span>
-	        <span v-else>
-	          Add 3 FREE JetPacks to Cart
+	        <span v-else class="inner--text">
+	          {{ buttonText }}
 	        </span>
         </div>
         <!-- <SubscriptionAddToCartButton
@@ -97,7 +97,12 @@ export default {
       subscriptionChecked: true,
       displayPrice: 17.94,
       localizedUnitPrice: '2.99',
-      symbol: '$'
+      symbol: '$',
+      defaultButtonText: 'Add 3 FREE JetPacks to Cart',
+      defaultButtonSubscriptionText: 'Add 6 FREE JetPacks to Cart',
+      buttonText: 'Add 3 FREE JetPacks to Cart',
+      buttonSubscriptionText: 'Add 6 FREE JetPacks to Cart',
+      buttonClass:''
     }
   },
   components: {
@@ -297,7 +302,13 @@ export default {
           tags: jetpack.tags,
           metafields: cartMeta
         }
-        this.addLineItem(lineItem)
+        this.addLineItem(lineItem);
+        this.buttonClass = 'clicked';
+        this.buttonText = 'Added!';
+        setTimeout( () => {
+          this.buttonText = this.defaultButtonText;
+          this.buttonClass = '';
+        },2000 );
       })
       
       }
@@ -322,7 +333,13 @@ export default {
           tags: jetpack.tags,
           metafields: cartMeta
         }
-        this.addLineItem(lineItem)
+        this.addLineItem(lineItem);
+        this.buttonSubscriptionText = 'Added!';
+        this.buttonClass = 'clicked';
+        setTimeout( () => {
+          this.buttonSubscriptionText = this.defaultButtonSubscriptionText;
+          this.buttonClass = '';
+        },2000 );
       })      
       
       }
@@ -433,4 +450,9 @@ export default {
     padding-bottom: 17px;
   }
 }
+
+.clicked {
+    opacity: .7;
+    transition: 0.5s ease;
+  }
 </style>
