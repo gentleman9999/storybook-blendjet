@@ -1,7 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-                               <a href="/products/blendjet-one" style="color:white;">BlendJet One</a><br/> <span style="font-size: 75%;color:gold;">10% off 1 - 12% off 2 - 15% off 3+</span>
+                               <a href="/products/blendjet-one" style="color:white;">BlendJet One</a><br/> <span style="font-size: 75%;color:gold;">The Original Portable Blender</span>
     </div>
     <div class="blendjet-image">
       <transition name="fade">

@@ -211,7 +211,7 @@ export default {
       screenWidth: 0,
       logoFill: '#373975',
       jetpackMenuVisible: false,
-      freeShippingMessage: "NEW YEAR'S SALE - SAVE UP TO 15%",
+      freeShippingMessage: "VALENTINE'S SALE - FREE JETPACKS",
       navColor: 'white',
       scrollY: 0,
       scrollTarget: 200,
@@ -312,7 +312,7 @@ export default {
         const localPrice = await Axios(config)
           .then((res) => {
             if(res.data.Country !== 'US') {
-              this.freeShippingMessage = "NEW YEAR'S SALE + FREE WORLDWIDE S&H"
+              this.freeShippingMessage = "VALENTINE'S SALE + FREE JETPACKS"
               localStorage.setItem('ww', 'true')
             } else {
               localStorage.setItem('ww', 'false')
