@@ -317,6 +317,7 @@ export default {
       border-radius: 12px;
       object-position: center;
       object-fit:contain;
+      max-height: 170px;
 
       @include respond-to('small') {
         width: 105px;
