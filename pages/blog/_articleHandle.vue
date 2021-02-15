@@ -109,8 +109,8 @@ export default nmerge({
       const meta = []
       const title = this.getMetatag('title')
 
-      if (this.article.title) {
-        let fullTitle = this.article.title
+      if (this.article.fields.blogMetaTitle) {
+        let fullTitle = this.article.fields.blogMetaTitle
 
         if (title) {
           fullTitle = `${fullTitle} | ${title.value}`

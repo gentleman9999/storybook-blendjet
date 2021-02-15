@@ -1843,6 +1843,26 @@
       "permanent": true
     },
     {
+      "source": "/defranco",
+      "destination": "https://www.inflcr.co/SH5iZ",
+      "permanent": true
+    },
+    {
+      "source": "/DEFRANCO",
+      "destination": "https://www.inflcr.co/SH5iZ",
+      "permanent": true
+    },
+    {
+      "source": "/DeFranco",
+      "destination": "https://www.inflcr.co/SH5iZ",
+      "permanent": true
+    },
+    {
+      "source": "/Defranco",
+      "destination": "https://www.inflcr.co/SH5iZ",
+      "permanent": true
+    },
+    {
       "source": "/BBB",
       "destination": "https://www.bedbathandbeyond.com/store/product/blendjet-reg-blendjet-2-portable-16-oz-blender/5541084",
       "permanent": true
