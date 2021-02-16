@@ -238,12 +238,12 @@ import MessagingFreeShippingCounter from '~/components/nacelle/MessagingFreeShip
 import CartItem from '~/components/nacelle/CartItem'
 import ShippingTime from '~/components/shippingTime'
 
-import BlendJetCart from '~/components/blendjetCart'
-import BlendJetOneCart from '~/components/blendjetOneCart'
 import JetpackCart from '~/components/jetpackCart-sale'
+import BlendJetCart from '~/components/blendjetCart'
 import SleeveCart from '~/components/sleeveCart'
 import BookCart from '~/components/bookCart'
 import ToteCart from '~/components/toteCart'
+import BlendJetOneCart from '~/components/blendjetOneCart'
 import Close from '~/components/svg/modalClose'
 
 // const routeapp = () => import('~/plugins/routeApp.js');
@@ -258,12 +258,12 @@ export default {
     MessagingFreeShippingCounter,
     CartItem,
     ShippingTime,
-    BlendJetCart,
-    BlendJetOneCart,    
     JetpackCart,
+    BlendJetCart,
     SleeveCart,
     BookCart,
-    ToteCart,
+	ToteCart,
+    BlendJetOneCart,
     Close
   },
   mixins: [imageOptimize],
