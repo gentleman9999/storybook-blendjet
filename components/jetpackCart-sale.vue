@@ -1,7 +1,7 @@
 <template>
   <div class="jetpack-container" v-if="product && jetpacks">
     <div class="text-block">
-      <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Want FREE JetPacks?</a><br/> <span style="font-size: 75%;color:gold;">Included With Each BlendJet</span>
+      <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Add FREE JetPacks to Cart</a><br/> <span style="font-size: 75%;color:gold;">With Each BlendJet</span>
     <br/>
 <span style="font-size: 75%;color:white;">Discount Applied at Checkout</span>  
       
@@ -53,7 +53,7 @@
         /> -->
       </div>
       <div class="subscribe-select">
-        <Checkbox v-if="variety" :color="'white'" :initialCheck="false" :label="'Subscribe to get all 6 flavors for FREE'" @checked="handleCheck"/>
+        <Checkbox v-if="variety" :color="'white'" :initialCheck="false" :label="'Subscribe to Get All 6 Flavors for FREE'" @checked="handleCheck"/>
         <!-- <SubscriptionSelect 
             v-if="jetpacks.length"
             :products="jetpacks"
