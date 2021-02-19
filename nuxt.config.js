@@ -314,7 +314,7 @@ export default {
     },
     done({ errors }, nuxt) {
       nuxt.callHook('generate:done', ({ nuxt, errors }))
-    }
+    },
   },
 
   vue: {

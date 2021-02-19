@@ -203,6 +203,7 @@ export default {
     }
   },
   async mounted() {
+    console.log(this.$route.params.collectionHandle);
     if(this.products.length) {
       this.jetpacks = [...this.products]
     } else {
