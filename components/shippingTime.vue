@@ -20,7 +20,7 @@
         <span v-else >Order within {{24-remaining.hours}} hours {{60-remaining.minutes}} minutes</span>
 	  	</span>
 	  	<span v-else>
-	  	  <span>Tuesday, February 26</span>
+	  	  <span>Friday, February 26</span>
 <!-- 	  	  <span>{{arrivalDate}}</span>  -->
 	  	</span>
       </div>
