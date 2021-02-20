@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="about-us-video">
-      <img class="about-us-video__img" :src="optimizeSource({ url: page.fields.missionHero.fields.file.url + '?w=2000' })" />
+      <img class="about-us-video__img" :src="optimizeSource({ url: page.fields.missionHero.fields.file.url + '?w=2000' })" :alt="page.fields.missionHero.fields.description"/>
     </div>
 
     <div class="what-drives-us">
@@ -30,7 +30,7 @@
           <div class="what-drives-us__image-grid__section__text">
             {{ pillar.fields.title }}
           </div>
-          <img class="what-drives-us__image-grid__section__img darken-image" :src="optimizeSource({ url: pillar.fields.image.fields.file.url })" />
+          <img class="what-drives-us__image-grid__section__img darken-image" :src="optimizeSource({ url: pillar.fields.image.fields.file.url })" :alt="pillar.fields.image.fields.description"/>
         </div>
       </div>
       <modal name="drive-modal" :width="'100%'" height="auto">
@@ -449,6 +449,7 @@ export default {
   async asyncData() {
     let ourStory = await client.getEntry('4RIljQvzSmaaa8i2QyfgTY')
     .then(async (res) => {
+      console.log(res.fields)
       let leadershipList = []
       for (const leadership of res.fields.leadership) {
         await client.getEntry(leadership.sys.id)
