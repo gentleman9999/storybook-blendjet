@@ -98,15 +98,15 @@
             <div class="product-select__controls__value-props__badges">
               <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
                :href="mcafeeLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/mcafee.png'})" />
+              <img :src="optimizeSource({url: '/images/blendjetPDP/mcafee.png'})" alt="McAfee Secure Logo" />
             </a>
             <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
                :href="nortonLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/norton.png'})" />
+              <img :src="optimizeSource({url: '/images/blendjetPDP/norton.png'})" alt="Norton Secured Logo" />
             </a>
             <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
                :href="bbbLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/bbb.png'})" />
+              <img :src="optimizeSource({url: '/images/blendjetPDP/bbb.png'})" alt="Better Business Bureau Logo" />
             </a>
             </div>
           </div>

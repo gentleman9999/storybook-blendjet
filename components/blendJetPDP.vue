@@ -146,7 +146,7 @@
                <img :src="optimizeSource({url: '/images/blendjetPDP/applepay.png'})" />
             </div>
           <div v-if="!applePay" role="button" class="product-select__controls__payments__paypal" @click="expressCheckout">
-            Pay with <img class="product-select__controls__payments__paypal__logo" :src="optimizeSource({url: '/images/blendjetPDP/paypal.png'})" />
+            Pay with <img class="product-select__controls__payments__paypal__logo" :src="optimizeSource({url: '/images/blendjetPDP/paypal.png'})" alt="Paypal Logo" />
           </div>
           <div role="button" class="product-select__controls__payments__more-options" @click="$modal.show('pay-with-modal')">
             More payment options
@@ -159,15 +159,15 @@
           <div class="product-select__controls__value-props__badges">
             <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
                :href="mcafeeLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/mcafee.png'})" />
+              <img :src="optimizeSource({url: '/images/blendjetPDP/mcafee.png'})" alt="McAfee Secure Logo" />
             </a>
             <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
                :href="nortonLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/norton.png'})" />
+              <img :src="optimizeSource({url: '/images/blendjetPDP/norton.png'})" alt="Norton Secured Logo" />
             </a>
             <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
                :href="bbbLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/bbb.png'})" />
+              <img :src="optimizeSource({url: '/images/blendjetPDP/bbb.png'})" alt="Better Business Bureau Logo" />
             </a>
           </div>
         </div>
