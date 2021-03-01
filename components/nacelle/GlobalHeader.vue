@@ -211,7 +211,7 @@ export default {
       screenWidth: 0,
       logoFill: '#373975',
       jetpackMenuVisible: false,
-      freeShippingMessage: "VALENTINE'S SALE - FREE S&H & JETPACKS",
+      freeShippingMessage: "SPRING SALE - FREE S&H & JETPACKS",
       navColor: 'white',
       scrollY: 0,
       scrollTarget: 200,
@@ -312,7 +312,7 @@ export default {
         const localPrice = await Axios(config)
           .then((res) => {
             if(res.data.Country !== 'US') {
-              this.freeShippingMessage = "VALENTINE'S SALE + FREE WORLDWIDE S&H"
+              this.freeShippingMessage = "SPRING SALE + FREE WORLDWIDE S&H"
               localStorage.setItem('ww', 'true')
             } else {
               localStorage.setItem('ww', 'false')
