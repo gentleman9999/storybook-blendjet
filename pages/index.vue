@@ -39,7 +39,7 @@
 <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
 		<div class="canvas-bfcm">
 			<div class="col-bfcm">
-				<span class="entry-title-bfcm">Valentine's Sale</span>
+				<span class="entry-title-bfcm">Spring Sale</span>
 				<span class="content-split-element-bfcm">Free JetPack Smoothies</span>
 				
 				
