@@ -1,7 +1,7 @@
 <template>
   <div class="blendjet-container" v-if="product">
     <div class="text-block">
-                               <a href="/products/blendjet-2" style="color:white;">BlendJet 2</a><br/> <span style="font-size: 75%;color:gold;">SPECIAL: Includes Free JetPacks</span>
+                               <a href="/products/blendjet-2" style="color:white;">BlendJet 2</a><br/> <span style="font-size: 75%;color:gold;">The Next-Gen Blender</span>
     </div>
     <div class="blendjet-image">
       <transition name="fade">
