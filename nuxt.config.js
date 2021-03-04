@@ -54,7 +54,7 @@ export default {
       { rel: 'icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-192.png', sizes:'192x192'},
 
 
-      { rel: 'shortcut icon', type: 'image/png', href: 'cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-196.png' },
+      { rel: 'shortcut icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-196.png' },
 
 
       { rel: 'apple-touch-icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-152.png', sizes:'152x152' },
