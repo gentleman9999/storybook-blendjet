@@ -101,7 +101,7 @@
           <div class="faq-section">
             <details>
               <summary>
-                Who Can Become a part of the BlendJet Ambassador Program?
+                <span class="summary-heading">Who Can Become a part of the BlendJet Ambassador Program?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -143,7 +143,7 @@
           <div class="faq-section">
             <details>
               <summary>
-                How do I receive my first free BlendJet?
+                <span class="summary-heading">How do I receive my first free BlendJet?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -184,7 +184,7 @@
           <div class="faq-section">
             <details>
               <summary>
-                How do I complete activities and earn points?
+                <span class="summary-heading">How do I complete activities and earn points?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -226,7 +226,7 @@
           <div class="faq-section">
             <details>
               <summary>
-                How do I receive a commission on referrals?
+                <span class="summary-heading">How do I receive a commission on referrals?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -267,7 +267,7 @@
           <div class="faq-section">
             <details>
               <summary>
-                What are the terms and conditions?
+                <span class="summary-heading">What are the terms and conditions?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -448,7 +448,9 @@ export default {
     padding: 70px 15px;
   }
 }
-
+span.summary-heading {
+    cursor: pointer;
+}
 g#Pulse-Mode- {
     cursor: pointer;
 }
