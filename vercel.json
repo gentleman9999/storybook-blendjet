@@ -1388,6 +1388,21 @@
       "permanent": true
     },
     {
+      "source": "/people",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=audio&utm_source=podcast&utm_content=People&discount=People",
+      "permanent": true
+    },
+    {
+      "source": "/People",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=audio&utm_source=podcast&utm_content=People&discount=People",
+      "permanent": true
+    },
+    {
+      "source": "/PEOPLE",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=audio&utm_source=podcast&utm_content=People&discount=People",
+      "permanent": true
+    },
+    {
       "source": "/PEO",
       "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=audio&utm_source=podcast&utm_content=People&discount=People",
       "permanent": true
