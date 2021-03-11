@@ -1398,6 +1398,21 @@
       "permanent": true
     },
     {
+      "source": "/allure",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=allure&discount=allure",
+      "permanent": true
+    },
+    {
+      "source": "/Allure",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=allure&discount=allure",
+      "permanent": true
+    },
+    {
+      "source": "/ALLURE",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=allure&discount=allure",
+      "permanent": true
+    },
+    {
       "source": "/PEOPLE",
       "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=People&discount=People",
       "permanent": true
