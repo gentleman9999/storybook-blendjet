@@ -1413,6 +1413,26 @@
       "permanent": true
     },
     {
+      "source": "/Hgtv",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=hgtv&discount=hgtv",
+      "permanent": true
+    },
+    {
+      "source": "/HGTV",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=hgtv&discount=hgtv",
+      "permanent": true
+    },
+    {
+      "source": "/hgtv",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=hgtv&discount=hgtv",
+      "permanent": true
+    },
+    {
+      "source": "/HGtv",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=hgtv&discount=hgtv",
+      "permanent": true
+    },
+    {
       "source": "/PEOPLE",
       "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=People&discount=People",
       "permanent": true
