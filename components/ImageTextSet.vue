@@ -293,4 +293,16 @@ export default {
   text-align: center;
 }
 
+.our-journey__section__text-block__main.text-centered a{
+  color:#ffffff;
+}
+.our-journey__section__text-block__main.text-centered a:hover{
+  color:#000;
+}
+.our-journey__section__text-block__main a{
+  color:#ffffff;
+}
+.our-journey__section__text-block__main a:hover{
+  color:#000;
+}
 </style>
