@@ -95,14 +95,14 @@
               <div class="product-select__controls__extend-warranty__button-group">
                 <div role="buton"
                   class="product-select__controls__extend-warranty__button"
-                  :class="[warrantySelected.handle === '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-1y' ? 'extend-active' : 'extend-inactive']"
+                  :class="[warrantySelected.handle === '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y' ? 'extend-active' : 'extend-inactive']"
                   @click="selectWarranty(extend1yr)"
                   >
                   1 yr - ${{extend1yr.variants[0].price}}
                 </div>
                 <div role="buton"
                   class="product-select__controls__extend-warranty__button"
-                  :class="warrantySelected.handle === '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-2y' ? 'extend-active' : 'extend-inactive'"
+                  :class="warrantySelected.handle === '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y' ? 'extend-active' : 'extend-inactive'"
                   @click="selectWarranty(extend2yr)"
                   >
                   2 yr - ${{extend2yr.variants[0].price}}
@@ -233,7 +233,7 @@
               </ul>
 
               <div class="extend-modal__text__plan-details">
-                <a href="https://customers.extend.com/plan_details/10002-blendjet-adh-replace-1y" target="_blank">Plan Details</a>
+                <a href="https://customers.extend.com/plan_details/10003-blendjet-adh-replace-1y" target="_blank">Plan Details</a>
               </div>
             </div>
             <div class="extend-modal__why-choose">
@@ -869,8 +869,8 @@ export default {
     if(process.client) {
 
       this.client = createClient()
-      this.extend1yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-1y'})
-      this.extend2yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-2y'})
+      this.extend1yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'})
+      this.extend2yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'})
       this.extend3yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'})
       this.screenWidth = window.innerWidth
       if(this.screenWidth <= 768) {
