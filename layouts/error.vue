@@ -13,8 +13,13 @@
       <div class="module-content">
         <p>Were you looking for <a href="https://blendjet.com/products/blendjet-2"><img src="https://cdn.shopify.com/s/files/1/0066/4433/4658/files/award.png?v=1593589428"> BlendJet 2?</a><br/>
           Or did you want to try our <a href="https://blendjet.com/collections/jetpack-ready-to-blend-smoothies">JetPacks?</a></p>
-        <p>You can start back at the  <a href="https://blendjet.com/"><i class="fa fa-home" aria-hidden="true"></i>  beginning</a> (sometimes that's the best place to start).<br/>
-          And we're  <a href="mailto:support@blendjet.com"><i class="fa fa-envelope" aria-hidden="true" style="font-size: 14px;"></i>  here for you</a> if you have any questions.</p>
+        
+        <p>You can start back at the  <a href="https://blendjet.com/"><img src="/images/home_icon.jpg" /><i class="fa fa-home" aria-hidden="true"></i>  beginning</a> (sometimes that's the best place to start).<br/>
+          And we're  <a href="mailto:support@blendjet.com"><img src="/images/envelope_icon.jpg" /><i class="fa fa-envelope" aria-hidden="true" style="font-size: 14px;"></i>  here for you</a> if you have any questions.
+          </p>
+
+        <p>If you already have a BlendJet 2, we have some great <a href="https://blendjet.com/user-guide/blendjet-2"><i class="fas fa-lightbulb" aria-hidden="true" style="font-size: 14px;"></i><img src="/images/light_icon.jpg" />tips</a> for you!</p>
+
         <!-- <p>If you already have a BlendJet One, we have some great <a href="https://blendjet.com/pages/tutorials"><img src="https://cdn.shopify.com/s/files/1/0066/4433/4658/files/bulb.png?v=1593589422" style="width: 11px;"> tips</a> for you!</p> -->
       </div>
     </div>
@@ -53,6 +58,10 @@ p {
   justify-content: center;
 }
 
+.module-content p{
+  margin-bottom: 30px;
+}
+
 .desktop-404 {
   @include respond-to('small') {
     display: none
@@ -64,4 +73,11 @@ p {
     display: none;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .module-content{
+    padding: 0 54px 40px 54px;
+  }  
+}
+
 </style>
