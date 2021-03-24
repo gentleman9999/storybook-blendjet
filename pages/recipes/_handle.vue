@@ -53,7 +53,7 @@
         <!-- <div class="meta__stats">
           <span class="meta__views">450 Views</span><span class="meta__published-at">| <timeago :datetime="page.sys.createdAt" :auto-update="60"></timeago></span>
         </div> -->
-        <div class="meta__description">{{ page.fields.description }}</div>
+        <div class="meta__description" v-html="productMetaDescription"></div>
       </div>
     </div>
     <div v-if="page.fields.ingredients" class="recipe__ingredients ingredients">
@@ -112,8 +112,9 @@
           v-for="(instruction, index) in page.fields.instructions"
           class="instructions__item"
           :key="index "
+          v-html="instruction"
         >
-          {{ instruction }}
+          {{instruction}}
         </li>
       </ol>
       <ul class="instructions__labels">
@@ -286,6 +287,16 @@ export default {
       // This will for sure break
       if (this.page.fields.nutritionFacts && this.page.fields.nutritionFacts.content[0] && this.page.fields.nutritionFacts.content[0].content[0]) {
         return this.page.fields.nutritionFacts.content[0].content[0].value;
+      }
+    }, 
+    productMetaDescription(){
+      if(this.page.fields.description){
+        return this.page.fields.description;
+      }
+    }, 
+    instructionsContent(){
+      if(instruction){
+        return instruction;
       }
     }
   }
@@ -720,4 +731,11 @@ export default {
     }
   }
 
+.instructions__item{
+  display: inline;
+}
+
+.instructions__item:before{
+  margin-right: 1rem;
+}
 </style>

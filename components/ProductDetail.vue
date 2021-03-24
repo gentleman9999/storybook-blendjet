@@ -2055,7 +2055,12 @@ export default {
     }
   }
 }
-
+.blendjet-banner__content-block a{
+  color:#ffffff
+}
+.blendjet-banner__content-block a:hover{
+  color:#000;
+}
 
 
 </style>
