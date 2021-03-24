@@ -269,6 +269,12 @@ export default {
       },
       datePublished: this.page.sys.createdAt,
       recipeCategory: this.page.fields.category.fields.title,
+      "nutrition": {
+          "@type": "NutritionInformation",
+          "servingSize": this.page.fields.servingSize,
+          "calories": this.page.fields.calories,
+          "fatContent": this.page.fields.fatContent
+      },
       recipeIngredient: recipeIngredients,
       recipeInstructions: recipeIns,
       'video' : {
