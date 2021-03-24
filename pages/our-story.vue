@@ -480,6 +480,31 @@ export default {
   beforeDestroy() {
     window.onresize = null
   },
+  /*Organization schema*/
+  jsonld() {
+    return {
+        "@context": "http://www.schema.org",
+        "@type": "Organization",
+        "name": "BlendJet",
+        "url": "https://blendjet.com/",
+        "contactPoint": [{
+          "@type": "ContactPoint",
+          "contactType": "Customer Service",
+          "telephone": "+1 844-588-1555",
+          "email": "support@blendjet.com"
+      }],
+        "sameAs": [
+          "https://www.facebook.com/blendjet/",
+          "https://www.instagram.com/BlendJet/",
+          "https://twitter.com/BlendJet",
+          "https://www.pinterest.com/blendjet/",
+          "https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w"
+        ],
+        "logo": "https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-logo-gradient-2020_200x37.png",
+        "image": "https://images.ctfassets.net/strhx3d94c40/2826IGPC4SeJ3ZxguhTAZ4/44e3bc3f698a08ef6c936e0e1d9aa79c/BlendJet-2-BLACK_8b5ecbb0-0dc8-46e3-9cd4-b20ed07f4fbd.png",
+        "description": "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
+    }
+  },
 }
 </script>
 
