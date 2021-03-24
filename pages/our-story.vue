@@ -4,7 +4,7 @@
     <content-hero-banner
         id="hero-banner"
         :imageUrl="optimizeSource({ url: page.fields.heroImage.fields.file.url + '?w=2000' })"
-        backgroundAltTag="About Us-Hero"
+        backgroundAltTag="A girl with her BlendJet"
         :title="page.fields.title"
         :subtitle="page.fields.subhead"
         :location="'about-us'"
@@ -86,7 +86,7 @@
       </div>
       <div class="leadership__grid">
         <div class="leadership__grid__entry" v-for="(leadership, i) in page.fields.leadership" :key="i" @click="openBioModal(i)">
-          <img class="leadership__grid__entry__img" :src="optimizeSource({url: leadership.fields.image.fields.file.url})" />
+          <img class="leadership__grid__entry__img" :src="optimizeSource({url: leadership.fields.image.fields.file.url})" :alt="leadership.fields.image.fields.description" />
           <div class="leadership__grid__entry__name">
             {{ leadership.fields.name }}
           </div>
