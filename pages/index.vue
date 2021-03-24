@@ -279,7 +279,7 @@ export default nmerge({
             "https://www.pinterest.com/blendjet/",
             "https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w"
           ],
-          "logo": "https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-logo-gradient-2020_200x37.png",
+          "logo": "https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844",
           "image": "https://images.ctfassets.net/strhx3d94c40/2826IGPC4SeJ3ZxguhTAZ4/44e3bc3f698a08ef6c936e0e1d9aa79c/BlendJet-2-BLACK_8b5ecbb0-0dc8-46e3-9cd4-b20ed07f4fbd.png",
           "description": "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
       }
