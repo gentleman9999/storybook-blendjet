@@ -131,7 +131,7 @@
       <div class="facebook__icon"><FacebookFilled /></div>
       <h3 class="facebook__title">Join the BlendJet Recipes Community</h3>
       <div class="facebook__text">For more BlendJet recipes like this, and to share your own, join our BlendJet Recipes Facebook Group!</div>
-      <a href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
+      <a rel="nofollow" href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
     </div>
 <!--
     <div class="recipe__jetpacks jetpacks">
