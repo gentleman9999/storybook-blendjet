@@ -53,7 +53,7 @@
         <!-- <div class="meta__stats">
           <span class="meta__views">450 Views</span><span class="meta__published-at">| <timeago :datetime="page.sys.createdAt" :auto-update="60"></timeago></span>
         </div> -->
-        <div class="meta__description">{{ page.fields.description }}</div>
+        <div class="meta__description" v-html="productMetaDescription"></div>
       </div>
     </div>
     <div v-if="page.fields.ingredients" class="recipe__ingredients ingredients">
@@ -112,8 +112,9 @@
           v-for="(instruction, index) in page.fields.instructions"
           class="instructions__item"
           :key="index "
+          v-html="instruction"
         >
-          {{ instruction }}
+          {{instruction}}
         </li>
       </ol>
       <ul class="instructions__labels">
@@ -130,7 +131,7 @@
       <div class="facebook__icon"><FacebookFilled /></div>
       <h3 class="facebook__title">Join the BlendJet Recipes Community</h3>
       <div class="facebook__text">For more BlendJet recipes like this, and to share your own, join our BlendJet Recipes Facebook Group!</div>
-      <a href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
+      <a rel="nofollow" href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
     </div>
 <!--
     <div class="recipe__jetpacks jetpacks">
@@ -268,6 +269,12 @@ export default {
       },
       datePublished: this.page.sys.createdAt,
       recipeCategory: this.page.fields.category.fields.title,
+      "nutrition": {
+          "@type": "NutritionInformation",
+          "servingSize": this.page.fields.servingSize,
+          "calories": this.page.fields.calories,
+          "fatContent": this.page.fields.fatContent
+      },
       recipeIngredient: recipeIngredients,
       recipeInstructions: recipeIns,
       'video' : {
@@ -286,6 +293,16 @@ export default {
       // This will for sure break
       if (this.page.fields.nutritionFacts && this.page.fields.nutritionFacts.content[0] && this.page.fields.nutritionFacts.content[0].content[0]) {
         return this.page.fields.nutritionFacts.content[0].content[0].value;
+      }
+    }, 
+    productMetaDescription(){
+      if(this.page.fields.description){
+        return this.page.fields.description;
+      }
+    }, 
+    instructionsContent(){
+      if(instruction){
+        return instruction;
       }
     }
   }
@@ -720,4 +737,11 @@ export default {
     }
   }
 
+.instructions__item{
+  display: inline;
+}
+
+.instructions__item:before{
+  margin-right: 1rem;
+}
 </style>

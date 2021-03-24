@@ -101,7 +101,7 @@
           <div class="faq-section">
             <details>
               <summary>
-                Who Can Become a part of the BlendJet Ambassador Program?
+                <span class="summary-heading">Who Can Become a part of the BlendJet Ambassador Program?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -134,16 +134,16 @@
                   </g>
                 </svg>
               </summary>
-              <b>We look for the following characteristics in our ambassadors:</b>
-              <p><span>1.</span> A social media presence that portrays a positive outlook and desire to share healthy habits with the world through high-quality images and videos.</p>
-              <p><span>2.</span> A minimum of 10,000 followers on Instagram, YouTube, or Facebook, or a minimum of 4,000 followers on Tik-Tok.</p> 
-              <p><span>3.</span> An average engagement rate of 4% per post.</p>
+              <b class="accordion-text">We look for the following characteristics in our ambassadors:</b>
+              <p class="accordion-text"><span>1.</span> A social media presence that portrays a positive outlook and desire to share healthy habits with the world through high-quality images and videos.</p>
+              <p class="accordion-text"><span>2.</span> A minimum of 10,000 followers on Instagram, YouTube, or Facebook, or a minimum of 4,000 followers on Tik-Tok.</p> 
+              <p class="accordion-text"><span>3.</span> An average engagement rate of 4% per post.</p>
             </details>
           </div>
           <div class="faq-section">
             <details>
               <summary>
-                How do I receive my first free BlendJet?
+                <span class="summary-heading">How do I receive my first free BlendJet?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -176,15 +176,15 @@
                   </g>
                 </svg>
               </summary>
-              <p><span>1.</span> After receiving your acceptance email, register at the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a></p>
-              <p><span>2.</span> If you've already registered, you can access the portal from the <a href="https://blendjet.brandchamp.io/login" target="_blank">Login Page.</a></p> 
-              <p><span>3.</span> Once inside, fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> When you have completed your profile, and it has been approved, you will see a code to order your FREE BlendJet + 3 JetPack Smoothies <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">HERE!</a></p>
+              <p class="accordion-text"><span>1.</span> After receiving your acceptance email, register at the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a></p>
+              <p class="accordion-text"><span>2.</span> If you've already registered, you can access the portal from the <a href="https://blendjet.brandchamp.io/login" target="_blank">Login Page.</a></p> 
+              <p class="accordion-text"><span>3.</span> Once inside, fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> When you have completed your profile, and it has been approved, you will see a code to order your FREE BlendJet + 3 JetPack Smoothies <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">HERE!</a></p>
             </details>
           </div>
           <div class="faq-section">
             <details>
               <summary>
-                How do I complete activities and earn points?
+                <span class="summary-heading">How do I complete activities and earn points?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -217,16 +217,16 @@
                   </g>
                 </svg>
               </summary>
-              <p><span>1.</span> First, register in the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a> and fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> to receive your Free BlendJet. </p>
-              <p><span>2.</span> <a href="https://blendjet.brandchamp.io/login" target="_blank">Login.</a> and click on the <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">Activities</a> tab to complete and submit fun BlendJet Ambassador activities. Be sure to read and follow all instructions! </p> 
-              <p><span>3.</span> When you've completed an activity and it's been approved, you'll be credited with reward points! </p>
-              <p><span>4.</span> Redeem your rewards points for exclusive products and cash bonuses in our <a href="https://blendjet.brandchamp.io/#/rewards/catalog" target="_blank">Rewards Store!</a> (New rewards are being added all the time!)</p>
+              <p class="accordion-text"><span>1.</span> First, register in the BlendJet Ambassadors <a href="https://blendjet.brandchamp.io/register" target="_blank">Portal.</a> and fill out your Ambassador <a href="https://blendjet.brandchamp.io/login?next=%2Fedit%2Fprofile" target="_blank">Profile.</a> to receive your Free BlendJet. </p>
+              <p class="accordion-text"><span>2.</span> <a href="https://blendjet.brandchamp.io/login" target="_blank">Login.</a> and click on the <a href="https://blendjet.brandchamp.io/login?next=%2Frewards%2Fcatalog" target="_blank">Activities</a> tab to complete and submit fun BlendJet Ambassador activities. Be sure to read and follow all instructions! </p> 
+              <p class="accordion-text"><span>3.</span> When you've completed an activity and it's been approved, you'll be credited with reward points! </p>
+              <p class="accordion-text"><span>4.</span> Redeem your rewards points for exclusive products and cash bonuses in our <a href="https://blendjet.brandchamp.io/#/rewards/catalog" target="_blank">Rewards Store!</a> (New rewards are being added all the time!)</p>
             </details>
           </div>
           <div class="faq-section">
             <details>
               <summary>
-                How do I receive a commission on referrals?
+                <span class="summary-heading">How do I receive a commission on referrals?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -259,15 +259,15 @@
                   </g>
                 </svg>
               </summary>
-              <p><span>1.</span> After you have been accepted into the program, you will receive an email that includes your personal discount code and link to share with your followers. You can also find your code and link <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a></p>
-              <p><span>2.</span> Every time someone uses your code, or follows your link, and makes a purchase on www.blendjet.com, you will receive $5 per qualifying order, as long as they do not return the item in 30 days! Keep track of all your referral sales <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a></p> 
-              <p><span>3.</span> Payments for approved referral commissions are made through PayPal by the 5th business day of every month (there may be occasional delays due to holidays). Make sure to add your PayPal account email address when you register so that your payment is not delayed! If you do not have a PayPal account, head to paypal.com to create your free account.</p>
+              <p class="accordion-text"><span>1.</span> After you have been accepted into the program, you will receive an email that includes your personal discount code and link to share with your followers. You can also find your code and link <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a></p>
+              <p class="accordion-text"><span>2.</span> Every time someone uses your code, or follows your link, and makes a purchase on www.blendjet.com, you will receive $5 per qualifying order, as long as they do not return the item in 30 days! Keep track of all your referral sales <a href="https://blendjet.brandchamp.io/#/referrals" target="_blank">HERE.</a></p> 
+              <p class="accordion-text"><span>3.</span> Payments for approved referral commissions are made through PayPal by the 5th business day of every month (there may be occasional delays due to holidays). Make sure to add your PayPal account email address when you register so that your payment is not delayed! If you do not have a PayPal account, head to paypal.com to create your free account.</p>
             </details>
           </div>
           <div class="faq-section">
             <details>
               <summary>
-                What are the terms and conditions?
+                <span class="summary-heading">What are the terms and conditions?</span>
                 <svg class="plus" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <title>+</title>
                   <g id="User-Guide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -300,7 +300,7 @@
                   </g>
                 </svg>
               </summary>
-              <p>Please read the <a href="https://blendjet.com/ambassador-agreement">terms & conditions</a> you must agree to in order to be a part of the BlendJet Brand Ambassador Program.</p>
+              <p class="accordion-text">Please read the <a href="https://blendjet.com/ambassador-agreement">terms & conditions</a> you must agree to in order to be a part of the BlendJet Brand Ambassador Program.</p>
             </details>
           </div>
         </div>
@@ -441,13 +441,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .image-tile--section {
   padding: 140px 0;
   @media (max-width: 600px) {
     padding: 70px 15px;
   }
 }
-
+span.summary-heading {
+    cursor: pointer;
+}
+g#Pulse-Mode- {
+    cursor: pointer;
+}
+svg.minus{
+  cursor: pointer;
+}
+p.accordion-text {
+    cursor: default;
+}
+b.accordion-text {
+    cursor: default;
+}
 .image-tile--section-heading {
   text-align: center;
   max-width: 570px;
@@ -671,4 +686,9 @@ summary::marker,summary::-webkit-details-marker {
   font-family: 'Bold';
 }
 
+</style>
+<style>
+.carousel-arrow .icon.has-icons-left, .carousel-arrow .icon.has-icons-right{
+  top:41%;
+}
 </style>

@@ -212,7 +212,7 @@ export default {
       viewAll: false,
       rating: 4.8,
       metaTitle: 'Search BlendJet.com - BlendJet®',
-      metaDescription: 'Our search feature helps you quickly find what you\'re looking for on BlendJet.com, and even offers suggestions and updates results as you type in your query.'
+      metaDescription: 'Are you looking for a specific product or recipe? Our search function makes quick browsing a breeze. Shop online now, and join the BlendJet revolution!'
     }
   },
   head() {

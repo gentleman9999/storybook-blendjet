@@ -288,10 +288,10 @@
             :ctaTwoHandler="ctaTwoHandler"
           >
             <p class="cta-container" v-if="ctaText.length > 0">
-              <cta-button :to="ctaUrl" @clicked="ctaHandler">{{
+              <cta-button :to="ctaUrl" @clicked="ctaHandler" rel="nofollow">{{
                 ctaText
               }}</cta-button>
-              <cta-button :to="ctaTwoUrl" @clicked="ctaTwoHandler">{{
+              <cta-button :to="ctaTwoUrl" @clicked="ctaTwoHandler" rel="nofollow">{{
                 ctaTwoText
               }}</cta-button>
             </p>

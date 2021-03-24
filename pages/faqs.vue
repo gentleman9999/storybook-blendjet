@@ -198,7 +198,7 @@ export default {
   data() {
     return {
       metaTitle: 'FAQs - Frequently Asked Questions - BlendJet®',
-      metaDescription: 'You can find answers to the most commonly asked questions here including information about BlendJet, our products, shipping, warranty, cleaning, and more.'
+      metaDescription: 'Our FAQ section provides answers to the questions we get asked most frequently. Contact us anytime if you have any questions, and order your BlendJet today!'
     }
   },
 
