@@ -134,10 +134,11 @@
                   </g>
                 </svg>
               </summary>
-              <b class="accordion-text">We look for the following characteristics in our ambassadors:</b>
               <p class="accordion-text"><span>1.</span> A social media presence that portrays a positive outlook and desire to share healthy habits with the world through high-quality images and videos.</p>
-              <p class="accordion-text"><span>2.</span> A minimum of 10,000 followers on Instagram, YouTube, or Facebook, or a minimum of 4,000 followers on Tik-Tok.</p> 
-              <p class="accordion-text"><span>3.</span> An average engagement rate of 4% per post.</p>
+              <p class="accordion-text"><span>2.</span> A minimum of 10,000 authentic followers on Instagram, YouTube, Facebook, or TikTok.</p> 
+              <p class="accordion-text"><span>3.</span> A consistent average engagement rate of at least 4% per post.</p>
+              <p class="accordion-text"><span>4.</span> Accounts must not be overly sales/sponsored post heavy.</p>
+              <p class="accordion-text"><span>5.</span> Content of accounts should be in line with the BlendJet brand and use cases.</p>
             </details>
           </div>
           <div class="faq-section">
