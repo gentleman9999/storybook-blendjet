@@ -20,7 +20,7 @@
       </svg>
     </div>
     <div class="title-container__subheading">
-      Ready-to-Blend Smoothies for Just $2.99
+      Ready-to-Blend Smoothies from Just $2.99
     </div>
     <!-- <div class="jetpack-tabs">
       <Tabs :tabItems="['smoothies', 'protein smoothies', 'lattes']" @activeTab="jetpackTabChange"/>
