@@ -42,7 +42,7 @@
       v-else-if="content.fields.layout === 'Image Background'"
       class="our-journey__dream"
       :style="`background-image: url('${optimizeSource({ url: content.fields.image.fields.file.url })}')`"
-      aria-label="Green Blendjet with Fruits"
+      aria-label="Green BlendJet with Fruits"
     >
       <div class="our-journey__dream__text-block">
         <div class="our-journey__dream__text-block__heading">
