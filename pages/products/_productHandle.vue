@@ -19,7 +19,10 @@
           </div>
           <transition name="fade">
             <BlendjetPDP v-cloak
-              v-if="['blendjet-2', 'blendjet-2-influencer-kit','blendjet-2-press-kit','youtube-blendjet-2', 'baileys-blendjet-2'].includes(product.handle)"
+              v-if="product.handle === 'blendjet-2' ||
+              product.handle === 'blendjet-2-influencer-kit' ||
+              product.handle === 'blendjet-2-press-kit' ||
+              product.handle === 'youtube-blendjet-2'"
               :product="product"
               :page="page"
             />
