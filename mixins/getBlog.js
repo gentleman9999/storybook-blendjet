@@ -47,8 +47,15 @@ export default (config = {}) => {
           const handles = articleList.handles.slice(0, config.itemsPerPage || 30)
 
           handles.forEach(handle => {
-            const articleFile = fs.readFileSync(`./static/data/articles/${blogObj.blogHandle}/${handle}--${blogObj.locale}/static.json`, 'utf-8')
-            blogObj.articles.push(JSON.parse(articleFile))
+            try {
+              const articleFile = fs.readFileSync(
+                `./static/data/articles/${blogObj.blogHandle}/${handle}--${blogObj.locale}/static.json`,
+                'utf-8'
+              )
+              blogObj.articles.push(JSON.parse(articleFile))
+            } catch (err) {
+              console.error(err);
+            }
           })
         }
       } else {
