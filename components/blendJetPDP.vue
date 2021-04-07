@@ -68,7 +68,7 @@
           </div>
         </div>
 
-        <div class="product-select__controls__variant-color">
+        <div v-if="variants.length > 1" class="product-select__controls__variant-color">
           <div class="product-select__controls__variant-color__text">
             <span class="product-select__controls__variant-color__text__label">Color: </span><span class="product-select__controls__variant-color__text__selected-color">{{currentVariant.title}}</span>
           </div>
