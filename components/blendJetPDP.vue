@@ -406,7 +406,6 @@
             <span class="image">
               <img class="media-content__carousel__img" :src="optimizeSource({url: image})">
             </span>
-
           </section>
         </b-carousel-item>
       </b-carousel>
@@ -905,12 +904,63 @@ export default {
 
       this.variants = this.product.variants.filter((variant)=>variant.availableForSale)
 
-
-
       if(window.ApplePaySession) {
         this.applePay = true;
       }
       const vm = this
+
+      // Try to query this product's contentful data 
+      // Note - You can't use Nacelle's SDK due to a bug when querying content models with the title `product`
+      await this.client.getEntries({
+        content_type: 'product',
+        'fields.handle': this.product.handle
+      }).then((data)=>{
+        if (!data || !Array.isArray(data.items) ||data.items.length === 0) {
+          // No content model found...
+        } else {
+          // Get first item
+          const item = data.items[0];
+
+          // For each variant content model...
+          item.fields.variants.forEach((node)=>{
+            vm.variantMedia[node.fields.title] = {
+              productImage: `https:${node.fields.productImage.fields.file.url}?w=2100`,
+              heroImages: node.fields.heroImages.map((image) => {
+                return `${image.fields.file.url}?w=2100`
+              })
+            }
+          });
+
+          let sections = item.fields.productDescription;
+          vm.specs = sections.pop()
+
+          vm.description = sections.map((node) => {
+            return {
+              heading: node.fields.heading,
+              text: node.fields.text.content.map((p) => {
+                return p.content.map((line) => {
+                  return line.value
+                })
+              }),
+
+              video: node.fields.video ? node.fields.video.fields.file.url : ''
+          }
+          })
+
+          if(item.fields.metaTitle) {
+            this.metaTitle = item.fields.metaTitle
+          }
+
+          if(item.fields.metaDescription) {
+            this.metaDescription = item.fields.metaDescription
+          }
+
+          this.currentVariant = this.setDefaultVariant()
+        }
+      }).catch(console.error)
+
+      /*
+      // Original Code - Fetching a hard coded content model by its ID
       await this.client.getEntry('3h7GKFvs4RzAFkwj6H1XuQ')
           .then((entry) => {
             entry.fields.variants.forEach((node) => {
@@ -948,7 +998,7 @@ export default {
 
             this.currentVariant = this.setDefaultVariant()
           })
-          .catch(console.error)
+          .catch(console.error)*/
 
 
       this.handleScroll();
