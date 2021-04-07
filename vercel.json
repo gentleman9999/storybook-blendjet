@@ -46,6 +46,16 @@
       "permanent": true
     },
     {
+      "source": "/Baileys",
+      "destination": "/products/baileys-blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/baileys",
+      "destination": "/products/baileys-blendjet-2",
+      "permanent": true
+    },
+    {
       "source": "/products/blendjet-ones",
       "destination": "/products/blendjet-one",
       "permanent": true

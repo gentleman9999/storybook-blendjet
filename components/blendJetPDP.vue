@@ -138,7 +138,9 @@
           </div>
         </div>
 
-       <div class="product-select__controls__shipping-notification">
+<div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page" data-v-621d5369="" class="product-select__controls__shipping-notification"><div data-v-74c97a54="" data-v-621d5369="" class="shipping-container"><div data-v-74c97a54="" class="normal-size"><div data-v-74c97a54="" class="normal-size__label"><span data-v-74c97a54="">Order now and it ships by</span></div> <div data-v-74c97a54="" class="normal-size__countdown"><span data-v-74c97a54=""><span data-v-74c97a54="">Friday, April 30</span></span></div></div></div></div>
+
+       <div v-else class="product-select__controls__shipping-notification">
           <ShippingTime :country="country"/>
         </div>
         <div class="product-select__controls__payments">
@@ -174,8 +176,8 @@
 
       <transition name="fade">
         <div class="product-select__controls__add-to-cart__mobile-float" v-show="showMobileHeader">
-          <div class="product-select__controls__add-to-cart__button-group">
-              <div class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"  @click.prevent="toggleMobileVariants">
+          <div class="product-select__controls__add-to-cart__button-group"> 
+              <div v-if="variants.length > 1" class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"  @click.prevent="toggleMobileVariants">
                 <product-option-swatch
                   :value="currentVariant.selectedOptions[0].value"
                   :optionName="'Color'"
@@ -300,8 +302,23 @@
         </modal>
       </div>
     </div>
+    
 
-    <div v-if="page && page.fields.headerText" class="blendjet-banner">
+
+
+            
+    <div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page"  class="blendjet-banner"><div data-v-621d5369="" class="blendjet-banner__content-block"><h2 data-v-621d5369="">IF YOU LIKE PIÑA COLADAS...</h2><p data-v-621d5369="">Then you’ll love this BlendJet x Baileys collab! Kick back, relax, and escape to a tropical paradise with our limited run, special edition BlendJet, the perfect way to enjoy<strong data-v-621d5369="">&nbsp;</strong><a style="color:white;" href="https://www.baileys.com/en-us/products/#baileys-colada" target="_blank"><strong data-v-621d5369="">Baileys Colada</strong></a>, the all new limited time offering that blends Baileys irresistible Irish cream with the rich flavors of creamy coconut and sweet pineapples.</p><p data-v-621d5369="" style="
+    padding: 10px;
+"><a data-v-621d5369="" href="https://www.baileys.com/en-us/products/#baileys-colada" target="_blank" style="
+    font-weight: bold;
+    /* padding: 10px; */
+">BUY BAILEYS COLADA HERE</a></p><p data-v-621d5369="" style="
+    font-size: 75%;
+">Please Enjoy Responsibly.</p><p data-v-621d5369="" style="
+    font-size: 70%;
+">BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by Paddington, Ltd., New York, NY.</p></div></div>        
+    
+    <div v-else-if="page && page.fields.headerText" class="blendjet-banner">
       <div class="blendjet-banner__content-block">
         <RichTextRenderer :document="page.fields.headerText" />
       </div>
@@ -325,7 +342,7 @@
           </div>
         </div>
         <div class="header-product-select__controls-container">
-        <div class="header-product-select__swatches">
+        <div v-if="variants.length > 1" class="header-product-select__swatches">
 
           <div class="dropdown" tabindex="0"  @focusout="showHeaderVariants = false" @click.prevent="toggleHeaderVariants">
             <div class="dropbtn" role="button">
@@ -1664,7 +1681,10 @@ export default {
 }
 
 .blendjet-banner {
-  height: 205px;
+  height: auto;
+  min-height: 205px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   @include gradient-primary-purple-turquoise(to bottom right);
   display: flex;
   justify-content: center;
@@ -1679,6 +1699,10 @@ export default {
     @include respond-to('small') {
       width: auto;
       padding: 15px;
+    }
+    
+    a {
+	    color:#ffd900;
     }
 
     h2 {
