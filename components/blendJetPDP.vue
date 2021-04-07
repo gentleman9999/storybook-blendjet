@@ -27,10 +27,10 @@
         </div>
       </div>
       <div class="product-select__image-carousel">
-        <div class="product-select__image-carousel__prev-variant" @click="decrementVariant">
+        <div v-if="variants.length > 1" class="product-select__image-carousel__prev-variant" @click="decrementVariant">
           <PrevSlide />
         </div>
-        <div class="product-select__image-carousel__next-variant" @click="incrementVariant">
+        <div v-if="variants.length > 1" class="product-select__image-carousel__next-variant" @click="incrementVariant">
           <NextSlide />
         </div>
       <transition name="fade" mode="out-in">
