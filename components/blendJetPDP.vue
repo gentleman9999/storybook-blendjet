@@ -27,10 +27,10 @@
         </div>
       </div>
       <div class="product-select__image-carousel">
-        <div class="product-select__image-carousel__prev-variant" @click="decrementVariant">
+        <div v-if="variants.length > 1" class="product-select__image-carousel__prev-variant" @click="decrementVariant">
           <PrevSlide />
         </div>
-        <div class="product-select__image-carousel__next-variant" @click="incrementVariant">
+        <div v-if="variants.length > 1" class="product-select__image-carousel__next-variant" @click="incrementVariant">
           <NextSlide />
         </div>
       <transition name="fade" mode="out-in">
@@ -68,7 +68,7 @@
           </div>
         </div>
 
-        <div class="product-select__controls__variant-color">
+        <div v-if="variants.length > 1" class="product-select__controls__variant-color">
           <div class="product-select__controls__variant-color__text">
             <span class="product-select__controls__variant-color__text__label">Color: </span><span class="product-select__controls__variant-color__text__selected-color">{{currentVariant.title}}</span>
           </div>
@@ -138,7 +138,9 @@
           </div>
         </div>
 
-       <div class="product-select__controls__shipping-notification">
+<div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page" data-v-621d5369="" class="product-select__controls__shipping-notification"><div data-v-74c97a54="" data-v-621d5369="" class="shipping-container"><div data-v-74c97a54="" class="normal-size"><div data-v-74c97a54="" class="normal-size__label"><span data-v-74c97a54="">Order now and it ships by</span></div> <div data-v-74c97a54="" class="normal-size__countdown"><span data-v-74c97a54=""><span data-v-74c97a54="" style="color:#7f7fd1;">Friday, April 30</span></span></div></div></div></div>
+
+       <div v-else class="product-select__controls__shipping-notification">
           <ShippingTime :country="country"/>
         </div>
         <div class="product-select__controls__payments">
@@ -174,8 +176,8 @@
 
       <transition name="fade">
         <div class="product-select__controls__add-to-cart__mobile-float" v-show="showMobileHeader">
-          <div class="product-select__controls__add-to-cart__button-group">
-              <div class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"  @click.prevent="toggleMobileVariants">
+          <div class="product-select__controls__add-to-cart__button-group"> 
+              <div v-if="variants.length > 1" class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"  @click.prevent="toggleMobileVariants">
                 <product-option-swatch
                   :value="currentVariant.selectedOptions[0].value"
                   :optionName="'Color'"
@@ -300,8 +302,23 @@
         </modal>
       </div>
     </div>
+    
 
-    <div v-if="page && page.fields.headerText" class="blendjet-banner">
+
+
+            
+    <div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page"  class="blendjet-banner"><div data-v-621d5369="" class="blendjet-banner__content-block"><h2 data-v-621d5369="">IF YOU LIKE PIÑA COLADAS...</h2><p data-v-621d5369="">Then you’ll love this BlendJet x Baileys collab! Kick back, relax, and escape to a tropical paradise with our limited run, special edition BlendJet, the perfect way to enjoy<strong data-v-621d5369="">&nbsp;</strong><a style="color:white;" href="https://www.baileys.com/en-us/products/#baileys-colada" target="_blank"><strong data-v-621d5369="">Baileys Colada</strong></a>, the all new limited time offering that blends Baileys irresistible Irish cream with the rich flavors of creamy coconut and sweet pineapples.</p><p data-v-621d5369="" style="
+    padding: 10px;
+"><a data-v-621d5369="" href="https://www.baileys.com/en-us/products/#baileys-colada" target="_blank" style="
+    font-weight: bold;
+    /* padding: 10px; */
+">BUY BAILEYS COLADA HERE</a></p><p data-v-621d5369="" style="
+    font-size: 75%;
+">Please Enjoy Responsibly.</p><p data-v-621d5369="" style="
+    font-size: 70%;
+">BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by Paddington, Ltd., New York, NY.</p></div></div>        
+    
+    <div v-else-if="page && page.fields.headerText" class="blendjet-banner">
       <div class="blendjet-banner__content-block">
         <RichTextRenderer :document="page.fields.headerText" />
       </div>
@@ -325,7 +342,7 @@
           </div>
         </div>
         <div class="header-product-select__controls-container">
-        <div class="header-product-select__swatches">
+        <div v-if="variants.length > 1" class="header-product-select__swatches">
 
           <div class="dropdown" tabindex="0"  @focusout="showHeaderVariants = false" @click.prevent="toggleHeaderVariants">
             <div class="dropbtn" role="button">
@@ -406,7 +423,6 @@
             <span class="image">
               <img class="media-content__carousel__img" :src="optimizeSource({url: image})">
             </span>
-
           </section>
         </b-carousel-item>
       </b-carousel>
@@ -905,12 +921,63 @@ export default {
 
       this.variants = this.product.variants.filter((variant)=>variant.availableForSale)
 
-
-
       if(window.ApplePaySession) {
         this.applePay = true;
       }
       const vm = this
+
+      // Try to query this product's contentful data 
+      // Note - You can't use Nacelle's SDK due to a bug when querying content models with the title `product`
+      await this.client.getEntries({
+        content_type: 'product',
+        'fields.handle': this.product.handle
+      }).then((data)=>{
+        if (!data || !Array.isArray(data.items) ||data.items.length === 0) {
+          // No content model found...
+        } else {
+          // Get first item
+          const item = data.items[0];
+
+          // For each variant content model...
+          item.fields.variants.forEach((node)=>{
+            vm.variantMedia[node.fields.title] = {
+              productImage: `https:${node.fields.productImage.fields.file.url}?w=2100`,
+              heroImages: node.fields.heroImages.map((image) => {
+                return `${image.fields.file.url}?w=2100`
+              })
+            }
+          });
+
+          let sections = item.fields.productDescription;
+          vm.specs = sections.pop()
+
+          vm.description = sections.map((node) => {
+            return {
+              heading: node.fields.heading,
+              text: node.fields.text.content.map((p) => {
+                return p.content.map((line) => {
+                  return line.value
+                })
+              }),
+
+              video: node.fields.video ? node.fields.video.fields.file.url : ''
+          }
+          })
+
+          if(item.fields.metaTitle) {
+            this.metaTitle = item.fields.metaTitle
+          }
+
+          if(item.fields.metaDescription) {
+            this.metaDescription = item.fields.metaDescription
+          }
+
+          this.currentVariant = this.setDefaultVariant()
+        }
+      }).catch(console.error)
+
+      /*
+      // Original Code - Fetching a hard coded content model by its ID
       await this.client.getEntry('3h7GKFvs4RzAFkwj6H1XuQ')
           .then((entry) => {
             entry.fields.variants.forEach((node) => {
@@ -948,7 +1015,7 @@ export default {
 
             this.currentVariant = this.setDefaultVariant()
           })
-          .catch(console.error)
+          .catch(console.error)*/
 
 
       this.handleScroll();
@@ -1614,7 +1681,10 @@ export default {
 }
 
 .blendjet-banner {
-  height: 205px;
+  height: auto;
+  min-height: 205px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   @include gradient-primary-purple-turquoise(to bottom right);
   display: flex;
   justify-content: center;
@@ -1629,6 +1699,10 @@ export default {
     @include respond-to('small') {
       width: auto;
       padding: 15px;
+    }
+    
+    a {
+	    color:#ffd900;
     }
 
     h2 {
