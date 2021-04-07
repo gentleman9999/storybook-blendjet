@@ -138,7 +138,7 @@
           </div>
         </div>
 
-<div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page" data-v-621d5369="" class="product-select__controls__shipping-notification"><div data-v-74c97a54="" data-v-621d5369="" class="shipping-container"><div data-v-74c97a54="" class="normal-size"><div data-v-74c97a54="" class="normal-size__label"><span data-v-74c97a54="">Order now and it ships by</span></div> <div data-v-74c97a54="" class="normal-size__countdown"><span data-v-74c97a54=""><span data-v-74c97a54="">Friday, April 30</span></span></div></div></div></div>
+<div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page" data-v-621d5369="" class="product-select__controls__shipping-notification"><div data-v-74c97a54="" data-v-621d5369="" class="shipping-container"><div data-v-74c97a54="" class="normal-size"><div data-v-74c97a54="" class="normal-size__label"><span data-v-74c97a54="">Order now and it ships by</span></div> <div data-v-74c97a54="" class="normal-size__countdown"><span data-v-74c97a54=""><span data-v-74c97a54="" style="color:#7f7fd1;">Friday, April 30</span></span></div></div></div></div>
 
        <div v-else class="product-select__controls__shipping-notification">
           <ShippingTime :country="country"/>
