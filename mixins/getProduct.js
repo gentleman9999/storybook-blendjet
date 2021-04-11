@@ -16,6 +16,7 @@ export default (config = {}) => {
       const { $nacelle } = app
       const { productHandle } = params
 
+      // TODO: This should be using nacelle content 
       let page = await client.getEntries({
         content_type: 'product',
         'fields.handle': params.productHandle,

@@ -52,7 +52,7 @@
         <Ticker type="asSeenOn"/>
       </div>
       <div class="section section__blendjet-demo">
-        <BlendJetDemo :demo="demoImg" :message="demoMsg"/>
+        <BlendJetDemo :demo="demoImg"/>
       </div>
       <div class="section section__free-shipping" >
         <FreeShippingMarquee />
