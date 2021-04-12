@@ -5,7 +5,7 @@
         <span class="dropdown-thumb">
           <img class="dropdown-thumb-image" :src="optimizeSource({url:currentVariant.featuredMedia.thumbnailSrc})"/>
         </span>
-        <span>{{currentVariant.title}}</span>
+        <span>{{currentVariant.title.replace("Peanut Butter", "PB")}}</span>
         <CaretDown :styleObj="{marginLeft: '30px'}"/>
       </div>
       <transition name="fade">
@@ -14,7 +14,7 @@
             <span class="dropdown-thumb">
               <img class="dropdown-thumb-image" :src="optimizeSource({url:variant.featuredMedia.thumbnailSrc})"/>
             </span>
-            {{variant.title}}
+            {{variant.title.replace("Peanut Butter", "PB")}}
           </li>
         </ul>
       </transition>

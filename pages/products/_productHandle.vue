@@ -23,7 +23,8 @@
               :page="page"
             />
             <BlendjetOnePDP v-cloak v-else-if="product.handle === 'blendjet-one'" :product="product" :page="page" /> 
-            <JetpackVariantPDP v-cloak v-else-if="product.handle.includes('variant')" :product="product" :page="page" />
+            <JetpackVariantPDP v-cloak v-else-if="product.handle.includes('variant')" :product="product" :page="page" />            
+            <JetpackProteinVariantPDP v-cloak v-else-if="product.handle.includes('protein')" :product="product" :page="page" />            
             <JetpackPDP v-cloak v-else-if="product.handle.includes('jetpack')" :product="product" :page="page" />
             <ProductDetail v-cloak v-else :product="product" :page="page" />
           </transition>
@@ -80,6 +81,7 @@ import ProductDetail from '~/components/ProductDetail'
 import BlendjetPDP from '~/components/blendJetPDP'
 import JetpackPDP from '~/components/jetpackPDP'
 import JetpackVariantPDP from '~/components/jetpackVariantPDP'
+import JetpackProteinVariantPDP from '~/components/jetpackProteinVariantPDP'
 import BlendjetOnePDP from '~/components/blendJetOnePDP'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
@@ -91,6 +93,7 @@ export default {
     BlendjetPDP,
     JetpackPDP,
     JetpackVariantPDP,
+    JetpackProteinVariantPDP,    
     BlendjetOnePDP
   },
   mixins: [
