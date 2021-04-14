@@ -41,6 +41,11 @@
       "permanent": true
     },
     {
+      "source": "/patterns",
+      "destination": "/products/blendjet-2-patterns",
+      "permanent": true
+    },
+    {
       "source": "/PrimeDay",
       "destination": "/products/blendjet-2",
       "permanent": true
