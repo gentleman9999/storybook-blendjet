@@ -66,7 +66,6 @@ export default {
                     !result.item.title.includes('Auto Delivery') &&
                     !result.item.title.includes('Starter Kit') &&
                     !result.item.title.includes('Patterns') &&   
-                    !result.item.title.includes('test') &&   
                     !result.item.title.includes('Test') &&                                                            
                     !result.item.title.includes('DHL')
                     
