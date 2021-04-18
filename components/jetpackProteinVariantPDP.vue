@@ -10,6 +10,7 @@
           />
         </div>
         <div class="product-select__controls__mobile-title-container">
+<a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie"><div class="inner-text" style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;max-width: 360px;margin: 30px auto 30px auto;">Try Our Original JetPack Smoothies</div></a>	        
           <div class="product-select__controls__title">
             {{ currentVariant.title }}
           </div>
@@ -36,6 +37,7 @@
         <div class="product-select__controls">
           <div class="product-select__controls__container">
             <div class="product-select__controls__title-container">
+<a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie"><div class="inner-text" style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;">Try Our Original JetPack Smoothies</div></a>	            
               <div class="product-select__controls__title">
                 {{ currentVariant.title }}
               </div>

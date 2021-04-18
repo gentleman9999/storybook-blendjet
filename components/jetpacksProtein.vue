@@ -20,7 +20,7 @@
       </svg>
     </div>
     <div class="title-container__subheading">
-      Ready-to-Blend Smoothies from Just $2.99
+      NEW! Protein Smoothies from Just $2.99
     </div>
     <!-- <div class="jetpack-tabs">
       <Tabs :tabItems="['smoothies', 'protein smoothies', 'lattes']" @activeTab="jetpackTabChange"/>
@@ -38,14 +38,16 @@
       >
         <template slot="item" slot-scope="props">
           <div class="card" :style="cardStyle">
-            <div class="card-image" @click="$router.push(`/products/${props.list.handle}`)" :style="{ 'background-image': getBGColor(props.list.title), height: '440px', cursor:'pointer' }">
+<!-- 	              Ryan Hack - Please Fix - Hard coded handle -->	          
+            <div class="card-image" @click="$router.push(`/products/jetpack-protein-smoothie`)" :style="{ 'background-image': getBGColor(props.list.title), height: '440px', cursor:'pointer' }">
               <figure class="image" :style="cardContentStyle">
                 <img class="jetpack-image" :style="imageStyle" :src="props.list.featuredMedia.src" :alt="props.list.featuredMedia.altText">
               </figure>
             </div>
             <div class="card-content" >
               <div class="content">
-                <p class="title is-6 jetpack-title" :style="titleStyle" @click="$router.push(`/products/${props.list.handle}`)">{{ props.list.title.split('-')[0].trim()}}</p>
+<!-- 	              Ryan Hack - Please Fix - Hard coded handle -->	          
+                <p class="title is-6 jetpack-title" :style="titleStyle" @click="$router.push(`/products/jetpack-protein-smoothie}`)">{{ props.list.title.split('-')[0].trim()}}</p>
               </div>
             </div>
           </div>
@@ -169,18 +171,18 @@ export default {
       //Needs update for additional colors
       getBGColor(item) {
         let title = item.toLowerCase();
-        if(title.includes('banana')) {
-          return 'linear-gradient(146deg, #aacaff 0%, #3c61ad 80%)'
-        } else if(title.includes('raspberry')) {
-          return 'linear-gradient(146deg, #eac5d2 0%, #cb355d 80%)'
-        } else if(title.includes('green')) {
-          return 'linear-gradient(146deg, #ede7a3 0%, #e29466 80%)'
-        } else if(title.includes('mango')) {
-          return 'linear-gradient(146deg, #f1df8b 0%, #e6a40e 80%)'
-        } else if(title.includes('mocha')) {
-          return 'linear-gradient(146deg, #e3e3ed 0%, #8c8ecd 80%)'
-        } else if(title.includes('tropical')) {
-          return 'linear-gradient(146deg, #f9f1be 0%, #ebd54d 80%)'
+        if(title.includes('strawberry banana')) {
+          return 'linear-gradient(146deg, #e28761 0%, #cc493d 80%)'
+        } else if(title.includes('peanut butter power breakfast')) {
+          return 'linear-gradient(146deg, #ecddc1 0%, #a76f34 80%)'
+        } else if(title.includes('blueberry acai')) {
+          return 'linear-gradient(146deg, #97a5db 0%, #473289 80%)'
+        } else if(title.includes('orange mango pineapple')) {
+          return 'linear-gradient(146deg, #e9e2b5 0%, #e2a23c 80%)'
+        } else if(title.includes('very berry')) {
+          return 'linear-gradient(146deg, #e4b2b5 0%, #df626a 80%)'
+        } else if(title.includes('chocolate peanut butter banana')) {
+          return 'linear-gradient(146deg, #dfd5ed 0%, #8440d9 80%)'
         } else {
           return 'none'
         }
@@ -196,17 +198,20 @@ export default {
     this.screenWidth = window.innerWidth;
     const vm = this
     this.jetpacks = await this.$nacelle.data.collectionPage({ 
-      handle: 'jetpack-ready-to-blend-smoothies',
+      handle: 'jetpack-protein-smoothies-1',
       paginate: false,
 
     }).then((results) => {
       
       let arr = results.filter((item) => {
-//         console.log(item)
+        console.log(item)
         return item.availableForSale
       })
       vm.showIndicator(arr)
-      return arr
+      
+      //HACK BY RYAN TO PULL PRODUCT VARIANTS
+// 	  console.log(arr[0].variants)
+      return arr[0].variants
     })
     
     this.setWidthData()

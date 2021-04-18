@@ -60,6 +60,12 @@
 
         <div class="section section__jetpacks"  >
           <transition name="fade">
+             <JetpacksProtein  />
+           </transition>
+        </div>
+
+        <div class="section section__jetpacks"  >
+          <transition name="fade">
              <Jetpacks  />
            </transition>
         </div>
@@ -111,6 +117,7 @@ import localforage from 'localforage'
 import PageContent from '~/components/nacelle/PageContent'
 import Ticker from '~/components/ticker'
 import debounce from 'lodash.debounce'
+import JetpacksProtein from '~/components/jetpacksProtein'
 import Jetpacks from '~/components/jetpacks'
 import Jetsetter from '~/components/jetsetter'
 import RecipesList from '~/components/recipes-list'
@@ -144,6 +151,7 @@ export default nmerge({
     Ticker,
     RecipesList,
     Jetpacks,
+    JetpacksProtein,
     Jetsetter,
     Instagram,
     BlendJetDemo,
