@@ -99,7 +99,8 @@ export default {
       },
       cardStyle: {
         background: 'transparent',
-        boxShadow: 'none'
+        boxShadow: 'none',
+		borderRadius: '0px'
       },
       cardContentStyle: {
         height: '440px',
