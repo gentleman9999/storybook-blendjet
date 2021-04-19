@@ -65,7 +65,8 @@ export default {
                     result.item.vendor !== 'Extend' && 
                     !result.item.title.includes('Auto Delivery') &&
                     !result.item.title.includes('Starter Kit') &&
-                    !result.item.title.includes('Patterns') &&                    
+                    !result.item.title.includes('Patterns') &&   
+                    !result.item.title.includes('Test') &&                                                            
                     !result.item.title.includes('DHL')
                     
           })

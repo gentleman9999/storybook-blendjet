@@ -3,8 +3,11 @@
   <div class="pdp-container" v-if="product && jetpacks.length">
     <div class="product-select">
       <div class="hidden-product-price" v-show="false"><product-price :price="product.variants[0].price" @DisplayPrice="setDisplayPrice" @Currency="setCurrency" /></div>
-      <div class="product-select__controls__mobile-title-container">
-        <div class="product-select__controls__title">
+      <div class="product-select__controls__mobile-title-container">	   
+	      
+<a href="/products/jetpack-protein-smoothie"><div class="inner-text" style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;max-width: 360px;margin: 30px auto 30px auto;">Try our NEW Protein Smoothies</div></a>
+	         
+        <div class="product-select__controls__title">	        
           {{formatTitle(product.title)}}
         </div>
         <div class="product-select__controls__category">
@@ -26,6 +29,9 @@
       <div class="product-select__controls">
         <div class="product-select__controls__container">
           <div class="product-select__controls__title-container">
+
+<a href="/products/jetpack-protein-smoothie"><div class="inner-text" style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;">Try our NEW Protein Smoothies</div></a>
+
             <div class="product-select__controls__title">
               {{formatTitle(product.title)}}
             </div>
