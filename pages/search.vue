@@ -210,7 +210,7 @@ export default {
       searchResultsNumber: null,
       results: null,
       viewAll: false,
-      rating: 4.8,
+      rating: null,
       metaTitle: 'Search BlendJet.com - BlendJet®',
       metaDescription: 'Are you looking for a specific product or recipe? Our search function makes quick browsing a breeze. Shop online now, and join the BlendJet revolution!'
     }
