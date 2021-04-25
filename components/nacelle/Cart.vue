@@ -249,6 +249,7 @@ import Close from '~/components/svg/modalClose'
 // const routeapp = () => import('~/plugins/routeApp.js');
 
 import imageOptimize from '~/mixins/imageOptimize'
+import customerChat from '~/mixins/customerChat'
 export default {
   components: {
     CartFlyoutHeader,
@@ -266,7 +267,7 @@ export default {
     BlendJetOneCart,
     Close
   },
-  mixins: [imageOptimize],
+  mixins: [imageOptimize, customerChat],
   data() {
     return {
       showUpsell: false,
@@ -291,10 +292,6 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
-
-      if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
-        window.FB.CustomerChat.show(false)
-      }
     },
     handleCheckoutDisable(value) {
       this.checkoutDisabled = value
@@ -321,10 +318,6 @@ export default {
         this.checkoutDisabled = true
         if(this.isMobile) {
           this.hideCart()
-
-          if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
-            window.FB.CustomerChat.show(false)
-          }
         }
       } else {
         this.checkoutDisabled = false
@@ -337,9 +330,7 @@ export default {
       //   document.body.style.overflowY = 'scroll'
       // }
 
-      if (newValue && window.FB && window.FB.CustomerChat && window.FB.CustomerChat.hide) {
-        window.FB.CustomerChat.hide()
-      }
+      this.toggleCustomerChat('cart')
     },
     cartSubtotal() {
       // console.log('cart balance getter', this.cartBalance)

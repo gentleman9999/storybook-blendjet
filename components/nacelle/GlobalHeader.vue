@@ -103,7 +103,7 @@
     <transition name="fade">
      <div class="mobile-menu" v-if="menuVisible">
         <div class="mobile-menu__header" >
-          <button class="mobile-menu__header__close" @click="toggleShowMenu">
+          <button class="mobile-menu__header__close" @click="handleToggleShowMenu">
             <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
                 <g id="Home-Nav" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -204,6 +204,8 @@ import Axios from 'axios'
 import Cart from '~/components/nacelle/Cart'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 
+import customerChat from '~/mixins/customerChat'
+
 export default {
   data() {
     return {
@@ -236,7 +238,6 @@ export default {
     this.getLocale()
 
   },
-
   components: {
     Cart,
     MainNavCart,
@@ -248,6 +249,7 @@ export default {
       default: true
     }
   },
+  mixins: [customerChat],
   watch: {
     "$nuxt.$route.name"(value) {
       this.routeName = value;
@@ -331,6 +333,11 @@ export default {
     },
     handleCloseMenu() {
       this.closeMenu()
+      this.showCustomerChat('navbar')
+    },
+    handleToggleShowMenu() {
+      this.toggleShowMenu()
+      this.showCustomerChat('navbar')
     },
     removeScrollWatch() {
       window.removeEventListener('scroll', this.handleDebouncedScroll)

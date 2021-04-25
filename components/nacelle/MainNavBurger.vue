@@ -6,7 +6,7 @@
     v-show="!menuVisible"
     :class="{ 'is-active': menuVisible }"
     :style="{'color': navColor}"
-    @click="toggleShowMenu"
+    @click="handleToggleShowMenu"
   >
     <span aria-hidden="true"></span>
     <span aria-hidden="true"></span>
@@ -17,6 +17,8 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+
+import customerChat from '~/mixins/customerChat'
 
 export default {
   props: {
@@ -31,11 +33,17 @@ export default {
       default: 'black'
     }
   },
+  mixins: [customerChat],
   computed: {
     ...mapState('menu', ['menuVisible'])
   },
   methods: {
-    ...mapMutations('menu', ['toggleShowMenu'])
+    ...mapMutations('menu', ['toggleShowMenu']),
+
+    handleToggleShowMenu() {
+      this.toggleShowMenu()
+      this.hideCustomerChat('navbar')
+    }
   }
 }
 </script>
