@@ -162,7 +162,7 @@ export default nmerge({
 
 <style lang="scss" scoped>
 .article-page {
-  margin-top: 100px;
+  margin-top: 5px;
   // background-image: linear-gradient(to bottom, #ffffff, #f6f5fd);
 
 }
@@ -209,7 +209,6 @@ export default nmerge({
   padding: 2rem;
   padding-bottom: 5rem;
   background-color: #ffffff;
-  border: 1px solid #f5f5f5;
   max-width: 1024px;
 }
 
