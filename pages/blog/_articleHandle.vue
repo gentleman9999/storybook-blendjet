@@ -209,6 +209,7 @@ export default nmerge({
   padding: 2rem;
   padding-bottom: 5rem;
   background-color: #ffffff;
+  border: 1px solid #f5f5f5;
   max-width: 1024px;
 }
 
