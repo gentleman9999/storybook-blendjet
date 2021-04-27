@@ -1,80 +1,47 @@
 <template>
-  <transition name="fade">
-    <div
-      class="pdp-container"
-      v-if="currentVariant"
-      :style="[!currentVariant ? 'height:100vh' : 'auto']"
-    >
-      <div class="product-select">
-        <div class="product-select__controls__mobile-title-container">
-          <div class="product-select__controls__title">
-            {{ product.title }}
-          </div>
-          <div class="product-select__controls__rating">
+<transition name="fade" >
+  <div class="pdp-container" v-if="currentVariant" :style="[!currentVariant ? 'height:100vh': 'auto']">
+    <div class="product-select">
+      <div class="product-select__controls__mobile-title-container">
+        <div class="product-select__controls__title">
+          {{product.title}}
+        </div>
+        <div class="product-select__controls__rating" >
             <loox-product-rating :product="product" />
-          </div>
-          <div class="product-select__controls__price">
-            <product-price
-              @Country="setCoutry"
-              @DisplayPrice="setDisplayPrice"
-              @Currency="setCurrency"
-              v-if="currentVariant"
-              :price="currentVariant.price"
-              :variantId="currentVariant.id"
-            />
-            <product-price
-              v-show="
-                currentVariant.compareAtPrice &&
-                  currentVariant.compareAtPrice !== currentVariant.price &&
-                  compareAtPrice !== displayPrice
-              "
-              @CompareAtLocal="setCompareAtPrice"
-              :price="currentVariant.compareAtPrice"
-              :strikethrough="true"
-              :variantId="currentVariant.id"
-            />
-            <div
-              class="product-select__controls__price__installments"
-              v-if="showAfterPay"
-            >
-              <afterpay-placement
-                data-locale="en_US"
-                :data-currency="currency"
-                :data-amount="displayPrice"
-                data-modal-theme="white"
-                data-size="xs"
-                data-logo-type="lockup"
+        </div>
+        <div class="product-select__controls__price">
+          <product-price @Country="setCoutry" @DisplayPrice="setDisplayPrice" @Currency="setCurrency" v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
+          <product-price v-show="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice" @CompareAtLocal="setCompareAtPrice"
+              :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
+          <div class="product-select__controls__price__installments" v-if="showAfterPay">
+            <afterpay-placement
+                  data-locale="en_US"
+                  :data-currency="currency"
+                  :data-amount="displayPrice"
+                  data-modal-theme="white"
+                  data-size="xs"
+                  data-logo-type="lockup"
               ></afterpay-placement>
-            </div>
           </div>
         </div>
-        <div class="product-select__image-carousel">
-          <div
-            v-if="variants.length > 1"
-            class="product-select__image-carousel__prev-variant"
-            @click="decrementVariant"
-          >
-            <PrevSlide />
-          </div>
-          <div
-            v-if="variants.length > 1"
-            class="product-select__image-carousel__next-variant"
-            @click="incrementVariant"
-          >
-            <NextSlide />
-          </div>
-          <transition name="fade" mode="out-in">
-            <picture v-if="productImage">
-              <source :srcset="optimizeSource({ url: heroUrl })" />
-              <img
-                class="product-select__image-carousel__img"
-                :src="optimizeSource({ url: productImage })"
-              />
-            </picture>
-          </transition>
+      </div>
+      <div class="product-select__image-carousel">
+        <div v-if="variants.length > 1" class="product-select__image-carousel__prev-variant" @click="decrementVariant">
+          <PrevSlide />
         </div>
-        <div class="product-select__controls">
-          <div class="product-select__controls__title-container">
+        <div v-if="variants.length > 1" class="product-select__image-carousel__next-variant" @click="incrementVariant">
+          <NextSlide />
+        </div>
+      <transition name="fade" mode="out-in">
+        <picture v-if="productImage">
+          <source :srcset="optimizeSource({url: heroUrl})" />
+          <img class="product-select__image-carousel__img" :src="optimizeSource({url: productImage, width: 2100})" />
+        </picture>
+      </transition>
+
+      </div>
+      <div class="product-select__controls">
+        <div class="product-select__controls__title-container">
             <div class="product-select__controls__title">
               {{ product.title }}
             </div>
@@ -739,7 +706,7 @@
                 <span class="image">
                   <img
                     class="media-content__carousel__img"
-                    :src="optimizeSource({ url: image })"
+                    :src="optimizeSource({url: image, width: 2800})"
                   />
                 </span>
               </section>
@@ -1297,30 +1264,27 @@ export default {
 
       // Try to query this product's contentful data
       // Note - You can't use Nacelle's SDK due to a bug when querying content models with the title `product`
-      await this.client
-        .getEntries({
-          content_type: 'product',
-          'fields.handle': this.product.handle
-        })
-        .then(data => {
-          if (!data || !Array.isArray(data.items) || data.items.length === 0) {
-            // No content model found...
-          } else {
-            // Get first item
-            const item = data.items[0]
 
-            // For each variant content model...
-            item.fields.variants.forEach(node => {
-              let productImage = node.fields.productImage
-                ? `https:${node.fields.productImage.fields.file.url}?w=2100`
-                : null
-              vm.variantMedia[node.fields.title] = {
-                productImage: productImage,
-                heroImages: node.fields.heroImages.map(image => {
-                  return `${image.fields.file.url}?w=2100`
-                })
-              }
-            })
+      await this.client.getEntries({
+        content_type: 'product',
+        'fields.handle': this.product.handle
+      }).then((data)=>{
+        if (!data || !Array.isArray(data.items) ||data.items.length === 0) {
+          // No content model found...
+        } else {
+          // Get first item
+          const item = data.items[0];
+
+          // For each variant content model...
+          item.fields.variants.forEach((node)=>{
+            vm.variantMedia[node.fields.title] = {
+              productImage: `https:${node.fields.productImage.fields.file.url}`,
+              heroImages: node.fields.heroImages.map((image) => {
+                return `${image.fields.file.url}`
+              })
+            }
+          });
+
 
             let sections = item.fields.productDescription
             vm.specs = sections.pop()

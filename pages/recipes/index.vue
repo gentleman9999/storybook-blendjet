@@ -15,7 +15,7 @@
           class="column is-one-quarter"
         >
           <n-link :to="`/recipes/${recipe.fields.handle}`" class="recipe-teaser">
-            <div class="recipe-teaser__img" :style="`background-image: url('${recipe.fields.teaserImage.fields.file.url}')`"></div>
+            <div class="recipe-teaser__img" :style="`background-image: url('${optimizeSource({ url:recipe.fields.teaserImage.fields.file.url, width: 500})}')`"></div>
             <h5 class="recipe-teaser__title">{{ recipe.fields.title }}</h5>
             <div class="recipe-teaser__text">{{ recipe.fields.teaserText }}</div>
           </n-link>
@@ -33,8 +33,10 @@
   </div>
 </template>
 <script>
+import imageOptimize from '~/mixins/imageOptimize';
 import { createClient } from '~/plugins/contentful';
 const client = createClient();
+
 
 export default {
   data() {
@@ -68,6 +70,7 @@ export default {
       })
     }
   },
+  mixins: [imageOptimize],
   async asyncData ({params}) {
 
     // Get Recipe Blog Page

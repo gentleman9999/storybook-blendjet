@@ -22,7 +22,7 @@
       <div class="product-select__image-carousel">
 
       <transition name="fade" mode="out-in">
-        <img class="product-select__image-carousel__img" :src="optimizeSource({url: productImage })" />
+        <img class="product-select__image-carousel__img" :src="optimizeSource({url: productImage, size: 2100 })" />
       </transition>
 
       </div>
@@ -549,9 +549,9 @@ export default {
           .then((entry) => {
             entry.fields.variants.forEach((node) => {
               vm.media[node.fields.title] = {
-                productImage: `https:${node.fields.productImage.fields.file.url}?w=2100`,
+                productImage: `https:${node.fields.productImage.fields.file.url}`,
                 heroImages: node.fields.heroImages.map((image) => {
-                  return `${image.fields.file.url}?w=2100`
+                  return `${image.fields.file.url}`
                 }),
                 bannerText: node.fields.description
 

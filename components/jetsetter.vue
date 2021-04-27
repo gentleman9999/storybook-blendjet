@@ -26,7 +26,12 @@
           <div class="card" :style="cardStyle">
             <div class="card-image" @click="$router.push(`/products/${props.list.handle}`)" :style="{ 'background-image': getBGColor(props.list.title), height: '440px', cursor:'pointer' }">
               <figure class="image" :style="cardContentStyle">
-                <img class="jetpack-image" :style="imageStyle" :src="props.list.featuredMedia.src" :alt="props.list.featuredMedia.altText">
+                <img 
+                  class="jetpack-image" 
+                  :style="imageStyle" 
+                  :src="optimizeSource({url: props.list.featuredMedia.src, width: 500})" 
+                  :alt="props.list.featuredMedia.altText"
+                >
               </figure>
             </div>
             <div class="card-content" >
@@ -71,6 +76,8 @@
 
 <script>
 import Tabs from './tabs';
+import imageOptimize from '~/mixins/imageOptimize'
+
 // import JetpackPDPModal from '~/components/jetpackPDPModal'
 export default {
   data() {
@@ -164,7 +171,7 @@ export default {
       jetpackTabChange(value) {
       }
     },
-
+  mixins: [imageOptimize],
   components: {
     Tabs
   },
