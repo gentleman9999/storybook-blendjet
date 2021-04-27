@@ -1,12 +1,9 @@
 <template>
-  <div
-    class="checkout-button" role="button"
-    :class="{ 'is-loading': loading }"
-    @click="checkout"
-    
-  >
+  <div class="checkout-button" role="button" :class="{ 'is-loading': loading }" @click="checkout">
     {{ checkoutText }}
-    <span class="subtotal" v-if="cartSubtotal > 0 && showPrice && displayPrice">&nbsp;—&nbsp;{{displayPrice}}</span>
+    <span class="subtotal" v-if="cartSubtotal > 0 && showPrice && displayPrice"
+      >&nbsp;—&nbsp;{{ displayPrice }}</span
+    >
   </div>
 </template>
 
@@ -40,75 +37,73 @@ export default {
   },
   computed: {
     ...mapGetters('cart', ['cartSubtotal']),
-     ...mapState('cart', ['lineItems'])
+    ...mapState('cart', ['lineItems'])
   },
   methods: {
     ...mapMutations('cart', ['setCartError']),
     ...mapActions('checkout', ['processCheckout']),
     async getDisplayPrice() {
-      
-      let _price = this.cartSubtotal;
+      let _price = this.cartSubtotal
 
       let priceData = []
 
-      this.lineItems.forEach((item) => {
+      this.lineItems.forEach(item => {
         priceData.push({
-          "Price": item.variant.price,
-          "Tag": atob(item.variant.id).split('/').pop()
+          Price: item.variant.price,
+          Tag: atob(item.variant.id)
+            .split('/')
+            .pop()
         })
       })
-      
-      const price = encodeURIComponent(JSON.stringify(
-          priceData
-        ))
-      
-/*
+
+      const price = encodeURIComponent(JSON.stringify(priceData))
+
+      /*
         const config = {
           method: 'get',
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
         }
 */
 
-		//START OF RYAN MOD to override currency
-       
-        //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
-		if(document.cookie.includes('_rchcur')){
-			var config = {
-			    method: 'get',
-			    url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=`+document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop()+`&MerchantPrices=${price}`,
-		    }
-		}
-		else {
-			var config = {
-		    	method: 'get',
-				url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
-		    }			
-		}
-		//END OF RYAN MOD
+      //START OF RYAN MOD to override currency
 
-		
+      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      if (document.cookie.includes('_rchcur')) {
+        var config = {
+          method: 'get',
+          url:
+            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
+            `&MerchantPrices=${price}`
+        }
+      } else {
+        var config = {
+          method: 'get',
+          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+        }
+      }
+      //END OF RYAN MOD
+
       const localPrice = await Axios(config)
-        .then((res) => {
-          if(!res.data.ConsumerPrices[0]) {
+        .then(res => {
+          if (!res.data.ConsumerPrices?.length) {
             this.displayPrice = `${res.data.Symbol}${_price.toFixed(2)}`
           } else {
             let localSubtotal = res.data.ConsumerPrices.reduce((acc, item, i) => {
               let quantTotal = Number(item * this.lineItems[i].quantity)
               return acc + quantTotal
             }, 0)
-				if(res.data.Symbol == null){
-					this.displayPrice = `${localSubtotal.toFixed(2)} ${res.data.Currency}`
-				}
-				else {
-					this.displayPrice = `${res.data.Symbol}${localSubtotal.toFixed(2)}`
-	            }
+            if (res.data.Symbol == null) {
+              this.displayPrice = `${localSubtotal.toFixed(2)} ${res.data.Currency}`
+            } else {
+              this.displayPrice = `${res.data.Symbol}${localSubtotal.toFixed(2)}`
+            }
           }
 
           this.$emit('Country', res.data.Country)
           this.$emit('DisplayPrice', this.displayPrice)
-         
         })
-        .catch((res) => {
+        .catch(res => {
           console.error('Currency Request Failed', res)
           this.displayPrice = `$${this._price}`
         })
@@ -124,7 +119,7 @@ export default {
             // Allows processing after checkout create and before redirecting.
           }
         })
-      } catch(err) {
+      } catch (err) {
         console.log(err)
         this.setCartError(err)
         this.loading = false

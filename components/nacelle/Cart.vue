@@ -1,48 +1,56 @@
 <template>
   <transition name="fade">
     <div class="cart-container" v-if="cartVisible">
+      <!-- <div
+        v-if="!isMobile"
+        style="background: black;height: 100px;color:white;position: absolute;text-align: center;font-size:42px;line-height: 100px;width:calc(100% - 394px);"
+      >
+        BLACK FRIDAY DEALS
+      </div> -->
 
-<!--
-      <div v-if="!isMobile" style="background: black;height: 100px;color:white;position: absolute;text-align: center;font-size:42px;line-height: 100px;width:calc(100% - 394px);">
-	      BLACK FRIDAY DEALS
-      </div>	    
-
-  
-      <div v-if="!isMobile" class="jetpack-upsell" >
+      <!-- <div v-if="!isMobile" class="jetpack-upsell">
         <BlendJetCart />
-      </div>
-      
-      <div v-if="!isMobile" class="blendjet-upsell" > 
+      </div> -->
+
+      <!-- <div v-if="!isMobile" class="blendjet-upsell">
         <JetpackCart />
-      </div>
-      
-      <div v-if="!isMobile" class="jetpack-upsell" >
+      </div> -->
+
+      <!-- <div v-if="!isMobile" class="jetpack-upsell">
         <SleeveCart />
-      </div>
-      
-      <div v-if="!isMobile" class="blendjet-upsell" > 
+      </div> -->
+
+      <!-- <div v-if="!isMobile" class="blendjet-upsell">
         <ToteCart />
-      </div>
--->
+      </div> -->
 
       <transition name="fade">
         <div v-if="!isMobile" style="z-index: 100000000;">
-	      <div style="position: fixed;width:446px;background-color: #E295C1;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;" class="ipadFix">
-		      <div style="margin: 0 auto; text-align: center;">SPRING SALE</div>
-		     </div>
-		     
-          <div class="mobile-upsell__container"  style="overflow: auto;height: 100%;padding-top:40px;">
+          <div
+            style="position: fixed;width:446px;background-color: #E295C1;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
+            class="ipadFix"
+          >
+            <div style="margin: 0 auto; text-align: center;">SPRING SALE</div>
+          </div>
+
+          <div
+            class="mobile-upsell__container"
+            style="overflow: auto;height: 100%;padding-top:40px;"
+          >
             <div class="mobile-upsell__component-container">
               <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
                 <JetpackCart />
               </div>
+              <div class="mobile-upsell__jetpacks">
+                <JetpackProteinCart />
+              </div>
               <div class="mobile-upsell__blendjet" style="height: unset;">
                 <BlendJetCart />
               </div>
-			  <div class="mobile-upsell__blendjet" style="height: unset;">
+              <div class="mobile-upsell__blendjet" style="height: unset;">
                 <SleeveCart />
               </div>
-                <div class="mobile-upsell__blendjet" style="height: unset;">
+              <div class="mobile-upsell__blendjet" style="height: unset;">
                 <BookCart />
               </div>
               <div class="mobile-upsell__blendjet" style="height: unset;padding-bottom: 40px;">
@@ -50,123 +58,244 @@
               </div>
               <div class="mobile-upsell__blendjet" style="height: unset;">
                 <BlendJetOneCart />
-              </div>              
+              </div>
 
-              <div style="background: #1E90BB;z-index: 9999;width:100%;height:50px;position: relative;box-shadow: 0 0 50px 50px #1E90BB;"></div>
-              
+              <div
+                style="background: #1E90BB;z-index: 9999;width:100%;height:50px;position: relative;box-shadow: 0 0 50px 50px #1E90BB;"
+              ></div>
             </div>
-            
-            	      <div style="position: fixed;width:446px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 200px;z-index: 10000000;font-size:18px;font-family: 'Medium';line-height: 180px;bottom: 0;pointer-events: none;z-index: 99;" class="ipadFix">
-		      		      <div style="margin: 0 auto; text-align: center;line-height: 320px;">	      		      
-		      <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-</svg>
-SCROLL FOR MORE
-		      		       <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-</svg>
-		     </div>
- 	     </div>  
- 	     
- 	     
+
+            <div
+              style="position: fixed;width:446px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 200px;z-index: 10000000;font-size:18px;font-family: 'Medium';line-height: 180px;bottom: 0;pointer-events: none;z-index: 99;"
+              class="ipadFix"
+            >
+              <div style="margin: 0 auto; text-align: center;line-height: 320px;">
+                <svg
+                  width="18px"
+                  height="18px"
+                  viewBox="0 0 16 16"
+                  class="bi bi-chevron-double-down"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+                SCROLL FOR MORE
+                <svg
+                  width="18px"
+                  height="18px"
+                  viewBox="0 0 16 16"
+                  class="bi bi-chevron-double-down"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </transition>
-      
 
-
-
-
-
-
-
-
-
-      
       <transition name="fade">
         <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
-	      <div style="position: fixed;width:377px;background-color: #E295C1;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;">
-		      <div style="margin: 0 auto; text-align: center;">SPRING SALE</div>
-		     </div>  
+          <div
+            style="position: fixed;width:377px;background-color: #E295C1;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
+          >
+            <div style="margin: 0 auto; text-align: center;">SPRING SALE</div>
+          </div>
           <div class="mobile-upsell__container">
-            <div class="mobile-upsell__close" @click="closeUpsellModal" style="z-index: 1000000000;position: fixed;top:0;right:0;">
+            <div
+              class="mobile-upsell__close"
+              @click="closeUpsellModal"
+              style="z-index: 1000000000;position: fixed;top:0;right:0;"
+            >
               <Close :color="'white'" />
             </div>
             <div class="mobile-upsell__component-container" style="padding-top:60px;">
               <div class="mobile-upsell__jetpacks">
                 <JetpackCart />
               </div>
+              <div class="mobile-upsell__jetpacks">
+                <JetpackProteinCart />
+              </div>
               <div class="mobile-upsell__blendjet">
                 <BlendJetCart />
               </div>
-                  <div class="mobile-upsell__blendjet">
+              <div class="mobile-upsell__blendjet">
                 <SleeveCart />
               </div>
-                  <div class="mobile-upsell__blendjet">
+              <div class="mobile-upsell__blendjet">
                 <BookCart />
-              </div>              
-                  <div class="mobile-upsell__blendjet" style="padding-bottom: 20px;">
+              </div>
+              <div class="mobile-upsell__blendjet" style="padding-bottom: 20px;">
                 <ToteCart />
               </div>
               <div class="mobile-upsell__blendjet">
                 <BlendJetOneCart />
-              </div>                            
-
+              </div>
             </div>
-            
-            	      <div style="position: fixed;width:377px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 100px;z-index: 10000000;font-size:12px;font-family: 'Medium';line-height: 180px;bottom: 79px;pointer-events: none;">
-		      		      <div style="margin: 0 auto; text-align: center;">
-		      <svg width="12px" height="12px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-</svg>
-		      SCROLL FOR MORE
-		      		       <svg width="12px" height="12px" viewBox="0 0 16 16" class="bi bi-chevron-double-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-</svg>
-		     </div>  	     </div>  
+
+            <div
+              style="position: fixed;width:377px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 100px;z-index: 10000000;font-size:12px;font-family: 'Medium';line-height: 180px;bottom: 79px;pointer-events: none;"
+            >
+              <div style="margin: 0 auto; text-align: center;">
+                <svg
+                  width="12px"
+                  height="12px"
+                  viewBox="0 0 16 16"
+                  class="bi bi-chevron-double-down"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+                SCROLL FOR MORE
+                <svg
+                  width="12px"
+                  height="12px"
+                  viewBox="0 0 16 16"
+                  class="bi bi-chevron-double-down"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+              </div>
+            </div>
             <div class="mobile-upsell__checkout" style="z-index:100000001;">
-              <cart-flyout-checkout-button  :checkoutText="'Continue to Checkout'" :showPrice="false" :class="[checkoutDisabled ? 'checkout-disabled' : null]" :key="1"/>
+              <cart-flyout-checkout-button
+                :checkoutText="'Continue to Checkout'"
+                :showPrice="false"
+                :class="[checkoutDisabled ? 'checkout-disabled' : null]"
+                :key="1"
+              />
             </div>
           </div>
         </div>
       </transition>
 
-      <div class="flyout" >
+      <div class="flyout">
         <cart-flyout-header @close="handleClose" />
-          
+
         <!-- <cart-flyout-messaging>
           <messaging-free-shipping-counter />
         </cart-flyout-messaging> -->
         <div class="cart-items">
-          <cart-item v-for="item in lineItems" :key="item.variant.id" :item="item" @checkoutDisabled="handleCheckoutDisable"></cart-item>
+          <cart-item
+            v-for="item in lineItems"
+            :key="item.variant.id"
+            :item="item"
+            @checkoutDisabled="handleCheckoutDisable"
+          ></cart-item>
         </div>
         <!-- <div v-if="loaded" class="route-insurance">
           <div id="RouteWidget"></div>
         </div> -->
-        <div class="cart-message">{{cartMessage}}</div>
-        <div class="free-shipping" v-if="country ==='US'">
+        <div class="cart-message">{{ cartMessage }}</div>
+        <div class="free-shipping" v-if="country === 'US'">
           <div class="free-shipping__svg">
-            <svg width="356px" height="26px" viewBox="0 0 356 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg
+              width="356px"
+              height="26px"
+              viewBox="0 0 356 26"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
               <title>FREE SHIPPING</title>
               <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="D-BlendJet-Cart_Picker" transform="translate(-1065.000000, -532.000000)">
                   <g id="Cart" transform="translate(1046.000000, 0.000000)">
                     <g id="FREE-SHIPPING" transform="translate(20.000000, 533.000000)">
-                      <rect id="Rectangle" stroke="#373795" fill="#FFFFFF" x="0" y="0" width="354" height="24" rx="6"></rect>
+                      <rect
+                        id="Rectangle"
+                        stroke="#373795"
+                        fill="#FFFFFF"
+                        x="0"
+                        y="0"
+                        width="354"
+                        height="24"
+                        rx="6"
+                      ></rect>
                       <g id="Group-4" transform="translate(110.000000, 8.000000)"></g>
                       <g id="Group" transform="translate(92.000000, 5.000000)">
-                        <text id="FREE-2-DAY-SHIPPING" font-family="Helvetica" font-size="10" font-weight="normal" line-spacing="14" letter-spacing="1.45833333" fill="#373795">
+                        <text
+                          id="FREE-2-DAY-SHIPPING"
+                          font-family="Helvetica"
+                          font-size="10"
+                          font-weight="normal"
+                          line-spacing="14"
+                          letter-spacing="1.45833333"
+                          fill="#373795"
+                        >
                           <tspan x="39.5" y="10">FREE 2-DAY SHIPPING</tspan>
                         </text>
                         <g>
-                          <path d="M31.7462908,6.80922432 L30.5059347,2.90566038 C30.3931751,2.55345912 30.0548961,2.28930818 29.6884273,2.28930818 L25.8545994,2.28930818 L25.8545994,0.410901468 C25.8545994,0.176100629 25.6854599,0 25.4881306,0 L13.3664688,0 C13.1691395,0 13,0.176100629 13,0.410901468 L13,11.0943396 C13,11.2997904 13.1691395,11.475891 13.3664688,11.475891 L15.227003,11.475891 C15.227003,11.475891 15.227003,11.475891 15.227003,11.475891 C15.227003,12.884696 16.3264095,14 17.6513353,14 C18.9762611,14 20.0756677,12.8553459 20.0756677,11.475891 C20.0756677,11.475891 20.0756677,11.475891 20.0756677,11.475891 L24.8961424,11.475891 C24.8961424,11.475891 24.8961424,11.475891 24.8961424,11.475891 C24.8961424,12.884696 25.995549,14 27.3204748,14 C28.6454006,14 29.7448071,12.8553459 29.7448071,11.475891 C29.7448071,11.475891 29.7448071,11.475891 29.7448071,11.475891 L31.5771513,11.475891 C31.8026706,11.475891 32,11.2704403 32,11.0356394 L32,8.5115304 C32,7.9245283 31.9154303,7.36687631 31.7462908,6.80922432 Z M17.6513353,12.6792453 C17.0311573,12.6792453 16.495549,12.1509434 16.495549,11.475891 C16.495549,10.8301887 17.0029674,10.2725367 17.6513353,10.2725367 C18.2715134,10.2725367 18.8071217,10.8008386 18.8071217,11.475891 C18.8071217,12.1509434 18.2997033,12.6792453 17.6513353,12.6792453 Z M27.3486647,12.6792453 C26.7284866,12.6792453 26.1928783,12.1509434 26.1928783,11.475891 C26.1928783,10.8301887 26.7002967,10.2725367 27.3486647,10.2725367 C27.9970326,10.2725367 28.4762611,10.8301887 28.4762611,11.475891 C28.4762611,12.1509434 27.9688427,12.6792453 27.3486647,12.6792453 Z M29.9985163,6.31027254 L26.2210682,6.31027254 C26.0237389,6.31027254 25.8827893,6.16352201 25.8827893,5.95807128 L25.8827893,3.99161426 C25.8827893,3.78616352 26.0237389,3.639413 26.2210682,3.639413 L29.1246291,3.639413 C29.2655786,3.639413 29.4065282,3.72746331 29.462908,3.87421384 L30.1676558,6.0754717 C30.1958457,6.19287212 30.111276,6.31027254 29.9985163,6.31027254 Z" id="Shape" fill="#373795" fill-rule="nonzero"></path>
-                          <line x1="10" y1="9.5" x2="-1.06858966e-14" y2="9.5" id="Line-2" stroke="#373795" stroke-width="1.5" stroke-linecap="round"></line>
-                          <line x1="10" y1="3.5" x2="5.5" y2="3.5" id="Line-2-Copy" stroke="#373795" stroke-width="1.5" stroke-linecap="round"></line>
-                          <line x1="10" y1="6.5" x2="3.5" y2="6.5" id="Line-2-Copy-2" stroke="#373795" stroke-width="1.5" stroke-linecap="round"></line>
+                          <path
+                            d="M31.7462908,6.80922432 L30.5059347,2.90566038 C30.3931751,2.55345912 30.0548961,2.28930818 29.6884273,2.28930818 L25.8545994,2.28930818 L25.8545994,0.410901468 C25.8545994,0.176100629 25.6854599,0 25.4881306,0 L13.3664688,0 C13.1691395,0 13,0.176100629 13,0.410901468 L13,11.0943396 C13,11.2997904 13.1691395,11.475891 13.3664688,11.475891 L15.227003,11.475891 C15.227003,11.475891 15.227003,11.475891 15.227003,11.475891 C15.227003,12.884696 16.3264095,14 17.6513353,14 C18.9762611,14 20.0756677,12.8553459 20.0756677,11.475891 C20.0756677,11.475891 20.0756677,11.475891 20.0756677,11.475891 L24.8961424,11.475891 C24.8961424,11.475891 24.8961424,11.475891 24.8961424,11.475891 C24.8961424,12.884696 25.995549,14 27.3204748,14 C28.6454006,14 29.7448071,12.8553459 29.7448071,11.475891 C29.7448071,11.475891 29.7448071,11.475891 29.7448071,11.475891 L31.5771513,11.475891 C31.8026706,11.475891 32,11.2704403 32,11.0356394 L32,8.5115304 C32,7.9245283 31.9154303,7.36687631 31.7462908,6.80922432 Z M17.6513353,12.6792453 C17.0311573,12.6792453 16.495549,12.1509434 16.495549,11.475891 C16.495549,10.8301887 17.0029674,10.2725367 17.6513353,10.2725367 C18.2715134,10.2725367 18.8071217,10.8008386 18.8071217,11.475891 C18.8071217,12.1509434 18.2997033,12.6792453 17.6513353,12.6792453 Z M27.3486647,12.6792453 C26.7284866,12.6792453 26.1928783,12.1509434 26.1928783,11.475891 C26.1928783,10.8301887 26.7002967,10.2725367 27.3486647,10.2725367 C27.9970326,10.2725367 28.4762611,10.8301887 28.4762611,11.475891 C28.4762611,12.1509434 27.9688427,12.6792453 27.3486647,12.6792453 Z M29.9985163,6.31027254 L26.2210682,6.31027254 C26.0237389,6.31027254 25.8827893,6.16352201 25.8827893,5.95807128 L25.8827893,3.99161426 C25.8827893,3.78616352 26.0237389,3.639413 26.2210682,3.639413 L29.1246291,3.639413 C29.2655786,3.639413 29.4065282,3.72746331 29.462908,3.87421384 L30.1676558,6.0754717 C30.1958457,6.19287212 30.111276,6.31027254 29.9985163,6.31027254 Z"
+                            id="Shape"
+                            fill="#373795"
+                            fill-rule="nonzero"
+                          ></path>
+                          <line
+                            x1="10"
+                            y1="9.5"
+                            x2="-1.06858966e-14"
+                            y2="9.5"
+                            id="Line-2"
+                            stroke="#373795"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          ></line>
+                          <line
+                            x1="10"
+                            y1="3.5"
+                            x2="5.5"
+                            y2="3.5"
+                            id="Line-2-Copy"
+                            stroke="#373795"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          ></line>
+                          <line
+                            x1="10"
+                            y1="6.5"
+                            x2="3.5"
+                            y2="6.5"
+                            id="Line-2-Copy-2"
+                            stroke="#373795"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          ></line>
                         </g>
                       </g>
                     </g>
@@ -178,10 +307,23 @@ SCROLL FOR MORE
         </div>
         <div class="cart-checkout">
           <!-- <button @click="$modal.show('mobile-upsell-modal')">Test</button> -->
-          <div v-if="isMobile" class="open-upsell-button" :class="[checkoutDisabled ? 'checkout-disabled' : null]" role="button" @click="openUpsellModal"> 
-            Checkout <span v-show="cartSubtotal > 0 && displayPrice">&nbsp;—&nbsp;{{displayPrice}}</span>
+          <div
+            v-if="isMobile"
+            class="open-upsell-button"
+            :class="[checkoutDisabled ? 'checkout-disabled' : null]"
+            role="button"
+            @click="openUpsellModal"
+          >
+            Checkout
+            <span v-show="cartSubtotal > 0 && displayPrice">&nbsp;—&nbsp;{{ displayPrice }}</span>
           </div>
-          <cart-flyout-checkout-button @Country="setCountry" @DisplayPrice="setDisplayPrice" :class="[checkoutDisabled ? 'checkout-disabled' : null]" v-show="!isMobile" :key="2"/>
+          <cart-flyout-checkout-button
+            @Country="setCountry"
+            @DisplayPrice="setDisplayPrice"
+            :class="[checkoutDisabled ? 'checkout-disabled' : null]"
+            v-show="!isMobile"
+            :key="2"
+          />
         </div>
         <div class="shipping-time">
           <!-- <ShippingTime /> -->
@@ -202,31 +344,34 @@ SCROLL FOR MORE
           <!-- <div class="mobile-divider-container">
             <hr class="mobile-divider" />
           </div> -->
-          
 
           <div class="value-props__badges">
             <div class="value-props__badges__img">
               <a href="https://www.mcafeesecure.com/verify?host=blendjet.com" target="_blank">
-                <img :src="optimizeSource({url: '/images/blendjetPDP/mcafee.png'})" />
+                <img :src="optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })" />
               </a>
             </div>
             <div class="value-props__badges__img">
-              <a href="https://trustsealinfo.websecurity.norton.com/splash?form_file=fdf/splash.fdf&dn=www.blendjet.com" target="_blank"> 
-              <img :src="optimizeSource({url: '/images/blendjetPDP/norton.png'})" />
+              <a
+                href="https://trustsealinfo.websecurity.norton.com/splash?form_file=fdf/splash.fdf&dn=www.blendjet.com"
+                target="_blank"
+              >
+                <img :src="optimizeSource({ url: '/images/blendjetPDP/norton.png' })" />
               </a>
             </div>
             <div class="value-props__badges__img">
-              <a href="https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick" target="_blank">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/bbb.png'})" />
+              <a
+                href="https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick"
+                target="_blank"
+              >
+                <img :src="optimizeSource({ url: '/images/blendjetPDP/bbb.png' })" />
               </a>
             </div>
           </div>
         </div>
         <!-- <cart-flyout-subtotal /> -->
-        
       </div>
     </div>
-
   </transition>
 </template>
 
@@ -234,17 +379,18 @@ SCROLL FOR MORE
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import CartFlyoutHeader from '~/components/nacelle/CartFlyoutHeader'
 import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
-import MessagingFreeShippingCounter from '~/components/nacelle/MessagingFreeShippingCounter'
 import CartItem from '~/components/nacelle/CartItem'
-import ShippingTime from '~/components/shippingTime'
+// import MessagingFreeShippingCounter from '~/components/nacelle/MessagingFreeShippingCounter'
 
 import JetpackCart from '~/components/jetpackCart-sale'
+import JetpackProteinCart from '~/components/JetpackProteinCart'
 import BlendJetCart from '~/components/blendjetCart'
 import SleeveCart from '~/components/sleeveCart'
 import BookCart from '~/components/bookCart'
 import ToteCart from '~/components/toteCart'
 import BlendJetOneCart from '~/components/blendjetOneCart'
 import Close from '~/components/svg/modalClose'
+// import ShippingTime from '~/components/shippingTime'
 
 // const routeapp = () => import('~/plugins/routeApp.js');
 
@@ -252,18 +398,19 @@ import imageOptimize from '~/mixins/imageOptimize'
 import customerChat from '~/mixins/customerChat'
 export default {
   components: {
-    CartFlyoutHeader,
     // CartFlyoutMessaging,
     // CartFlyoutSubtotal,
+    // MessagingFreeShippingCounter,
+    // ShippingTime,
+    CartFlyoutHeader,
     CartFlyoutCheckoutButton,
-    MessagingFreeShippingCounter,
     CartItem,
-    ShippingTime,
     JetpackCart,
+    JetpackProteinCart,
     BlendJetCart,
     SleeveCart,
     BookCart,
-	ToteCart,
+    ToteCart,
     BlendJetOneCart,
     Close
   },
@@ -273,7 +420,6 @@ export default {
       showUpsell: false,
       isMobile: false,
       checkoutDisabled: false,
-      showUpsell: false,
       country: 'US',
       displayPrice: null,
       cartMessage: ''
@@ -282,14 +428,10 @@ export default {
   computed: {
     ...mapState('cart', ['lineItems', 'cartVisible']),
     ...mapGetters('cart', ['cartSubtotal', 'cartBalance']),
-    ...mapActions('cart', ['incrementLineItem', 'decrementLineItem']),
+    ...mapActions('cart', ['incrementLineItem', 'decrementLineItem'])
   },
   methods: {
-    ...mapMutations('cart', [
-      'showCart',
-      'hideCart',
-      'setFreeShippingThreshold'
-    ]),
+    ...mapMutations('cart', ['showCart', 'hideCart', 'setFreeShippingThreshold']),
     handleClose() {
       this.hideCart()
     },
@@ -297,17 +439,17 @@ export default {
       this.checkoutDisabled = value
     },
     openUpsellModal() {
-      this.showUpsell = true;
+      this.showUpsell = true
     },
     closeUpsellModal() {
-      this.showUpsell = false;
+      this.showUpsell = false
     },
     setCountry(data) {
       // console.log('data', data)
       this.country = data
     },
     setDisplayPrice(data) {
-      this.displayPrice = data;
+      this.displayPrice = data
     }
   },
   watch: {
@@ -316,7 +458,7 @@ export default {
       if (newValue.length == 0) {
         // this.hideCart()
         this.checkoutDisabled = true
-        if(this.isMobile) {
+        if (this.isMobile) {
           this.hideCart()
         }
       } else {
@@ -334,7 +476,7 @@ export default {
     },
     cartSubtotal() {
       // console.log('cart balance getter', this.cartBalance)
-      if(!this.cartBalance) {
+      if (!this.cartBalance) {
         this.checkoutDisabled = true
         this.cartMessage = 'Please Adjust the Number of Extend Plans'
       } else {
@@ -344,11 +486,11 @@ export default {
     }
   },
   async mounted() {
-    if(window.innerWidth <= 768) {
-      this.isMobile = true;
+    if (window.innerWidth <= 768) {
+      this.isMobile = true
     }
     this.intl = localStorage.getItem('ww')
-    if(!this.lineItems.length) {
+    if (!this.lineItems.length) {
       this.checkoutDisabled = true
     } else {
       this.checkoutDisabled = false
@@ -358,7 +500,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .cart-container {
   position: fixed;
   top: 0;
@@ -403,7 +544,7 @@ export default {
   line-height: 1.17;
   text-transform: uppercase;
   margin-bottom: 5px;
-  color: #dd0000
+  color: #dd0000;
 }
 
 .flyout {
@@ -411,7 +552,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   // position: fixed;
-  
+
   width: 394px;
   background-color: #ffffff;
   border-left: 1px solid #dedede7a;
@@ -430,7 +571,6 @@ export default {
 }
 
 .value-props {
-
   &__payment-options {
     display: flex;
     justify-content: center;
@@ -491,43 +631,32 @@ export default {
 
 .mobile-upsell {
   position: absolute;
-  top:0;
+  top: 0;
   height: 100%;
   width: 100%;
   z-index: 1000;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-  
 
   &__container {
     display: flex;
     flex-flow: column nowrap;
   }
 
-  &__component-container {
-    // height: 90vh;
-    // @media screen and (max-height: 700px) {
-    //   height: 100vh;
-    // }
-  }
-
   &__jetpacks {
     @include gradient-primary-purple-turquoise(to bottom);
-    height: 50%
   }
 
   &__blendjet {
     @include gradient-primary-purple-turquoise(to bottom right);
-    height: 50%
   }
 
   &__checkout {
-  
     height: 80px;
     background-color: $primary-turquoise;
     padding: 15px;
     position: sticky;
-    bottom:0;
+    bottom: 0;
   }
 }
 
@@ -575,16 +704,16 @@ export default {
 // }
 .slide-enter-active {
   animation: slideInRight;
-  animation-duration: 0.6s
+  animation-duration: 0.6s;
 }
 
 .slide-leave-active {
   animation: slideOutRight;
-  animation-duration: 0.6s
+  animation-duration: 0.6s;
 }
 
 .fade-enter-active {
-  animation: fadeIn;  
+  animation: fadeIn;
   animation-duration: 0.6s;
 }
 

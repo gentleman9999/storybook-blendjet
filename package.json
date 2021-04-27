@@ -1,7 +1,5 @@
 {
-  "name": "BlendJet",
-  "version": "1.0.3",
-  "author": "Alpha Omega Agency",
+  "private": true,
   "scripts": {
     "test": "jest",
     "test:ci": "jest --no-coverage",
@@ -130,7 +128,7 @@
   },
   "prettier": {
     "semi": false,
-    "printWidth": 80,
+    "printWidth": 100,
     "singleQuote": true
   },
   "lint-staged": {

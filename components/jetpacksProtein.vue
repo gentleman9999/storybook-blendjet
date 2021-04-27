@@ -204,13 +204,11 @@ export default {
     }).then((results) => {
       
       let arr = results.filter((item) => {
-        console.log(item)
         return item.availableForSale
       })
       vm.showIndicator(arr)
       
       //HACK BY RYAN TO PULL PRODUCT VARIANTS
-// 	  console.log(arr[0].variants)
       return arr[0].variants
     })
     
