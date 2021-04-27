@@ -871,7 +871,8 @@ export default {
     },
     getPageHandle(title) {
       let handle = title.replace(/\s+/g, '-')
-      handle = handle + '-jetpack-ready-to-blend-smoothie'
+      let handlesufix = this.product.handle.includes("protein") ? '-protein-smoothie' : '-jetpack-ready-to-blend-smoothie'
+      handle = handle + handlesufix
       return handle.toLowerCase()
     },
     async getMedia() {
@@ -889,7 +890,7 @@ export default {
           content_type: 'product',
           'fields.handle': this.getPageHandle(variant.title)
         })
-        .then(async res => {
+        .then(res => {
           let something = res.items[0]
           this.headerText = something.fields.headerText
           this.productDescription = something.fields.productDescription
@@ -913,8 +914,11 @@ export default {
 
     const vm = this
     // TODO we should get this using nacelle content
+    const PROTEIN_CONTENT = '24QNVJ9UR9oYvUmQ8EzvFs'
+    const SMOOTHIE_CONENT = '6L3Tl2qpSUZLV3i2I3thFQ'
+    let contentId = this.product.handle.includes("protein") ? PROTEIN_CONTENT : SMOOTHIE_CONENT
     await this.client
-      .getEntry('6L3Tl2qpSUZLV3i2I3thFQ')
+      .getEntry(contentId)
       .then( async entry => {
         entry.fields.variants.forEach(node => {
           vm.media[node.fields.title] = {

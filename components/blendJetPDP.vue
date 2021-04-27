@@ -1,393 +1,708 @@
-
 <template>
-<transition name="fade" >
-  <div class="pdp-container" v-if="currentVariant" :style="[!currentVariant ? 'height:100vh': 'auto']">
-    <div class="product-select">
-      <div class="product-select__controls__mobile-title-container">
-        <div class="product-select__controls__title">
-          {{product.title}}
-        </div>
-        <div class="product-select__controls__rating" >
-            <loox-product-rating :product="product" />
-        </div>
-        <div class="product-select__controls__price">
-          <product-price @Country="setCoutry" @DisplayPrice="setDisplayPrice" @Currency="setCurrency" v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
-          <product-price v-show="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice" @CompareAtLocal="setCompareAtPrice"
-              :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
-          <div class="product-select__controls__price__installments" v-if="showAfterPay">
-            <afterpay-placement
-                  data-locale="en_US"
-                  :data-currency="currency"
-                  :data-amount="displayPrice"
-                  data-modal-theme="white"
-                  data-size="xs"
-                  data-logo-type="lockup"
-              ></afterpay-placement>
-          </div>
-        </div>
-      </div>
-      <div class="product-select__image-carousel">
-        <div v-if="variants.length > 1" class="product-select__image-carousel__prev-variant" @click="decrementVariant">
-          <PrevSlide />
-        </div>
-        <div v-if="variants.length > 1" class="product-select__image-carousel__next-variant" @click="incrementVariant">
-          <NextSlide />
-        </div>
-      <transition name="fade" mode="out-in">
-        <picture v-if="productImage">
-          <source :srcset="optimizeSource({url: heroUrl })" />
-          <img class="product-select__image-carousel__img" :src="optimizeSource({url: productImage })" />
-        </picture>
-      </transition>
-
-      </div>
-      <div class="product-select__controls">
-        <div class="product-select__controls__title-container">
-
-
+  <transition name="fade">
+    <div
+      class="pdp-container"
+      v-if="currentVariant"
+      :style="[!currentVariant ? 'height:100vh' : 'auto']"
+    >
+      <div class="product-select">
+        <div class="product-select__controls__mobile-title-container">
           <div class="product-select__controls__title">
-            {{product.title}}
+            {{ product.title }}
           </div>
           <div class="product-select__controls__rating">
-              <loox-product-rating :product="product" />
+            <loox-product-rating :product="product" />
           </div>
           <div class="product-select__controls__price">
-            <product-price v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
-            <product-price v-if="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice"
-                :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
-            <div class="product-select__controls__price__installments" v-if="showAfterPay">
+            <product-price
+              @Country="setCoutry"
+              @DisplayPrice="setDisplayPrice"
+              @Currency="setCurrency"
+              v-if="currentVariant"
+              :price="currentVariant.price"
+              :variantId="currentVariant.id"
+            />
+            <product-price
+              v-show="
+                currentVariant.compareAtPrice &&
+                  currentVariant.compareAtPrice !== currentVariant.price &&
+                  compareAtPrice !== displayPrice
+              "
+              @CompareAtLocal="setCompareAtPrice"
+              :price="currentVariant.compareAtPrice"
+              :strikethrough="true"
+              :variantId="currentVariant.id"
+            />
+            <div
+              class="product-select__controls__price__installments"
+              v-if="showAfterPay"
+            >
               <afterpay-placement
+                data-locale="en_US"
+                :data-currency="currency"
+                :data-amount="displayPrice"
+                data-modal-theme="white"
+                data-size="xs"
+                data-logo-type="lockup"
+              ></afterpay-placement>
+            </div>
+          </div>
+        </div>
+        <div class="product-select__image-carousel">
+          <div
+            v-if="variants.length > 1"
+            class="product-select__image-carousel__prev-variant"
+            @click="decrementVariant"
+          >
+            <PrevSlide />
+          </div>
+          <div
+            v-if="variants.length > 1"
+            class="product-select__image-carousel__next-variant"
+            @click="incrementVariant"
+          >
+            <NextSlide />
+          </div>
+          <transition name="fade" mode="out-in">
+            <picture v-if="productImage">
+              <source :srcset="optimizeSource({ url: heroUrl })" />
+              <img
+                class="product-select__image-carousel__img"
+                :src="optimizeSource({ url: productImage })"
+              />
+            </picture>
+          </transition>
+        </div>
+        <div class="product-select__controls">
+          <div class="product-select__controls__title-container">
+            <div class="product-select__controls__title">
+              {{ product.title }}
+            </div>
+            <div class="product-select__controls__rating">
+              <loox-product-rating :product="product" />
+            </div>
+            <div class="product-select__controls__price">
+              <product-price
+                v-if="currentVariant"
+                :price="currentVariant.price"
+                :variantId="currentVariant.id"
+              />
+              <product-price
+                v-if="
+                  currentVariant.compareAtPrice &&
+                    currentVariant.compareAtPrice !== currentVariant.price &&
+                    compareAtPrice !== displayPrice
+                "
+                :price="currentVariant.compareAtPrice"
+                :strikethrough="true"
+                :variantId="currentVariant.id"
+              />
+              <div
+                class="product-select__controls__price__installments"
+                v-if="showAfterPay"
+              >
+                <afterpay-placement
                   data-locale="en_US"
                   :data-currency="currency"
                   :data-amount="displayPrice"
                   data-modal-theme="white"
                   data-size="xs"
                   data-logo-type="lockup"
-              ></afterpay-placement>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="variants.length > 1" class="product-select__controls__variant-color">
-          <div class="product-select__controls__variant-color__text">
-            <span class="product-select__controls__variant-color__text__label">Color: </span><span class="product-select__controls__variant-color__text__selected-color">{{currentVariant.title}}</span>
-          </div>
-          <div class="product-select__controls__variant-color__swatches" >
-            <product-options
-              :options="allOptions"
-              :variant="selectedVariant"
-              @selectedOptionsSet="setSelected"
-              :variants="product.variants"
-              @clear="selectedOptions = []"
-              :currentOption="currentVariant.selectedOptions[0].value"
-              :key="1"
-              v-if="!showMobileVariants && !showDesktopHeader"
-            />
-          </div>
-        </div>
-
-        <div v-if="country === 'US'">
-         <div class="product-select__controls__extend-warranty" v-if="extend1yr && extend2yr && extend3yr">
-              <div class="product-select__controls__extend-warranty__text" @click="$modal.show('extend-modal')">
-                Add accident protection offered by <img class=" product-select__controls__extend-warranty__logo" :src="optimizeSource({url: '/images/blendjetPDP/extend.png'})" />&nbsp;<Info />
-
-              </div>
-              <div class="product-select__controls__extend-warranty__button-group">
-                <div role="buton"
-                  class="product-select__controls__extend-warranty__button"
-                  :class="[warrantySelected.handle === '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y' ? 'extend-active' : 'extend-inactive']"
-                  @click="selectWarranty(extend1yr)"
-                  >
-                  1 yr - ${{extend1yr.variants[0].price}}
-                </div>
-                <div role="buton"
-                  class="product-select__controls__extend-warranty__button"
-                  :class="warrantySelected.handle === '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y' ? 'extend-active' : 'extend-inactive'"
-                  @click="selectWarranty(extend2yr)"
-                  >
-                  2 yr - ${{extend2yr.variants[0].price}}
-                </div>
-                <div role="buton"
-                  class="product-select__controls__extend-warranty__button"
-                  :class="warrantySelected.handle ===  '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y' ? 'extend-active' : 'extend-inactive'"
-                  @click="selectWarranty(extend3yr)"
-                  >
-                  3 yr - ${{extend3yr.variants[0].price}}
-                </div>
+                ></afterpay-placement>
               </div>
             </div>
-        </div>
+          </div>
 
-
-        <div class="product-select__controls__add-to-cart">
-          <div class="product-select__controls__add-to-cart__button-group">
-            <div class="product-select__controls__add-to-cart__quantity-select-container">
-              <quantity-selector :quantity.sync="quantity" />
+          <div
+            v-if="variants.length > 1"
+            class="product-select__controls__variant-color"
+          >
+            <div class="product-select__controls__variant-color__text">
+              <span class="product-select__controls__variant-color__text__label"
+                >Color: </span
+              ><span
+                class="product-select__controls__variant-color__text__selected-color"
+                >{{ currentVariant.title }}</span
+              >
             </div>
-            <div class="product-select__controls__add-to-cart__add-to-cart-button">
-              <product-add-to-cart-button
-                :quantity="quantity"
-                :product="product"
-                :variant="currentVariant"
-                :allOptionsSelected="true"
-                :onlyOneOption="true"
-                :warranty="warrantySelected"
-                @addedToCart="quantity = 1"
+            <div class="product-select__controls__variant-color__swatches">
+              <product-options
+                :options="allOptions"
+                :variant="selectedVariant"
+                @selectedOptionsSet="setSelected"
+                :variants="product.variants"
+                @clear="selectedOptions = []"
+                :currentOption="currentVariant.selectedOptions[0].value"
+                :key="1"
+                v-if="!showMobileVariants && !showDesktopHeader"
               />
             </div>
           </div>
-        </div>
 
-<div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page" data-v-621d5369="" class="product-select__controls__shipping-notification"><div data-v-74c97a54="" data-v-621d5369="" class="shipping-container"><div data-v-74c97a54="" class="normal-size"><div data-v-74c97a54="" class="normal-size__label"><span data-v-74c97a54="">Order now and it ships by</span></div> <div data-v-74c97a54="" class="normal-size__countdown"><span data-v-74c97a54=""><span data-v-74c97a54="" style="color:#7f7fd1;">Friday, April 30</span></span></div></div></div></div>
-
-       <div v-else class="product-select__controls__shipping-notification">
-          <ShippingTime :country="country"/>
-        </div>
-        <div class="product-select__controls__payments">
-          <div v-if="applePay" class="pay-with-modal__container__apple apple-pay-with" @click="expressCheckout">
-               <img :src="optimizeSource({url: '/images/blendjetPDP/applepay.png'})" />
+          <div v-if="country === 'US'">
+            <div
+              class="product-select__controls__extend-warranty"
+              v-if="extend1yr && extend2yr && extend3yr"
+            >
+              <div
+                class="product-select__controls__extend-warranty__text"
+                @click="$modal.show('extend-modal')"
+              >
+                Add accident protection offered by
+                <img
+                  class=" product-select__controls__extend-warranty__logo"
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/extend.png' })
+                  "
+                />&nbsp;<Info />
+              </div>
+              <div
+                class="product-select__controls__extend-warranty__button-group"
+              >
+                <div
+                  role="buton"
+                  class="product-select__controls__extend-warranty__button"
+                  :class="[
+                    warrantySelected.handle ===
+                    '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'
+                      ? 'extend-active'
+                      : 'extend-inactive'
+                  ]"
+                  @click="selectWarranty(extend1yr)"
+                >
+                  1 yr - ${{ extend1yr.variants[0].price }}
+                </div>
+                <div
+                  role="buton"
+                  class="product-select__controls__extend-warranty__button"
+                  :class="
+                    warrantySelected.handle ===
+                    '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'
+                      ? 'extend-active'
+                      : 'extend-inactive'
+                  "
+                  @click="selectWarranty(extend2yr)"
+                >
+                  2 yr - ${{ extend2yr.variants[0].price }}
+                </div>
+                <div
+                  role="buton"
+                  class="product-select__controls__extend-warranty__button"
+                  :class="
+                    warrantySelected.handle ===
+                    '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'
+                      ? 'extend-active'
+                      : 'extend-inactive'
+                  "
+                  @click="selectWarranty(extend3yr)"
+                >
+                  3 yr - ${{ extend3yr.variants[0].price }}
+                </div>
+              </div>
             </div>
-          <div v-if="!applePay" role="button" class="product-select__controls__payments__paypal" @click="expressCheckout">
-            Pay with <img class="product-select__controls__payments__paypal__logo" :src="optimizeSource({url: '/images/blendjetPDP/paypal.png'})" alt="Paypal Logo" />
           </div>
-          <div role="button" class="product-select__controls__payments__more-options" @click="$modal.show('pay-with-modal')">
-            More payment options
-          </div>
-        </div>
-        <div class="product-select__controls__value-props">
-          <div class="product-select__controls__value-props__guarantee" @click="$modal.show('guarantee-modal')">
-              <Guarantee :size="'40px'" /> <span class="product-select__controls__value-props__guarantee__text">30 day money back guarantee</span>
-          </div>
-          <div class="product-select__controls__value-props__badges">
-            <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
-               :href="mcafeeLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/mcafee.png'})" alt="McAfee Secure Logo" />
-            </a>
-            <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
-               :href="nortonLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/norton.png'})" alt="Norton Secured Logo" />
-            </a>
-            <a target="_blank" rel="nofollow" class="product-select__controls__value-props__badges__img"
-               :href="bbbLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/bbb.png'})" alt="Better Business Bureau Logo" />
-            </a>
-          </div>
-        </div>
 
-      <transition name="fade">
-        <div class="product-select__controls__add-to-cart__mobile-float" v-show="showMobileHeader">
-          <div class="product-select__controls__add-to-cart__button-group"> 
-              <div v-if="variants.length > 1" class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"  @click.prevent="toggleMobileVariants">
-                <product-option-swatch
-                  :value="currentVariant.selectedOptions[0].value"
-                  :optionName="'Color'"
-                  :swatchStyle="'bubble'"
-                  :class="{selected: true}"
-                  :variants="product.variants"
-                  :selectedOptions="currentVariant.selectedOptions"
+          <div class="product-select__controls__add-to-cart">
+            <div class="product-select__controls__add-to-cart__button-group">
+              <div
+                class="product-select__controls__add-to-cart__quantity-select-container"
+              >
+                <quantity-selector :quantity.sync="quantity" />
+              </div>
+              <div
+                class="product-select__controls__add-to-cart__add-to-cart-button"
+              >
+                <product-add-to-cart-button
+                  :quantity="quantity"
+                  :product="product"
+                  :variant="currentVariant"
+                  :allOptionsSelected="true"
+                  :onlyOneOption="true"
+                  :warranty="warrantySelected"
+                  @addedToCart="quantity = 1"
                 />
               </div>
-            <div class="product-select__controls__add-to-cart__quantity-select-container">
-              <quantity-selector :quantity.sync="quantity" />
             </div>
-            <div class="product-select__controls__add-to-cart__add-to-cart-button">
-              <product-add-to-cart-button
-                :quantity="quantity"
-                :product="product"
-                :variant="currentVariant"
-                :allOptionsSelected="true"
-                :onlyOneOption="true"
-                :warranty="warrantySelected"
-                @addedToCart="quantity = 1"
+          </div>
+
+          <div
+            v-if="['baileys-blendjet-2'].includes(product.handle)"
+            :product="product"
+            :page="page"
+            data-v-621d5369=""
+            class="product-select__controls__shipping-notification"
+          >
+            <div
+              data-v-74c97a54=""
+              data-v-621d5369=""
+              class="shipping-container"
+            >
+              <div data-v-74c97a54="" class="normal-size">
+                <div data-v-74c97a54="" class="normal-size__label">
+                  <span data-v-74c97a54="">Order now and it ships by</span>
+                </div>
+                <div data-v-74c97a54="" class="normal-size__countdown">
+                  <span data-v-74c97a54=""
+                    ><span data-v-74c97a54="" style="color:#7f7fd1;"
+                      >Friday, April 30</span
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="product-select__controls__shipping-notification">
+            <ShippingTime :country="country" />
+          </div>
+          <div class="product-select__controls__payments">
+            <div
+              v-if="applePay"
+              class="pay-with-modal__container__apple apple-pay-with"
+              @click="expressCheckout"
+            >
+              <img
+                :src="
+                  optimizeSource({ url: '/images/blendjetPDP/applepay.png' })
+                "
               />
             </div>
-          </div>
-
-        </div>
-      </transition>
-        <transition name="fade">
-          <div class="mobile-variant-select" v-if="showMobileVariants ">
-            <div class="mobile-variant-select__close" @click="toggleMobileVariants">
-              <Close />
-            </div>
-            <div class="product-select__controls__variant-color__text">
-              <span class="product-select__controls__variant-color__text__label">Color: </span><span class="product-select__controls__variant-color__text__selected-color">{{currentVariant.title}}</span>
-            </div>
-            <product-options
-              :options="allOptions"
-              :variant="selectedVariant"
-              @selectedOptionsSet="setSelected"
-              :variants="product.variants"
-              @clear="selectedOptions = []"
-              :currentOption="currentVariant.selectedOptions[0].value"
-              :key="3"
-            />
-            <div class="mobile-variant-select__shipping">
-          <ShippingTime :country="country"/>
-            </div>
-          </div>
-        </transition>
-
-        <modal name="extend-modal" height="auto" :adaptive="true">
-          <div class="extend-modal__container">
-            <div slot="top-right" @click="$modal.hide('extend-modal')">
-              <Close/>
-            </div>
-            <div class="extend-modal__svg-container">
-              <BlnExtend />
-            </div>
-            <div class="extend-modal__text">
-              <div class="extend-modal__text__block">
-                Keep your product protected from accidents right away, plus full coverage after manufacturer warranties expire.
-              </div>
-            </div>
-            <div class="extend-modal__text__list">
-              <div class="extend-modal__text__list__subheading">
-                This plan covers:
-              </div>
-              <ul class="extend-modal__text__list__items">
-                <li>Fast and free product replacements</li>
-                <li>Accidental damage such as breaks, drops, and spills</li>
-                <li>Extended malfunction and wear-and-tear protection</li>
-              </ul>
-
-              <div class="extend-modal__text__plan-details">
-                <a href="https://customers.extend.com/plan_details/10003-blendjet-adh-replace-1y" target="_blank">Plan Details</a>
-              </div>
-            </div>
-            <div class="extend-modal__why-choose">
-              <div class="extend-modal__why-choose__support"><img class="extend-modal__why-choose__support__icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgc3Ryb2tlLXdpZHRoPSIxLjM1OCIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiCiAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aAogICAgICBkPSJNMTMgMjIuODU4cy03LjU2Ny03LjYxLTkuOTU4LTEwLjI3N2MtMS4xNTMtMS4yODYtMS45NzYtMi45MDctMS45NzYtNC43N0E2Ljc0NSA2Ljc0NSAwIDAxMTMgMy41MDRhNi43NDUgNi43NDUgMCAwMTExLjkzNCA0LjMwOGMwIDEuODYyLS44MjMgMy40ODMtMS45NzYgNC43NjlDMjAuNTY4IDE1LjI0OSAxMyAyMi44NTggMTMgMjIuODU4eiIKICAgICAgc3Ryb2tlPSIjMjI0QkM1Ii8+CiAgICA8cGF0aCBkPSJNMy43MTcgOC4zODdhNC42NzYgNC42NzYgMCAwMTQuNjctNC42NyIgc3Ryb2tlPSIjMjdBRUU0Ii8+CiAgPC9nPgo8L3N2Zz4K">Friendly support 24/7</div>
-              <div class="extend-modal__why-choose__fees"><img class="extend-modal__why-choose__fees__icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSJub25lIj4KICAgIDxwYXRoCiAgICAgIGQ9Ik0yLjU1IDE2LjQyMnYtMS4zMTNDMS4wMTUgMTQuOTY0LjE3NiAxNC4wMDMuMDMyIDEyLjIyNWgxLjQzNWMuMDU0LjQ5Ni4xNjcuODczLjMzOCAxLjEzLjE3Mi4yNTguNDIuNDIyLjc0NS40OTR2LTMuMjM1bC0uMjMtLjA4MWMtLjczMS0uMjYyLTEuMjczLS42MS0xLjYyNS0xLjA0My0uMzUyLS40MzMtLjUyOC0uOTc1LS41MjgtMS42MjQgMC0uNjg2LjIxNy0xLjI2NC42NS0xLjczMy40MzMtLjQ3IDEuMDEtLjc0NSAxLjczMy0uODI2VjQuMTI5aC44NjZ2MS4xNzhjLjY2LjA3MiAxLjE4My4zMTYgMS41Ny43MzEuMzg5LjQxNS42NTUgMS4wMS44IDEuNzg3bC0xLjM0LjIxN2MtLjA5MS0uNDQzLS4yMTgtLjc4MS0uMzgtMS4wMTZhMS4xMiAxLjEyIDAgMDAtLjY1LS40NnYyLjkzOGwuMjg0LjA5NWMuNzY4LjI4IDEuMzI1LjY0IDEuNjcyIDEuMDgzLjM0OC40NDIuNTIyIDEuMDEuNTIyIDEuNzA1IDAgLjc1OS0uMjI0IDEuMzg0LS42NyAxLjg3NS0uNDQ3LjQ5Mi0xLjA1Ljc3NC0xLjgwOC44NDd2MS4zMTNIMi41NXptLjg2Ni0yLjU0NWMuMzQzLS4wNjQuNjA3LS4yMTcuNzkyLS40Ni4xODUtLjI0NC4yNzgtLjU2NS4yNzgtLjk2MiAwLS4zODgtLjA4Mi0uNy0uMjQ0LS45MzQtLjE2Mi0uMjM1LS40MzgtLjQzMy0uODI2LS41OTZ2Mi45NTJ6TTIuNTUgNi41MzljLS42NS4xMjYtLjk3NS41Ni0uOTc1IDEuMyAwIC4zNDMuMDcyLjYxMy4yMTcuODEyLjE0NC4xOTguMzk3LjM3NC43NTguNTI4di0yLjY0eiIKICAgICAgZmlsbD0iIzI3QUVFNCIvPgogICAgPHBhdGgKICAgICAgZD0iTTE1Ljg4NSAyMS42MzVjLTIuMDM0IDAtMy41NC0uODY1LTQuNTE3LTIuNTk2LS45NzgtMS43My0xLjQ2Ny00LjQwNS0xLjQ2Ny04LjAyMkM5LjkwMSAzLjg2IDExLjkzNS4yOCAxNi4wMDIuMjhjMi4wMzQgMCAzLjU0Ljg2NSA0LjUxNyAyLjU5Ni45NzggMS43MyAxLjQ2NyA0LjQwNSAxLjQ2NyA4LjAyMiAwIDcuMTU4LTIuMDM0IDEwLjczNi02LjEwMSAxMC43MzZ6bS4wMy0xLjUyNWMxLjUwNSAwIDIuNTk1LS43MjkgMy4yNy0yLjE4NS42NzQtMS40NTcgMS4wMTItMy43OSAxLjAxMi02Ljk5NiAwLTIuMTktLjE0Ny0zLjk1LS40NC01LjI4LS4yOTQtMS4zMy0uNzQ4LTIuMzAzLTEuMzY0LTIuOTE5LS42MTYtLjYxNi0xLjQyMy0uOTI0LTIuNDItLjkyNC0xLjUwNiAwLTIuNTk2LjcyOS0zLjI3IDIuMTg2LS42NzUgMS40NTYtMS4wMTMgMy43ODgtMS4wMTMgNi45OTUgMCAyLjE5LjE0NyAzLjk1LjQ0IDUuMjguMjk0IDEuMzMuNzQ4IDIuMzAzIDEuMzY0IDIuOTE5LjYxNi42MTYgMS40MjMuOTI0IDIuNDIuOTI0eiIKICAgICAgZmlsbD0iIzIyNEJDNSIvPgogIDwvZz4KPC9zdmc+Cg==">No fees. No deductibles.</div>
-            </div>
-          </div>
-        </modal>
-
-
-        <modal name="guarantee-modal" width="414px" height="auto" :adaptive="true">
-          <div class="guarantee-modal__container">
-            <div slot="top-right" @click="$modal.hide('guarantee-modal')">
-              <Close />
-            </div>
-            <Guarantee />
-            <div class="guarantee-modal__container__heading">
-              30-day Money Back Guarantee
-            </div>
-            <div class="guarantee-modal__container__text">
-              We believe in 100% customer satisfaction and that is why we are offering all customers a 30 day money-back guarantee! If you are not satisfied with your BlendJet blender, you may return the item within 30 days from the order date for a full refund. If you don't like your product, get a full refund within 30 days, no questions asked. <br/>
-              — <br />
-              Please <a class="guarantee-modal__container__text__contact-link" >contact our customer happiness</a> team to start your return process.
-            </div>
-          </div>
-        </modal>
-
-        <modal name="pay-with-modal" width="414px" height="auto" :adaptive="true">
-          <div class="pay-with-modal__container">
-            <div slot="top-right" @click="$modal.hide('pay-with-modal')">
-              <Close />
-            </div>
-            <div class="pay-with-modal__container__text">
+            <div
+              v-if="!applePay"
+              role="button"
+              class="product-select__controls__payments__paypal"
+              @click="expressCheckout"
+            >
               Pay with
+              <img
+                class="product-select__controls__payments__paypal__logo"
+                :src="optimizeSource({ url: '/images/blendjetPDP/paypal.png' })"
+                alt="Paypal Logo"
+              />
             </div>
-
-            <div class="pay-with-modal__container__amazon" @click="expressCheckout">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/amazonpay.png'})" />
-            </div>
-            <div v-if="applePay" class="pay-with-modal__container__apple" @click="expressCheckout">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/applepay.png'})" />
-            </div>
-            <div class="pay-with-modal__container__paypal" @click="expressCheckout">
-              <img class="pay-with-modal__container__paypal__logo" :src="optimizeSource({url: '/images/blendjetPDP/paypal.png'})" />
-            </div>
-          </div>
-        </modal>
-      </div>
-    </div>
-    
-
-
-
-            
-    <div v-if="['baileys-blendjet-2'].includes(product.handle)" :product="product" :page="page"  class="blendjet-banner"><div data-v-621d5369="" class="blendjet-banner__content-block"><h2 data-v-621d5369="">IF YOU LIKE PIÑA COLADAS...</h2><p data-v-621d5369="">Then you’ll love this BlendJet x Baileys collab! Kick back, relax, and escape to a tropical paradise with our limited run, special edition BlendJet, the perfect way to enjoy<strong data-v-621d5369="">&nbsp;</strong><a style="color:white;" href="https://www.baileys.com/en-us/products/#baileys-colada" target="_blank"><strong data-v-621d5369="">Baileys Colada</strong></a>, the all new limited time offering that blends Baileys irresistible Irish cream with the rich flavors of creamy coconut and sweet pineapples.</p><p data-v-621d5369="" style="
-    padding: 10px;
-"><a data-v-621d5369="" href="https://www.baileys.com/en-us/products/#baileys-colada" target="_blank" style="
-    font-weight: bold;
-    /* padding: 10px; */
-">BUY BAILEYS COLADA HERE</a></p><p data-v-621d5369="" style="
-    font-size: 75%;
-">Please Enjoy Responsibly.</p><p data-v-621d5369="" style="
-    font-size: 70%;
-">BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by Paddington, Ltd., New York, NY.</p></div></div>        
-    
-    <div v-else-if="page && page.fields.headerText" class="blendjet-banner">
-      <div class="blendjet-banner__content-block">
-        <RichTextRenderer :document="page.fields.headerText" />
-      </div>
-    </div>
-
-    <transition name="fade">
-      <div class="header-product-select" v-if="showDesktopHeader">
-        <div class="header-product-select__info-container">
-          <div class="header-product-select__thumbnail">
-            <img class="header-product-select__thumbnail__img" :src="optimizeSource({url: currentVariant.featuredMedia.thumbnailSrc})" />
-          </div>
-          <div class="header-product-select__title-container">
-            <div class="header-product-select__title-container__title">
-              {{product.title}}
-            </div>
-            <div class="header-product-select__title-container__price">
-              <product-price v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
-              <product-price v-if="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice"
-                  :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id" />
+            <div
+              role="button"
+              class="product-select__controls__payments__more-options"
+              @click="$modal.show('pay-with-modal')"
+            >
+              More payment options
             </div>
           </div>
-        </div>
-        <div class="header-product-select__controls-container">
-        <div v-if="variants.length > 1" class="header-product-select__swatches">
+          <div class="product-select__controls__value-props">
+            <div
+              class="product-select__controls__value-props__guarantee"
+              @click="$modal.show('guarantee-modal')"
+            >
+              <Guarantee :size="'40px'" />
+              <span
+                class="product-select__controls__value-props__guarantee__text"
+                >30 day money back guarantee</span
+              >
+            </div>
+            <div class="product-select__controls__value-props__badges">
+              <a
+                target="_blank"
+                rel="nofollow"
+                class="product-select__controls__value-props__badges__img"
+                :href="mcafeeLink"
+              >
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })
+                  "
+                  alt="McAfee Secure Logo"
+                />
+              </a>
+              <a
+                target="_blank"
+                rel="nofollow"
+                class="product-select__controls__value-props__badges__img"
+                :href="nortonLink"
+              >
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/norton.png' })
+                  "
+                  alt="Norton Secured Logo"
+                />
+              </a>
+              <a
+                target="_blank"
+                rel="nofollow"
+                class="product-select__controls__value-props__badges__img"
+                :href="bbbLink"
+              >
+                <img
+                  :src="optimizeSource({ url: '/images/blendjetPDP/bbb.png' })"
+                  alt="Better Business Bureau Logo"
+                />
+              </a>
+            </div>
+          </div>
 
-          <div class="dropdown" tabindex="0"  @focusout="showHeaderVariants = false" @click.prevent="toggleHeaderVariants">
-            <div class="dropbtn" role="button">
-              <div class="dropbtn__swatch">
-              <product-option-swatch
+          <transition name="fade">
+            <div
+              class="product-select__controls__add-to-cart__mobile-float"
+              v-show="showMobileHeader"
+            >
+              <div class="product-select__controls__add-to-cart__button-group">
+                <div
+                  v-if="variants.length > 1"
+                  class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"
+                  @click.prevent="toggleMobileVariants"
+                >
+                  <product-option-swatch
                     :value="currentVariant.selectedOptions[0].value"
-                    :style={}
                     :optionName="'Color'"
                     :swatchStyle="'bubble'"
-                    :class="{selected: false}"
+                    :class="{ selected: true }"
                     :variants="product.variants"
                     :selectedOptions="currentVariant.selectedOptions"
                   />
-              </div>
-              <div class="dropbtn__text">
-                <div class="dropbtn__text__color">
-                  {{currentVariant.title}}
                 </div>
-                <div class="dropbtn__text__shipping">
-                  <ShippingTime :size="'short'" :product="'blendjet-2'" :country="country"/>
+                <div
+                  class="product-select__controls__add-to-cart__quantity-select-container"
+                >
+                  <quantity-selector :quantity.sync="quantity" />
                 </div>
-              </div>
-              <div class="dropbtn__caret-down">
-                <CaretDown />
-              </div>
-            </div>
-            <transition name="fade">
-              <div v-if="showHeaderVariants" class="dropdown-content">
-                <div class="dropdown-content__swatches">
-                  <product-options
-                    :options="allOptions"
-                    :variant="selectedVariant"
-                    @selectedOptionsSet="setSelected"
-                    :variants="product.variants"
-                    @clear="selectedOptions = []"
-                    :currentOption="currentVariant.selectedOptions[0].value"
-                    :key="2"
+                <div
+                  class="product-select__controls__add-to-cart__add-to-cart-button"
+                >
+                  <product-add-to-cart-button
+                    :quantity="quantity"
+                    :product="product"
+                    :variant="currentVariant"
+                    :allOptionsSelected="true"
+                    :onlyOneOption="true"
+                    :warranty="warrantySelected"
+                    @addedToCart="quantity = 1"
                   />
                 </div>
               </div>
-            </transition>
+            </div>
+          </transition>
+          <transition name="fade">
+            <div class="mobile-variant-select" v-if="showMobileVariants">
+              <div
+                class="mobile-variant-select__close"
+                @click="toggleMobileVariants"
+              >
+                <Close />
+              </div>
+              <div class="product-select__controls__variant-color__text">
+                <span
+                  class="product-select__controls__variant-color__text__label"
+                  >Color: </span
+                ><span
+                  class="product-select__controls__variant-color__text__selected-color"
+                  >{{ currentVariant.title }}</span
+                >
+              </div>
+              <product-options
+                :options="allOptions"
+                :variant="selectedVariant"
+                @selectedOptionsSet="setSelected"
+                :variants="product.variants"
+                @clear="selectedOptions = []"
+                :currentOption="currentVariant.selectedOptions[0].value"
+                :key="3"
+              />
+              <div class="mobile-variant-select__shipping">
+                <ShippingTime :country="country" />
+              </div>
+            </div>
+          </transition>
+
+          <modal name="extend-modal" height="auto" :adaptive="true">
+            <div class="extend-modal__container">
+              <div slot="top-right" @click="$modal.hide('extend-modal')">
+                <Close />
+              </div>
+              <div class="extend-modal__svg-container">
+                <BlnExtend />
+              </div>
+              <div class="extend-modal__text">
+                <div class="extend-modal__text__block">
+                  Keep your product protected from accidents right away, plus
+                  full coverage after manufacturer warranties expire.
+                </div>
+              </div>
+              <div class="extend-modal__text__list">
+                <div class="extend-modal__text__list__subheading">
+                  This plan covers:
+                </div>
+                <ul class="extend-modal__text__list__items">
+                  <li>Fast and free product replacements</li>
+                  <li>Accidental damage such as breaks, drops, and spills</li>
+                  <li>Extended malfunction and wear-and-tear protection</li>
+                </ul>
+
+                <div class="extend-modal__text__plan-details">
+                  <a
+                    href="https://customers.extend.com/plan_details/10003-blendjet-adh-replace-1y"
+                    target="_blank"
+                    >Plan Details</a
+                  >
+                </div>
+              </div>
+              <div class="extend-modal__why-choose">
+                <div class="extend-modal__why-choose__support">
+                  <img
+                    class="extend-modal__why-choose__support__icon"
+                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgc3Ryb2tlLXdpZHRoPSIxLjM1OCIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiCiAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aAogICAgICBkPSJNMTMgMjIuODU4cy03LjU2Ny03LjYxLTkuOTU4LTEwLjI3N2MtMS4xNTMtMS4yODYtMS45NzYtMi45MDctMS45NzYtNC43N0E2Ljc0NSA2Ljc0NSAwIDAxMTMgMy41MDRhNi43NDUgNi43NDUgMCAwMTExLjkzNCA0LjMwOGMwIDEuODYyLS44MjMgMy40ODMtMS45NzYgNC43NjlDMjAuNTY4IDE1LjI0OSAxMyAyMi44NTggMTMgMjIuODU4eiIKICAgICAgc3Ryb2tlPSIjMjI0QkM1Ii8+CiAgICA8cGF0aCBkPSJNMy43MTcgOC4zODdhNC42NzYgNC42NzYgMCAwMTQuNjctNC42NyIgc3Ryb2tlPSIjMjdBRUU0Ii8+CiAgPC9nPgo8L3N2Zz4K"
+                  />Friendly support 24/7
+                </div>
+                <div class="extend-modal__why-choose__fees">
+                  <img
+                    class="extend-modal__why-choose__fees__icon"
+                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSJub25lIj4KICAgIDxwYXRoCiAgICAgIGQ9Ik0yLjU1IDE2LjQyMnYtMS4zMTNDMS4wMTUgMTQuOTY0LjE3NiAxNC4wMDMuMDMyIDEyLjIyNWgxLjQzNWMuMDU0LjQ5Ni4xNjcuODczLjMzOCAxLjEzLjE3Mi4yNTguNDIuNDIyLjc0NS40OTR2LTMuMjM1bC0uMjMtLjA4MWMtLjczMS0uMjYyLTEuMjczLS42MS0xLjYyNS0xLjA0My0uMzUyLS40MzMtLjUyOC0uOTc1LS41MjgtMS42MjQgMC0uNjg2LjIxNy0xLjI2NC42NS0xLjczMy40MzMtLjQ3IDEuMDEtLjc0NSAxLjczMy0uODI2VjQuMTI5aC44NjZ2MS4xNzhjLjY2LjA3MiAxLjE4My4zMTYgMS41Ny43MzEuMzg5LjQxNS42NTUgMS4wMS44IDEuNzg3bC0xLjM0LjIxN2MtLjA5MS0uNDQzLS4yMTgtLjc4MS0uMzgtMS4wMTZhMS4xMiAxLjEyIDAgMDAtLjY1LS40NnYyLjkzOGwuMjg0LjA5NWMuNzY4LjI4IDEuMzI1LjY0IDEuNjcyIDEuMDgzLjM0OC40NDIuNTIyIDEuMDEuNTIyIDEuNzA1IDAgLjc1OS0uMjI0IDEuMzg0LS42NyAxLjg3NS0uNDQ3LjQ5Mi0xLjA1Ljc3NC0xLjgwOC44NDd2MS4zMTNIMi41NXptLjg2Ni0yLjU0NWMuMzQzLS4wNjQuNjA3LS4yMTcuNzkyLS40Ni4xODUtLjI0NC4yNzgtLjU2NS4yNzgtLjk2MiAwLS4zODgtLjA4Mi0uNy0uMjQ0LS45MzQtLjE2Mi0uMjM1LS40MzgtLjQzMy0uODI2LS41OTZ2Mi45NTJ6TTIuNTUgNi41MzljLS42NS4xMjYtLjk3NS41Ni0uOTc1IDEuMyAwIC4zNDMuMDcyLjYxMy4yMTcuODEyLjE0NC4xOTguMzk3LjM3NC43NTguNTI4di0yLjY0eiIKICAgICAgZmlsbD0iIzI3QUVFNCIvPgogICAgPHBhdGgKICAgICAgZD0iTTE1Ljg4NSAyMS42MzVjLTIuMDM0IDAtMy41NC0uODY1LTQuNTE3LTIuNTk2LS45NzgtMS43My0xLjQ2Ny00LjQwNS0xLjQ2Ny04LjAyMkM5LjkwMSAzLjg2IDExLjkzNS4yOCAxNi4wMDIuMjhjMi4wMzQgMCAzLjU0Ljg2NSA0LjUxNyAyLjU5Ni45NzggMS43MyAxLjQ2NyA0LjQwNSAxLjQ2NyA4LjAyMiAwIDcuMTU4LTIuMDM0IDEwLjczNi02LjEwMSAxMC43MzZ6bS4wMy0xLjUyNWMxLjUwNSAwIDIuNTk1LS43MjkgMy4yNy0yLjE4NS42NzQtMS40NTcgMS4wMTItMy43OSAxLjAxMi02Ljk5NiAwLTIuMTktLjE0Ny0zLjk1LS40NC01LjI4LS4yOTQtMS4zMy0uNzQ4LTIuMzAzLTEuMzY0LTIuOTE5LS42MTYtLjYxNi0xLjQyMy0uOTI0LTIuNDItLjkyNC0xLjUwNiAwLTIuNTk2LjcyOS0zLjI3IDIuMTg2LS42NzUgMS40NTYtMS4wMTMgMy43ODgtMS4wMTMgNi45OTUgMCAyLjE5LjE0NyAzLjk1LjQ0IDUuMjguMjk0IDEuMzMuNzQ4IDIuMzAzIDEuMzY0IDIuOTE5LjYxNi42MTYgMS40MjMuOTI0IDIuNDIuOTI0eiIKICAgICAgZmlsbD0iIzIyNEJDNSIvPgogIDwvZz4KPC9zdmc+Cg=="
+                  />No fees. No deductibles.
+                </div>
+              </div>
+            </div>
+          </modal>
+
+          <modal
+            name="guarantee-modal"
+            width="414px"
+            height="auto"
+            :adaptive="true"
+          >
+            <div class="guarantee-modal__container">
+              <div slot="top-right" @click="$modal.hide('guarantee-modal')">
+                <Close />
+              </div>
+              <Guarantee />
+              <div class="guarantee-modal__container__heading">
+                30-day Money Back Guarantee
+              </div>
+              <div class="guarantee-modal__container__text">
+                We believe in 100% customer satisfaction and that is why we are
+                offering all customers a 30 day money-back guarantee! If you are
+                not satisfied with your BlendJet blender, you may return the
+                item within 30 days from the order date for a full refund. If
+                you don't like your product, get a full refund within 30 days,
+                no questions asked. <br />
+                — <br />
+                Please
+                <a class="guarantee-modal__container__text__contact-link"
+                  >contact our customer happiness</a
+                >
+                team to start your return process.
+              </div>
+            </div>
+          </modal>
+
+          <modal
+            name="pay-with-modal"
+            width="414px"
+            height="auto"
+            :adaptive="true"
+          >
+            <div class="pay-with-modal__container">
+              <div slot="top-right" @click="$modal.hide('pay-with-modal')">
+                <Close />
+              </div>
+              <div class="pay-with-modal__container__text">
+                Pay with
+              </div>
+
+              <div
+                class="pay-with-modal__container__amazon"
+                @click="expressCheckout"
+              >
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/amazonpay.png' })
+                  "
+                />
+              </div>
+              <div
+                v-if="applePay"
+                class="pay-with-modal__container__apple"
+                @click="expressCheckout"
+              >
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/applepay.png' })
+                  "
+                />
+              </div>
+              <div
+                class="pay-with-modal__container__paypal"
+                @click="expressCheckout"
+              >
+                <img
+                  class="pay-with-modal__container__paypal__logo"
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/paypal.png' })
+                  "
+                />
+              </div>
+            </div>
+          </modal>
+        </div>
+      </div>
+
+      <div
+        v-if="['baileys-blendjet-2'].includes(product.handle)"
+        :product="product"
+        :page="page"
+        class="blendjet-banner"
+      >
+        <div data-v-621d5369="" class="blendjet-banner__content-block">
+          <h2 data-v-621d5369="">IF YOU LIKE PIÑA COLADAS...</h2>
+          <p data-v-621d5369="">
+            Then you’ll love this BlendJet x Baileys collab! Kick back, relax,
+            and escape to a tropical paradise with our limited run, special
+            edition BlendJet, the perfect way to enjoy<strong data-v-621d5369=""
+              >&nbsp;</strong
+            ><a
+              style="color:white;"
+              href="https://www.baileys.com/en-us/products/#baileys-colada"
+              target="_blank"
+              ><strong data-v-621d5369="">Baileys Colada</strong></a
+            >, the all new limited time offering that blends Baileys
+            irresistible Irish cream with the rich flavors of creamy coconut and
+            sweet pineapples.
+          </p>
+          <p
+            data-v-621d5369=""
+            style="
+    padding: 10px;
+"
+          >
+            <a
+              data-v-621d5369=""
+              href="https://www.baileys.com/en-us/products/#baileys-colada"
+              target="_blank"
+              style="
+    font-weight: bold;
+    /* padding: 10px; */
+"
+              >BUY BAILEYS COLADA HERE</a
+            >
+          </p>
+          <p
+            data-v-621d5369=""
+            style="
+    font-size: 75%;
+"
+          >
+            Please Enjoy Responsibly.
+          </p>
+          <p
+            data-v-621d5369=""
+            style="
+    font-size: 70%;
+"
+          >
+            BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by
+            Paddington, Ltd., New York, NY.
+          </p>
+        </div>
+      </div>
+
+      <div v-else-if="page && page.fields.headerText" class="blendjet-banner">
+        <div class="blendjet-banner__content-block">
+          <RichTextRenderer :document="page.fields.headerText" />
+        </div>
+      </div>
+
+      <transition name="fade">
+        <div class="header-product-select" v-if="showDesktopHeader">
+          <div class="header-product-select__info-container">
+            <div class="header-product-select__thumbnail">
+              <img
+                class="header-product-select__thumbnail__img"
+                :src="
+                  optimizeSource({
+                    url: currentVariant.featuredMedia.thumbnailSrc
+                  })
+                "
+              />
+            </div>
+            <div class="header-product-select__title-container">
+              <div class="header-product-select__title-container__title">
+                {{ product.title }}
+              </div>
+              <div class="header-product-select__title-container__price">
+                <product-price
+                  v-if="currentVariant"
+                  :price="currentVariant.price"
+                  :variantId="currentVariant.id"
+                />
+                <product-price
+                  v-if="
+                    currentVariant.compareAtPrice &&
+                      currentVariant.compareAtPrice !== currentVariant.price &&
+                      compareAtPrice !== displayPrice
+                  "
+                  :price="currentVariant.compareAtPrice"
+                  :strikethrough="true"
+                  :variantId="currentVariant.id"
+                />
+              </div>
             </div>
           </div>
-          <div class="header-product-select__add-buttons">
-            <div class="add-to-cart-buttons">
+          <div class="header-product-select__controls-container">
+            <div
+              v-if="variants.length > 1"
+              class="header-product-select__swatches"
+            >
+              <div
+                class="dropdown"
+                tabindex="0"
+                @focusout="showHeaderVariants = false"
+                @click.prevent="toggleHeaderVariants"
+              >
+                <div class="dropbtn" role="button">
+                  <div class="dropbtn__swatch">
+                    <product-option-swatch
+                      :value="currentVariant.selectedOptions[0].value"
+                      :style="{}"
+                      :optionName="'Color'"
+                      :swatchStyle="'bubble'"
+                      :class="{ selected: false }"
+                      :variants="product.variants"
+                      :selectedOptions="currentVariant.selectedOptions"
+                    />
+                  </div>
+                  <div class="dropbtn__text">
+                    <div class="dropbtn__text__color">
+                      {{ currentVariant.title }}
+                    </div>
+                    <div class="dropbtn__text__shipping">
+                      <ShippingTime
+                        :size="'short'"
+                        :product="'blendjet-2'"
+                        :country="country"
+                      />
+                    </div>
+                  </div>
+                  <div class="dropbtn__caret-down">
+                    <CaretDown />
+                  </div>
+                </div>
+                <transition name="fade">
+                  <div v-if="showHeaderVariants" class="dropdown-content">
+                    <div class="dropdown-content__swatches">
+                      <product-options
+                        :options="allOptions"
+                        :variant="selectedVariant"
+                        @selectedOptionsSet="setSelected"
+                        :variants="product.variants"
+                        @clear="selectedOptions = []"
+                        :currentOption="currentVariant.selectedOptions[0].value"
+                        :key="2"
+                      />
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
+            <div class="header-product-select__add-buttons">
+              <div class="add-to-cart-buttons">
                 <div class="quantity-select-container">
                   <quantity-selector :quantity.sync="quantity" />
                 </div>
@@ -403,113 +718,139 @@
                   />
                 </div>
               </div>
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
 
-    <div class="media-content" >
-      <div class="media-content__carousel">
-        <b-carousel class="media-content__carousel"
-          :arrow="true"
-          :repeat="true"
-          :indicator="true"
-          :has-drag="true"
-          :autoplay="false"
-          v-model="heroIndex"
+      <div class="media-content">
+        <div class="media-content__carousel">
+          <b-carousel
+            class="media-content__carousel"
+            :arrow="true"
+            :repeat="true"
+            :indicator="true"
+            :has-drag="true"
+            :autoplay="false"
+            v-model="heroIndex"
           >
-        <b-carousel-item v-for="(image, i) in heroImages" :key="i">
-          <section class="`hero is-large`">
-            <span class="image">
-              <img class="media-content__carousel__img" :src="optimizeSource({url: image})">
-            </span>
-          </section>
-        </b-carousel-item>
-      </b-carousel>
-      </div>
-      <div class="media-content__hero-banner">
-
-      </div>
-      <div class="media-content__main" v-if="loadDescription && page && page.fields.features">
-        <div class="media-content__main__features">
-          <div v-if="page && page.fields.features" class="features-container sticky">
-            <div class="features-column">
-              <div class="features-heading">
-                {{ page.fields.features.fields.title }}
+            <b-carousel-item v-for="(image, i) in heroImages" :key="i">
+              <section class="`hero is-large`">
+                <span class="image">
+                  <img
+                    class="media-content__carousel__img"
+                    :src="optimizeSource({ url: image })"
+                  />
+                </span>
+              </section>
+            </b-carousel-item>
+          </b-carousel>
+        </div>
+        <div class="media-content__hero-banner"></div>
+        <div
+          class="media-content__main"
+          v-if="loadDescription && page && page.fields.features"
+        >
+          <div class="media-content__main__features">
+            <div
+              v-if="page && page.fields.features"
+              class="features-container sticky"
+            >
+              <div class="features-column">
+                <div class="features-heading">
+                  {{ page.fields.features.fields.title }}
+                </div>
+                <div
+                  v-if="page.fields.features.fields.features"
+                  v-for="feature in page.fields.features.fields.features"
+                  class="features-row"
+                >
+                  <div class="features-icon">
+                    <ModelIcon :type="feature.fields.icon" />
+                  </div>
+                  <div class="features-text-block">
+                    <div class="features-text-block__title">
+                      {{ feature.fields.title }}
+                    </div>
+                    <div class="features-text-block__text">
+                      <RichTextRenderer
+                        :document="feature.fields.description"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="media-content__main__details">
+            <div
+              v-for="(section, i) of description"
+              :key="i"
+              class="media-content__main__details__content-block"
+            >
+              <div class="media-content__main__details__content-block__heading">
+                {{ section.heading }}
+              </div>
+              <div class="media-content__main__details__content-block__text">
+                <!-- <div v-for="(paragraph, i) of section.text" :key="paragraph[0]+i"> -->
+                <!-- {{paragraph}} -->
+                {{ section.text[0][0] }}
+                <!-- </div> -->
               </div>
               <div
-                v-if="page.fields.features.fields.features"
-                v-for="feature in page.fields.features.fields.features"
-                class="features-row"
+                v-if="section.video.length && section.video.includes('video')"
+                class="media-content__main__details__content-block__media rounded-video-container"
               >
-                <div class="features-icon">
-                  <ModelIcon :type="feature.fields.icon"/>
-                </div>
-                <div class="features-text-block">
-                  <div class="features-text-block__title">
-                    {{ feature.fields.title }}
-                  </div>
-                  <div class="features-text-block__text">
-                    <RichTextRenderer :document="feature.fields.description" />
-                  </div>
-                </div>
+                <VideoContainer
+                  :source="section.video"
+                  class="media-content__main__details__content-block__media__video"
+                />
+              </div>
+              <div
+                v-if="section.video.includes('images')"
+                class="media-content__main__details__content-block__image"
+              >
+                <img
+                  class="media-content__main__details__content-block__img"
+                  :src="optimizeSource({ url: section.video })"
+                />
+              </div>
+            </div>
+            <div class="media-content__main__details__content-block">
+              <div class="media-content__main__details__specs__heading">
+                DETAILS & SPECS
+              </div>
+              <div class="media-content__main__details__specs__text">
+                Blend your favorite smoothies, shakes, margaritas, or baby food
+                without the limitations of a regular blender - whenever,
+                wherever you want!
+              </div>
+              <div class="media-content__main__details__specs__list">
+                <ul>
+                  <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
+                  <li>Product Weight: 1.34 lb (.61 kg)</li>
+                  <li>Jar w/ Measurement Markings: 16 oz (475 mL)</li>
+                  <li>15+ Blends Per 1 Hour Charge</li>
+                  <li>Water-resistant USB-C Port</li>
+                  <li>4000 mAh Rechargeable Battery</li>
+                  <li>5V Electric Motor Spins 275 Times Per Second</li>
+                  <li>6-Point Stainless Steel Blade</li>
+                  <li>Durable Built-In Carrying Strap</li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
-        <div class="media-content__main__details">
+      </div>
+      <div class="reviews" id="reviews">
+        <loox-product-reviews :product="product" />
+      </div>
 
-          <div v-for="(section, i) of description" :key="i" class="media-content__main__details__content-block">
-            <div class="media-content__main__details__content-block__heading">
-              {{section.heading}}
-            </div>
-            <div class="media-content__main__details__content-block__text">
-              <!-- <div v-for="(paragraph, i) of section.text" :key="paragraph[0]+i"> -->
-                <!-- {{paragraph}} -->
-                {{section.text[0][0]}}
-              <!-- </div> -->
-            </div>
-            <div v-if="section.video.length && section.video.includes('video')" class="media-content__main__details__content-block__media rounded-video-container" >
-              <VideoContainer :source="section.video" class="media-content__main__details__content-block__media__video" />
-            </div>
-            <div v-if="section.video.includes('images')" class="media-content__main__details__content-block__image">
-              <img class="media-content__main__details__content-block__img" :src="optimizeSource({url: section.video})" />
-            </div>
-          </div>
-          <div class="media-content__main__details__content-block">
-            <div class="media-content__main__details__specs__heading">
-              DETAILS & SPECS
-            </div>
-            <div class="media-content__main__details__specs__text">
-              Blend your favorite smoothies, shakes, margaritas, or baby food without the limitations of a regular blender - whenever, wherever you want!
-            </div>
-            <div class="media-content__main__details__specs__list">
-              <ul>
-                <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
-                <li>Product Weight: 1.34 lb (.61 kg)</li>
-                <li>Jar w/ Measurement Markings: 16 oz (475 mL)</li>
-                <li>15+ Blends Per 1 Hour Charge</li>
-                <li>Water-resistant USB-C Port</li>
-                <li>4000 mAh Rechargeable Battery</li>
-                <li>5V Electric Motor Spins 275 Times Per Second</li>
-                <li>6-Point Stainless Steel Blade</li>
-                <li>Durable Built-In Carrying Strap</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      <div class="jetpacks" v-if="loadDescription">
+        <JetpackCrossSell :heading="'Power up with Jetpacks'" />
       </div>
     </div>
-    <div class="reviews" id="reviews">
-      <loox-product-reviews :product="product" />
-    </div>
-
-    <div class="jetpacks" v-if="loadDescription">
-      <JetpackCrossSell  :heading="'Power up with Jetpacks'" />
-    </div>
-
-  </div>
-</transition>
+  </transition>
 </template>
 
 <script>
@@ -546,9 +887,9 @@ import PrevSlide from '~/components/svg/PrevSlide'
 export default {
   data() {
     return {
-       imageStyle: {
+      imageStyle: {
         height: '252px',
-        width:'auto'
+        width: 'auto'
       },
       currentVariant: null,
       extend1yr: null,
@@ -556,7 +897,7 @@ export default {
       extend3yr: null,
       warrantySelected: {},
       quantity: 1,
-      variants:[],
+      variants: [],
       selectedOptions: [],
       showMobileVariants: false,
       showMobileHeader: false,
@@ -568,8 +909,10 @@ export default {
       heroUrl: null,
       imgWidth: 0,
       mcafeeLink: 'https://www.mcafeesecure.com/verify?host=blendjet.com',
-      nortonLink: 'https://trustsealinfo.websecurity.norton.com/splash?form_file=fdf/splash.fdf&dn=www.blendjet.com',
-      bbbLink: 'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
+      nortonLink:
+        'https://trustsealinfo.websecurity.norton.com/splash?form_file=fdf/splash.fdf&dn=www.blendjet.com',
+      bbbLink:
+        'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
 
       description: [],
       variantMedia: {},
@@ -612,7 +955,7 @@ export default {
       type: Object,
       default: () => {}
     },
-     country: {
+    country: {
       type: Object,
       default: () => {}
     },
@@ -628,31 +971,31 @@ export default {
     let image = this.productImage
     let properties = {}
     let meta = []
-    let script = [{
+    let script = [
+      {
         type: 'application/ld+json',
         json: {
-          "@context" : "http://schema.org",
-          "@type": "Product",
-          "name": "BlendJet 2",
-          "image": [
-            `${image}`
-          ],
-          "offers": {
-            "@type": "Offer",
-            "url": "https://blendjet.com/products/blendjet-2",
-            "itemCondition": "http://schema.org/NewCondition",
-            "availability": "http://schema.org/InStock",
-            "price": `${productPrice}`,
-            "priceCurrency": `${productCurrency}`,
+          '@context': 'http://schema.org',
+          '@type': 'Product',
+          name: 'BlendJet 2',
+          image: [`${image}`],
+          offers: {
+            '@type': 'Offer',
+            url: 'https://blendjet.com/products/blendjet-2',
+            itemCondition: 'http://schema.org/NewCondition',
+            availability: 'http://schema.org/InStock',
+            price: `${productPrice}`,
+            priceCurrency: `${productCurrency}`
           }
         }
-      }]
+      }
+    ]
 
-    if(this.metaTitle) {
+    if (this.metaTitle) {
       properties.title = this.metaTitle
     }
 
-    if(this.metaDescription) {
+    if (this.metaDescription) {
       meta.push({
         hid: 'description',
         name: 'description',
@@ -660,15 +1003,17 @@ export default {
       })
     }
 
-    if(image && productCurrency && productPrice) {
+    if (image && productCurrency && productPrice) {
       return {
-         ...properties, meta, script
+        ...properties,
+        meta,
+        script
       }
     }
   },
   computed: {
     ...mapState('user', ['locale']),
-    ...mapGetters('cart', ['cartBalance']),
+    ...mapGetters('cart', ['cartBalance'])
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
@@ -688,14 +1033,16 @@ export default {
         this.product.variants &&
         this.product.variants.length
       ) {
-        if(this.$route.query && this.$route.query.variant) {
-           let variantId = btoa(`gid://shopify/ProductVariant/${this.$route.query.variant}`)
-           return this.product.variants.filter((variant) => {
-             return variant.id === variantId
-           })[0]
+        if (this.$route.query && this.$route.query.variant) {
+          let variantId = btoa(
+            `gid://shopify/ProductVariant/${this.$route.query.variant}`
+          )
+          return this.product.variants.filter(variant => {
+            return variant.id === variantId
+          })[0]
         } else {
-          for(let i = 0; i < this.product.variants.length; i++) {
-            if(this.product.variants[i].availableForSale === true) {
+          for (let i = 0; i < this.product.variants.length; i++) {
+            if (this.product.variants[i].availableForSale === true) {
               return this.product.variants[i]
             }
           }
@@ -705,24 +1052,24 @@ export default {
     },
     setCoutry(data) {
       this.country = data
-      switch(this.country) {
+      switch (this.country) {
         case 'US':
-          this.showAfterPay = true;
-          break;
+          this.showAfterPay = true
+          break
         case 'NZ':
-          this.showAfterPay = true;
-          break;
+          this.showAfterPay = true
+          break
         case 'CA':
-          this.showAfterPay = true;
-          break;
+          this.showAfterPay = true
+          break
         case 'AU':
-          this.showAfterPay = true;
-          break;
+          this.showAfterPay = true
+          break
         case 'GB':
-          this.showAfterPay = true;
-          break;
+          this.showAfterPay = true
+          break
         default:
-          this.showAfterPay = false;
+          this.showAfterPay = false
       }
     },
     setDisplayPrice(data) {
@@ -734,19 +1081,19 @@ export default {
     setCurrency(data) {
       this.currency = data
     },
-    handleScroll (event) {
-      this.scrollY = window.scrollY;
+    handleScroll(event) {
+      this.scrollY = window.scrollY
       if (this.screenWidth > 768) {
-        if(window.scrollY > 300) {
-          this.showDesktopHeader = true;
+        if (window.scrollY > 300) {
+          this.showDesktopHeader = true
         } else {
-          this.showDesktopHeader = false;
-          this.showHeaderVariants = false;
+          this.showDesktopHeader = false
+          this.showHeaderVariants = false
         }
       } else {
-        if(window.scrollY < 900) {
+        if (window.scrollY < 900) {
           this.showMobileHeader = false
-          if(this.showMobileVariants ) {
+          if (this.showMobileVariants) {
             this.showMobileVariants = false
           }
         } else {
@@ -754,33 +1101,34 @@ export default {
         }
       }
 
-      if(window.scrollY > 300) {
+      if (window.scrollY > 300) {
         this.loadDescription = true
       }
     },
     camelize(str) {
       return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-        if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-        return index === 0 ? match.toLowerCase() : match.toUpperCase();
-      });
+        if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
+        return index === 0 ? match.toLowerCase() : match.toUpperCase()
+      })
     },
     updateVariant(variant) {
       this.currentVariant = variant
 
-      this.variantIndex = this.variants.findIndex((variant)=> variant.title === this.currentVariant.title)
+      this.variantIndex = this.variants.findIndex(
+        variant => variant.title === this.currentVariant.title
+      )
     },
     incrementVariant() {
-      if(this.variantIndex === this.variants.length -1) {
-        this.variantIndex = 0;
+      if (this.variantIndex === this.variants.length - 1) {
+        this.variantIndex = 0
       } else {
-         this.variantIndex++
+        this.variantIndex++
       }
       const newVar = this.variants[this.variantIndex]
       this.updateVariant(newVar)
     },
     decrementVariant() {
-
-      if(this.variantIndex === 0) {
+      if (this.variantIndex === 0) {
         this.variantIndex = this.variants.length - 1
       } else {
         this.variantIndex--
@@ -795,23 +1143,25 @@ export default {
       this.showHeaderVariants = !this.showHeaderVariants
     },
     selectWarranty(warranty) {
-      if(this.warrantySelected.handle === warranty.handle) {
+      if (this.warrantySelected.handle === warranty.handle) {
         this.warrantySelected = {}
       } else {
-        this.warrantySelected = {...warranty}
+        this.warrantySelected = { ...warranty }
       }
     },
     iOS() {
-      return [
-        'iPad Simulator',
-        'iPhone Simulator',
-        'iPod Simulator',
-        'iPad',
-        'iPhone',
-        'iPod'
-      ].includes(navigator.platform)
-      // iPad on iOS 13 detection
-      || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+      return (
+        [
+          'iPad Simulator',
+          'iPhone Simulator',
+          'iPod Simulator',
+          'iPad',
+          'iPhone',
+          'iPod'
+        ].includes(navigator.platform) ||
+        // iPad on iOS 13 detection
+        (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+      )
     },
     productId() {
       if (this.product && this.product.pimSyncSourceProductId) {
@@ -825,47 +1175,46 @@ export default {
     },
 
     expressAdd() {
-
       const lineItem = {
-          image: this.product.featuredMedia,
-          title: this.product.title,
-          variant: this.currentVariant,
+        image: this.product.featuredMedia,
+        title: this.product.title,
+        variant: this.currentVariant,
+        quantity: this.quantity || 1,
+        productId: this.product.id,
+        handle: this.product.handle,
+        vendor: this.product.vendor,
+        tags: this.product.tags,
+        metafields: []
+      }
+
+      if (Object.keys(this.warrantySelected).length) {
+        const warrantyItem = {
+          image: this.warrantySelected.featuredMedia,
+          title: this.warrantySelected.title,
+          variant: this.warrantySelected.variants[0],
           quantity: this.quantity || 1,
-          productId: this.product.id,
-          handle: this.product.handle,
-          vendor: this.product.vendor,
-          tags: this.product.tags,
-          metafields: []
+          productId: this.warrantySelected.id,
+          handle: this.warrantySelected.handle,
+          vendor: this.warrantySelected.vendor,
+          tags: this.warrantySelected.tags,
+          metafields: [
+            {
+              key: 'Ref',
+              value: atob(this.currentVariant.id)
+                .split('/')
+                .pop()
+            }
+          ]
         }
-
-        if(Object.keys(this.warrantySelected).length) {
-
-          const warrantyItem = {
-            image: this.warrantySelected.featuredMedia,
-            title: this.warrantySelected.title,
-            variant: this.warrantySelected.variants[0],
-            quantity: this.quantity || 1,
-            productId: this.warrantySelected.id,
-            handle: this.warrantySelected.handle,
-            vendor: this.warrantySelected.vendor,
-            tags: this.warrantySelected.tags,
-            metafields: [
-              {
-                key: 'Ref',
-                value: atob(this.currentVariant.id).split('/').pop()
-              }
-            ]
-          }
-          this.addLineItem(warrantyItem)
-        }
-        this.addLineItem(lineItem)
-
+        this.addLineItem(warrantyItem)
+      }
+      this.addLineItem(lineItem)
     },
 
     async expressCheckout() {
-      if(this.currentVariant.availableForSale) {
+      if (this.currentVariant.availableForSale) {
         await this.expressAdd()
-        if(this.cartBalance) {
+        if (this.cartBalance) {
           try {
             await this.processCheckout({
               async beforeCreate() {
@@ -875,7 +1224,7 @@ export default {
                 // Allows processing after checkout create and before redirecting.
               }
             })
-          } catch(err) {
+          } catch (err) {
             console.log(err)
             this.setCartError(err)
           }
@@ -892,89 +1241,117 @@ export default {
     },
     //Local Variant
     currentVariant() {
-      if(this.variantMedia[this.camelize(this.currentVariant.title)]) {
-        this.productImage = `${this.variantMedia[this.camelize(this.currentVariant.title)].productImage}`
-        this.heroImages = this.variantMedia[this.camelize(this.currentVariant.title)].heroImages
-
+      if (this.variantMedia[this.camelize(this.currentVariant.title)]) {
+        let variantImage = this.variantMedia[
+          this.camelize(this.currentVariant.title)
+        ].productImage
+          ? this.variantMedia[this.camelize(this.currentVariant.title)]
+              .productImage
+          : this.currentVariant.featuredMedia.src
+        this.productImage = variantImage
+        this.heroImages = this.variantMedia[
+          this.camelize(this.currentVariant.title)
+        ].heroImages
       } else {
-        this.productImage = 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
-        this.heroImages = [];
+        this.productImage =
+          'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
+        this.heroImages = []
       }
       this.heroIndex = 0
 
-      let variantId = atob(this.currentVariant.id).split('/').pop()
+      let variantId = atob(this.currentVariant.id)
+        .split('/')
+        .pop()
       let path = `${this.$route.path}?variant=${variantId}`
       this.$router.push(path)
     }
   },
 
   async mounted() {
-    if(process.client) {
+    if (process.client) {
       this.client = createClient()
-      this.extend1yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'})
-      this.extend2yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'})
-      this.extend3yr = await this.$nacelle.data.product({handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'})
-
+      this.extend1yr = await this.$nacelle.data.product({
+        handle:
+          '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'
+      })
+      this.extend2yr = await this.$nacelle.data.product({
+        handle:
+          '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'
+      })
+      this.extend3yr = await this.$nacelle.data.product({
+        handle:
+          '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'
+      })
 
       this.screenWidth = window.innerWidth
       this.imgWidth = 2600
 
-      this.variants = this.product.variants.filter((variant)=>variant.availableForSale)
+      this.variants = this.product.variants.filter(
+        variant => variant.availableForSale
+      )
 
-      if(window.ApplePaySession) {
-        this.applePay = true;
+      if (window.ApplePaySession) {
+        this.applePay = true
       }
       const vm = this
 
-      // Try to query this product's contentful data 
+      // Try to query this product's contentful data
       // Note - You can't use Nacelle's SDK due to a bug when querying content models with the title `product`
-      await this.client.getEntries({
-        content_type: 'product',
-        'fields.handle': this.product.handle
-      }).then((data)=>{
-        if (!data || !Array.isArray(data.items) ||data.items.length === 0) {
-          // No content model found...
-        } else {
-          // Get first item
-          const item = data.items[0];
+      await this.client
+        .getEntries({
+          content_type: 'product',
+          'fields.handle': this.product.handle
+        })
+        .then(data => {
+          if (!data || !Array.isArray(data.items) || data.items.length === 0) {
+            // No content model found...
+          } else {
+            // Get first item
+            const item = data.items[0]
 
-          // For each variant content model...
-          item.fields.variants.forEach((node)=>{
-            vm.variantMedia[node.fields.title] = {
-              productImage: `https:${node.fields.productImage.fields.file.url}?w=2100`,
-              heroImages: node.fields.heroImages.map((image) => {
-                return `${image.fields.file.url}?w=2100`
-              })
-            }
-          });
-
-          let sections = item.fields.productDescription;
-          vm.specs = sections.pop()
-
-          vm.description = sections.map((node) => {
-            return {
-              heading: node.fields.heading,
-              text: node.fields.text.content.map((p) => {
-                return p.content.map((line) => {
-                  return line.value
+            // For each variant content model...
+            item.fields.variants.forEach(node => {
+              let productImage = node.fields.productImage
+                ? `https:${node.fields.productImage.fields.file.url}?w=2100`
+                : null
+              vm.variantMedia[node.fields.title] = {
+                productImage: productImage,
+                heroImages: node.fields.heroImages.map(image => {
+                  return `${image.fields.file.url}?w=2100`
                 })
-              }),
+              }
+            })
 
-              video: node.fields.video ? node.fields.video.fields.file.url : ''
+            let sections = item.fields.productDescription
+            vm.specs = sections.pop()
+
+            vm.description = sections.map(node => {
+              return {
+                heading: node.fields.heading,
+                text: node.fields.text.content.map(p => {
+                  return p.content.map(line => {
+                    return line.value
+                  })
+                }),
+
+                video: node.fields.video
+                  ? node.fields.video.fields.file.url
+                  : ''
+              }
+            })
+
+            if (item.fields.metaTitle) {
+              this.metaTitle = item.fields.metaTitle
+            }
+
+            if (item.fields.metaDescription) {
+              this.metaDescription = item.fields.metaDescription
+            }
+
+            this.currentVariant = this.setDefaultVariant()
           }
-          })
-
-          if(item.fields.metaTitle) {
-            this.metaTitle = item.fields.metaTitle
-          }
-
-          if(item.fields.metaDescription) {
-            this.metaDescription = item.fields.metaDescription
-          }
-
-          this.currentVariant = this.setDefaultVariant()
-        }
-      }).catch(console.error)
+        })
+        .catch(console.error)
 
       /*
       // Original Code - Fetching a hard coded content model by its ID
@@ -1017,26 +1394,23 @@ export default {
           })
           .catch(console.error)*/
 
-
-      this.handleScroll();
-      this.handleDebouncedScroll = debounce(this.handleScroll, 0);
+      this.handleScroll()
+      this.handleDebouncedScroll = debounce(this.handleScroll, 0)
 
       window.addEventListener('scroll', this.handleDebouncedScroll, {
         passive: true
-      });
+      })
     }
   },
   beforeDestroy() {
-    if(process.client) {
+    if (process.client) {
       window.removeEventListener('scroll', this.handleDebouncedScroll)
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .price {
   margin-bottom: 1rem;
 }
@@ -1060,10 +1434,10 @@ export default {
     position: relative;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 
     @include respond-to('small') {
@@ -1124,7 +1498,7 @@ export default {
       width: 100%;
 
       @media screen and (min-width: 768px) {
-        display: none
+        display: none;
       }
     }
 
@@ -1165,7 +1539,6 @@ export default {
       & > a {
         color: $primary-purple;
       }
-
     }
 
     &__price {
@@ -1208,7 +1581,6 @@ export default {
     }
 
     &__variant-color {
-
       &__text {
         font-family: Bold;
         font-size: $text-small;
@@ -1217,7 +1589,7 @@ export default {
         letter-spacing: 1.75px;
         margin-bottom: 20px;
 
-         &__selected-color {
+        &__selected-color {
           color: $primary-purple;
         }
 
@@ -1230,7 +1602,6 @@ export default {
           margin-bottom: 10px;
         }
       }
-
 
       &__swatches {
         min-height: 170px;
@@ -1272,7 +1643,6 @@ export default {
         }
       }
 
-
       &__mobile-float {
         @include respond-to('small') {
           position: fixed;
@@ -1285,7 +1655,6 @@ export default {
           align-items: center;
           justify-content: center;
         }
-
       }
 
       &__selected-swatch {
@@ -1295,7 +1664,7 @@ export default {
         }
 
         @media screen and (min-width: 768px) {
-          display: none
+          display: none;
         }
       }
 
@@ -1366,7 +1735,6 @@ export default {
       }
 
       &__button {
-
         font-size: 10px;
         letter-spacing: 0.83px;
         line-height: 1.4;
@@ -1405,7 +1773,7 @@ export default {
         align-items: center;
         height: 50px;
         margin-bottom: 25px;
-		margin-top: 20px; //hack to fix shipping counter on BJ2 page
+        margin-top: 20px; //hack to fix shipping counter on BJ2 page
         border: none;
 
         @media screen and (max-width: 320px) {
@@ -1475,10 +1843,10 @@ export default {
 
 .mobile-swatch {
   margin-right: 5px;
-   ::v-deep .bubble .inside-color {
-      height: 44px;
-      width: 44px;
-    }
+  ::v-deep .bubble .inside-color {
+    height: 44px;
+    width: 44px;
+  }
 }
 
 .extend-active {
@@ -1503,7 +1871,6 @@ export default {
 }
 
 .guarantee-modal {
-
   &__container {
     padding: 40px;
 
@@ -1532,7 +1899,6 @@ export default {
 }
 
 .extend-modal {
-
   &__container {
     display: flex;
     flex-flow: column nowrap;
@@ -1557,7 +1923,6 @@ export default {
     }
 
     &__list {
-
       &__subheading {
         font-size: 16px;
         font-family: Bold;
@@ -1580,7 +1945,6 @@ export default {
   }
 
   &__why-choose {
-
     &__support {
       display: flex;
       align-items: center;
@@ -1601,16 +1965,14 @@ export default {
       }
     }
   }
-
-
 }
 
 .apple-pay-with {
   width: 370px;
 
-   @media screen and (max-width: 320px) {
-          width: 300px;
-        }
+  @media screen and (max-width: 320px) {
+    width: 300px;
+  }
 }
 
 .pay-with-modal {
@@ -1621,7 +1983,6 @@ export default {
     // align-items: center;
     flex-flow: column nowrap;
 
-
     &__text {
       font-family: Bold;
       color: $primary-purple;
@@ -1631,11 +1992,10 @@ export default {
       letter-spacing: 1.75px;
       margin-bottom: 20px;
       text-align: center;
-
     }
     &__amazon {
       @include button-primary('white');
-      background-color: #FFC51F;
+      background-color: #ffc51f;
       height: 50px;
       margin-bottom: 15px;
     }
@@ -1700,9 +2060,9 @@ export default {
       width: auto;
       padding: 15px;
     }
-    
+
     a {
-	    color:#ffd900;
+      color: #ffd900;
     }
 
     h2 {
@@ -1717,7 +2077,6 @@ export default {
       font-size: 16px;
       line-height: 1.25;
       letter-spacing: 0.5px;
-
     }
   }
 }
@@ -1738,7 +2097,6 @@ export default {
   }
 
   &__thumbnail {
-
     &__img {
       height: 75px;
     }
@@ -1776,7 +2134,6 @@ export default {
       letter-spacing: 1.75px;
       color: $primary-purple;
     }
-
   }
 
   &__swatches {
@@ -1784,13 +2141,10 @@ export default {
   }
 
   &__add-buttons {
-
   }
 }
 
 .media-content {
-
-
   &__carousel {
     height: 800px;
     @include respond-to('small') {
@@ -1809,7 +2163,6 @@ export default {
   }
 
   &__hero-banner {
-
     &__img {
       object-position: center;
       object-fit: cover;
@@ -1821,7 +2174,7 @@ export default {
     flex-flow: row wrap;
 
     &__features {
-      background-color: #33499D;
+      background-color: #33499d;
       width: 50%;
       padding: 50px;
 
@@ -1843,7 +2196,6 @@ export default {
       }
 
       &__content-block {
-
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
@@ -1917,7 +2269,6 @@ export default {
       }
 
       &__specs {
-
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
@@ -1969,16 +2320,16 @@ export default {
 }
 
 .rounded-video-container {
-    width: 520px;
-    height: 520px;
-    border-radius: 12px;
-    overflow: hidden;
+  width: 520px;
+  height: 520px;
+  border-radius: 12px;
+  overflow: hidden;
 
-    @include respond-to('small') {
-      width: auto;
-      height: auto;
-      border-radius: 0;
-    }
+  @include respond-to('small') {
+    width: auto;
+    height: auto;
+    border-radius: 0;
+  }
 }
 
 .reviews {
@@ -1989,13 +2340,11 @@ export default {
 .fade-enter-active {
   animation: fadeIn;
   animation-duration: 0.6s;
-
 }
 .fade-leave-active {
   animation: fadeOut;
   animation-duration: 0.6s;
 }
-
 
 .dropbtn {
   color: $primary-purple;
@@ -2032,7 +2381,7 @@ export default {
   width: 231px;
   font-family: Bold;
   letter-spacing: 1.75px;
-  text-transform:uppercase;
+  text-transform: uppercase;
   font-size: $text-small;
   background-color: $grayscale-white;
   cursor: pointer;
@@ -2042,7 +2391,7 @@ export default {
 }
 
 .dollar-strike {
-    text-decoration: line-through;
+  text-decoration: line-through;
   opacity: 0.3;
 }
 
@@ -2075,7 +2424,6 @@ export default {
 .fade-enter-active {
   animation: fadeIn;
   animation-duration: 0.6s;
-
 }
 .fade-leave-active {
   animation: fadeOut;
@@ -2084,25 +2432,23 @@ export default {
 
 .slide-enter-active {
   animation: slideInLeft;
-  animation-duration: 0.6s
+  animation-duration: 0.6s;
 }
 
 .slide-leave-active {
   animation: slideOutLeft;
-  animation-duration: 0.6s
+  animation-duration: 0.6s;
 }
 
 .carousel-arrow .icon {
-    background: #f6f5fd !important;
-
+  background: #f6f5fd !important;
 }
-
 
 .expand-enter-active {
-  animation: expand .6s;
+  animation: expand 0.6s;
 }
 .expand-leave-active {
-  animation: expand .6s reverse;
+  animation: expand 0.6s reverse;
 }
 @keyframes expand {
   0% {
@@ -2116,7 +2462,6 @@ export default {
   }
 }
 
-
 .sticky {
   position: sticky;
   top: 260px;
@@ -2126,12 +2471,10 @@ export default {
   display: flex;
   justify-content: center;
   color: $grayscale-white;
-
-
 }
 
 .features-heading {
-  font-size:24px;
+  font-size: 24px;
   font-family: Medium;
   letter-spacing: 4px;
   line-height: 1.17;
@@ -2202,5 +2545,4 @@ export default {
     }
   }
 }
-
 </style>
