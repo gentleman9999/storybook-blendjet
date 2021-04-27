@@ -249,11 +249,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.columns /deep/ .article-preview {
-  // padding: 1rem;
-  // border: 1px solid #f5f5f5;
-}
-
 .blog-feature {
   background-color: #f6f6f6;
 }
