@@ -1,43 +1,55 @@
 <template>
-<div>
-  <transition name="fade">
-    <div class="user-guide-container">
-      <div class="hero-banner">
-        <div class="hero-banner__column-left">
-          <div class="hero-banner__text-block">
-            <div class="hero-banner__text-block__title">
-              {{ page.fields.title }}
-            </div>
-            <p class="hero-banner__text-block__text">
-              {{ page.fields.description }}
-            </p>
-          </div>
-        </div>
-        <div class="hero-banner__column-right">
-          <div v-if="page.fields.heroImage" class="hero-banner__image-container">
-            <img class="hero-banner__image-container__img" :src="optimizeSource({url: page.fields.heroImage.fields.file.url})" />
-          </div>
-        </div>
-      </div>
-      <div class="content-container">
-        <div class="content-main">
-
-          <div class="safety-warning">
-            <div class="safety-warning__text">
-              <div class="safety-warning__info">
-                <Info />
+  <div>
+    <transition name="fade">
+      <div class="user-guide-container">
+        <div class="hero-banner">
+          <div class="hero-banner__column-left">
+            <div class="hero-banner__text-block">
+              <div class="hero-banner__text-block__title">
+                {{ page.fields.title }}
               </div>
-              {{ page.fields.alert }}
+              <p class="hero-banner__text-block__text">
+                {{ page.fields.description }}
+              </p>
             </div>
           </div>
-
-          <div class="safety-warning" style="border-color: #cccccc !important;">
-            <div class="safety-warning__text">          
-          <a href="https://shop.blendjet.com/pages/tutorials">Click here for the BlendJet One Guide.</a>
+          <div class="hero-banner__column-right">
+            <div
+              v-if="page.fields.heroImage"
+              class="hero-banner__image-container"
+            >
+              <img
+                class="hero-banner__image-container__img"
+                :src="
+                  optimizeSource({ url: page.fields.heroImage.fields.file.url })
+                "
+              />
             </div>
           </div>
+        </div>
+        <div class="content-container">
+          <div class="content-main">
+            <div class="safety-warning">
+              <div class="safety-warning__text">
+                <div class="safety-warning__info">
+                  <Info />
+                </div>
+                {{ page.fields.alert }}
+              </div>
+            </div>
 
-          <!-- <div class="table-of-contents">
+            <div
+              class="safety-warning"
+              style="border-color: #cccccc !important;"
+            >
+              <div class="safety-warning__text">
+                <a href="https://shop.blendjet.com/pages/tutorials"
+                  >Click here for the BlendJet One Guide.</a
+                >
+              </div>
+            </div>
+
+            <!-- <div class="table-of-contents">
             <div class="table-of-contents__row">
               <div class="table-of-contents__cell">
                 <n-link :to="{ path: '/user-guide',hash:'#anatomy-of-awesome'}">Anatomy of Blendjet</n-link>
@@ -68,113 +80,171 @@
               </div>
             </div>
           </div> -->
-          <div id="anatomy-of-awesome" class="aoa">
-            <div class="aoa__container">
-              <div class="aoa__heading">
-                Anatomy of Awesome
-              </div>
-              <client-only v-if="page.fields.componentsDesktop && page.fields.componentsMobile">
-                <img
-                  v-if="$mq !== 'sm'"
-                  class="aoa__img"
-                  :src="optimizeSource({url: page.fields.componentsDesktop.fields.file.url})"
-                />
-                <img
-                  v-else
-                  class="aoa__img-mobile"
-                  :src="optimizeSource({url: page.fields.componentsMobile.fields.file.url})"
-                />
-              </client-only>
-            </div>
-          </div>
-          <div v-for="section in page.fields.userGuideSections" class="guide-section">
-            <div class="section-heading">{{ section.fields.title }}</div>
-            <div v-if="section.fields.media" class="section-split">
-              <div class="section-split col col-left">
-                <RichTextRenderer :document="section.fields.body" />
-              </div>
-              <div class="section-split col col-right">
-                <video autoplay="autoplay" loop="loop" muted="" webkit-playsinline="" playsinline="">
-                  <source :src="section.fields.media.fields.file.url" type="video/mp4">
-                </video>
-              </div>
-            </div>
-            <div v-else>
-              <div class="section-subheading">
-                <RichTextRenderer v-if="section.fields.body" :document="section.fields.body" />
+            <div id="anatomy-of-awesome" class="aoa">
+              <div class="aoa__container">
+                <div class="aoa__heading">
+                  Anatomy of Awesome
+                </div>
+                <client-only
+                  v-if="
+                    page.fields.componentsDesktop &&
+                      page.fields.componentsMobile
+                  "
+                >
+                  <img
+                    v-if="$mq !== 'sm'"
+                    class="aoa__img"
+                    :src="
+                      optimizeSource({
+                        url: page.fields.componentsDesktop.fields.file.url
+                      })
+                    "
+                  />
+                  <img
+                    v-else
+                    class="aoa__img-mobile"
+                    :src="
+                      optimizeSource({
+                        url: page.fields.componentsMobile.fields.file.url
+                      })
+                    "
+                  />
+                </client-only>
               </div>
             </div>
-            <div v-if="section.fields.cards">
-              <div v-for="card in section.fields.cards" class="section-panel">
-                <Collapse>
-                  <template v-slot:collapsed>
-                    <div class="c-svg"><ModelIcon :type="card.fields.type"/></div>
-                    <div class="c-heading">{{ card.fields.title }}</div>
-                  </template>
-
-                  <template v-slot:expanded>
-                    <div>
-                    <div class="section-split">
-                      <div class="section-split col col-left">
-                        <RichTextRenderer :document="card.fields.body" />
+            <div
+              v-for="section in page.fields.userGuideSections"
+              :key="section.fields.title"
+              class="guide-section"
+            >
+              <div class="section-heading">{{ section.fields.title }}</div>
+              <div v-if="section.fields.media" class="section-split">
+                <div class="section-split col col-left">
+                  <RichTextRenderer :document="section.fields.body" />
+                </div>
+                <div class="section-split col col-right">
+                  <video
+                    autoplay="autoplay"
+                    loop="loop"
+                    muted=""
+                    webkit-playsinline=""
+                    playsinline=""
+                  >
+                    <source
+                      :src="
+                        section.fields.externalVideoUrl ||
+                          section.fields.media.fields.file.url
+                      "
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+              </div>
+              <div v-else>
+                <div class="section-subheading">
+                  <RichTextRenderer
+                    v-if="section.fields.body"
+                    :document="section.fields.body"
+                  />
+                </div>
+              </div>
+              <div v-if="section.fields.cards">
+                <div
+                  v-for="card in section.fields.cards"
+                  :key="card.fields.title"
+                  class="section-panel"
+                >
+                  <Collapse>
+                    <template v-slot:collapsed>
+                      <div class="c-svg">
+                        <ModelIcon :type="card.fields.type" />
                       </div>
-                      <div class="section-split col col-right">
-                        <div class="rounded-video-container-md">
-                          <video autoplay="autoplay" loop="loop" muted="" webkit-playsinline="" playsinline="">
-                            <source :src="card.fields.media.fields.file.url" type="video/mp4">
-                          </video>
+                      <div class="c-heading">{{ card.fields.title }}</div>
+                    </template>
+
+                    <template v-slot:expanded>
+                      <div>
+                        <div class="section-split">
+                          <div class="section-split col col-left">
+                            <RichTextRenderer :document="card.fields.body" />
+                          </div>
+                          <div class="section-split col col-right">
+                            <div class="rounded-video-container-md">
+                              <video
+                                autoplay="autoplay"
+                                loop="loop"
+                                muted=""
+                                webkit-playsinline=""
+                                playsinline=""
+                              >
+                                <source
+                                  :src="
+                                    card.fields.externalVideoUrl ||
+                                      card.fields.media.fields.file.url
+                                  "
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    </div>
-                  </template>
-                </Collapse>
-
+                    </template>
+                  </Collapse>
+                </div>
               </div>
+              <hr class="user-guide-divider" />
             </div>
-            <hr class="user-guide-divider">
-          </div>
-          <div id="safeguards-caution" class="guide-section">
-            <div class="safeguards__dos">
-              <div class="safeguards__section-heading">DOs</div>
-              <div class="safeguards__section">
-                <RichTextRenderer :document="page.fields.doList" :nodeRenderers="doRenders"/>
+            <div id="safeguards-caution" class="guide-section">
+              <div class="safeguards__dos">
+                <div class="safeguards__section-heading">DOs</div>
+                <div class="safeguards__section">
+                  <RichTextRenderer
+                    :document="page.fields.doList"
+                    :nodeRenderers="doRenders"
+                  />
+                </div>
               </div>
-            </div>
-            <hr class="user-guide-subdivider"/>
-            <div class="safeguards__donts">
-              <div class="safeguards__section-heading">DO NOTs</div>
-              <div class="safeguards__section">
-                <RichTextRenderer :document="page.fields.doNotList" :nodeRenderers="doNotRenders"/>
+              <hr class="user-guide-subdivider" />
+              <div class="safeguards__donts">
+                <div class="safeguards__section-heading">DO NOTs</div>
+                <div class="safeguards__section">
+                  <RichTextRenderer
+                    :document="page.fields.doNotList"
+                    :nodeRenderers="doNotRenders"
+                  />
+                </div>
               </div>
+              <hr class="user-guide-subdivider" />
             </div>
-            <hr class="user-guide-subdivider"/>
-          </div>
-          <div id="contact-us" class="guide-section">
-            <div class="contact-heading">Contact Us</div>
-            <div class="section-subheading">
-              <a class="contact-email" href="mailto:support@blendjet.com">Support@blendjet.com</a>
+            <div id="contact-us" class="guide-section">
+              <div class="contact-heading">Contact Us</div>
+              <div class="section-subheading">
+                <a class="contact-email" href="mailto:support@blendjet.com"
+                  >Support@blendjet.com</a
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </transition>
-</div>
+    </transition>
+  </div>
 </template>
 
 <script>
 import Info from '~/components/svg/info'
-const Collapse = () => import('~/components/collapse')
 import ImageOptimize from '~/mixins/imageOptimize'
 import ListGrid from '~/components/ListGrid'
 import DoItem from '~/components/DoItem'
 import DoNotItem from '~/components/DoNotItem'
 import ModelIcon from '~/components/ModelIcon'
-import RichTextRenderer from 'contentful-rich-text-vue-renderer';
-import { BLOCKS, MARKS } from '@contentful/rich-text-types';
+import RichTextRenderer from 'contentful-rich-text-vue-renderer'
+import { BLOCKS } from '@contentful/rich-text-types'
 import { createClient } from '~/plugins/contentful.js'
-const client = createClient();
+const client = createClient()
+const Collapse = () => import('~/components/collapse')
+
 export default {
   data() {
     return {
@@ -185,61 +255,55 @@ export default {
   components: {
     Info,
     Collapse,
-    ListGrid,
-    DoItem,
-    DoNotItem,
     ModelIcon,
     RichTextRenderer
   },
   mixins: [ImageOptimize],
   head() {
-    let properties = {}
-    let meta = []
+    const properties = {}
+    const meta = []
     const mdescription = this.metaDescription
     const title = this.metaTitle
-    if(title.length) {
+    if (title.length) {
       properties.title = title
     }
 
-    if(mdescription.length) {
+    if (mdescription.length) {
       meta.push({
         hid: 'description',
         name: 'description',
         content: mdescription
       })
     }
-    
-    return {...properties, meta}
-    
+
+    return { ...properties, meta }
   },
-  async asyncData({params}) {
-    let userGuide = await client.getEntries({
-      content_type: 'userGuide',
-      'fields.handle': params.handle,
-    })
-    .then(async (res) => {
-      let data = res.items[0]
+  async asyncData({ params }) {
+    const userGuide = await client
+      .getEntries({
+        content_type: 'userGuide',
+        'fields.handle': params.handle
+      })
+      .then(async res => {
+        const data = res.items[0]
 
-      if (data.fields.userGuideSections) {
-        let userGuideSections = []
-        for (const [index, item] of data.fields.userGuideSections.entries()) {
-          let section = await client.getEntry(item.sys.id)
-          .then(async (res) => { return res })
-          userGuideSections.push(section)
+        if (data.fields.userGuideSections) {
+          const userGuideSections = []
+          for (const [, item] of data.fields.userGuideSections.entries()) {
+            const section = await client.getEntry(item.sys.id)
+            userGuideSections.push(section)
+          }
+          data.fields.userGuideSections = userGuideSections
         }
-        data.fields.userGuideSections = userGuideSections
-      }
 
-      return data
-    })
+        return data
+      })
 
     return { page: userGuide }
   },
   async mounted() {
-    const vm = this
-    await client.getEntry('DtNqBDOvFbHUSxyOK3IMM')
-    .then((res) => {
-      if ( res.fields.metaInfo ) {
+    await client.getEntry('DtNqBDOvFbHUSxyOK3IMM').then(res => {
+      if (res.fields.metaInfo) {
         this.metaTitle = res.fields.metaInfo.fields.metaTitle
         this.metaDescription = res.fields.metaInfo.fields.metaDescription
       }
@@ -248,14 +312,18 @@ export default {
   computed: {
     doRenders() {
       return {
-        [BLOCKS.LIST_ITEM]: (node, key, h, next) => h('DoItem', { key: key }, next(node.content, key, h, next)),
-        [BLOCKS.UL_LIST]: (node, key, h, next) => h('ListGrid', { key: key }, next(node.content, key, h, next))
+        [BLOCKS.LIST_ITEM]: (node, key, h, next) =>
+          h(DoItem, { key }, next(node.content, key, h, next)),
+        [BLOCKS.UL_LIST]: (node, key, h, next) =>
+          h(ListGrid, { key }, next(node.content, key, h, next))
       }
     },
     doNotRenders() {
       return {
-        [BLOCKS.LIST_ITEM]: (node, key, h, next) => h('DoNotItem', { key: key }, next(node.content, key, h, next)),
-        [BLOCKS.UL_LIST]: (node, key, h, next) => h('ListGrid', { key: key }, next(node.content, key, h, next))
+        [BLOCKS.LIST_ITEM]: (node, key, h, next) =>
+          h(DoNotItem, { key }, next(node.content, key, h, next)),
+        [BLOCKS.UL_LIST]: (node, key, h, next) =>
+          h(ListGrid, { key }, next(node.content, key, h, next))
       }
     }
   }
@@ -263,7 +331,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .no-content {
   height: 100vh;
 }
@@ -284,12 +351,12 @@ ol {
   // padding-left: 40px;
 }
 ol li {
-  margin: 0.75rem 0 ;
+  margin: 0.75rem 0;
   counter-increment: guide-counter;
   position: relative;
   // display: block;
   height: 3.5em;
-    // line-height: 12px;
+  // line-height: 12px;
   display: flex;
   align-items: center;
 
@@ -320,9 +387,9 @@ ol li::before {
   vertical-align: middle;
 }
 
-.user-guide-container {
-  // margin-top: 100px;
-}
+/* .user-guide-container {
+  margin-top: 100px;
+} */
 
 .hero-banner {
   @include gradient-primary-purple-turquoise(to right);
@@ -404,12 +471,10 @@ ol li::before {
       letter-spacing: 0.5px;
       line-height: 1.29;
       text-align: center;
-
     }
   }
 
   &__image-container {
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -483,7 +548,7 @@ ol li::before {
   }
 
   &__info {
-    margin-right: 16px
+    margin-right: 16px;
   }
 
   &__text {
@@ -545,7 +610,6 @@ ol li::before {
       width: 50%;
     }
     & > a {
-
       color: $primary-purple;
       font-family: Bold;
       font-size: $text-small;
@@ -606,10 +670,8 @@ ol li::before {
   }
 }
 
-
-#first-blend {
-
-}
+/* #first-blend {
+} */
 
 .section-heading {
   font-family: Medium;
@@ -655,17 +717,16 @@ ol li::before {
 }
 
 .col {
-    width: 50%;
-    display: flex;
-    flex-flow: column nowrap;
-    @include respond-to('small') {
-      width: 100%;
-    }
+  width: 50%;
+  display: flex;
+  flex-flow: column nowrap;
+  @include respond-to('small') {
+    width: 100%;
+  }
 }
 
 .col-left {
   display: flex;
-
 }
 
 .col-right {
@@ -701,7 +762,6 @@ ol li::before {
   }
 }
 
-
 .content-centered {
   display: flex;
   justify-content: center;
@@ -716,7 +776,6 @@ ol li::before {
 }
 
 .safeguards {
-
   &__section {
     display: flex;
     flex-flow: row wrap;
@@ -737,7 +796,7 @@ ol li::before {
     flex-flow: column nowrap;
 
     @include respond-to('small') {
-      width: 100%
+      width: 100%;
     }
   }
 
@@ -772,13 +831,13 @@ ol li::before {
 }
 
 .rounded-video-container-md {
-    width: 350px;
-    // height: 320px;
-    border-radius: 12px;
-    overflow: hidden;
-    @include respond-to('small') {
-      width: auto;
-    }
+  width: 350px;
+  // height: 320px;
+  border-radius: 12px;
+  overflow: hidden;
+  @include respond-to('small') {
+    width: auto;
+  }
 }
 
 .contact-email {
@@ -789,26 +848,24 @@ ol li::before {
   text-transform: uppercase;
   color: $primary-purple;
 }
-// .slide-fade-enter-active {
-//   transition: all .3s ease;
-// }
-// .slide-fade-leave-active {
-//   transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-// }
-// .slide-fade-enter, .slide-fade-leave-to
-// /* .slide-fade-leave-active below version 2.1.8 */ {
-//   transform: translateX(10px);
-//   opacity: 0;
-// }
+
+/* .slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+} */
 
 .fade-enter-active {
   animation: fadeIn;
   animation-duration: 0.6s;
-
 }
 .fade-leave-active {
   animation: fadeOut;
   animation-duration: 0.6s;
 }
-
 </style>
