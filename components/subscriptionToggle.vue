@@ -128,6 +128,8 @@ export default {
         this.purchaseType = 'onetime'
         this.subscriptionChecked = false;
       }
+
+      this.$emit('subscriptionChanged', this.subscriptionChecked)
     },
     onClick() {
       this.toggle(!this.state)

@@ -1,65 +1,35 @@
 <template>
-<transition name="fade" >
-  <div class="pdp-container" v-if="currentVariant" :style="[!currentVariant ? 'height:100vh': 'auto']">
-    <div class="product-select">
-      <div class="product-select__controls__mobile-title-container">
-        <div class="product-select__controls__title">
-          {{product.title}}
-        </div>
-        <div class="product-select__controls__rating" >
-          <loox-product-rating :product="product" />
-        </div>
-        <div class="product-select__controls__price">
-          <product-price 
-          @Country="setCoutry" @DisplayPrice="setDisplayPrice" @Currency="setCurrency" v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
-          <product-price v-show="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice" @CompareAtLocal="setCompareAtPrice"
-              :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
-          <div class="product-select__controls__price__installments" v-if="showAfterPay">
-            <afterpay-placement
-                  data-locale="en_US"
-                  :data-currency="currency"
-                  :data-amount="displayPrice"
-                  data-modal-theme="white"
-                  data-size="xs"
-                  data-logo-type="lockup"
-              ></afterpay-placement>
-          </div>
-        </div>
-      </div>
-      <div class="product-select__image-carousel">
-        <div v-if="variants.length > 1" class="product-select__image-carousel__prev-variant" @click="decrementVariant">
-          <PrevSlide />
-        </div>
-        <div v-if="variants.length > 1" class="product-select__image-carousel__next-variant" @click="incrementVariant">
-          <NextSlide />
-        </div>
-        <transition name="fade" mode="out-in">
-          <picture v-if="productImage">
-            <source :srcset="optimizeSource({url: heroUrl})" />
-            <img class="product-select__image-carousel__img" :src="optimizeSource({url: productImage, width: 2100})" />
-          </picture>
-        </transition>
-      </div>
-      <div class="product-select__controls">
-        <div class="product-select__controls__title-container">
+  <transition name="fade">
+    <div
+      class="pdp-container"
+      v-if="currentVariant"
+      :style="[!currentVariant ? 'height:100vh' : 'auto']"
+    >
+      <!-- PRODUCT OPTIONS -->
+      <div class="product-select">
+        <div class="product-select__controls__mobile-title-container">
           <div class="product-select__controls__title">
-            {{product.title}}
+            {{ product.title }}
           </div>
           <div class="product-select__controls__rating">
             <loox-product-rating :product="product" />
           </div>
           <div class="product-select__controls__price">
             <product-price
+              @Country="setCoutry"
+              @DisplayPrice="setDisplayPrice"
+              @Currency="setCurrency"
               v-if="currentVariant"
               :price="currentVariant.price"
               :variantId="currentVariant.id"
             />
             <product-price
-              v-if="
+              v-show="
                 currentVariant.compareAtPrice &&
                   currentVariant.compareAtPrice !== currentVariant.price &&
                   compareAtPrice !== displayPrice
               "
+              @CompareAtLocal="setCompareAtPrice"
               :price="currentVariant.compareAtPrice"
               :strikethrough="true"
               :variantId="currentVariant.id"
@@ -79,255 +49,163 @@
             </div>
           </div>
         </div>
-
-        <div
-          v-if="variants.length > 1"
-          class="product-select__controls__variant-color"
-        >
-          <div class="product-select__controls__variant-color__text">
-            <span class="product-select__controls__variant-color__text__label"
-              >Color: </span
-            ><span
-              class="product-select__controls__variant-color__text__selected-color"
-              >{{ currentVariant.title }}</span
-            >
-          </div>
-          <div class="product-select__controls__variant-color__swatches">
-            <product-options
-              :options="allOptions"
-              :variant="selectedVariant"
-              @selectedOptionsSet="setSelected"
-              :variants="product.variants"
-              @clear="selectedOptions = []"
-              :currentOption="currentVariant.selectedOptions[0].value"
-              :key="1"
-              v-if="!showMobileVariants && !showDesktopHeader"
-            />
-          </div>
-        </div>
-
-        <div v-if="country === 'US'">
+        <div class="product-select__image-carousel">
           <div
-            class="product-select__controls__extend-warranty"
-            v-if="extend1yr && extend2yr && extend3yr"
+            v-if="variants.length > 1"
+            class="product-select__image-carousel__prev-variant"
+            @click="decrementVariant"
           >
-            <div
-              class="product-select__controls__extend-warranty__text"
-              @click="$modal.show('extend-modal')"
-            >
-              Add accident protection offered by
+            <PrevSlide />
+          </div>
+          <div
+            v-if="variants.length > 1"
+            class="product-select__image-carousel__next-variant"
+            @click="incrementVariant"
+          >
+            <NextSlide />
+          </div>
+          <transition name="fade" mode="out-in">
+            <picture v-if="productImage">
+              <source :srcset="optimizeSource({ url: heroUrl })" />
               <img
-                class=" product-select__controls__extend-warranty__logo"
-                :src="
-                  optimizeSource({ url: '/images/blendjetPDP/extend.png' })
-                "
-              />&nbsp;<Info />
+                class="product-select__image-carousel__img"
+                :src="optimizeSource({url: productImage, width: 2100})"
+              />
+            </picture>
+          </transition>
+        </div>
+
+        <div class="product-select__controls">
+          <div class="product-select__controls__title-container">
+            <div class="product-select__controls__title">
+              {{ product.title }}
             </div>
-            <div
-              class="product-select__controls__extend-warranty__button-group"
-            >
-              <div
-                role="buton"
-                class="product-select__controls__extend-warranty__button"
-                :class="[
-                  warrantySelected.handle ===
-                  '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'
-                    ? 'extend-active'
-                    : 'extend-inactive'
-                ]"
-                @click="selectWarranty(extend1yr)"
-              >
-                1 yr - ${{ extend1yr.variants[0].price }}
-              </div>
-              <div
-                role="buton"
-                class="product-select__controls__extend-warranty__button"
-                :class="
-                  warrantySelected.handle ===
-                  '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'
-                    ? 'extend-active'
-                    : 'extend-inactive'
+            <div class="product-select__controls__rating">
+              <loox-product-rating :product="product" />
+            </div>
+            <div class="product-select__controls__price">
+              <product-price
+                v-if="currentVariant"
+                :price="currentVariant.price"
+                :variantId="currentVariant.id"
+              />
+              <product-price
+                v-if="
+                  currentVariant.compareAtPrice &&
+                    currentVariant.compareAtPrice !== currentVariant.price &&
+                    compareAtPrice !== displayPrice
                 "
-                @click="selectWarranty(extend2yr)"
-              >
-                2 yr - ${{ extend2yr.variants[0].price }}
-              </div>
+                :price="currentVariant.compareAtPrice"
+                :strikethrough="true"
+                :variantId="currentVariant.id"
+              />
               <div
-                role="buton"
-                class="product-select__controls__extend-warranty__button"
-                :class="
-                  warrantySelected.handle ===
-                  '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'
-                    ? 'extend-active'
-                    : 'extend-inactive'
-                "
-                @click="selectWarranty(extend3yr)"
+                class="product-select__controls__price__installments"
+                v-if="showAfterPay"
               >
-                3 yr - ${{ extend3yr.variants[0].price }}
+                <afterpay-placement
+                  data-locale="en_US"
+                  :data-currency="currency"
+                  :data-amount="displayPrice"
+                  data-modal-theme="white"
+                  data-size="xs"
+                  data-logo-type="lockup"
+                ></afterpay-placement>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="product-select__controls__add-to-cart">
-          <div class="product-select__controls__add-to-cart__button-group">
-            <div
-              class="product-select__controls__add-to-cart__quantity-select-container"
-            >
-              <quantity-selector :quantity.sync="quantity" />
+          <div
+            v-if="variants.length > 1"
+            class="product-select__controls__variant-color"
+          >
+            <div class="product-select__controls__variant-color__text">
+              <span class="product-select__controls__variant-color__text__label"
+                >Color: </span
+              ><span
+                class="product-select__controls__variant-color__text__selected-color"
+                >{{ currentVariant.title }}</span
+              >
             </div>
-            <div
-              class="product-select__controls__add-to-cart__add-to-cart-button"
-            >
-              <product-add-to-cart-button
-                :quantity="quantity"
-                :product="product"
-                :variant="currentVariant"
-                :allOptionsSelected="true"
-                :onlyOneOption="true"
-                :warranty="warrantySelected"
-                @addedToCart="quantity = 1"
+            <div class="product-select__controls__variant-color__swatches">
+              <product-options
+                :options="allOptions"
+                :variant="selectedVariant"
+                @selectedOptionsSet="setSelected"
+                :variants="product.variants"
+                @clear="selectedOptions = []"
+                :currentOption="currentVariant.selectedOptions[0].value"
+                :key="1"
+                v-if="!showMobileVariants && !showDesktopHeader"
               />
             </div>
           </div>
-        </div>
 
-        <div
-          v-if="['baileys-blendjet-2'].includes(product.handle)"
-          :product="product"
-          :page="page"
-          data-v-621d5369=""
-          class="product-select__controls__shipping-notification"
-        >
-          <div
-            data-v-74c97a54=""
-            data-v-621d5369=""
-            class="shipping-container"
-          >
-            <div data-v-74c97a54="" class="normal-size">
-              <div data-v-74c97a54="" class="normal-size__label">
-                <span data-v-74c97a54="">Order now and it ships by</span>
+          <div v-if="country === 'US'">
+            <div
+              class="product-select__controls__extend-warranty"
+              v-if="extend1yr && extend2yr && extend3yr"
+            >
+              <div
+                class="product-select__controls__extend-warranty__text"
+                @click="$modal.show('extend-modal')"
+              >
+                Add accident protection offered by
+                <img
+                  class=" product-select__controls__extend-warranty__logo"
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/extend.png' })
+                  "
+                />&nbsp;<Info />
               </div>
-              <div data-v-74c97a54="" class="normal-size__countdown">
-                <span data-v-74c97a54=""
-                  ><span data-v-74c97a54="" style="color:#7f7fd1;"
-                    >Friday, April 30</span
-                  ></span
+              <div
+                class="product-select__controls__extend-warranty__button-group"
+              >
+                <div
+                  role="buton"
+                  class="product-select__controls__extend-warranty__button"
+                  :class="[
+                    warrantySelected.handle ===
+                    '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'
+                      ? 'extend-active'
+                      : 'extend-inactive'
+                  ]"
+                  @click="selectWarranty(extend1yr)"
                 >
+                  1 yr - ${{ extend1yr.variants[0].price }}
+                </div>
+                <div
+                  role="buton"
+                  class="product-select__controls__extend-warranty__button"
+                  :class="
+                    warrantySelected.handle ===
+                    '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'
+                      ? 'extend-active'
+                      : 'extend-inactive'
+                  "
+                  @click="selectWarranty(extend2yr)"
+                >
+                  2 yr - ${{ extend2yr.variants[0].price }}
+                </div>
+                <div
+                  role="buton"
+                  class="product-select__controls__extend-warranty__button"
+                  :class="
+                    warrantySelected.handle ===
+                    '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'
+                      ? 'extend-active'
+                      : 'extend-inactive'
+                  "
+                  @click="selectWarranty(extend3yr)"
+                >
+                  3 yr - ${{ extend3yr.variants[0].price }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div v-else class="product-select__controls__shipping-notification">
-          <ShippingTime :country="country" />
-        </div>
-        <div class="product-select__controls__payments">
-          <div
-            v-if="applePay"
-            class="pay-with-modal__container__apple apple-pay-with"
-            @click="expressCheckout"
-          >
-            <img
-              :src="
-                optimizeSource({ url: '/images/blendjetPDP/applepay.png' })
-              "
-            />
-          </div>
-          <div
-            v-if="!applePay"
-            role="button"
-            class="product-select__controls__payments__paypal"
-            @click="expressCheckout"
-          >
-            Pay with
-            <img
-              class="product-select__controls__payments__paypal__logo"
-              :src="optimizeSource({ url: '/images/blendjetPDP/paypal.png' })"
-              alt="Paypal Logo"
-            />
-          </div>
-          <div
-            role="button"
-            class="product-select__controls__payments__more-options"
-            @click="$modal.show('pay-with-modal')"
-          >
-            More payment options
-          </div>
-        </div>
-
-        <div class="product-select__controls__value-props">
-          <div
-            class="product-select__controls__value-props__guarantee"
-            @click="$modal.show('guarantee-modal')"
-          >
-            <Guarantee :size="'40px'" />
-            <span
-              class="product-select__controls__value-props__guarantee__text"
-              >30 day money back guarantee</span
-            >
-          </div>
-          <div class="product-select__controls__value-props__badges">
-            <a
-              target="_blank"
-              rel="nofollow"
-              class="product-select__controls__value-props__badges__img"
-              :href="mcafeeLink"
-            >
-              <img
-                :src="
-                  optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })
-                "
-                alt="McAfee Secure Logo"
-              />
-            </a>
-            <a
-              target="_blank"
-              rel="nofollow"
-              class="product-select__controls__value-props__badges__img"
-              :href="nortonLink"
-            >
-              <img
-                :src="
-                  optimizeSource({ url: '/images/blendjetPDP/norton.png' })
-                "
-                alt="Norton Secured Logo"
-              />
-            </a>
-            <a
-              target="_blank"
-              rel="nofollow"
-              class="product-select__controls__value-props__badges__img"
-              :href="bbbLink"
-            >
-              <img
-                :src="optimizeSource({ url: '/images/blendjetPDP/bbb.png' })"
-                alt="Better Business Bureau Logo"
-              />
-            </a>
-          </div>
-        </div>
-
-        <transition name="fade">
-          <div
-            class="product-select__controls__add-to-cart__mobile-float"
-            v-show="showMobileHeader"
-          >
+          <div class="product-select__controls__add-to-cart">
             <div class="product-select__controls__add-to-cart__button-group">
-              <div
-                v-if="variants.length > 1"
-                class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"
-                @click.prevent="toggleMobileVariants"
-              >
-                <product-option-swatch
-                  :value="currentVariant.selectedOptions[0].value"
-                  :optionName="'Color'"
-                  :swatchStyle="'bubble'"
-                  :class="{ selected: true }"
-                  :variants="product.variants"
-                  :selectedOptions="currentVariant.selectedOptions"
-                />
-              </div>
               <div
                 class="product-select__controls__add-to-cart__quantity-select-container"
               >
@@ -348,148 +226,37 @@
               </div>
             </div>
           </div>
-        </transition>
 
-        <transition name="fade">
-          <div class="mobile-variant-select" v-if="showMobileVariants">
+          <div
+            v-if="['baileys-blendjet-2'].includes(product.handle)"
+            :product="product"
+            :page="page"
+            class="product-select__controls__shipping-notification"
+          >
             <div
-              class="mobile-variant-select__close"
-              @click="toggleMobileVariants"
+              class="shipping-container"
             >
-              <Close />
-            </div>
-            <div class="product-select__controls__variant-color__text">
-              <span
-                class="product-select__controls__variant-color__text__label"
-                >Color: </span
-              ><span
-                class="product-select__controls__variant-color__text__selected-color"
-                >{{ currentVariant.title }}</span
-              >
-            </div>
-            <product-options
-              :options="allOptions"
-              :variant="selectedVariant"
-              @selectedOptionsSet="setSelected"
-              :variants="product.variants"
-              @clear="selectedOptions = []"
-              :currentOption="currentVariant.selectedOptions[0].value"
-              :key="3"
-            />
-            <div class="mobile-variant-select__shipping">
-              <ShippingTime :country="country" />
+              <div class="normal-size">
+                <div class="normal-size__label">
+                  <span>Order now and it ships by</span>
+                </div>
+                <div class="normal-size__countdown">
+                  <span><span style="color:#7f7fd1;"
+                      >Friday, April 30</span
+                    ></span
+                  >
+                </div>
+              </div>
             </div>
           </div>
-        </transition>
 
-        <modal name="extend-modal" height="auto" :adaptive="true">
-          <div class="extend-modal__container">
-            <div slot="top-right" @click="$modal.hide('extend-modal')">
-              <Close />
-            </div>
-            <div class="extend-modal__svg-container">
-              <BlnExtend />
-            </div>
-            <div class="extend-modal__text">
-              <div class="extend-modal__text__block">
-                Keep your product protected from accidents right away, plus
-                full coverage after manufacturer warranties expire.
-              </div>
-            </div>
-            <div class="extend-modal__text__list">
-              <div class="extend-modal__text__list__subheading">
-                This plan covers:
-              </div>
-              <ul class="extend-modal__text__list__items">
-                <li>Fast and free product replacements</li>
-                <li>Accidental damage such as breaks, drops, and spills</li>
-                <li>Extended malfunction and wear-and-tear protection</li>
-              </ul>
-
-              <div class="extend-modal__text__plan-details">
-                <a
-                  href="https://customers.extend.com/plan_details/10003-blendjet-adh-replace-1y"
-                  target="_blank"
-                  >Plan Details</a
-                >
-              </div>
-            </div>
-            <div class="extend-modal__why-choose">
-              <div class="extend-modal__why-choose__support">
-                <img
-                  class="extend-modal__why-choose__support__icon"
-                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgc3Ryb2tlLXdpZHRoPSIxLjM1OCIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiCiAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aAogICAgICBkPSJNMTMgMjIuODU4cy03LjU2Ny03LjYxLTkuOTU4LTEwLjI3N2MtMS4xNTMtMS4yODYtMS45NzYtMi45MDctMS45NzYtNC43N0E2Ljc0NSA2Ljc0NSAwIDAxMTMgMy41MDRhNi43NDUgNi43NDUgMCAwMTExLjkzNCA0LjMwOGMwIDEuODYyLS44MjMgMy40ODMtMS45NzYgNC43NjlDMjAuNTY4IDE1LjI0OSAxMyAyMi44NTggMTMgMjIuODU4eiIKICAgICAgc3Ryb2tlPSIjMjI0QkM1Ii8+CiAgICA8cGF0aCBkPSJNMy43MTcgOC4zODdhNC42NzYgNC42NzYgMCAwMTQuNjctNC42NyIgc3Ryb2tlPSIjMjdBRUU0Ii8+CiAgPC9nPgo8L3N2Zz4K"
-                />Friendly support 24/7
-              </div>
-              <div class="extend-modal__why-choose__fees">
-                <img
-                  class="extend-modal__why-choose__fees__icon"
-                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSJub25lIj4KICAgIDxwYXRoCiAgICAgIGQ9Ik0yLjU1IDE2LjQyMnYtMS4zMTNDMS4wMTUgMTQuOTY0LjE3NiAxNC4wMDMuMDMyIDEyLjIyNWgxLjQzNWMuMDU0LjQ5Ni4xNjcuODczLjMzOCAxLjEzLjE3Mi4yNTguNDIuNDIyLjc0NS40OTR2LTMuMjM1bC0uMjMtLjA4MWMtLjczMS0uMjYyLTEuMjczLS42MS0xLjYyNS0xLjA0My0uMzUyLS40MzMtLjUyOC0uOTc1LS41MjgtMS42MjQgMC0uNjg2LjIxNy0xLjI2NC42NS0xLjczMy40MzMtLjQ3IDEuMDEtLjc0NSAxLjczMy0uODI2VjQuMTI5aC44NjZ2MS4xNzhjLjY2LjA3MiAxLjE4My4zMTYgMS41Ny43MzEuMzg5LjQxNS42NTUgMS4wMS44IDEuNzg3bC0xLjM0LjIxN2MtLjA5MS0uNDQzLS4yMTgtLjc4MS0uMzgtMS4wMTZhMS4xMiAxLjEyIDAgMDAtLjY1LS40NnYyLjkzOGwuMjg0LjA5NWMuNzY4LjI4IDEuMzI1LjY0IDEuNjcyIDEuMDgzLjM0OC40NDIuNTIyIDEuMDEuNTIyIDEuNzA1IDAgLjc1OS0uMjI0IDEuMzg0LS42NyAxLjg3NS0uNDQ3LjQ5Mi0xLjA1Ljc3NC0xLjgwOC44NDd2MS4zMTNIMi41NXptLjg2Ni0yLjU0NWMuMzQzLS4wNjQuNjA3LS4yMTcuNzkyLS40Ni4xODUtLjI0NC4yNzgtLjU2NS4yNzgtLjk2MiAwLS4zODgtLjA4Mi0uNy0uMjQ0LS45MzQtLjE2Mi0uMjM1LS40MzgtLjQzMy0uODI2LS41OTZ2Mi45NTJ6TTIuNTUgNi41MzljLS42NS4xMjYtLjk3NS41Ni0uOTc1IDEuMyAwIC4zNDMuMDcyLjYxMy4yMTcuODEyLjE0NC4xOTguMzk3LjM3NC43NTguNTI4di0yLjY0eiIKICAgICAgZmlsbD0iIzI3QUVFNCIvPgogICAgPHBhdGgKICAgICAgZD0iTTE1Ljg4NSAyMS42MzVjLTIuMDM0IDAtMy41NC0uODY1LTQuNTE3LTIuNTk2LS45NzgtMS43My0xLjQ2Ny00LjQwNS0xLjQ2Ny04LjAyMkM5LjkwMSAzLjg2IDExLjkzNS4yOCAxNi4wMDIuMjhjMi4wMzQgMCAzLjU0Ljg2NSA0LjUxNyAyLjU5Ni45NzggMS43MyAxLjQ2NyA0LjQwNSAxLjQ2NyA4LjAyMiAwIDcuMTU4LTIuMDM0IDEwLjczNi02LjEwMSAxMC43MzZ6bS4wMy0xLjUyNWMxLjUwNSAwIDIuNTk1LS43MjkgMy4yNy0yLjE4NS42NzQtMS40NTcgMS4wMTItMy43OSAxLjAxMi02Ljk5NiAwLTIuMTktLjE0Ny0zLjk1LS40NC01LjI4LS4yOTQtMS4zMy0uNzQ4LTIuMzAzLTEuMzY0LTIuOTE5LS42MTYtLjYxNi0xLjQyMy0uOTI0LTIuNDItLjkyNC0xLjUwNiAwLTIuNTk2LjcyOS0zLjI3IDIuMTg2LS42NzUgMS40NTYtMS4wMTMgMy43ODgtMS4wMTMgNi45OTUgMCAyLjE5LjE0NyAzLjk1LjQ0IDUuMjguMjk0IDEuMzMuNzQ4IDIuMzAzIDEuMzY0IDIuOTE5LjYxNi42MTYgMS40MjMuOTI0IDIuNDIuOTI0eiIKICAgICAgZmlsbD0iIzIyNEJDNSIvPgogIDwvZz4KPC9zdmc+Cg=="
-                />No fees. No deductibles.
-              </div>
-            </div>
-
+          <div v-else class="product-select__controls__shipping-notification">
+            <ShippingTime :country="country" />
           </div>
-        </modal>
-
-        <modal
-          name="guarantee-modal"
-          width="414px"
-          height="auto"
-          :adaptive="true"
-        >
-          <div class="guarantee-modal__container">
-            <div slot="top-right" @click="$modal.hide('guarantee-modal')">
-              <Close />
-            </div>
-            <Guarantee />
-            <div class="guarantee-modal__container__heading">
-              30-day Money Back Guarantee
-            </div>
-            <div class="guarantee-modal__container__text">
-              We believe in 100% customer satisfaction and that is why we are
-              offering all customers a 30 day money-back guarantee! If you are
-              not satisfied with your BlendJet blender, you may return the
-              item within 30 days from the order date for a full refund. If
-              you don't like your product, get a full refund within 30 days,
-              no questions asked. <br />
-              — <br />
-              Please
-              <a class="guarantee-modal__container__text__contact-link"
-                >contact our customer happiness</a
-              >
-              team to start your return process.
-            </div>
-          </div>
-        </modal>
-
-        <modal
-          name="pay-with-modal"
-          width="414px"
-          height="auto"
-          :adaptive="true"
-        >
-          <div class="pay-with-modal__container">
-            <div slot="top-right" @click="$modal.hide('pay-with-modal')">
-              <Close />
-            </div>
-            <div class="pay-with-modal__container__text">
-              Pay with
-            </div>
-
-            <div
-              class="pay-with-modal__container__amazon"
-              @click="expressCheckout"
-            >
-              <img
-                :src="
-                  optimizeSource({ url: '/images/blendjetPDP/amazonpay.png' })
-                "
-              />
-            </div>
+          <div class="product-select__controls__payments">
             <div
               v-if="applePay"
-              class="pay-with-modal__container__apple"
+              class="pay-with-modal__container__apple apple-pay-with"
               @click="expressCheckout"
             >
               <img
@@ -499,321 +266,585 @@
               />
             </div>
             <div
-              class="pay-with-modal__container__paypal"
+              v-if="!applePay"
+              role="button"
+              class="product-select__controls__payments__paypal"
               @click="expressCheckout"
             >
+              Pay with
               <img
-                class="pay-with-modal__container__paypal__logo"
-                :src="
-                  optimizeSource({ url: '/images/blendjetPDP/paypal.png' })
-                "
+                class="product-select__controls__payments__paypal__logo"
+                :src="optimizeSource({ url: '/images/blendjetPDP/paypal.png' })"
+                alt="Paypal Logo"
               />
             </div>
-          </div>
-        </modal>
-      </div>
-    </div>
-
-    <div
-      v-if="['baileys-blendjet-2'].includes(product.handle)"
-      :product="product"
-      :page="page"
-      class="blendjet-banner"
-    >
-      <div class="blendjet-banner__content-block">
-        <h2>IF YOU LIKE PIÑA COLADAS...</h2>
-        <p>
-          Then you’ll love this BlendJet x Baileys collab! Kick back, relax,
-          and escape to a tropical paradise with our limited run, special
-          edition BlendJet, the perfect way to enjoy<strong>&nbsp;</strong
-          ><a
-            style="color:white;"
-            href="https://www.baileys.com/en-us/products/#baileys-colada"
-            target="_blank"
-            ><strong>Baileys Colada</strong></a
-          >, the all new limited time offering that blends Baileys
-          irresistible Irish cream with the rich flavors of creamy coconut and
-          sweet pineapples.
-        </p>
-        <p style="padding: 10px;">
-          <a
-            href="https://www.baileys.com/en-us/products/#baileys-colada"
-            target="_blank"
-            style="font-weight: bold;/* padding: 10px; */"
-            >BUY BAILEYS COLADA HERE</a
-          >
-        </p>
-        <p style="font-size: 75%;">
-          Please Enjoy Responsibly.
-        </p>
-        <p style="font-size: 70%;">
-          BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by Paddington, Ltd., New York, NY.
-        </p>
-      </div>
-    </div>
-
-    <div v-else-if="page && page.fields.headerText" class="blendjet-banner">
-      <div class="blendjet-banner__content-block">
-        <RichTextRenderer :document="page.fields.headerText" />
-      </div>
-    </div>
-
-    <transition name="fade">
-      <div class="header-product-select" v-if="showDesktopHeader">
-        <div class="header-product-select__info-container">
-          <div class="header-product-select__thumbnail">
-            <img
-              class="header-product-select__thumbnail__img"
-              :src="
-                optimizeSource({
-                  url: currentVariant.featuredMedia.thumbnailSrc
-                })
-              "
-            />
-          </div>
-          <div class="header-product-select__title-container">
-            <div class="header-product-select__title-container__title">
-              {{ product.title }}
-            </div>
-            <div class="header-product-select__title-container__price">
-              <product-price
-                v-if="currentVariant"
-                :price="currentVariant.price"
-                :variantId="currentVariant.id"
-              />
-              <product-price
-                v-if="
-                  currentVariant.compareAtPrice &&
-                    currentVariant.compareAtPrice !== currentVariant.price &&
-                    compareAtPrice !== displayPrice
-                "
-                :price="currentVariant.compareAtPrice"
-                :strikethrough="true"
-                :variantId="currentVariant.id"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="header-product-select__controls-container">
-          <div
-            v-if="variants.length > 1"
-            class="header-product-select__swatches"
-          >
             <div
-              class="dropdown"
-              tabindex="0"
-              @focusout="showHeaderVariants = false"
-              @click.prevent="toggleHeaderVariants"
+              role="button"
+              class="product-select__controls__payments__more-options"
+              @click="$modal.show('pay-with-modal')"
             >
-              <div class="dropbtn" role="button">
-                <div class="dropbtn__swatch">
+              More payment options
+            </div>
+          </div>
+          <div class="product-select__controls__value-props">
+            <div
+              class="product-select__controls__value-props__guarantee"
+              @click="$modal.show('guarantee-modal')"
+            >
+              <Guarantee :size="'40px'" />
+              <span
+                class="product-select__controls__value-props__guarantee__text"
+                >30 day money back guarantee</span
+              >
+            </div>
+            <div class="product-select__controls__value-props__badges">
+              <a
+                target="_blank"
+                rel="nofollow"
+                class="product-select__controls__value-props__badges__img"
+                :href="mcafeeLink"
+              >
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })
+                  "
+                  alt="McAfee Secure Logo"
+                />
+              </a>
+              <a
+                target="_blank"
+                rel="nofollow"
+                class="product-select__controls__value-props__badges__img"
+                :href="nortonLink"
+              >
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/norton.png' })
+                  "
+                  alt="Norton Secured Logo"
+                />
+              </a>
+              <a
+                target="_blank"
+                rel="nofollow"
+                class="product-select__controls__value-props__badges__img"
+                :href="bbbLink"
+              >
+                <img
+                  :src="optimizeSource({ url: '/images/blendjetPDP/bbb.png' })"
+                  alt="Better Business Bureau Logo"
+                />
+              </a>
+            </div>
+          </div>
+
+          <transition name="fade">
+            <div
+              class="product-select__controls__add-to-cart__mobile-float"
+              v-show="showMobileHeader"
+            >
+              <div class="product-select__controls__add-to-cart__button-group">
+                <div
+                  v-if="variants.length > 1"
+                  class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"
+                  @click.prevent="toggleMobileVariants"
+                >
                   <product-option-swatch
                     :value="currentVariant.selectedOptions[0].value"
-                    :style="{}"
                     :optionName="'Color'"
                     :swatchStyle="'bubble'"
-                    :class="{ selected: false }"
+                    :class="{ selected: true }"
                     :variants="product.variants"
                     :selectedOptions="currentVariant.selectedOptions"
                   />
                 </div>
-                <div class="dropbtn__text">
-                  <div class="dropbtn__text__color">
-                    {{ currentVariant.title }}
-                  </div>
-                  <div class="dropbtn__text__shipping">
-                    <ShippingTime
-                      :size="'short'"
-                      :product="'blendjet-2'"
-                      :country="country"
-                    />
-                  </div>
+                <div
+                  class="product-select__controls__add-to-cart__quantity-select-container"
+                >
+                  <quantity-selector :quantity.sync="quantity" />
                 </div>
-                <div class="dropbtn__caret-down">
-                  <CaretDown />
+                <div
+                  class="product-select__controls__add-to-cart__add-to-cart-button"
+                >
+                  <product-add-to-cart-button
+                    :quantity="quantity"
+                    :product="product"
+                    :variant="currentVariant"
+                    :allOptionsSelected="true"
+                    :onlyOneOption="true"
+                    :warranty="warrantySelected"
+                    @addedToCart="quantity = 1"
+                  />
                 </div>
-              </div>
-              <transition name="fade">
-                <div v-if="showHeaderVariants" class="dropdown-content">
-                  <div class="dropdown-content__swatches">
-                    <product-options
-                      :options="allOptions"
-                      :variant="selectedVariant"
-                      @selectedOptionsSet="setSelected"
-                      :variants="product.variants"
-                      @clear="selectedOptions = []"
-                      :currentOption="currentVariant.selectedOptions[0].value"
-                      :key="2"
-                    />
-                  </div>
-                </div>
-              </transition>
-            </div>
-          </div>
-          <div class="header-product-select__add-buttons">
-            <div class="add-to-cart-buttons">
-              <div class="quantity-select-container">
-                <quantity-selector :quantity.sync="quantity" />
-              </div>
-              <div class="add-to-cart">
-                <product-add-to-cart-button
-                  :quantity="quantity"
-                  :product="product"
-                  :warranty="warrantySelected"
-                  :variant="currentVariant"
-                  :allOptionsSelected="true"
-                  :onlyOneOption="true"
-                  @addedToCart="quantity = 1"
-                />
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </transition>
+          </transition>
+          <transition name="fade">
+            <div class="mobile-variant-select" v-if="showMobileVariants">
+              <div
+                class="mobile-variant-select__close"
+                @click="toggleMobileVariants"
+              >
+                <Close />
+              </div>
+              <div class="product-select__controls__variant-color__text">
+                <span
+                  class="product-select__controls__variant-color__text__label"
+                  >Color: </span
+                ><span
+                  class="product-select__controls__variant-color__text__selected-color"
+                  >{{ currentVariant.title }}</span
+                >
+              </div>
+              <product-options
+                :options="allOptions"
+                :variant="selectedVariant"
+                @selectedOptionsSet="setSelected"
+                :variants="product.variants"
+                @clear="selectedOptions = []"
+                :currentOption="currentVariant.selectedOptions[0].value"
+                :key="3"
+              />
+              <div class="mobile-variant-select__shipping">
+                <ShippingTime :country="country" />
+              </div>
+            </div>
+          </transition>
 
-    <div class="media-content">
-      <div class="media-content__carousel">
-        <b-carousel
-          class="media-content__carousel"
-          :arrow="true"
-          :repeat="true"
-          :indicator="true"
-          :has-drag="true"
-          :autoplay="false"
-          v-model="heroIndex"
-        >
-          <b-carousel-item v-for="(image, i) in heroImages" :key="i">
-            <section class="`hero is-large`">
-              <span class="image">
-                <img
-                  class="media-content__carousel__img"
-                  :src="optimizeSource({url: image, width: 2800})"
-                />
-              </span>
-            </section>
-          </b-carousel-item>
-        </b-carousel>
-      </div>
-      <div class="media-content__hero-banner"></div>
-      <div
-        class="media-content__main"
-        v-if="loadDescription && page && page.fields.features"
-      >
-        <div class="media-content__main__features">
-          <div
-            v-if="page && page.fields.features"
-            class="features-container sticky"
+          <modal name="extend-modal" height="auto" :adaptive="true">
+            <div class="extend-modal__container">
+              <div slot="top-right" @click="$modal.hide('extend-modal')">
+                <Close />
+              </div>
+              <div class="extend-modal__svg-container">
+                <BlnExtend />
+              </div>
+              <div class="extend-modal__text">
+                <div class="extend-modal__text__block">
+                  Keep your product protected from accidents right away, plus
+                  full coverage after manufacturer warranties expire.
+                </div>
+              </div>
+              <div class="extend-modal__text__list">
+                <div class="extend-modal__text__list__subheading">
+                  This plan covers:
+                </div>
+                <ul class="extend-modal__text__list__items">
+                  <li>Fast and free product replacements</li>
+                  <li>Accidental damage such as breaks, drops, and spills</li>
+                  <li>Extended malfunction and wear-and-tear protection</li>
+                </ul>
+
+                <div class="extend-modal__text__plan-details">
+                  <a
+                    href="https://customers.extend.com/plan_details/10003-blendjet-adh-replace-1y"
+                    target="_blank"
+                    >Plan Details</a
+                  >
+                </div>
+              </div>
+              <div class="extend-modal__why-choose">
+                <div class="extend-modal__why-choose__support">
+                  <img
+                    class="extend-modal__why-choose__support__icon"
+                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgc3Ryb2tlLXdpZHRoPSIxLjM1OCIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiCiAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aAogICAgICBkPSJNMTMgMjIuODU4cy03LjU2Ny03LjYxLTkuOTU4LTEwLjI3N2MtMS4xNTMtMS4yODYtMS45NzYtMi45MDctMS45NzYtNC43N0E2Ljc0NSA2Ljc0NSAwIDAxMTMgMy41MDRhNi43NDUgNi43NDUgMCAwMTExLjkzNCA0LjMwOGMwIDEuODYyLS44MjMgMy40ODMtMS45NzYgNC43NjlDMjAuNTY4IDE1LjI0OSAxMyAyMi44NTggMTMgMjIuODU4eiIKICAgICAgc3Ryb2tlPSIjMjI0QkM1Ii8+CiAgICA8cGF0aCBkPSJNMy43MTcgOC4zODdhNC42NzYgNC42NzYgMCAwMTQuNjctNC42NyIgc3Ryb2tlPSIjMjdBRUU0Ii8+CiAgPC9nPgo8L3N2Zz4K"
+                  />Friendly support 24/7
+                </div>
+                <div class="extend-modal__why-choose__fees">
+                  <img
+                    class="extend-modal__why-choose__fees__icon"
+                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSJub25lIj4KICAgIDxwYXRoCiAgICAgIGQ9Ik0yLjU1IDE2LjQyMnYtMS4zMTNDMS4wMTUgMTQuOTY0LjE3NiAxNC4wMDMuMDMyIDEyLjIyNWgxLjQzNWMuMDU0LjQ5Ni4xNjcuODczLjMzOCAxLjEzLjE3Mi4yNTguNDIuNDIyLjc0NS40OTR2LTMuMjM1bC0uMjMtLjA4MWMtLjczMS0uMjYyLTEuMjczLS42MS0xLjYyNS0xLjA0My0uMzUyLS40MzMtLjUyOC0uOTc1LS41MjgtMS42MjQgMC0uNjg2LjIxNy0xLjI2NC42NS0xLjczMy40MzMtLjQ3IDEuMDEtLjc0NSAxLjczMy0uODI2VjQuMTI5aC44NjZ2MS4xNzhjLjY2LjA3MiAxLjE4My4zMTYgMS41Ny43MzEuMzg5LjQxNS42NTUgMS4wMS44IDEuNzg3bC0xLjM0LjIxN2MtLjA5MS0uNDQzLS4yMTgtLjc4MS0uMzgtMS4wMTZhMS4xMiAxLjEyIDAgMDAtLjY1LS40NnYyLjkzOGwuMjg0LjA5NWMuNzY4LjI4IDEuMzI1LjY0IDEuNjcyIDEuMDgzLjM0OC40NDIuNTIyIDEuMDEuNTIyIDEuNzA1IDAgLjc1OS0uMjI0IDEuMzg0LS42NyAxLjg3NS0uNDQ3LjQ5Mi0xLjA1Ljc3NC0xLjgwOC44NDd2MS4zMTNIMi41NXptLjg2Ni0yLjU0NWMuMzQzLS4wNjQuNjA3LS4yMTcuNzkyLS40Ni4xODUtLjI0NC4yNzgtLjU2NS4yNzgtLjk2MiAwLS4zODgtLjA4Mi0uNy0uMjQ0LS45MzQtLjE2Mi0uMjM1LS40MzgtLjQzMy0uODI2LS41OTZ2Mi45NTJ6TTIuNTUgNi41MzljLS42NS4xMjYtLjk3NS41Ni0uOTc1IDEuMyAwIC4zNDMuMDcyLjYxMy4yMTcuODEyLjE0NC4xOTguMzk3LjM3NC43NTguNTI4di0yLjY0eiIKICAgICAgZmlsbD0iIzI3QUVFNCIvPgogICAgPHBhdGgKICAgICAgZD0iTTE1Ljg4NSAyMS42MzVjLTIuMDM0IDAtMy41NC0uODY1LTQuNTE3LTIuNTk2LS45NzgtMS43My0xLjQ2Ny00LjQwNS0xLjQ2Ny04LjAyMkM5LjkwMSAzLjg2IDExLjkzNS4yOCAxNi4wMDIuMjhjMi4wMzQgMCAzLjU0Ljg2NSA0LjUxNyAyLjU5Ni45NzggMS43MyAxLjQ2NyA0LjQwNSAxLjQ2NyA4LjAyMiAwIDcuMTU4LTIuMDM0IDEwLjczNi02LjEwMSAxMC43MzZ6bS4wMy0xLjUyNWMxLjUwNSAwIDIuNTk1LS43MjkgMy4yNy0yLjE4NS42NzQtMS40NTcgMS4wMTItMy43OSAxLjAxMi02Ljk5NiAwLTIuMTktLjE0Ny0zLjk1LS40NC01LjI4LS4yOTQtMS4zMy0uNzQ4LTIuMzAzLTEuMzY0LTIuOTE5LS42MTYtLjYxNi0xLjQyMy0uOTI0LTIuNDItLjkyNC0xLjUwNiAwLTIuNTk2LjcyOS0zLjI3IDIuMTg2LS42NzUgMS40NTYtMS4wMTMgMy43ODgtMS4wMTMgNi45OTUgMCAyLjE5LjE0NyAzLjk1LjQ0IDUuMjguMjk0IDEuMzMuNzQ4IDIuMzAzIDEuMzY0IDIuOTE5LjYxNi42MTYgMS40MjMuOTI0IDIuNDIuOTI0eiIKICAgICAgZmlsbD0iIzIyNEJDNSIvPgogIDwvZz4KPC9zdmc+Cg=="
+                  />No fees. No deductibles.
+                </div>
+              </div>
+            </div>
+          </modal>
+
+          <modal
+            name="guarantee-modal"
+            width="414px"
+            height="auto"
+            :adaptive="true"
           >
-            <div class="features-column">
-              <div class="features-heading">
-                {{ page.fields.features.fields.title }}
+            <div class="guarantee-modal__container">
+              <div slot="top-right" @click="$modal.hide('guarantee-modal')">
+                <Close />
+              </div>
+              <Guarantee />
+              <div class="guarantee-modal__container__heading">
+                30-day Money Back Guarantee
+              </div>
+              <div class="guarantee-modal__container__text">
+                We believe in 100% customer satisfaction and that is why we are
+                offering all customers a 30 day money-back guarantee! If you are
+                not satisfied with your BlendJet blender, you may return the
+                item within 30 days from the order date for a full refund. If
+                you don't like your product, get a full refund within 30 days,
+                no questions asked. <br />
+                — <br />
+                Please
+                <a class="guarantee-modal__container__text__contact-link"
+                  >contact our customer happiness</a
+                >
+                team to start your return process.
+              </div>
+            </div>
+          </modal>
+
+          <modal
+            name="pay-with-modal"
+            width="414px"
+            height="auto"
+            :adaptive="true"
+          >
+            <div class="pay-with-modal__container">
+              <div slot="top-right" @click="$modal.hide('pay-with-modal')">
+                <Close />
+              </div>
+              <div class="pay-with-modal__container__text">
+                Pay with
+              </div>
+
+              <div
+                class="pay-with-modal__container__amazon"
+                @click="expressCheckout"
+              >
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/amazonpay.png' })
+                  "
+                />
               </div>
               <div
-                v-if="page.fields.features.fields.features"
-                v-for="feature in page.fields.features.fields.features"
-                class="features-row"
+                v-if="applePay"
+                class="pay-with-modal__container__apple"
+                @click="expressCheckout"
               >
-                <div class="features-icon">
-                  <ModelIcon :type="feature.fields.icon" />
-                </div>
-                <div class="features-text-block">
-                  <div class="features-text-block__title">
-                    {{ feature.fields.title }}
-                  </div>
-                  <div class="features-text-block__text">
-                    <RichTextRenderer
-                      :document="feature.fields.description"
+                <img
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/applepay.png' })
+                  "
+                />
+              </div>
+              <div
+                class="pay-with-modal__container__paypal"
+                @click="expressCheckout"
+              >
+                <img
+                  class="pay-with-modal__container__paypal__logo"
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/paypal.png' })
+                  "
+                />
+              </div>
+            </div>
+          </modal>
+        </div>
+      </div>
+
+      <!-- BAILEYS SPECIAL DESCRIPTION SECTION -->
+      <div
+        v-if="['baileys-blendjet-2'].includes(product.handle)"
+        :product="product"
+        :page="page"
+        class="blendjet-banner"
+      >
+        <div class="blendjet-banner__content-block">
+          <h2>IF YOU LIKE PIÑA COLADAS...</h2>
+          <p>
+            Then you’ll love this BlendJet x Baileys collab! Kick back, relax,
+            and escape to a tropical paradise with our limited run, special
+            edition BlendJet, the perfect way to enjoy<strong data-v-621d5369=""
+              >&nbsp;</strong
+            ><a
+              style="color:white;"
+              href="https://www.baileys.com/en-us/products/#baileys-colada"
+              target="_blank"
+              ><strong>Baileys Colada</strong></a
+            >, the all new limited time offering that blends Baileys
+            irresistible Irish cream with the rich flavors of creamy coconut and
+            sweet pineapples.
+          </p>
+          <p style="padding: 10px;">
+            <a
+              href="https://www.baileys.com/en-us/products/#baileys-colada"
+              target="_blank"
+              style="font-weight: bold;/* padding: 10px; */">BUY BAILEYS COLADA HERE</a>
+          </p>
+          <p style="font-size: 75%;">
+            Please Enjoy Responsibly.
+          </p>
+          <p style="font-size: 70%;">
+            BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by
+            Paddington, Ltd., New York, NY.
+          </p>
+        </div>
+      </div>
+
+      <!-- DEFAULT BLENDJET DESCRIPTION SECTION -->
+      <div v-else-if="page && page.fields.headerText" class="blendjet-banner">
+        <div class="blendjet-banner__content-block">
+          <RichTextRenderer :document="page.fields.headerText" />
+        </div>
+      </div>
+
+      <!-- STICKY TOP BANNER WITH PRODUCT INFORMATION  -->
+      <transition name="fade">
+        <div class="header-product-select" v-if="showDesktopHeader">
+          <div class="header-product-select__info-container">
+            <div class="header-product-select__thumbnail">
+              <img
+                class="header-product-select__thumbnail__img"
+                :src="
+                  optimizeSource({
+                    url: currentVariant.featuredMedia.thumbnailSrc
+                  })
+                "
+              />
+            </div>
+            <div class="header-product-select__title-container">
+              <div class="header-product-select__title-container__title">
+                {{ product.title }}
+              </div>
+              <div class="header-product-select__title-container__price">
+                <product-price
+                  v-if="currentVariant"
+                  :price="currentVariant.price"
+                  :variantId="currentVariant.id"
+                />
+                <product-price
+                  v-if="
+                    currentVariant.compareAtPrice &&
+                      currentVariant.compareAtPrice !== currentVariant.price &&
+                      compareAtPrice !== displayPrice
+                  "
+                  :price="currentVariant.compareAtPrice"
+                  :strikethrough="true"
+                  :variantId="currentVariant.id"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="header-product-select__controls-container">
+            <div
+              v-if="variants.length > 1"
+              class="header-product-select__swatches"
+            >
+              <div
+                class="dropdown"
+                tabindex="0"
+                @focusout="showHeaderVariants = false"
+                @click.prevent="toggleHeaderVariants"
+              >
+                <div class="dropbtn" role="button">
+                  <div class="dropbtn__swatch">
+                    <product-option-swatch
+                      :value="currentVariant.selectedOptions[0].value"
+                      :style="{}"
+                      :optionName="'Color'"
+                      :swatchStyle="'bubble'"
+                      :class="{ selected: false }"
+                      :variants="product.variants"
+                      :selectedOptions="currentVariant.selectedOptions"
                     />
                   </div>
+                  <div class="dropbtn__text">
+                    <div class="dropbtn__text__color">
+                      {{ currentVariant.title }}
+                    </div>
+                    <div class="dropbtn__text__shipping">
+                      <ShippingTime
+                        :size="'short'"
+                        :product="'blendjet-2'"
+                        :country="country"
+                      />
+                    </div>
+                  </div>
+                  <div class="dropbtn__caret-down">
+                    <CaretDown />
+                  </div>
+                </div>
+                <transition name="fade">
+                  <div v-if="showHeaderVariants" class="dropdown-content">
+                    <div class="dropdown-content__swatches">
+                      <product-options
+                        :options="allOptions"
+                        :variant="selectedVariant"
+                        @selectedOptionsSet="setSelected"
+                        :variants="product.variants"
+                        @clear="selectedOptions = []"
+                        :currentOption="currentVariant.selectedOptions[0].value"
+                        :key="2"
+                      />
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
+            <div class="header-product-select__add-buttons">
+              <div class="add-to-cart-buttons">
+                <div class="quantity-select-container">
+                  <quantity-selector :quantity.sync="quantity" />
+                </div>
+                <div class="add-to-cart">
+                  <product-add-to-cart-button
+                    :quantity="quantity"
+                    :product="product"
+                    :warranty="warrantySelected"
+                    :variant="currentVariant"
+                    :allOptionsSelected="true"
+                    :onlyOneOption="true"
+                    @addedToCart="quantity = 1"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
-        <div class="media-content__main__details">
-          <div
-            v-for="(section, i) of description"
-            :key="i"
-            class="media-content__main__details__content-block"
+      </transition>
+
+      <!-- BLENDJET FEATURES  -->
+      <div class="media-content">
+        <div class="media-content__carousel">
+          <b-carousel
+            class="media-content__carousel"
+            :arrow="true"
+            :repeat="true"
+            :indicator="true"
+            :has-drag="true"
+            :autoplay="false"
+            v-model="heroIndex"
           >
-            <div class="media-content__main__details__content-block__heading">
-              {{ section.heading }}
-            </div>
-            <div class="media-content__main__details__content-block__text">
-              <!-- <div v-for="(paragraph, i) of section.text" :key="paragraph[0]+i"> -->
-
-              <!-- {{paragraph}} -->
-              {{ section.text[0][0] }}
-              <!-- </div> -->
-            </div>
-
-            <!-- Video - Only renders if filetype is an .mp4 -->
+            <b-carousel-item v-for="(image, i) in heroImages" :key="i">
+              <section class="`hero is-large`">
+                <span class="image">
+                  <img
+                    class="media-content__carousel__img"
+                    :src="optimizeSource({ url: image })"
+                  />
+                </span>
+              </section>
+            </b-carousel-item>
+          </b-carousel>
+        </div>
+        <div class="media-content__hero-banner"></div>
+        <div
+          class="media-content__main"
+          v-if="loadDescription && page && page.fields.features"
+        >
+          <div class="media-content__main__features">
             <div
-              v-if="section.video.includes('.mp4')"
-              class="media-content__main__details__content-block__media rounded-video-container"
+              v-if="page && page.fields.features"
+              class="features-container sticky"
             >
-              <VideoContainer
-                :source="section.video"
-                class="media-content__main__details__content-block__media__video"
-              />
-            </div>
-
-            <!-- Image - Renders instead if the 'video' is coming from Contentful's images CDN -->
-            <div
-              v-else-if="section.video.includes('images')"
-              class="media-content__main__details__content-block__image"
-            >
-              <img
-                class="media-content__main__details__content-block__img"
-                :src="optimizeSource({ url: section.video })"
-              />
+              <div class="features-column">
+                <div class="features-heading">
+                  {{ page.fields.features.fields.title }}
+                </div>
+                <div
+                  v-if="page.fields.features.fields.features"
+                  v-for="feature in page.fields.features.fields.features"
+                  class="features-row"
+                >
+                  <div class="features-icon">
+                    <ModelIcon :type="feature.fields.icon" />
+                  </div>
+                  <div class="features-text-block">
+                    <div class="features-text-block__title">
+                      {{ feature.fields.title }}
+                    </div>
+                    <div class="features-text-block__text">
+                      <RichTextRenderer
+                        :document="feature.fields.description"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="media-content__main__details__content-block">
-            <div class="media-content__main__details__specs__heading">
-              DETAILS & SPECS
+          <div class="media-content__main__details">
+            <div
+              v-for="(section, i) of description"
+              :key="i"
+              class="media-content__main__details__content-block"
+            >
+              <div class="media-content__main__details__content-block__heading">
+                {{ section.heading }}
+              </div>
+              <div class="media-content__main__details__content-block__text">
+                <!-- <div v-for="(paragraph, i) of section.text" :key="paragraph[0]+i"> -->
+                <!-- {{paragraph}} -->
+                {{ section.text[0][0] }}
+                <!-- </div> -->
+              </div>
+              <div
+                v-if="section.video.length && section.video.includes('video')"
+                class="media-content__main__details__content-block__media rounded-video-container"
+              >
+                <VideoContainer
+                  :source="section.video"
+                  class="media-content__main__details__content-block__media__video"
+                />
+              </div>
+              <div
+                v-if="section.video.includes('images')"
+                class="media-content__main__details__content-block__image"
+              >
+                <img
+                  class="media-content__main__details__content-block__img"
+                  :src="optimizeSource({ url: section.video })"
+                />
+              </div>
             </div>
-            <div class="media-content__main__details__specs__text">
-              Blend your favorite smoothies, shakes, margaritas, or baby food
-              without the limitations of a regular blender - whenever,
-              wherever you want!
-            </div>
-            <div class="media-content__main__details__specs__list">
-              <ul>
-                <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
-                <li>Product Weight: 1.34 lb (.61 kg)</li>
-                <li>Jar w/ Measurement Markings: 16 oz (475 mL)</li>
-                <li>15+ Blends Per 1 Hour Charge</li>
-                <li>Water-resistant USB-C Port</li>
-                <li>4000 mAh Rechargeable Battery</li>
-                <li>5V Electric Motor Spins 275 Times Per Second</li>
-                <li>6-Point Stainless Steel Blade</li>
-                <li>Durable Built-In Carrying Strap</li>
-              </ul>
+            <div class="media-content__main__details__content-block">
+              <div class="media-content__main__details__specs__heading">
+                DETAILS & SPECS
+              </div>
+              <div class="media-content__main__details__specs__text">
+                Blend your favorite smoothies, shakes, margaritas, or baby food
+                without the limitations of a regular blender - whenever,
+                wherever you want!
+              </div>
+              <div class="media-content__main__details__specs__list">
+                <ul>
+                  <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
+                  <li>Product Weight: 1.34 lb (.61 kg)</li>
+                  <li>Jar w/ Measurement Markings: 16 oz (475 mL)</li>
+                  <li>15+ Blends Per 1 Hour Charge</li>
+                  <li>Water-resistant USB-C Port</li>
+                  <li>4000 mAh Rechargeable Battery</li>
+                  <li>5V Electric Motor Spins 275 Times Per Second</li>
+                  <li>6-Point Stainless Steel Blade</li>
+                  <li>Durable Built-In Carrying Strap</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="reviews" id="reviews">
+      <!-- BLENDJET REVIEWS  -->
+         <div class="reviews" id="reviews">
       <loox-product-reviews :product="product" />
     </div>
 
-    <div class="jetpacks" v-if="loadDescription">
-      <JetpackCrossSell :heading="'Power up with Jetpacks'" />
+      <!-- JETPACKS CROSS-SELL -->
+      <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
+      <div class="jetpacks" v-if="loadDescription">
+        <JetpackCrossSell :heading="'Power up with Jetpacks'" />
+      </div>
     </div>
-  </div>
-</transition>
+  </transition>
 </template>
 
 <script>
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 import ProductPrice from '~/components/nacelle/ProductPrice'
-import ModelIcon from '~/components/ModelIcon'
+const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
+const VideoContainer = () => import('~/components/VideoContainer')
 
+import ModelIcon from '~/components/ModelIcon'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import ProductOptionSwatch from '~/components/nacelle/ProductOptionSwatch'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
@@ -835,9 +866,6 @@ import CaretDown from '~/components/svg/caretDown'
 import BlnExtend from '~/components/svg/blnExtend'
 import NextSlide from '~/components/svg/NextSlide'
 import PrevSlide from '~/components/svg/PrevSlide'
-
-const VideoContainer = () => import('~/components/VideoContainer')
-const JetpackCrossSell = () => import('~/components/jetpackCrossSell')
 
 export default {
   data() {
@@ -982,8 +1010,10 @@ export default {
         this.product.variants.length
       ) {
         if (this.$route.query && this.$route.query.variant) {
-          const variantId = btoa(`gid://shopify/ProductVariant/${this.$route.query.variant}`)
-          return this.product.variants.filter((variant) => {
+          let variantId = btoa(
+            `gid://shopify/ProductVariant/${this.$route.query.variant}`
+          )
+          return this.product.variants.filter(variant => {
             return variant.id === variantId
           })[0]
         } else {
@@ -1052,14 +1082,16 @@ export default {
       }
     },
     camelize(str) {
-      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
         if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
         return index === 0 ? match.toLowerCase() : match.toUpperCase()
       })
     },
     updateVariant(variant) {
       this.currentVariant = variant
-      this.variantIndex = this.variants.findIndex((variant) => variant.title === this.currentVariant.title)
+      this.variantIndex = this.variants.findIndex(
+        variant => variant.title === this.currentVariant.title
+      )
     },
     incrementVariant() {
       if (this.variantIndex === this.variants.length - 1) {
@@ -1093,16 +1125,18 @@ export default {
       }
     },
     iOS() {
-      return [
-        'iPad Simulator',
-        'iPhone Simulator',
-        'iPod Simulator',
-        'iPad',
-        'iPhone',
-        'iPod'
-      ].includes(navigator.platform) ||
-      // iPad on iOS 13 detection
-      (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+      return (
+        [
+          'iPad Simulator',
+          'iPhone Simulator',
+          'iPod Simulator',
+          'iPad',
+          'iPhone',
+          'iPod'
+        ].includes(navigator.platform) ||
+        // iPad on iOS 13 detection
+        (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+      )
     },
     productId() {
       if (this.product && this.product.pimSyncSourceProductId) {
@@ -1141,7 +1175,9 @@ export default {
           metafields: [
             {
               key: 'Ref',
-              value: atob(this.currentVariant.id).split('/').pop()
+              value: atob(this.currentVariant.id)
+                .split('/')
+                .pop()
             }
           ]
         }
@@ -1237,56 +1273,61 @@ export default {
 
       // Try to query this product's contentful data
       // Note - You can't use Nacelle's SDK due to a bug when querying content models with the title `product`
+      await this.client
+        .getEntries({
+          content_type: 'product',
+          'fields.handle': this.product.handle
+        })
+        .then(data => {
+          if (!data || !Array.isArray(data.items) || data.items.length === 0) {
+            // No content model found...
+          } else {
+            // Get first item
+            const item = data.items[0]
 
-      await this.client.getEntries({
-        content_type: 'product',
-        'fields.handle': this.product.handle
-      }).then((data) => {
-        if (!data || !Array.isArray(data.items) || data.items.length === 0) {
-          // No content model found...
-        } else {
-          // Get first item
-          const item = data.items[0]
-
-          // For each variant content model...
-          item.fields.variants.forEach((node) => {
-            vm.variantMedia[node.fields.title] = {
-              productImage: `https:${node.fields.productImage.fields.file.url}`,
-              heroImages: node.fields.heroImages.map((image) => {
-                return `${image.fields.file.url}`
-              })
-            }
-          })
-
-          const sections = item.fields.productDescription
-          vm.specs = sections.pop()
-
-
-          vm.description = sections.map(node => {
-            return {
-              heading: node.fields.heading,
-              text: node.fields.text.content.map(p => {
-                return p.content.map(line => {
-                  return line.value
+            // For each variant content model...
+            item.fields.variants.forEach(node => {
+              let productImage = node.fields.productImage
+                ? `https:${node.fields.productImage.fields.file.url}?w=2100`
+                : null
+              vm.variantMedia[node.fields.title] = {
+                productImage: productImage,
+                heroImages: node.fields.heroImages.map(image => {
+                  return `${image.fields.file.url}?w=2100`
                 })
-              }),
-              video: node.fields.externalVideoUrl ?? node.fields?.video?.fields.file.url
+              }
+            })
+
+            let sections = item.fields.productDescription
+            vm.specs = sections.pop()
+
+            vm.description = sections.map(node => {
+              return {
+                heading: node.fields.heading,
+                text: node.fields.text.content.map(p => {
+                  return p.content.map(line => {
+                    return line.value
+                  })
+                }),
+
+                video: node.fields.video
+                  ? node.fields.video.fields.file.url
+                  : ''
+              }
+            })
+
+            if (item.fields.metaTitle) {
+              this.metaTitle = item.fields.metaTitle
             }
-          })
 
-          if (item.fields.metaTitle) {
-            this.metaTitle = item.fields.metaTitle
+            if (item.fields.metaDescription) {
+              this.metaDescription = item.fields.metaDescription
+            }
+
+            this.currentVariant = this.setDefaultVariant()
           }
-
-
-          if (item.fields.metaDescription) {
-            this.metaDescription = item.fields.metaDescription
-          }
-
-          this.currentVariant = this.setDefaultVariant()
-        }
-      })
-      .catch(console.error)
+        })
+        .catch(console.error)
 
       /*
       // Original Code - Fetching a hard coded content model by its ID
@@ -1328,7 +1369,6 @@ export default {
             this.currentVariant = this.setDefaultVariant()
           })
           .catch(console.error) */
-
 
       this.handleScroll()
       this.handleDebouncedScroll = debounce(this.handleScroll, 0)

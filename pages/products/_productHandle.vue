@@ -8,7 +8,7 @@
 /****
 -->
 <template>
-  <div class="product">
+  <div class="product" v-if="product">
     <!-- <section class="section">
       <div class="container"> -->
     <!-- <transition name="fade"> -->

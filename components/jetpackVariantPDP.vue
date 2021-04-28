@@ -653,6 +653,9 @@
           </div>
         </div>
       </div>
+
+      <!-- JETPACKS CROSS-SELL -->
+      <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
       <div class="reviews" id="reviews">
         <loox-product-reviews :product="product" />
       </div>
@@ -660,7 +663,7 @@
       <div class="jetpacks">
         <!-- TODO: Make this dynamic using contentful -->
         <JetpackCrossSell
-          :jetpacks="jetpacks"
+          :product="product"
           :heading="'You may also like these jetpack flavors'"
         />
       </div>
@@ -672,7 +675,7 @@
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
-const JetpackCrossSell = () => import('~/components/jetpackCrossSell')
+const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
 import ModelIcon from '~/components/ModelIcon'
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
 
@@ -843,6 +846,8 @@ export default {
     },
     async updateJetpack(seletectedVariant) {
       this.currentVariant = seletectedVariant
+      this.addHashToLocation()
+
       await this.getMedia()
     },
     toggleJetpackMenu() {
@@ -869,9 +874,36 @@ export default {
     setCurrency(data) {
       this.currency = data
     },
+    addHashToLocation() {
+      window.history.pushState(
+        {},
+        null,
+        this.$route.path +
+          '?variant=' +
+          this.formatVariantId(this.currentVariant.id)
+      )
+    },
+    formatVariantId(value) {
+      const url = atob(value)
+      return url.replace('gid://shopify/ProductVariant/', '')
+    },
+    setCurrentVariant() {
+      const variantId = this.$route.query.variant
+      const variants = this.product.variants.map(variant => {
+        variant['formatedId'] = this.formatVariantId(variant.id)
+        return variant
+      })
+      const variant = variants.filter(variant => {
+        return variant.formatedId === variantId
+      })
+
+      if (variant.length > 0) this.currentVariant = variant[0]
+    },
     getPageHandle(title) {
       let handle = title.replace(/\s+/g, '-')
-      let handlesufix = this.product.handle.includes("protein") ? '-protein-smoothie' : '-jetpack-ready-to-blend-smoothie'
+      let handlesufix = this.product.handle.includes('protein')
+        ? '-protein-smoothie'
+        : '-jetpack-ready-to-blend-smoothie'
       handle = handle + handlesufix
       return handle.toLowerCase()
     },
@@ -903,23 +935,30 @@ export default {
     this.client = createClient()
 
     // Gets variants of the products
-    this.jetpacks = this.product.variants.filter(variant => {
-      return variant.availableForSale
-    })
-
+    if (this.product && this.product.availableForSale) {
+      this.jetpacks = this.product.variants.filter(variant => {
+        return variant.availableForSale
+      })
+    } else {
+      //TODO: SHOW 404 PAGE
+    }
+    
     console.log('PAGE')
     console.log(this.page)
-
+    //todo decide which variant will be displayed
+    this.setCurrentVariant()
     this.currentVariant = this.setDefaultVariant()
 
     const vm = this
     // TODO we should get this using nacelle content
     const PROTEIN_CONTENT = '24QNVJ9UR9oYvUmQ8EzvFs'
     const SMOOTHIE_CONENT = '6L3Tl2qpSUZLV3i2I3thFQ'
-    let contentId = this.product.handle.includes("protein") ? PROTEIN_CONTENT : SMOOTHIE_CONENT
+    let contentId = this.product.handle.includes('protein')
+      ? PROTEIN_CONTENT
+      : SMOOTHIE_CONENT
     await this.client
       .getEntry(contentId)
-      .then( async entry => {
+      .then(async entry => {
         entry.fields.variants.forEach(node => {
           vm.media[node.fields.title] = {
             productImage: `https:${node.fields.productImage.fields.file.url}?w=2100`,

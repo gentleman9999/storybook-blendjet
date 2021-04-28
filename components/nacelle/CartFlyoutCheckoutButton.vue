@@ -87,6 +87,7 @@ export default {
       const localPrice = await Axios(config)
         .then(res => {
           if (!res.data.ConsumerPrices?.length) {
+
             this.displayPrice = `${res.data.Symbol}${_price.toFixed(2)}`
           } else {
             let localSubtotal = res.data.ConsumerPrices.reduce((acc, item, i) => {

@@ -104,6 +104,7 @@ export default {
       type: Object,
       default: () => {}
     },
+    isSubscriptionOn: { type: Boolean, default: true },
     quantity: { type: Number, default: 1 },
     allOptionsSelected: { type: Boolean, default: false },
     confirmedSelection: { type: Boolean, default: false },
@@ -139,7 +140,7 @@ export default {
     isProductVariantSelectChild () {
       return this.$parent.$options._componentTag === 'product-variant-select'
     },
-    isSubscription () {
+    veryfySubscription () {
       return !!this.metafields.find(meta => meta.key === 'charge_interval_frequency')
     },
     disableAtcButton () {
@@ -170,12 +171,7 @@ export default {
     confirmedSelection () {
       this.addToCart()
     },
-    variant() {
-      this.getDisplayPrice()
-    },
-    subPrice() {
-    },
-    subscriptionVariant() {
+    isSubscriptionOn() {
       this.getDisplayPrice()
     },
     quantity() {
@@ -184,7 +180,7 @@ export default {
   },
 
   mounted() {
-    this.getDisplayPrice(true)
+    this.getDisplayPrice()
   },
   methods: {
     ...mapActions('cart', [
@@ -199,11 +195,8 @@ export default {
       const decodedId = atob(encodedId)
       return decodedId.split('gid://shopify/ProductVariant/')[1]
     },
-    async getDisplayPrice(init = false) {
-      let _vprice = this.isSubscription ? this.subscriptionVariant.price : this.variant.price;
-      if(init) {
-        _vprice = this.subscriptionVariant.price
-      }
+    async getDisplayPrice() {
+      let _vprice = this.isSubscriptionOn && this.veryfySubscription ? this.subscriptionVariant.price : this.variant.price
       const vm = this;
       const price = encodeURIComponent(JSON.stringify(
           [{"Price": _vprice, 
@@ -268,10 +261,11 @@ export default {
     },
     addToCart () {
       if (this.allOptionsSelected && this.product.availableForSale) {
-        const variant = this.isSubscription ? this.subscriptionVariant : this.variant
+        const variant = this.isSubscriptionOn && this.veryfySubscription ? this.subscriptionVariant : this.variant
         const cartMeta = this.metafields.filter((field) => {
           return !field.id && field.id !== null
         })
+
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,

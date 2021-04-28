@@ -15,7 +15,10 @@
               values="0 0 0 0 0.215686 0 0 0 0 0.215686 0 0 0 0 0.584314 0 0 0 1.000000 0"
             />
           </filter>
-          <path id="3nr89l9qzb" d="M1.155 0.38L21.663 0.38 21.663 37.079 1.155 37.079z" />
+          <path
+            id="3nr89l9qzb"
+            d="M1.155 0.38L21.663 0.38 21.663 37.079 1.155 37.079z"
+          />
         </defs>
         <g fill="none" fill-rule="evenodd" transform="translate(-622 -47)">
           <g>
@@ -41,11 +44,14 @@
       </svg>
     </div>
     <div class="title-container__subheading">
-      Ready-to-Blend Smoothies from Just $2.99
+      Ready-to-Blend Smoothies from Just ${{ productPrice }}
     </div>
-    <!-- <div class="jetpack-tabs">
-      <Tabs :tabItems="['smoothies', 'protein smoothies', 'lattes']" @activeTab="jetpackTabChange"/>
-    </div> -->
+    <div class="jetpack-tabs">
+      <Tabs
+        :tabItems="['smoothies', 'protein smoothies']"
+        @activeTab="jetpackTabChange"
+      />
+    </div>
     <div class="blendjet-carousel">
       <b-carousel-list
         v-model="jetpackIndex"
@@ -61,9 +67,13 @@
           <div class="card" :style="cardStyle">
             <div
               class="card-image"
-              @click="$router.push(`/products/${props.list.handle}`)"
+              @click="
+                $router.push(
+                  `/products/${activeProductHandle}?variant=${props.formatedId}`
+                )
+              "
               :style="{
-                'background-image': getBGColor(props.list.title),
+                'background-image': getBGColor(props.title),
                 height: '440px',
                 cursor: 'pointer'
               }"
@@ -72,8 +82,8 @@
                 <img
                   class="jetpack-image"
                   :style="imageStyle"
-                  :src="optimizeSource({ url: props.list.featuredMedia.src })"
-                  :alt="props.list.featuredMedia.altText"
+                  :src="optimizeSource({ url: props.featuredMedia.src })"
+                  :alt="props.featuredMedia.altText"
                 />
               </figure>
             </div>
@@ -82,9 +92,13 @@
                 <p
                   class="title is-6 jetpack-title"
                   :style="titleStyle"
-                  @click="$router.push(`/products/${props.list.handle}`)"
+                  @click="
+                    $router.push(
+                      `/products/${activeProductHandle}?variant=${props.formatedId}`
+                    )
+                  "
                 >
-                  {{ props.list.title.split('-')[0].trim() }}
+                  {{ props.title }}
                 </p>
               </div>
             </div>
@@ -95,9 +109,24 @@
     <div class="carousel-indicator-container" v-if="indicatorVisible">
       <div class="carousel-indicator">
         <div class="carousel-indicator__left" @click="back">
-          <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
-            <g fill="none" fill-rule="evenodd" transform="matrix(-1 0 0 1 28 1)">
-              <circle cx="13.5" cy="13.5" r="13.5" stroke="#373795" stroke-width="1.5" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="29"
+            height="29"
+            viewBox="0 0 29 29"
+          >
+            <g
+              fill="none"
+              fill-rule="evenodd"
+              transform="matrix(-1 0 0 1 28 1)"
+            >
+              <circle
+                cx="13.5"
+                cy="13.5"
+                r="13.5"
+                stroke="#373795"
+                stroke-width="1.5"
+              />
               <g fill="#373795">
                 <path
                   d="M0 3.6L9 3.6 9 5.4 0 5.4z"
@@ -111,13 +140,27 @@
             </g>
           </svg>
         </div>
-        <progress class="progress is-small" :value="jetpackIndex + 1" :max="jetpacks.length"
+        <progress
+          class="progress is-small"
+          :value="jetpackIndex + 1"
+          :max="jetpacks.length"
           >15%</progress
         >
         <div class="carousel-indicator__right" @click="forward">
-          <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="29"
+            height="29"
+            viewBox="0 0 29 29"
+          >
             <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
-              <circle cx="13.5" cy="13.5" r="13.5" stroke="#373795" stroke-width="1.5" />
+              <circle
+                cx="13.5"
+                cy="13.5"
+                r="13.5"
+                stroke="#373795"
+                stroke-width="1.5"
+              />
               <g fill="#373795">
                 <path
                   d="M0 3.6L9 3.6 9 5.4 0 5.4z"
@@ -149,6 +192,8 @@ export default {
       jetpackIndex: 0,
       itemsToShow: 1,
       indicatorVisible: false,
+      productPrice: 3.95,
+      activeProductHandle: 'jetpack-smoothies',
       carouselStyle: {
         boxShadow: 'none'
       },
@@ -186,14 +231,25 @@ export default {
       this.jetpackIndex > 0 ? this.jetpackIndex-- : (this.jetpackIndex = 0)
     },
     forward() {
-      this.jetpackIndex < this.jetpacks.length ? this.jetpackIndex++ : (this.jetpackIndex = 0)
+      this.jetpackIndex < this.jetpacks.length
+        ? this.jetpackIndex++
+        : (this.jetpackIndex = 0)
     },
     openPDP(data) {
       this.$modal.show(
         JetpackPDPModal,
         { initialProduct: data, jetpackProps: this.jetpacks },
-        { height: 'auto', width: this.modalWidth, scrollable: false, adaptive: true }
+        {
+          height: 'auto',
+          width: this.modalWidth,
+          scrollable: false,
+          adaptive: true
+        }
       )
+    },
+    formatVariantId(value) {
+      const url = atob(value)
+      return url.replace('gid://shopify/ProductVariant/', '')
     },
     showIndicator(arr) {
       if (this.screenWidth > 1024) {
@@ -239,11 +295,45 @@ export default {
         return 'linear-gradient(146deg, rgba(249,214,97,1) 0%, rgba(255,243,202,1) 100%)'
       } else if (title.includes('mocha')) {
         return 'linear-gradient(202deg, rgba(197,197,224,1) 0%, rgba(94,63,54,1) 100%)'
-      } else {
+      } else if (title.includes('peanut')) {
+        return 'linear-gradient(146deg, rgba(242,226,213,1) 0%, rgba(240,186,138,1) 100%)'
+      } else if (title.includes('acai')) {
+        return 'linear-gradient(146deg, rgba(197,197,224,1) 0%, rgba(27,19,24,1) 100%)'
+      } else if (title.includes('very')) {
+        return 'linear-gradient(146deg, rgba(229,128,140,1) 0%, rgba(219,30,53,1) 100%)'
+      }else {
         return 'none'
       }
     },
-    jetpackTabChange(value) {}
+    async jetpackTabChange(value) {
+      switch (value) {
+        case 'smoothies':
+          this.activeProductHandle = 'jetpack-smoothies'
+          await this.fetchProducts()
+          break
+        case 'protein smoothies':
+          this.activeProductHandle = 'jetpack-protein-smoothie'
+          await this.fetchProducts()
+          break
+      }
+    },
+    async fetchProducts() {
+      const product = await this.$nacelle.data.product({
+      handle: this.activeProductHandle
+    })
+
+    if (product) {
+      this.productPrice = product.priceRange.min
+      if (product.availableForSale) {
+        this.jetpacks = product.variants.map(variant => {
+          if (variant.availableForSale) {
+            variant['formatedId'] = this.formatVariantId(variant.id)
+            return variant
+          }
+        })
+      }
+    }
+    }
   },
 
   components: {
@@ -253,18 +343,9 @@ export default {
   async mounted() {
     this.screenWidth = window.innerWidth
     const vm = this
-    this.jetpacks = await this.$nacelle.data
-      .collectionPage({
-        handle: 'jetpack-ready-to-blend-smoothies',
-        paginate: false
-      })
-      .then(results => {
-        let arr = results.filter(item => {
-          return item.availableForSale
-        })
-        vm.showIndicator(arr)
-        return arr
-      })
+
+    //Get products by handle
+    this.fetchProducts()
 
     this.setWidthData()
     window.addEventListener('resize', function() {

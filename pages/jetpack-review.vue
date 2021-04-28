@@ -1,8 +1,10 @@
 <template>
 	<div class="page" style="max-width:1200px;margin: 0 auto;">
 
-<h1 class="page__title">Which would you like to review?</h1>
 
+<!-- JETPACKS CROSS-SELL -->
+<!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
+<h1 class="page__title">Which would you like to review?</h1>
 			<div class="row">
 				<div class="column">
 					<a href="https://blendjet.com/collections/jetpack-ready-to-blend-smoothies/products/banana-blueberry-jetpack-ready-to-blend-smoothie?ref=review"><img src="https://cdn.shopify.com/s/files/1/0066/4433/4658/products/Banana-Blueberry_JetPack_932acb45-3723-4aca-ab40-f510e401d7b8_600x600.png"></a>
