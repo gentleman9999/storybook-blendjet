@@ -14,21 +14,20 @@
     <!-- <transition name="fade"> -->
     <!-- <template v-if="product"> -->
     <div v-if="page && page.fields.productAnnouncement" class="">
-      <div
-        v-html="productAnnouncement"
-        class="product-productAnnouncement"
-      ></div>
+      <div v-html="productAnnouncement" class="product-productAnnouncement"></div>
     </div>
     <transition name="fade">
       <BlendjetPDP
         v-cloak
-        v-if=" product.productType === 'BlendJet'"
+        v-if="product.productType === 'BlendJet'"
         :product="product"
         :page="page"
       />
       <JetpackVariantPDP
         v-cloak
-        v-else-if="product.productType === 'Jetpack Smoothies'"
+        v-else-if="
+          ['jetpack smoothies'].includes(product.productType && product.productType.toLowerCase())
+        "
         :product="product"
         :page="page"
       />

@@ -2,28 +2,28 @@
   <div>
     <div v-if="!checkbox" class="toggle-container">
       <div class="text-container">
+        <!-- TODO - This should pull the discount dynamically from the Shopify metafields for this product/variant... -->
         <div class="text-container__option subscription">
-          Subscribe & <br/>
+          Subscribe &amp; <br />
           Save 25%
         </div>
         <div class="text-container__option onetime">
-          One-time <br/>
+          One-time <br />
           Purchase
         </div>
       </div>
-      <div
-        class="toggle"
-        :class=[this.state_class]
-        @click="onClick">
-        <div
-          class="draggable"
-          :style="style">
-        </div>
+      <div class="toggle" :class="[this.state_class]" @click="onClick">
+        <div class="draggable" :style="style"></div>
       </div>
     </div>
 
     <div class="checkbox-container" v-if="checkbox">
-      <Checkbox :color="color" :initialCheck="true" :label="'Subscribe & Save 25%'" @checked="handleCheck"/>
+      <Checkbox
+        :color="color"
+        :initialCheck="true"
+        :label="'Subscribe & Save 25%'"
+        @checked="handleCheck"
+      />
     </div>
   </div>
 </template>
@@ -34,11 +34,13 @@ import productMetafields from '~/mixins/productMetafields'
 import Checkbox from '~/components/checkbox'
 
 export default {
-   props: {
+  props: {
+    // Boolean value representing whether the toggle is active or not
     value: {
       type: Boolean,
-      default: false
+      default: true
     },
+    // Shopify product data
     product: {
       type: Object,
       default: () => {
@@ -62,6 +64,7 @@ export default {
         }
       }
     },
+    // Toggle to true to have toggle appear as normal checkbox <input />
     checkbox: {
       type: Boolean,
       default: false
@@ -74,32 +77,28 @@ export default {
   components: {
     Checkbox
   },
-  mixins: [ rechargeProperties, productMetafields ],
-
+  mixins: [rechargeProperties, productMetafields],
   data() {
     return {
       width: 100,
-      state: false,
       pressed: 0,
       position: 0,
-      subscriptionChecked: true
+      isChecked: this.value // Internal property to hold 'checked' state. Based on the current `value` to avoid competing with parent passing prop down
     }
   },
-  mounted() {
-    this.toggle(this.value)
-    this.productType = 'subscription'
-    // this.$emit()
-  },
+  mounted() {},
   computed: {
+    productType() {
+      return this.value ? 'subscription' : 'onetime'
+    },
     style() {
       return {
-        transform: `translateX(${this.pos_percentage})`,
+        transform: `translateX(${this.pos_percentage})`
         // transition: 'all 3s'
-        
       }
     },
     pos_percentage() {
-      return `${this.position / this.width * 100}%`
+      return `${(this.position / this.width) * 100}%`
     },
     state_class() {
       if (this.state) {
@@ -108,11 +107,12 @@ export default {
     }
   },
   watch: {
+    // Position of the toggle
     position() {
-      this.state = this.position >= 50
+      this.isChecked = this.position >= 50
     },
     product() {
-      if(this.subscriptionChecked) {
+      if (this.value) {
         this.purchaseType = 'subscription'
       } else {
         this.purchaseType = 'onetime'
@@ -120,38 +120,29 @@ export default {
     }
   },
   methods: {
+    // Main handler for when the toggle state is changed
     handleCheck(checked) {
-      if(checked) {
-        this.purchaseType = 'subscription'
-        this.subscriptionChecked = true;
-      } else {
-        this.purchaseType = 'onetime'
-        this.subscriptionChecked = false;
-      }
-
-      this.$emit('subscriptionChanged', this.subscriptionChecked)
+      this.purchaseType = checked ? 'subscription' : 'onetime'
+      this.isChecked = !!checked
+      this.$emit('subscriptionChanged', this.isChecked)
     },
     onClick() {
-      this.toggle(!this.state)
+      this.toggle(!this.isChecked)
     },
     toggle(state) {
-      this.state = state
-      this.position = !state
-        ? 0
-        : 100
-      this.purchaseType = this.state ? 'onetime' : 'subscription'
-    },
+      this.isChecked = !!state ?? !this.isChecked // set equal to state, or opposite of current if undefined
+      this.position = this.isChecked ? 0 : 100
 
+      // emit event indicating toggled state has changed.
+      // TODO - 'check' and 'toggle' should route through the same method...
+      this.$emit('input', this.isChecked)
+    },
 
     // In progress for mobile drag interface
     dragging(e) {
-      const pos = e.clientX - this.$el.offsetLeft 
-      const percent = pos / this.width * 100
-      this.position = percent <= 0
-        ? 0
-        : percent >= 100
-          ? 100
-          : percent
+      const pos = e.clientX - this.$el.offsetLeft
+      const percent = (pos / this.width) * 100
+      this.position = percent <= 0 ? 0 : percent >= 100 ? 100 : percent
     },
     dragStart(e) {
       this.startTimer()
@@ -164,10 +155,9 @@ export default {
       this.resolvePosition()
       clearInterval(this.$options.interval)
       if (this.pressed < 30) {
-        this.toggle(!this.state)
+        this.toggle(!this.isChecked)
       }
       this.pressed = 0
-      this.emit()
     },
     startTimer() {
       this.$options.interval = setInterval(() => {
@@ -175,33 +165,27 @@ export default {
       }, 1)
     },
     resolvePosition() {
-      this.position = this.state
-        ? 100
-        : 0
-    },
-    emit() {
-      this.$emit('input', this.state)
+      this.position = this.isChecked ? 100 : 0
     }
   }
 }
 </script>
 
-
 <style lang="scss" scoped>
-  $width: 360px;
-  $background: #fff;
-  $background-active: #fff;
-  $border-color: $secondary-purple-3;
-  $button-size: 180px;
-  $button-color: $secondary-purple-4;
+$width: 360px;
+$background: #fff;
+$background-active: #fff;
+$border-color: $secondary-purple-3;
+$button-size: 180px;
+$button-color: $secondary-purple-4;
 
-  $checkbox-checkmark-color:	$grayscale-white;
-  $checkbox-border-color:	$grayscale-white;
+$checkbox-checkmark-color: $grayscale-white;
+$checkbox-border-color: $grayscale-white;
 .toggle-container {
   position: relative;
   height: 50px;
 
-  @media screen and (max-width: 360px){
+  @media screen and (max-width: 360px) {
     width: 302px;
   }
 }
@@ -213,7 +197,7 @@ export default {
   pointer-events: none;
   cursor: pointer;
 
-  @media screen and (max-width: 360px){
+  @media screen and (max-width: 360px) {
     width: 302px;
   }
 
@@ -228,12 +212,11 @@ export default {
     font-size: 12px;
     text-transform: uppercase;
     cursor: pointer;
-    
-    @media screen and (max-width: 360px){
+
+    @media screen and (max-width: 360px) {
       font-size: 10px;
       padding-top: 14px;
     }
-
   }
 }
 
@@ -247,11 +230,10 @@ export default {
   position: relative;
   cursor: pointer;
 
-   @media screen and (max-width: 360px){
-      width: 302px;
-    }
+  @media screen and (max-width: 360px) {
+    width: 302px;
+  }
 
-  
   .draggable {
     width: $button-size;
     height: 100%;
@@ -262,15 +244,14 @@ export default {
     transition: transform 0.5s ease-in-out;
     cursor: pointer;
 
-    @media screen and (max-width: 360px){
+    @media screen and (max-width: 360px) {
       width: 151px;
     }
   }
-  
+
   &.active {
     background: $background-active;
     transition: background 0.6s;
   }
 }
-
 </style>
