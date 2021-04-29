@@ -4,7 +4,7 @@
       <nuxt-link :to="`/products/${handle}`" style="color:white;">
         Try JetPack Protein Smoothies
       </nuxt-link>
-      <br/>
+      <br />
       <span style="font-size: 75%;color:gold;">6 Ready-to-Blend Smoothies</span>
       <br />
     </div>
@@ -164,7 +164,7 @@ export default {
 <style lang="scss" scoped>
 .text-block {
   font-family: Bold;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1.17;
   letter-spacing: 0.67px;
   text-align: center;
