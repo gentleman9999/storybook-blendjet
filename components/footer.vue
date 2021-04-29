@@ -111,7 +111,6 @@
         <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Sign&nbsp;Up</a>
         <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Log&#8209;in</a>
         <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Manage&nbsp;Subscription</a>
-        <a href="/products/blendjet-2-patterns">Patterns</a>        
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">

@@ -24,6 +24,8 @@ import CartFlyoutItem from '~/components/nacelle/CartFlyoutItem'
 import CartFlyoutSubtotal from '~/components/nacelle/CartFlyoutSubtotal'
 import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
 import { mapState, mapMutations, mapActions } from 'vuex'
+
+import customerChat from '~/mixins/customerChat'
 export default {
   components: {
     CartFlyoutHeader,
@@ -33,6 +35,7 @@ export default {
     CartFlyoutSubtotal,
     CartFlyoutCheckoutButton
   },
+  mixins: [customerChat],
   computed: {
     ...mapState('cart', ['lineItems', 'cartVisible'])
   },
@@ -44,20 +47,14 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
-
-      if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
-        window.FB.CustomerChat.show(false)
-      }
+      this.showCustomerChat('cartflyout')
     }
   },
   watch: {
     lineItems(newValue) {
       if (newValue.length == 0) {
         this.hideCart()
-
-        if (window.FB && window.FB.CustomerChat && window.FB.CustomerChat.show) {
-          window.FB.CustomerChat.show(false)
-        }
+        this.showCustomerChat('cartflyout')
       }
     }
   }
