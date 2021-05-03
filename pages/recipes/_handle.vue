@@ -130,7 +130,7 @@
     <div class="recipe__facebook facebook">
       <div class="facebook__icon"><FacebookFilled /></div>
       <h3 class="facebook__title">Join the BlendJet Recipes Community</h3>
-      <div class="facebook__text">For more BlendJet recipes like this, and to share your own, join our BlendJet Recipes Facebook Group!</div>
+      <div class="facebook__text">For more <span class="blendjet-receipes-facebook"><a href="https://blendjet.com/recipes">BlendJet recipes</a></span> like this, and to share your own, join our BlendJet Recipes Facebook Group!</div>
       <a rel="nofollow" href="https://www.facebook.com/groups/blendjetrecipes" target="__blank" class="facebook__join btn btn--outline">Join Now</a>
     </div>
 <!--
@@ -743,5 +743,9 @@ export default {
 
 .instructions__item:before{
   margin-right: 1rem;
+}
+span.blendjet-receipes-facebook a {
+    color: #ffffff;
+    font-weight: bold;
 }
 </style>
