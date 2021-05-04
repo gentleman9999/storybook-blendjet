@@ -80,7 +80,7 @@
         /> -->
       </div>
       <div
-        style="text-align: center;color:white;margin-bottom:10px;font-size:75%;padding-top:5px;"
+        style="text-align: center;color:white;padding-bottom:10px;font-size:75%;padding-top:5px;"
       >
         You can cancel anytime.
       </div>

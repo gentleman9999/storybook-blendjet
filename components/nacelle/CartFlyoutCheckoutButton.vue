@@ -1,9 +1,12 @@
 <template>
   <div class="checkout-button" role="button" :class="{ 'is-loading': loading }" @click="checkout">
     {{ checkoutText }}
-    <span class="subtotal" v-if="cartSubtotal > 0 && showPrice && displayPrice"
-      >&nbsp;—&nbsp;{{ displayPrice }}</span
+    <span 
+      class="subtotal" 
+      v-if="cartSubtotal > 0 && showPrice && displayPrice"
     >
+      &nbsp;—&nbsp;{{ displayPrice }}
+    </span>
   </div>
 </template>
 
@@ -19,6 +22,11 @@ export default {
     showPrice: {
       type: Boolean,
       default: true
+    },
+    // Can be toggled on to prevent the normal checkout redirection behavior 
+    preventCheckout: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -46,10 +54,9 @@ export default {
       let _price = this.cartSubtotal
 
       let priceData = []
-
       this.lineItems.forEach(item => {
         priceData.push({
-          Price: item.variant.price,
+          Price: parseFloat(item.variant.price),
           Tag: atob(item.variant.id)
             .split('/')
             .pop()
@@ -57,13 +64,6 @@ export default {
       })
 
       const price = encodeURIComponent(JSON.stringify(priceData))
-
-      /*
-        const config = {
-          method: 'get',
-          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
-        }
-*/
 
       //START OF RYAN MOD to override currency
 
@@ -84,10 +84,13 @@ export default {
       }
       //END OF RYAN MOD
 
-      const localPrice = await Axios(config)
+      await Axios(config)
         .then(res => {
-          if (!res.data.ConsumerPrices?.length) {
-
+          const consumerPrices = res.data?.ConsumerPrices; 
+          if (!Array.isArray(consumerPrices) || !consumerPrices.length || !consumerPrices[0] ) {
+            // Currently the API returns an array of `null` values, 
+            // so we also are checking the first index to make sure
+            // the value isn't null.
             this.displayPrice = `${res.data.Symbol}${_price.toFixed(2)}`
           } else {
             let localSubtotal = res.data.ConsumerPrices.reduce((acc, item, i) => {
@@ -100,7 +103,7 @@ export default {
               this.displayPrice = `${res.data.Symbol}${localSubtotal.toFixed(2)}`
             }
           }
-
+          // Emit the country + display price events back up to the parent cart
           this.$emit('Country', res.data.Country)
           this.$emit('DisplayPrice', this.displayPrice)
         })
@@ -110,7 +113,11 @@ export default {
         })
     },
     async checkout() {
+      // If prevent flag is enabled, bail
+      if (this.preventCheckout) return;
+
       this.loading = true
+
       try {
         await this.processCheckout({
           async beforeCreate() {

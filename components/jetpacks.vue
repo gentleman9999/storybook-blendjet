@@ -48,7 +48,7 @@
     </div>
     <div class="jetpack-tabs">
       <Tabs
-        :tabItems="['smoothies', 'protein smoothies']"
+        :tabItems="['protein smoothies', 'smoothies']"
         @activeTab="jetpackTabChange"
       />
     </div>
@@ -67,11 +67,7 @@
           <div class="card" :style="cardStyle">
             <div
               class="card-image"
-              @click="
-                $router.push(
-                  `/products/${activeProductHandle}?variant=${props.formatedId}`
-                )
-              "
+              @click="$router.push(props.list.url)"
               :style="{
                 'background-image': getBGColor(props.title),
                 height: '440px',
@@ -82,24 +78,20 @@
                 <img
                   class="jetpack-image"
                   :style="imageStyle"
-                  :src="optimizeSource({ url: props.featuredMedia.src })"
                   :alt="props.featuredMedia.altText"
+                  :src="optimizeSource({ url: props.featuredMedia.src, width: 500 })"
                 />
               </figure>
             </div>
             <div class="card-content">
-              <div class="content">
-                <p
+              <div class="content" style="text-align: center;">
+                <nuxt-link
                   class="title is-6 jetpack-title"
+                  :to="props.list.url"
                   :style="titleStyle"
-                  @click="
-                    $router.push(
-                      `/products/${activeProductHandle}?variant=${props.formatedId}`
-                    )
-                  "
                 >
                   {{ props.title }}
-                </p>
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -193,7 +185,7 @@ export default {
       itemsToShow: 1,
       indicatorVisible: false,
       productPrice: 3.95,
-      activeProductHandle: 'jetpack-smoothies',
+      activeProductHandle: 'jetpack-protein-smoothie',
       carouselStyle: {
         boxShadow: 'none'
       },
@@ -213,13 +205,13 @@ export default {
         width: 'auto'
       },
       titleStyle: {
-        textAlign: 'center',
         color: '#373795',
         fontSize: '12px',
         fontFamily: 'Bold',
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: '1.17',
+        textAlign: 'center',
         letterSpacing: '1.75px',
         textTransform: 'uppercase'
       },
@@ -325,11 +317,14 @@ export default {
     if (product) {
       this.productPrice = product.priceRange.min
       if (product.availableForSale) {
-        this.jetpacks = product.variants.map(variant => {
-          if (variant.availableForSale) {
-            variant['formatedId'] = this.formatVariantId(variant.id)
-            return variant
+        this.jetpacks = product.variants.filter(v=>v.availableForSale).map(variant => {
+          const variantId = this.formatVariantId(variant.id)
+          return {
+            ...variant,
+            formattedId: variantId,
+            url: `/products/${product.handle}?variant=${variantId}`
           }
+          
         })
       }
     }

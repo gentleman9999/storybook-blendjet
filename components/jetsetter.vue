@@ -36,7 +36,13 @@
             </div>
             <div class="card-content" >
               <div class="content">
-                <p class="title is-6 jetpack-title" :style="titleStyle" @click="$router.push(`/products/${props.list.handle}`)">{{ props.list.title }}</p>
+                <p 
+                  class="title is-6 jetpack-title" 
+                  :style="titleStyle" 
+                  @click="$router.push(`/products/${props.list.handle}`)"
+                >
+                  {{ props.list.title }}
+                </p>
               </div>
             </div>
           </div>
@@ -113,7 +119,8 @@ export default {
         fontStyle: 'normal',
         lineHeight: '1.17',
         letterSpacing: '1.75px',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        cursor: 'pointer'
       },
       modalWidth: '100%'
       

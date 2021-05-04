@@ -30,8 +30,6 @@
         ref="product-image"
         :src="source"
         :alt="alt"
-        :width="width"
-        :height="height"
         :style="cssVars"
         @error="fallback"
       />
@@ -48,8 +46,7 @@ export default {
   props: {
     source: {
       type: String,
-      default:
-        'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
+      default: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
     },
     alt: {
       type: String,

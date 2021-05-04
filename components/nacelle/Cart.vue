@@ -39,10 +39,18 @@
           >
             <div class="mobile-upsell__component-container">
               <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
-                <JetpackCart />
+                <JetpackCartUpsell
+                  product-handle="jetpack-protein-smoothie"
+                  title="Try JetPack Protein Smoothies"
+                  subtitle="6 ready-to-blend Smoothies"
+                />
               </div>
-              <div class="mobile-upsell__jetpacks">
-                <JetpackProteinCart />
+              <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
+                <JetpackCartUpsell
+                  product-handle="jetpack-smoothies"
+                  title="Try JetPack Smoothies"
+                  subtitle="6 ready-to-blend Smoothies"
+                />
               </div>
               <div class="mobile-upsell__blendjet" style="height: unset;">
                 <BlendJetCart />
@@ -128,10 +136,18 @@
             </div>
             <div class="mobile-upsell__component-container" style="padding-top:60px;">
               <div class="mobile-upsell__jetpacks">
-                <JetpackCart />
+                <JetpackCartUpsell
+                  product-handle="jetpack-protein-smoothie"
+                  title="Try JetPack Protein Smoothies"
+                  subtitle="6 ready-to-blend Smoothies"
+                />
               </div>
               <div class="mobile-upsell__jetpacks">
-                <JetpackProteinCart />
+                <JetpackCartUpsell
+                  product-handle="jetpack-smoothies"
+                  title="Try JetPack Smoothies"
+                  subtitle="6 ready-to-blend Smoothies"
+                />
               </div>
               <div class="mobile-upsell__blendjet">
                 <BlendJetCart />
@@ -305,26 +321,19 @@
             </svg>
           </div>
         </div>
+        <!-- Checkout CTA -->
         <div class="cart-checkout">
-          <!-- <button @click="$modal.show('mobile-upsell-modal')">Test</button> -->
-          <div
-            v-if="isMobile"
-            class="open-upsell-button"
-            :class="[checkoutDisabled ? 'checkout-disabled' : null]"
-            role="button"
-            @click="openUpsellModal"
-          >
-            Checkout
-            <span v-show="cartSubtotal > 0 && displayPrice">&nbsp;—&nbsp;{{ displayPrice }}</span>
-          </div>
+          <!-- On mobile, the CTA triggers the upsell window.  On desktop, it redirects to checkout immediately -->
           <cart-flyout-checkout-button
             @Country="setCountry"
             @DisplayPrice="setDisplayPrice"
+            @click.native="handleCheckoutClick"
+            :preventCheckout="isMobile"
             :class="[checkoutDisabled ? 'checkout-disabled' : null]"
-            v-show="!isMobile"
             :key="2"
           />
         </div>
+
         <div class="shipping-time">
           <!-- <ShippingTime /> -->
         </div>
@@ -381,9 +390,7 @@ import CartFlyoutHeader from '~/components/nacelle/CartFlyoutHeader'
 import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
 import CartItem from '~/components/nacelle/CartItem'
 // import MessagingFreeShippingCounter from '~/components/nacelle/MessagingFreeShippingCounter'
-
-import JetpackCart from '~/components/jetpackCart-sale'
-import JetpackProteinCart from '~/components/JetpackProteinCart'
+import JetpackCartUpsell from '~/components/JetpackCartUpsell'
 import BlendJetCart from '~/components/blendjetCart'
 import SleeveCart from '~/components/sleeveCart'
 import BookCart from '~/components/bookCart'
@@ -405,14 +412,13 @@ export default {
     CartFlyoutHeader,
     CartFlyoutCheckoutButton,
     CartItem,
-    JetpackCart,
-    JetpackProteinCart,
     BlendJetCart,
     SleeveCart,
     BookCart,
     ToteCart,
     BlendJetOneCart,
-    Close
+    Close,
+    JetpackCartUpsell
   },
   mixins: [imageOptimize, customerChat],
   data() {
@@ -445,11 +451,15 @@ export default {
       this.showUpsell = false
     },
     setCountry(data) {
-      // console.log('data', data)
       this.country = data
     },
     setDisplayPrice(data) {
       this.displayPrice = data
+    },
+    handleCheckoutClick(e) {
+      // If this is mobile, open the upsell.
+      // Note the actual checkout redirection logic is handled in CartFlyoutCheckoutButton.vue
+      this.isMobile && this.openUpsellModal()
     }
   },
   watch: {

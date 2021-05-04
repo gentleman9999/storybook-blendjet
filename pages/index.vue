@@ -58,12 +58,6 @@
 
         <div class="section section__jetpacks"  >
           <transition name="fade">
-             <JetpacksProtein  />
-           </transition>
-        </div>
-
-        <div class="section section__jetpacks"  >
-          <transition name="fade">
              <Jetpacks  />
            </transition>
         </div>

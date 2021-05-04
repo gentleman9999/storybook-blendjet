@@ -72,20 +72,20 @@
                 <img
                   class="jetpack-image"
                   :style="imageStyle"
-                  :src="props.list.featuredMedia.src"
+                  :src="optimizeSource({ url: props.list.featuredMedia.src, width: 500 })"
                   :alt="props.list.featuredMedia.altText"
                 />
               </figure>
             </div>
             <div class="card-content">
-              <div class="content">
-                <p
+              <div class="content" style="text-align:center;">
+                <nuxt-link
                   class="title is-6 jetpack-title"
                   :style="titleStyle"
-                  @click="$router.push(`/products/jetpack-protein-smoothie}`)"
+                  :to="props.list.url"
                 >
                   {{ props.list.title.split('-')[0].trim() }}
-                </p>
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -138,6 +138,7 @@
 
 <script>
 import Tabs from './tabs'
+import imageOptimize from '~/mixins/imageOptimize'
 // import JetpackPDPModal from '~/components/jetpackPDPModal'
 export default {
   data() {
@@ -152,7 +153,8 @@ export default {
       },
       cardStyle: {
         background: 'transparent',
-        boxShadow: 'none'
+        boxShadow: 'none',
+        borderRadius: 0
       },
       cardContentStyle: {
         height: '440px',
@@ -246,6 +248,7 @@ export default {
   components: {
     Tabs
   },
+  mixins: [imageOptimize],
   async mounted() {
     this.screenWidth = window.innerWidth
     const vm = this

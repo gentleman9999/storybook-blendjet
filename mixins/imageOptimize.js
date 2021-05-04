@@ -28,10 +28,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('space', ['getMetafield']),
+    // Alias `getMetafield` because it can compete with the productMetafields mixin method of the same name...
+    ...mapGetters('space', {
+      getNacelleMetafield: 'getMetafield'
+    }),
     cdn() {
       const supportedCDNs = ['shopify', 'cloudinary']
-      const metafieldCDN = this.getMetafield('cdn', 'provider')?.toLowerCase() || ''
+      const metafieldCDN = this.getNacelleMetafield('cdn', 'provider')?.toLowerCase() || ''
 
       return supportedCDNs.includes(metafieldCDN) ? metafieldCDN : 'shopify'
     },
@@ -39,7 +42,7 @@ export default {
       return Boolean(this.reformat && this.isCloudinary && this.cloudinaryCloudName)
     },
     cloudinaryCloudName() {
-      return this.getMetafield('cdn', 'cloudinary-cloud-name')
+      return this.getNacelleMetafield('cdn', 'cloudinary-cloud-name')
     },
     cloudinaryUrlBase() {
       return `https://res.cloudinary.com/${this.cloudinaryCloudName}/image/fetch/`
@@ -52,7 +55,7 @@ export default {
     },
     shopifyPathPrefix() {
       const path =
-        this.getMetafield('cdn', 'shopify-path-prefix') || 'https://cdn.shopify.com/s/files/'
+        this.getNacelleMetafield('cdn', 'shopify-path-prefix') || 'https://cdn.shopify.com/s/files/'
       return path.split('').reverse()[0] !== '/' ? path.concat('/') : path
     },
     isShopify() {

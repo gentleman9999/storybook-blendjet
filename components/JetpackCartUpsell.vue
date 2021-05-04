@@ -1,16 +1,19 @@
 <template>
   <div class="jetpack-container" v-if="product && variant">
     <div class="text-block">
-      <nuxt-link :to="`/products/${handle}`" style="color:white;">
-        Try JetPack Protein Smoothies
+      <nuxt-link :to="productUrl" style="color:white;">
+        {{ upsellTitle }}
       </nuxt-link>
       <br />
-      <span style="font-size: 75%;color:gold;">6 Ready-to-Blend Smoothies</span>
+      <span v-if="subtitle" style="font-size: 75%;color:gold;">{{ subtitle }}</span>
       <br />
     </div>
     <div class="jetpack-image">
       <transition name="fade">
-        <img class="jetpack-image__img" :src="optimizeSource({ url: variant.featuredMedia.src })" />
+        <img
+          class="jetpack-image__img"
+          :src="optimizeSource({ url: variant.featuredMedia.src, width: 600 })"
+        />
       </transition>
     </div>
     <div class="add-to-cart-controls">
@@ -52,6 +55,14 @@ import rechargeProperties from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
 
 export default {
+  props: {
+    title: String,
+    subtitle: String,
+    productHandle: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       jetpacks: null,
@@ -61,7 +72,6 @@ export default {
       subscriptionChecked: false,
       localizedPrice: null,
       symbol: '$',
-      handle: 'jetpack-protein-smoothie',
       justAdded: false
     }
   },
@@ -72,13 +82,27 @@ export default {
   },
   mixins: [imageOptimize, productMetafields, rechargeProperties],
   async mounted() {
-    this.product = await this.$nacelle.data.product({ handle: 'jetpack-protein-smoothie' })
-    this.jetpacks = this.product.variants
+    // Bail if not provided a product handle
+    if (!this.productHandle) return
+
+    this.product = this.productHandle
+      ? await this.$nacelle.data.product({ handle: this.productHandle })
+      : { variants: [] }
+    this.jetpacks = this.product.variants.filter(v => v.availableForSale)
     this.variant = this.jetpacks[0]
 
     this.initLocalizedPrice()
   },
   computed: {
+    upsellTitle() {
+      return this.title ? this.title : this.product ? this.product.title : ''
+    },
+    productUrl() {
+      const variantId = atob(this.variant.id)
+        .split('/')
+        .pop()
+      return `/products/${this.product.handle}?variant=${variantId}`
+    },
     productPrice() {
       const discountPrice = this.localizedPrice?.discountPrice ?? this.discountPrice
       const price = this.localizedPrice?.price ?? Number(this.variant.price)
