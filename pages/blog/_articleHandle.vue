@@ -64,6 +64,9 @@
               >
               </blog-article-header> -->
             <!-- </div> -->
+            <div v-if="article.fields.youtubeUrl" class="article-embed-container">
+                  <iframe :src="`${article.fields.youtubeUrl}`" class="article-youtube-url" frameborder="0"></iframe>
+            </div>
             <div class="column is-9 content">
               <blog-article-content :article="article" :products="products">
               {{ article.excerpt }}
@@ -242,5 +245,13 @@ export default nmerge({
 }
 .fadeDelay-enter {
   opacity: 0;
+}
+.article-embed-container {
+    height: 495px;
+    width: 100%;
+}
+iframe.article-youtube-url {
+    height: 100%;
+    width: 100%;
 }
 </style>
