@@ -1,5 +1,5 @@
 <template>
-  <div class="jetpack-container" v-if="product && variant">
+  <div class="jetpack-container" v-if="product && selectedVariant">
     <div class="text-block">
       <nuxt-link :to="productUrl" style="color:white;">
         {{ upsellTitle }}
@@ -10,20 +10,17 @@
     </div>
     <div class="jetpack-image">
       <transition name="fade">
-        <img
-          class="jetpack-image__img"
-          :src="optimizeSource({ url: variant.featuredMedia.src, width: 600 })"
-        />
+        <img class="jetpack-image__img" :src="optimizeSource({ url: productImage, width: 600 })" />
       </transition>
     </div>
     <div class="add-to-cart-controls">
       <div class="jetpack-dropdown">
         <CartDropdown
-          :items="jetpacks"
-          :product="variant"
-          @update:jetpacks="updateJetpack"
-          :label="'Flavor'"
-          :productType="'jetpacks'"
+          productType="jetpacks"
+          :label="product.variants[0].selectedOptions.map(o => o.name).join(', ')"
+          :items="variants"
+          :product="selectedVariant"
+          @update:jetpacks="updateSelectedVariant"
         />
       </div>
       <div class="quantity-select">
@@ -33,12 +30,16 @@
         </div>
       </div>
       <div class="add-to-cart-container">
-        <div class="variety-button" @click="addProduct">
+        <button type="button" class="variety-button" @click="addProduct" :disabled="justAdded">
           {{ buttonText }}
-        </div>
+        </button>
       </div>
       <div class="subscribe-select">
-        <Checkbox :color="'white'" :label="'Subscribe & Save 25%'" @checked="handleCheck" />
+        <Checkbox
+          color="white"
+          label="Subscribe &amp; Save 25%"
+          @checked="handleSubscriptionCheck"
+        />
       </div>
     </div>
   </div>
@@ -46,6 +47,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import Axios from 'axios'
 import QuantityDropdown from '~/components/quantityDropdown'
 import imageOptimize from '~/mixins/imageOptimize'
 import CartDropdown from '~/components/cartDropdown'
@@ -65,14 +67,17 @@ export default {
   },
   data() {
     return {
-      jetpacks: null,
       product: null,
       quantity: 1,
-      variant: null,
+      variants: null,
+      selectedVariant: null,
       subscriptionChecked: false,
-      localizedPrice: null,
+      localizedPricesMap: null,
       symbol: '$',
-      justAdded: false
+      justAdded: false,
+      bundleImageIndex: 0,
+      bundleImageCycleDelay: 1000,
+      localized: false
     }
   },
   components: {
@@ -88,8 +93,43 @@ export default {
     this.product = this.productHandle
       ? await this.$nacelle.data.product({ handle: this.productHandle })
       : { variants: [] }
-    this.jetpacks = this.product.variants.filter(v => v.availableForSale)
-    this.variant = this.jetpacks[0]
+
+    // Filter for applicable variants, map the decoded variant ID + url
+    this.variants = this.product.variants
+      .filter(v => v.availableForSale)
+      .map(v => {
+        const variantId = atob(v.id)
+          .split('/')
+          .pop()
+        const subscriptionDiscountVariant =
+          this.discountVariantMap && this.discountVariantMap[variantId]
+        return {
+          ...v,
+          plainId: variantId,
+          url: `/products/${this.product.handle}?variant=${variantId}`,
+          price: parseFloat(v.price),
+          subscriptionPrice: subscriptionDiscountVariant
+            ? parseFloat(subscriptionDiscountVariant.discount_variant_price)
+            : null
+        }
+      })
+
+    // If the variants array exists and is more than 1 item...
+    if (Array.isArray(this.variants) && this.variants.length > 1) {
+      // Create an 'all variants' bundle option
+      const allVariantsOption = {
+        title: 'Variety Pack',
+        subVariants: [
+          ...this.variants // don't just assign a reference, since it'll also include this bundle.
+        ]
+      }
+
+      // Add 'all variants' option to end of variants array
+      this.variants.unshift(allVariantsOption)
+    }
+
+    // Set the module's selected variant to the first variant option.
+    this.selectedVariant = this.variants[0]
 
     this.initLocalizedPrice()
   },
@@ -98,93 +138,185 @@ export default {
       return this.title ? this.title : this.product ? this.product.title : ''
     },
     productUrl() {
-      const variantId = atob(this.variant.id)
-        .split('/')
-        .pop()
-      return `/products/${this.product.handle}?variant=${variantId}`
+      const baseUrl = `/products/${this.product.handle}`
+      return (this.selectedVariant && this.selectedVariant.url) || baseUrl
     },
+    /**
+     * Returns the product price (localized, if available) for the currently selected variant.
+     */
     productPrice() {
-      const discountPrice = this.localizedPrice?.discountPrice ?? this.discountPrice
-      const price = this.localizedPrice?.price ?? Number(this.variant.price)
+      // Single variant prices
+      let price = this.localized
+        ? this.selectedVariant.localizedPrice ?? this.selectedVariant.price
+        : this.selectedVariant.price
+      let subscriptionPrice = this.localized
+        ? this.selectedVariant.localizedSubscriptionPrice ?? this.selectedVariant.subscriptionPrice
+        : this.selectedVariant.subscriptionPrice
 
-      return this.subscriptionChecked ? discountPrice : price
+      // If a bundle is selected, get the price based on total price for all sub-variants
+      if (this.isBundleVariant) {
+        const bundledVariants = this.selectedVariant.subVariants
+        // Get total price (localized if possible)
+        price = bundledVariants.reduce(
+          (acc, curr) => (this.localized ? acc + curr.localizedPrice : acc + curr.price),
+          0
+        )
+        // Get total subscription price (localized if possible)
+        subscriptionPrice = bundledVariants.reduce(
+          (acc, curr) =>
+            this.localized ? acc + curr.localizedSubscriptionPrice : acc + curr.subscriptionPrice,
+          0
+        )
+      }
+
+      return this.subscriptionChecked ? subscriptionPrice : price
     },
     buttonText() {
-      const price = `${this.symbol} ${(this.productPrice * this.quantity).toFixed(2)}`
+      const price = `${this.symbol}${(this.productPrice * this.quantity).toFixed(2)}`
       return this.justAdded ? 'Added!' : `Add to Cart${price ? ` - ${price}` : ''}`
+    },
+    productImage() {
+      let variantImage = this.selectedVariant?.featuredMedia?.src
+
+      // If this is a 'bundle', set the current image + a short timeout to
+      // update it to the next with a short delay.
+      if (this.isBundleVariant) {
+        const bundleVariants = this.selectedVariant.subVariants
+        const bundleImages = bundleVariants
+          .filter(v => v?.featuredMedia?.src)
+          .map(v => v.featuredMedia.src)
+        variantImage = bundleImages[this.bundleImageIndex]
+        // Update the image index
+        setTimeout(() => {
+          this.bundleImageIndex =
+            this.bundleImageIndex + 1 >= bundleImages.length ? 0 : this.bundleImageIndex + 1
+        }, this.bundleImageCycleDelay || 1000)
+      } else {
+        this.bundleImageIndex = 0
+      }
+
+      return variantImage
+    },
+    isBundleVariant() {
+      return (
+        this.selectedVariant &&
+        Array.isArray(this.selectedVariant.subVariants) &&
+        this.selectedVariant.subVariants.length > 0
+      )
     }
   },
   methods: {
     ...mapActions('cart', ['addLineItem']),
-    updateJetpack(jetpack) {
-      this.variant = jetpack
+    updateSelectedVariant(newVariant) {
+      this.selectedVariant = newVariant
     },
     updateQuantity(newQuantity) {
       this.quantity = newQuantity
     },
-    handleCheck(check) {
+    handleSubscriptionCheck(check) {
       this.subscriptionChecked = check
     },
+    /**
+     * Note:
+     * This API only returns values when called for non-US locations.
+     */
     async initLocalizedPrice() {
-      const variantId = atob(this.variant.id)
-        .split('/')
-        .pop()
-
-      const price = encodeURIComponent(
-        JSON.stringify([
-          { Price: this.discountPrice, Tag: variantId },
-          { Price: Number(this.variant.price), Tag: variantId }
-        ])
+      // Create array of all variant prices to get localized values
+      const pricesArray = this.variants.reduce(
+        (arr, v) =>
+          v.price
+            ? [
+                ...arr,
+                { Price: v.price, Tag: v.plainId },
+                { Price: v.subscriptionPrice, Tag: v.plainId }
+              ]
+            : arr,
+        []
       )
 
-      let url = `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
-
-      // START OF RYAN MOD to override currency
+      // Encode prices to send to price localization API
+      const priceData = encodeURIComponent(JSON.stringify(pricesArray))
 
       // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
-      if (document.cookie.includes('_rchcur')) {
-        url =
-          'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
+      let url = document.cookie.includes('_rchcur')
+        ? 'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
           document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
-          `&MerchantPrices=${price}`
-      }
-      // END OF RYAN MOD
+          `&MerchantPrices=${priceData}`
+        : `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${priceData}`
 
-      try {
-        const res = await fetch(url)
-        const data = await res.json()
+      // Fetch price localization data
+      await Axios({
+        method: 'get',
+        url
+      })
+        .then(({ data }) => {
+          // If an array of localized prices is returned...
+          if (
+            data &&
+            Array.isArray(data.ConsumerPrices) &&
+            data.ConsumerPrices.length &&
+            data.ConsumerPrices[0]
+          ) {
+            const returnedPrices = data.ConsumerPrices
 
-        if (data.ConsumerPrices.length) {
-          const [discountPrice, price] = data.ConsumerPrices
-          this.symbol = data.Symbol ?? data.Currency
-          this.localizedPrice = { discountPrice, price }
-        }
-      } catch (error) {
-        console.error('Currency Request Failed', error)
-      }
+            // Get this currency's symbol, or the ISO code
+            this.symbol = data.Symbol || data.Currency
+
+            // Create a localized prices map by iterating over the request in twos
+            for (let i = 0; i <= pricesArray.length - 1; i += 2) {
+              const variantId = pricesArray[i].Tag
+              const variant = this.variants.find(v => v.plainId === variantId)
+
+              // If variant is found, update it to contain the localized prices
+              if (variant) {
+                variant['localizedPrice'] = returnedPrices[i]
+                variant['localizedSubscriptionPrice'] = returnedPrices[i + 1]
+              }
+            }
+            this.localized = true
+          }
+        })
+        .catch(err => {
+          console.error('Currency Request Failed: ', err)
+        })
     },
     addProduct() {
       const { handle, vendor, tags } = this.product
-      const { featuredMedia, title, id, metafields } = this.variant
-      const price = this.subscriptionChecked ? this.discountPrice : Number(this.variant.price)
 
+      // ReCharge Subscription Metadata
+      // TODO - Pull this from mixin
       const rechargeFields = [
         { key: 'charge_interval_frequency', value: '30' },
         { key: 'order_interval_frequency', value: '30' },
         { key: 'order_interval_unit', value: 'day' }
       ]
 
-      this.addLineItem({
-        image: featuredMedia,
-        title,
-        quantity: this.quantity,
-        productId: id,
-        handle,
-        vendor,
-        tags,
-        variant: { ...this.variant, price },
-        metafields: [...metafields, ...(this.subscriptionChecked ? rechargeFields : [])]
-      })
+      // Add a single variant to the cart
+      const addVariantToCart = variant => {
+        const { featuredMedia, title, id, metafields } = variant
+        const price = this.subscriptionChecked ? variant.subscriptionPrice : variant.price
+        this.addLineItem({
+          image: featuredMedia,
+          title,
+          quantity: this.quantity,
+          productId: id,
+          handle,
+          vendor,
+          tags,
+          variant: { ...variant, price },
+          metafields: this.subscriptionChecked
+            ? [...metafields, ...rechargeFields]
+            : [...metafields]
+        })
+      }
+
+      if (this.isBundleVariant) {
+        this.selectedVariant.subVariants.forEach(v => {
+          addVariantToCart(v)
+        })
+      } else {
+        addVariantToCart(this.selectedVariant)
+      }
 
       this.justAdded = true
       setTimeout(() => {
