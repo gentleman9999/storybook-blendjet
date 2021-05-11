@@ -11,7 +11,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       purchaseType: 'subscription',
       selectedFrequency: undefined,
@@ -28,26 +28,26 @@ export default {
     }
   },
   computed: {
-    frequencies () {
-      return this.metafieldsObj.subscriptions.shipping_interval_frequency.split(',')
+    frequencies() {
+      return this.metafieldsObj.subscriptions?.shipping_interval_frequency.split(',') ?? []
     },
-    frequencyUnit () {
-      return this.metafieldsObj.subscriptions.shipping_interval_unit_type
+    frequencyUnit() {
+      return this.metafieldsObj.subscriptions?.shipping_interval_unit_type ?? ''
     },
-    discountVariantMap () {
+    discountVariantMap() {
       return JSON.parse(this.metafieldsObj.subscriptions.original_to_hidden_variant_map)
     },
-    discountPercentage () {
+    discountPercentage() {
       return Number(this.metafieldsObj.subscriptions.discount_percentage)
     },
-    discountPrice () {
+    discountPrice() {
       const price = this.product.priceRange.max
-      return price - (price * (this.discountPercentage / 100))
+      return price - price * (this.discountPercentage / 100)
     },
-    subscribeAndSave () {
+    subscribeAndSave() {
       return this.discountPercentage > 0
     },
-    rechargeMetafields () {
+    rechargeMetafields() {
       const frequency = this.frequency || this.frequencies[0]
       const subscriptionMetafields = [
         { key: 'charge_interval_frequency', value: frequency },
@@ -58,7 +58,7 @@ export default {
     }
   },
   methods: {
-    dynamicConditional (prop, testValue) {
+    dynamicConditional(prop, testValue) {
       switch (prop) {
         case 'frequency':
           return ['charge_interval_frequency', 'order_interval_frequency'].includes(testValue)
@@ -66,7 +66,7 @@ export default {
           return testValue === prop
       }
     },
-    onMetafieldsChange (prop, value) {
+    onMetafieldsChange(prop, value) {
       const updatedMetafields = []
       this.metafields.forEach(metafield => {
         if (this.dynamicConditional(prop, metafield.key)) {
@@ -79,11 +79,11 @@ export default {
       })
       this.$emit('update:metafields', updatedMetafields)
     },
-    onFrequencyChange (event) {
+    onFrequencyChange(event) {
       this.$emit('update:frequency', event.target.value)
       this.onMetafieldsChange('frequency', event.target.value)
     },
-    toggleSubscriptionMetafields (value) {
+    toggleSubscriptionMetafields(value) {
       let updatedMetafields
       if (value === 'onetime') {
         updatedMetafields = this.metafields.filter(metafield => {
@@ -95,11 +95,11 @@ export default {
       this.$emit('update:metafields', updatedMetafields)
     }
   },
-  created () {
+  created() {
     this.toggleSubscriptionMetafields(this.purchaseType)
   },
   watch: {
-    purchaseType (value) {
+    purchaseType(value) {
       this.toggleSubscriptionMetafields(value)
     }
   }

@@ -20,7 +20,12 @@
           <div class="card" :style="cardStyle">
             <div class="card-image">
               <figure class="image" :style="cardContentStyle">
-                <img class="jetpack-image" :style="imageStyle" :src="props.list.featuredMedia.src" @click="$router.push(`/products/${props.list.handle}`)">
+                <img 
+                  class="jetpack-image" 
+                  :style="imageStyle" 
+                  :src="optimizeSource({url: props.list.featuredMedia.src, width: 500})" 
+                  @click="$router.push(`/products/${props.list.handle}`)"
+                >
               </figure>
             </div>
             <div class="card-content" >
@@ -192,6 +197,7 @@ export default {
     SubscriptionAddToCartButton,
     RechargeModal
   },
+  mixins: [imageOptimize],
   props: {
     heading: {
       type: String,

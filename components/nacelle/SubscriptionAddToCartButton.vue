@@ -7,31 +7,28 @@
       class="add-to-cart-button button nacelle"
       @click="addToCart"
     >
-      <span
-        v-if="
-          !variantInLineItems && !allOptionsSelected && product.availableForSale
-        "
-      >Select Options</span>
+      <span v-if="!variantInLineItems && !allOptionsSelected && product.availableForSale">
+        Select Options
+      </span>
       <span
         v-if="
           (!variantInLineItems && allOptionsSelected && variant == undefined) ||
-            (!variantInLineItems &&
-            allOptionsSelected &&
-            variant.availableForSale === false) ||
+            (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
             !product.availableForSale
         "
-      >Out of Stock</span>
+      >
+        Out of Stock
+      </span>
       <span
         v-if="
-          !variantInLineItems &&
-            allOptionsSelected &&
-            variant &&
-            variant.availableForSale == true
+          !variantInLineItems && allOptionsSelected && variant && variant.availableForSale == true
         "
-      >Add to Cart</span>
+      >
+        Add to Cart
+      </span>
       <span v-if="variantInLineItems">Added!</span>
     </button>
-   <button
+    <button
       class="add-to-cart-button"
       :style="styleObj"
       @click="addToCart"
@@ -40,26 +37,21 @@
       :class="buttonClass"
     >
       <slot>
-        <span v-if="!onlyOneOption && product.availableForSale"
-          >Select Options</span
-        >
-        <span class="inner-text"
-          v-if="subPrice"
-          >{{buttonText}}</span
-        >
+        <span v-if="!onlyOneOption && product.availableForSale">
+          Select Options
+        </span>
+        <span class="inner-text" v-if="subPrice">
+          {{ buttonText }}
+        </span>
         <span
           v-if="
-            (!variantInLineItems &&
-              allOptionsSelected &&
-              variant == undefined) ||
-              (!variantInLineItems &&
-                allOptionsSelected &&
-                variant.availableForSale === false) ||
+            (!variantInLineItems && allOptionsSelected && variant == undefined) ||
+              (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
               !product.availableForSale
           "
-          >Out of Stock</span
         >
-        <!-- <span v-if=""></span> -->
+          Out of Stock
+        </span>
       </slot>
     </button>
   </div>
@@ -104,6 +96,7 @@ export default {
       type: Object,
       default: () => {}
     },
+    isSubscriptionOn: { type: Boolean, default: true },
     quantity: { type: Number, default: 1 },
     allOptionsSelected: { type: Boolean, default: false },
     confirmedSelection: { type: Boolean, default: false },
@@ -120,7 +113,7 @@ export default {
   computed: {
     ...mapState('cart', ['lineItems']),
     ...mapGetters('cart', ['checkoutLineItems']),
-    variantInLineItems () {
+    variantInLineItems() {
       const vm = this
       if (vm.variant != null) {
         const lineItem = vm.lineItems.findIndex(lineItem => {
@@ -135,14 +128,18 @@ export default {
         return false
       }
     },
-    
-    isProductVariantSelectChild () {
+
+    isProductVariantSelectChild() {
       return this.$parent.$options._componentTag === 'product-variant-select'
     },
-    isSubscription () {
-      return !!this.metafields.find(meta => meta.key === 'charge_interval_frequency')
+    /**
+     * Verify if the parent product is subscription-eligible by the presence
+     * of a ReCharge metafield value
+     */
+    verifySubscription() {
+      return !!this.metafields.find(meta => meta.key === 'shipping_interval_frequency')
     },
-    disableAtcButton () {
+    disableAtcButton() {
       return (
         !this.allOptionsSelected ||
         (this.allOptionsSelected && this.variant === undefined) ||
@@ -151,10 +148,10 @@ export default {
           this.variant.availableForSale !== true)
       )
     },
-    discountVariantMap () {
+    discountVariantMap() {
       return JSON.parse(this.metafieldsObj.subscriptions.original_to_hidden_variant_map)
     },
-    subscriptionVariant () {
+    subscriptionVariant() {
       // Deep clone object without references to state.
       const _variant = JSON.parse(JSON.stringify(this.variant))
       const variantDiscount = this.discountVariantMap[this.decodeBase64VariantId(_variant.id)]
@@ -167,24 +164,18 @@ export default {
     }
   },
   watch: {
-    confirmedSelection () {
+    confirmedSelection() {
       this.addToCart()
     },
-    variant() {
-      this.getDisplayPrice()
-    },
-    subPrice() {
-    },
-    subscriptionVariant() {
+    isSubscriptionOn() {
       this.getDisplayPrice()
     },
     quantity() {
       this.getDisplayPrice()
-    },
+    }
   },
-
   mounted() {
-    this.getDisplayPrice(true)
+    this.getDisplayPrice()
   },
   methods: {
     ...mapActions('cart', [
@@ -195,83 +186,94 @@ export default {
       'getLineItems'
     ]),
     ...mapMutations('cart', ['showCart']),
-    decodeBase64VariantId (encodedId) {
+    decodeBase64VariantId(encodedId) {
       const decodedId = atob(encodedId)
       return decodedId.split('gid://shopify/ProductVariant/')[1]
     },
-    async getDisplayPrice(init = false) {
-      let _vprice = this.isSubscription ? this.subscriptionVariant.price : this.variant.price;
-      if(init) {
-        _vprice = this.subscriptionVariant.price
+    async getDisplayPrice() {
+      let _vprice =
+        this.isSubscriptionOn && this.verifySubscription
+          ? this.subscriptionVariant.price
+          : this.variant.price
+      const vm = this
+      const price = encodeURIComponent(
+        JSON.stringify([
+          {
+            Price: _vprice,
+            Tag: atob(this.variant.id)
+              .split('/')
+              .pop()
+          }
+        ])
+      )
+
+      //START OF RYAN MOD to override currency
+
+      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      if (document.cookie.includes('_rchcur')) {
+        var config = {
+          method: 'get',
+          url:
+            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
+            `&MerchantPrices=${price}`
+        }
+      } else {
+        var config = {
+          method: 'get',
+          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+        }
       }
-      const vm = this;
-      const price = encodeURIComponent(JSON.stringify(
-          [{"Price": _vprice, 
-            "Tag": atob(this.variant.id).split('/').pop()
-          }]
-        ))
+      //END OF RYAN MOD
 
-		//START OF RYAN MOD to override currency
-       
-        //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
-		if(document.cookie.includes('_rchcur')){
-			var config = {
-			    method: 'get',
-			    url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=`+document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop()+`&MerchantPrices=${price}`,
-		    }
-		}
-		else {
-			var config = {
-		    	method: 'get',
-				url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
-		    }			
-		}
-		//END OF RYAN MOD
-
-        const localPrice = await Axios(config)
-          .then((res) => {
-            if(!res.data.ConsumerPrices[0]) {
-              vm.subPrice = `${res.data.Symbol}${(Number(_vprice) * this.quantity).toFixed(2)}`
+      const localPrice = await Axios(config)
+        .then(res => {
+          if (!res.data.ConsumerPrices[0]) {
+            vm.subPrice = `${res.data.Symbol}${(Number(_vprice) * this.quantity).toFixed(2)}`
+          } else {
+            if (res.data.Symbol == null) {
+              vm.subPrice = `${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)} ${
+                res.data.Currency
+              }`
             } else {
-
-				if(res.data.Symbol == null){
-					vm.subPrice = `${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)} ${res.data.Currency}`
-				}
-				else {
-					vm.subPrice = `${res.data.Symbol}${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)}`
-	            }
+              vm.subPrice = `${res.data.Symbol}${(
+                Number(res.data.ConsumerPrices[0]) * vm.quantity
+              ).toFixed(2)}`
             }
-	            this.defaultText = `Add to Cart - ${vm.subPrice}`,
-	            this.buttonText = `Add to Cart - ${vm.subPrice}`         
-          })
-          .catch((res) => {
-            console.error('Currency Request Failed', res)
-            this.subPrice = `$${this.variant.price}`
-          })
+          }
+          ;(this.defaultText = `Add to Cart - ${vm.subPrice}`),
+            (this.buttonText = `Add to Cart - ${vm.subPrice}`)
+        })
+        .catch(res => {
+          console.error('Currency Request Failed', res)
+          this.subPrice = `$${this.variant.price}`
+        })
     },
     setButtonText() {
-      if(this.onlyOneOption &&
-        !this.variantInLineItems &&
-        this.variant.availableForSale == true) {
-          this.butttonText = this.defaultText
-      } else if(this.onlyOneOption && this.variantInLineItems) {
+      if (this.onlyOneOption && !this.variantInLineItems && this.variant.availableForSale == true) {
+        this.butttonText = this.defaultText
+      } else if (this.onlyOneOption && this.variantInLineItems) {
         this.buttonText = 'Added!'
         this.buttonClass = 'clicked'
-        setTimeout(()=> {
+        setTimeout(() => {
           this.buttonText = this.defaultText
           this.buttonClass = 'unclicked'
         }, 2000)
       }
     },
-    encodeBase64VariantId (decodedId) {
+    encodeBase64VariantId(decodedId) {
       return btoa(`gid://shopify/ProductVariant/${decodedId}`)
     },
-    addToCart () {
+    addToCart() {
       if (this.allOptionsSelected && this.product.availableForSale) {
-        const variant = this.isSubscription ? this.subscriptionVariant : this.variant
-        const cartMeta = this.metafields.filter((field) => {
-          return !field.id && field.id !== null
-        })
+        const subscribed = this.isSubscriptionOn && this.verifySubscription
+        const variant = subscribed ? this.subscriptionVariant : this.variant
+        const cartMeta = subscribed
+          ? this.metafields.filter(field => {
+              return !field.id && field.id !== null
+            })
+          : []
+
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,
@@ -294,27 +296,26 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .button {
-    &:disabled {
-      @include button-primary('purple');
-      opacity: 0.5;
-    }
-  }
-
-  .add-to-cart-button {
+.button {
+  &:disabled {
     @include button-primary('purple');
-
-    &:hover {
-      @include button-primary('purple');
-    }
+    opacity: 0.5;
   }
+}
 
-  .clicked {
-    @include hover-transition;
-    width: 217.58px;
+.add-to-cart-button {
+  @include button-primary('purple');
+
+  &:hover {
+    @include button-primary('purple');
   }
+}
 
-  .unclicked {}
+.clicked {
+  @include hover-transition;
+  width: 217.58px;
+}
+
+.unclicked {
+}
 </style>
-
-

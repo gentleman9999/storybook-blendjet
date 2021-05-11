@@ -2,7 +2,7 @@
   <div >
     <div class="dropdown" tabindex="0"  @focusout="visible = false">
       <div class="dropbtn" role="button" @click.prevent="toggleVisible" v-show="!visible">
-        <span class="dropdown-thumb">
+        <span v-if="currentVariant.featuredMedia.thumbnailSrc" class="dropdown-thumb">
           <img class="dropdown-thumb-image" :src="optimizeSource({url:currentVariant.featuredMedia.thumbnailSrc})"/>
         </span>
         <span>{{currentVariant.title.replace("Peanut Butter", "PB")}}</span>
@@ -11,8 +11,8 @@
       <transition name="fade">
         <ul v-if="visible" class="dropdown-content">
           <li v-for="(variant, i) in items" :key="i" @click.prevent="updateJetpack(variant)">
-            <span class="dropdown-thumb">
-              <img class="dropdown-thumb-image" :src="optimizeSource({url:variant.featuredMedia.thumbnailSrc})"/>
+            <span v-if="variant.featuredMedia.thumbnailSrc" class="dropdown-thumb">
+              <img  class="dropdown-thumb-image" :src="optimizeSource({url:variant.featuredMedia.thumbnailSrc})"/>
             </span>
             {{variant.title.replace("Peanut Butter", "PB")}}
           </li>
@@ -44,7 +44,7 @@ export default {
   mixins: [imageOptimize],
   data() {
     return {
-      visible: false
+      visible: false,
     }
   },
   methods: {

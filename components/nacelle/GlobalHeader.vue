@@ -13,7 +13,7 @@
           <nuxt-link to="/products/blendjet-2" class="nav-item nav-item__blendjet" :style="{color: navColor}">
            BlendJet 2
           </nuxt-link>
-          <nuxt-link to="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" class="nav-item" :style="{color: navColor}">Jetpacks</nuxt-link>
+          <nuxt-link to="/products/jetpack-smoothies" class="nav-item" :style="{color: navColor}">Jetpacks</nuxt-link>
         </div>
 
       </div>
