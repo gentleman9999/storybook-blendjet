@@ -281,7 +281,7 @@ export default {
         })
     },
     addProduct() {
-      const { handle, vendor, tags } = this.product
+      const { handle, title, vendor, tags } = this.product
 
       // ReCharge Subscription Metadata
       // TODO - Pull this from mixin
@@ -293,7 +293,7 @@ export default {
 
       // Add a single variant to the cart
       const addVariantToCart = variant => {
-        const { featuredMedia, title, id, metafields } = variant
+        const { featuredMedia, id, metafields } = variant
         const price = this.subscriptionChecked ? variant.subscriptionPrice : variant.price
         this.addLineItem({
           image: featuredMedia,
