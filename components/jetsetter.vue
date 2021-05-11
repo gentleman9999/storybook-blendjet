@@ -26,12 +26,23 @@
           <div class="card" :style="cardStyle">
             <div class="card-image" @click="$router.push(`/products/${props.list.handle}`)" :style="{ 'background-image': getBGColor(props.list.title), height: '440px', cursor:'pointer' }">
               <figure class="image" :style="cardContentStyle">
-                <img class="jetpack-image" :style="imageStyle" :src="props.list.featuredMedia.src" :alt="props.list.featuredMedia.altText">
+                <img 
+                  class="jetpack-image" 
+                  :style="imageStyle" 
+                  :src="optimizeSource({url: props.list.featuredMedia.src, width: 500})" 
+                  :alt="props.list.featuredMedia.altText"
+                >
               </figure>
             </div>
             <div class="card-content" >
               <div class="content">
-                <p class="title is-6 jetpack-title" :style="titleStyle" @click="$router.push(`/products/${props.list.handle}`)">{{ props.list.title }}</p>
+                <p 
+                  class="title is-6 jetpack-title" 
+                  :style="titleStyle" 
+                  @click="$router.push(`/products/${props.list.handle}`)"
+                >
+                  {{ props.list.title }}
+                </p>
               </div>
             </div>
           </div>
@@ -71,6 +82,8 @@
 
 <script>
 import Tabs from './tabs';
+import imageOptimize from '~/mixins/imageOptimize'
+
 // import JetpackPDPModal from '~/components/jetpackPDPModal'
 export default {
   data() {
@@ -106,7 +119,8 @@ export default {
         fontStyle: 'normal',
         lineHeight: '1.17',
         letterSpacing: '1.75px',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        cursor: 'pointer'
       },
       modalWidth: '100%'
       
@@ -164,7 +178,7 @@ export default {
       jetpackTabChange(value) {
       }
     },
-
+  mixins: [imageOptimize],
   components: {
     Tabs
   },

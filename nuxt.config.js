@@ -81,7 +81,8 @@ export default {
     ],
     script: [
       { src: '/scripts/optimonk.js', body: true, defer:true},
-      { src: '/scripts/gtm.js'},
+      // Disabled for Nuxt version of GTM
+      // { src: '/scripts/gtm.js'},
       { src: '/scripts/currencycookie.js'},
       // { src: 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=NhVDeY', async: true},
       { src: 'https://cdn.weglot.com/weglot.min.js', async: true},
@@ -136,6 +137,8 @@ export default {
     '@nuxtjs/svg',
     '@nacelle/nacelle-loox-nuxt-module',
     'vue-social-sharing/nuxt',
+    '@nuxtjs/gtm',
+    '@nuxtjs/google-gtag',
     "@nacelle/nacelle-klaviyo-nuxt-module",
     "nuxt-robots-module",
     // ['nuxt-buefy', { css: false, materialDesignIcons: false }],
@@ -149,7 +152,8 @@ export default {
     '~plugins/vue-modal.js',
     '~plugins/contentful.js',
     '~plugins/timeAgo.js',
-    "~/plugins/gtag.js",
+    // removing gtag plugin below to use nuxt gtag module
+    //"~/plugins/gtag.js",
     "~/plugins/pinterest-pixel.client.js",
     "~/plugins/snap-pixel.client.js",
     '~/plugins/vue-mq.js',
@@ -158,6 +162,43 @@ export default {
 
   router: {
     middleware: ['cart', 'cartRedirect']
+  },
+
+  gtm: {
+    id: 'GTM-NLRSLWR'
+  },
+
+  // Replaces gtag plugin and makes gtag available to nuxt for additional methods
+  // see: https://github.com/nuxt-community/google-gtag-module
+  'google-gtag': {
+    id: 'UA-111004875-4',
+    config: {
+      anonymize_ip: true, // anonymize IP 
+      send_page_view: false, // might be necessary to avoid duplicated page track on page reload
+      linker: {
+        domains: ['blendjet.com']
+      }
+    },
+    debug: false, // enable to track in dev mode
+    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
+    additionalAccounts: [{
+      id: 'AW-758185293'
+    },
+    {
+      id: 'AW-800828740'
+    },
+    {
+      id: 'AW-707656444'
+    },
+    {
+      id: 'DC-9973664'
+    }]
+  },
+
+  publicRuntimeConfig: {
+    gtm: {
+      id: process.env.GOOGLE_TAG_MANAGER_ID
+    }
   },
 
   polyfill: {

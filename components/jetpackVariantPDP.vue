@@ -10,6 +10,16 @@
           />
         </div>
         <div class="product-select__controls__mobile-title-container">
+          <!-- Cross-Sell Link (links to Protein from Original, and vice versa) -->
+          <nuxt-link :to="crossSell.url" v-if="crossSell.url && crossSell.text">
+            <div
+              class="inner-text"
+              style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;max-width: 360px;margin: 30px auto 30px auto;"
+            >
+              {{ crossSell.text }}
+            </div>
+          </nuxt-link>
+
           <div class="product-select__controls__title">
             {{ currentVariant.title }}
           </div>
@@ -17,9 +27,7 @@
             {{ jetpackCategory }}
           </div>
           <div class="product-select__controls__rating">
-            <n-link
-              :to="{ path: `/products/${product.handle}`, hash: '#reviews' }"
-            >
+            <n-link :to="{ path: `/products/${product.handle}`, hash: '#reviews' }">
               <!-- TODO: Change to be variant based -->
               <loox-product-rating :product="product" />
             </n-link>
@@ -36,6 +44,16 @@
         <div class="product-select__controls">
           <div class="product-select__controls__container">
             <div class="product-select__controls__title-container">
+              <!-- Cross-Sell Link (links to Protein from Original, and vice versa) -->
+              <nuxt-link :to="crossSell.url" v-if="crossSell.url && crossSell.text">
+                <div
+                  class="inner-text"
+                  style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
+                >
+                  {{ crossSell.text }}
+                </div>
+              </nuxt-link>
+
               <div class="product-select__controls__title">
                 {{ currentVariant.title }}
               </div>
@@ -64,23 +82,21 @@
               </div>
             </div>
             <div class="product-select__controls__add-to-cart">
-              <div
-                class="product-select__controls__add-to-cart__subscribe-select"
-              >
+              <div class="product-select__controls__add-to-cart__subscribe-select">
                 <SubscriptionToggle
+                  :value="isSubscriptionActive"
                   :product="productData"
                   :variant="currentVariant"
                   :metafields.sync="productData.metafields"
                   :frequency.sync="frequency"
+                  v-on:input="handleSubscriptionToggle"
                 />
                 <div
                   class="product-select__controls__add-to-cart__subscribe-select__about"
                   @click="$modal.show('about-subscriptions')"
                 >
                   <div>How do subscriptions work?</div>
-                  <div
-                    class="product-select__controls__add-to-cart__subscribe-select__about__icon"
-                  >
+                  <div class="product-select__controls__add-to-cart__subscribe-select__about__icon">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       height="18"
@@ -96,12 +112,8 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="product-select__controls__add-to-cart__quantity-add-button"
-              >
-                <div
-                  class="product-select__controls__add-to-cart__quantity-add-button__quantity"
-                >
+              <div class="product-select__controls__add-to-cart__quantity-add-button">
+                <div class="product-select__controls__add-to-cart__quantity-add-button__quantity">
                   <quantity-selector :quantity.sync="quantity" />
                 </div>
                 <div
@@ -115,6 +127,7 @@
                     :only-one-option="true"
                     :quantity="quantity"
                     :showPrice="true"
+                    :isSubscriptionOn="isSubscriptionActive"
                     :styleObj="{
                       height: '50px',
                       marginRight: '6px'
@@ -135,8 +148,7 @@
                 @click="$modal.show('guarantee-modal')"
               >
                 <Guarantee :size="'40px'" />
-                <span
-                  class="product-select__controls__value-props__guarantee__text"
+                <span class="product-select__controls__value-props__guarantee__text"
                   >30 day money back guarantee</span
                 >
               </div>
@@ -148,9 +160,7 @@
                   :href="mcafeeLink"
                 >
                   <img
-                    :src="
-                      optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })
-                    "
+                    :src="optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })"
                     alt="McAfee Secure Logo"
                   />
                 </a>
@@ -161,9 +171,7 @@
                   :href="nortonLink"
                 >
                   <img
-                    :src="
-                      optimizeSource({ url: '/images/blendjetPDP/norton.png' })
-                    "
+                    :src="optimizeSource({ url: '/images/blendjetPDP/norton.png' })"
                     alt="Norton Secured Logo"
                   />
                 </a>
@@ -174,9 +182,7 @@
                   :href="bbbLink"
                 >
                   <img
-                    :src="
-                      optimizeSource({ url: '/images/blendjetPDP/bbb.png' })
-                    "
+                    :src="optimizeSource({ url: '/images/blendjetPDP/bbb.png' })"
                     alt="Better Business Bureau Logo"
                   />
                 </a>
@@ -193,22 +199,10 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
               >
                 <title>made in california</title>
-                <g
-                  id="PDP"
-                  stroke="none"
-                  stroke-width="1"
-                  fill="none"
-                  fill-rule="evenodd"
-                >
-                  <g
-                    id="D-BlendJet-PDP-JetPack"
-                    transform="translate(-1031.000000, -826.000000)"
-                  >
+                <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g id="D-BlendJet-PDP-JetPack" transform="translate(-1031.000000, -826.000000)">
                     <g id="BUY" transform="translate(0.000000, 109.000000)">
-                      <g
-                        id="made-in-california"
-                        transform="translate(1031.000000, 717.000000)"
-                      >
+                      <g id="made-in-california" transform="translate(1031.000000, 717.000000)">
                         <path
                           d="M295,15.5 C299.280207,15.5 303.155207,17.2348966 305.960155,20.0398449 C308.765103,22.8447932 310.5,26.7197932 310.5,31 C310.5,35.2802068 308.765103,39.1552068 305.960155,41.9601551 C303.155207,44.7651034 299.280207,46.5 295,46.5 L295,46.5 L19,46.5 C14.7197932,46.5 10.8447932,44.7651034 8.03984489,41.9601551 C5.23489659,39.1552068 3.5,35.2802068 3.5,31 C3.5,26.7197932 5.23489659,22.8447932 8.03984489,20.0398449 C10.8447932,17.2348966 14.7197932,15.5 19,15.5 L19,15.5 L295,15.5 Z"
                           id="Rectangle"
@@ -236,11 +230,7 @@
                           fill="#8291ED"
                           points="139.358007 0 138.5783 1.4160597 138.056089 0 116.18821 0 116.187007 1.4160597 116.970323 5.11231227 116.187007 8.50320734 115 11.056795 115.521609 13.1520611 118.71263 18.0434886 119.234239 22.7950795 122.833162 26.206522 124.221112 29.1704874 126.720866 30.0369036 129.559936 33.4991439 126.116232 31.5505635 127.777921 36.0099244 130.044846 36.7210935 129.559936 39.2507092 130.044846 41.4275942 137.273976 49.2858409 137.795585 53.3005784 145.076456 54.2845715 146.095007 55.9198037 150.268483 56.9197782 150.790092 58.6286386 152.24422 58.6286386 157.155288 62.7541039 158.156995 67 171.984752 65.2860027 174.029677 64.4310017 172.763857 62.7541039 172.506361 60.7632872 173.508068 59.8580592 173.508068 57.1652057 176 54.9643487 174.290782 54.0402856 172.764459 50.0147035 141.011875 22.171237 140.173811 21.5576682 141.011875 20.3550734 141.011875 0"
                         ></polygon>
-                        <g
-                          id="Group-5"
-                          transform="translate(23.000000, 21.000000)"
-                          fill="#373795"
-                        >
+                        <g id="Group-5" transform="translate(23.000000, 21.000000)" fill="#373795">
                           <text
                             id="made-with"
                             font-family="Helvetica"
@@ -276,12 +266,7 @@
             </div>
           </div>
 
-          <modal
-            name="guarantee-modal"
-            width="414px"
-            height="auto"
-            :adaptive="true"
-          >
+          <modal name="guarantee-modal" width="414px" height="auto" :adaptive="true">
             <div class="guarantee-modal__container">
               <div slot="top-right" @click="$modal.hide('guarantee-modal')">
                 <Close />
@@ -291,12 +276,11 @@
                 30-day Money Back Guarantee
               </div>
               <div class="guarantee-modal__container__text">
-                We believe in 100% customer satisfaction and that is why we are
-                offering all customers a 30 day money-back guarantee! If you are
-                not satisfied with your BlendJet blender, you may return the
-                item within 30 days from the order date for a full refund. If
-                you don't like your product, get a full refund within 30 days,
-                no questions asked. <br />
+                We believe in 100% customer satisfaction and that is why we are offering all
+                customers a 30 day money-back guarantee! If you are not satisfied with your BlendJet
+                blender, you may return the item within 30 days from the order date for a full
+                refund. If you don't like your product, get a full refund within 30 days, no
+                questions asked. <br />
                 — <br />
                 Please
                 <a class="guarantee-modal__container__text__contact-link"
@@ -307,12 +291,7 @@
             </div>
           </modal>
 
-          <modal
-            name="about-subscriptions"
-            height="auto"
-            width="494px"
-            :adaptive="true"
-          >
+          <modal name="about-subscriptions" height="auto" width="494px" :adaptive="true">
             <div class="about-subscriptions__container">
               <div slot="top-right" @click="$modal.hide('about-subscriptions')">
                 <Close />
@@ -344,29 +323,14 @@
                         <stop stop-color="#373795" offset="100%"></stop>
                       </linearGradient>
                     </defs>
-                    <g
-                      id="PDP"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                    >
+                    <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                       <g
                         id="D-BlendJet-PDP-JetPack-Copy"
                         transform="translate(-685.000000, -289.000000)"
                       >
-                        <g
-                          id="Group-4"
-                          transform="translate(472.000000, 170.000000)"
-                        >
-                          <g
-                            id="Portable"
-                            transform="translate(113.000000, 120.000000)"
-                          >
-                            <g
-                              id="Group-2"
-                              transform="translate(101.000000, 0.000000)"
-                            >
+                        <g id="Group-4" transform="translate(472.000000, 170.000000)">
+                          <g id="Portable" transform="translate(113.000000, 120.000000)">
+                            <g id="Group-2" transform="translate(101.000000, 0.000000)">
                               <circle
                                 id="Oval-Copy"
                                 stroke="#373795"
@@ -435,29 +399,14 @@
                         <stop stop-color="#373795" offset="100%"></stop>
                       </linearGradient>
                     </defs>
-                    <g
-                      id="PDP"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                    >
+                    <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                       <g
                         id="D-BlendJet-PDP-JetPack-Copy"
                         transform="translate(-685.000000, -438.000000)"
                       >
-                        <g
-                          id="Group-4"
-                          transform="translate(472.000000, 170.000000)"
-                        >
-                          <g
-                            id="Portable-Copy"
-                            transform="translate(113.000000, 269.000000)"
-                          >
-                            <g
-                              id="Group-2"
-                              transform="translate(101.000000, 0.000000)"
-                            >
+                        <g id="Group-4" transform="translate(472.000000, 170.000000)">
+                          <g id="Portable-Copy" transform="translate(113.000000, 269.000000)">
+                            <g id="Group-2" transform="translate(101.000000, 0.000000)">
                               <circle
                                 id="Oval-Copy"
                                 stroke="#373795"
@@ -513,29 +462,14 @@
                         <stop stop-color="#373795" offset="100%"></stop>
                       </linearGradient>
                     </defs>
-                    <g
-                      id="PDP"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                    >
+                    <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                       <g
                         id="D-BlendJet-PDP-JetPack-Copy"
                         transform="translate(-685.000000, -588.000000)"
                       >
-                        <g
-                          id="Group-4"
-                          transform="translate(472.000000, 170.000000)"
-                        >
-                          <g
-                            id="Portable-Copy-2"
-                            transform="translate(93.000000, 419.000000)"
-                          >
-                            <g
-                              id="Group-2"
-                              transform="translate(121.000000, 0.000000)"
-                            >
+                        <g id="Group-4" transform="translate(472.000000, 170.000000)">
+                          <g id="Portable-Copy-2" transform="translate(93.000000, 419.000000)">
+                            <g id="Group-2" transform="translate(121.000000, 0.000000)">
                               <circle
                                 id="Oval-Copy"
                                 stroke="#373795"
@@ -602,10 +536,7 @@
               :title="features.fields.title"
             />
           </div>
-          <div
-            class="media-content__main__details"
-            v-if="loaded && productDescription"
-          >
+          <div class="media-content__main__details" v-if="loaded && productDescription">
             <div
               v-for="(section, i) of productDescription"
               :key="i"
@@ -620,9 +551,7 @@
               <div
                 v-if="
                   section.fields.video &&
-                    section.fields.video.fields.file.contentType.includes(
-                      'video'
-                    )
+                    section.fields.video.fields.file.contentType.includes('video')
                 "
                 class="media-content__main__details__content-block__media rounded-video-container"
               >
@@ -634,9 +563,7 @@
               <div
                 v-if="
                   section.fields.video &&
-                    section.fields.video.fields.file.contentType.includes(
-                      'image'
-                    )
+                    section.fields.video.fields.file.contentType.includes('image')
                 "
                 class="media-content__main__details__content-block__media rounded-video-container"
               >
@@ -653,16 +580,16 @@
           </div>
         </div>
       </div>
+
+      <!-- JETPACKS CROSS-SELL -->
+      <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
       <div class="reviews" id="reviews">
         <loox-product-reviews :product="product" />
       </div>
 
       <div class="jetpacks">
         <!-- TODO: Make this dynamic using contentful -->
-        <JetpackCrossSell
-          :jetpacks="jetpacks"
-          :heading="'You may also like these jetpack flavors'"
-        />
+        <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
       </div>
     </div>
   </transition>
@@ -672,7 +599,7 @@
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
-const JetpackCrossSell = () => import('~/components/jetpackCrossSell')
+const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
 import ModelIcon from '~/components/ModelIcon'
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
 
@@ -702,6 +629,7 @@ export default {
       productImage: null,
       heroImages: [],
       imgWidth: 0,
+      isSubscriptionActive: true, // whether the subscription toggle is active or not
       loaded: false,
       ratingCount: '9,881',
       shippingTime: 'saturday, October 23rd',
@@ -824,11 +752,7 @@ export default {
     setDefaultVariant() {
       if (this.currentVariant) {
         return this.currentVariant
-      } else if (
-        this.product &&
-        this.product.variants &&
-        this.product.variants.length
-      ) {
+      } else if (this.product && this.product.variants && this.product.variants.length) {
         return this.product.variants[0]
       }
       return undefined
@@ -841,8 +765,10 @@ export default {
         }
       }
     },
-    async updateJetpack(seletectedVariant) {
-      this.currentVariant = seletectedVariant
+    async updateJetpack(selectedVariant) {
+      this.currentVariant = selectedVariant
+      this.addHashToLocation()
+
       await this.getMedia()
     },
     toggleJetpackMenu() {
@@ -858,9 +784,7 @@ export default {
       })
     },
     handleJetpackMenu() {
-      this.jetpackMenuVisible
-        ? (this.jetpackMenuVisible = !this.jetpackMenuVisible)
-        : null
+      this.jetpackMenuVisible ? (this.jetpackMenuVisible = !this.jetpackMenuVisible) : null
     },
     setImages() {},
     setDisplayPrice(data) {
@@ -869,9 +793,35 @@ export default {
     setCurrency(data) {
       this.currency = data
     },
+    addHashToLocation() {
+      window.history.pushState(
+        {},
+        null,
+        this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
+      )
+    },
+    formatVariantId(value) {
+      const url = atob(value)
+      return url.replace('gid://shopify/ProductVariant/', '')
+    },
+    setCurrentVariant() {
+      const variantId = this.$route.query.variant
+      const variants = this.product.variants.map(variant => {
+        variant['formatedId'] = this.formatVariantId(variant.id)
+        return variant
+      })
+      const variant = variants.filter(variant => {
+        return variant.formatedId === variantId
+      })
+
+      if (variant.length > 0) this.currentVariant = variant[0]
+    },
     getPageHandle(title) {
       let handle = title.replace(/\s+/g, '-')
-      handle = handle + '-jetpack-ready-to-blend-smoothie'
+      let handlesufix = this.product.handle.includes('protein')
+        ? '-protein-smoothie'
+        : '-jetpack-ready-to-blend-smoothie'
+      handle = handle + handlesufix
       return handle.toLowerCase()
     },
     async getMedia() {
@@ -889,12 +839,19 @@ export default {
           content_type: 'product',
           'fields.handle': this.getPageHandle(variant.title)
         })
-        .then(async res => {
+        .then(res => {
           let something = res.items[0]
           this.headerText = something.fields.headerText
           this.productDescription = something.fields.productDescription
           this.features = something.fields.features
         })
+    },
+    /**
+     * Handler for the subscription toggle checkbox.
+     * If checked, set the flag on this component to true.
+     */
+    handleSubscriptionToggle(active) {
+      this.isSubscriptionActive = active
     }
   },
   async mounted() {
@@ -902,20 +859,37 @@ export default {
     this.client = createClient()
 
     // Gets variants of the products
-    this.jetpacks = this.product.variants.filter(variant => {
-      return variant.availableForSale
-    })
+    if (this.product && this.product.availableForSale) {
+      this.jetpacks = this.product.variants.filter(variant => {
+        return variant.availableForSale
+      })
+    } else {
+      //TODO: SHOW 404 PAGE
+    }
 
-    console.log('PAGE')
-    console.log(this.page)
-
+    //todo decide which variant will be displayed
+    this.setCurrentVariant()
     this.currentVariant = this.setDefaultVariant()
 
     const vm = this
     // TODO we should get this using nacelle content
+    const isProteinJetPack = this.product.handle.includes('protein')
+    const PROTEIN_CONTENT = '24QNVJ9UR9oYvUmQ8EzvFs'
+    const SMOOTHIE_CONENT = '6L3Tl2qpSUZLV3i2I3thFQ'
+    let contentId = isProteinJetPack ? PROTEIN_CONTENT : SMOOTHIE_CONENT
+
+    // Assemble cross sell link data
+    this.crossSell = {
+      url: isProteinJetPack ? '/products/jetpack-smoothies' : '/products/jetpack-protein-smoothie',
+      text: isProteinJetPack
+        ? 'Try Our Original JetPack Smoothies'
+        : 'Try our NEW Protein Smoothies'
+    }
+
+    // Fetch Contentful data
     await this.client
-      .getEntry('6L3Tl2qpSUZLV3i2I3thFQ')
-      .then( async entry => {
+      .getEntry(contentId)
+      .then(async entry => {
         entry.fields.variants.forEach(node => {
           vm.media[node.fields.title] = {
             productImage: `https:${node.fields.productImage.fields.file.url}?w=2100`,

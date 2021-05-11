@@ -8,36 +8,51 @@
 /****
 -->
 <template>
-  <div class="product" >
+  <div class="product" v-if="product">
     <!-- <section class="section">
       <div class="container"> -->
-        <!-- <transition name="fade"> -->
-        <!-- <template v-if="product"> -->
-          <div v-if="page && page.fields.productAnnouncement" class="">
-            <div v-html="productAnnouncement" class="product-productAnnouncement"></div>
-          </div>
-          <transition name="fade">
-            <BlendjetPDP v-cloak
-              v-if="['blendjet-2', 'blendjet-2-patterns', 'blendjet-2-influencer-kit','blendjet-2-press-kit','youtube-blendjet-2', 'baileys-blendjet-2'].includes(product.handle)"
-              :product="product"
-              :page="page"
-            />
-            <BlendjetOnePDP v-cloak v-else-if="product.handle === 'blendjet-one'" :product="product" :page="page" /> 
-            <JetpackVariantPDP v-cloak v-else-if="product.handle.includes('variant')" :product="product" :page="page" />            
-            <JetpackProteinVariantPDP v-cloak v-else-if="product.handle.includes('protein')" :product="product" :page="page" />            
-            <JetpackPDP v-cloak v-else-if="product.handle.includes('jetpack')" :product="product" :page="page" />
-            <ProductDetail v-cloak v-else :product="product" :page="page" />
-          </transition>
-        <!-- </template> -->
-        <!-- </transition> -->
-       <!-- <recharge-widget
+    <!-- <transition name="fade"> -->
+    <!-- <template v-if="product"> -->
+    <!--
+      Temporarily removing as part of release 1.1.0
+      <div v-if="page && page.fields.productAnnouncement" class="">
+        <div v-html="productAnnouncement" class="product-productAnnouncement"></div>
+      </div>
+    -->
+    <transition name="fade">
+      <BlendjetPDP
+        v-cloak
+        v-if="product.productType === 'BlendJet'"
+        :product="product"
+        :page="page"
+      />
+      <JetpackVariantPDP
+        v-cloak
+        v-else-if="
+          ['jetpack smoothies'].includes(product.productType && product.productType.toLowerCase())
+        "
+        :product="product"
+        :page="page"
+      />
+      <!-- TODO: THIS SHOULD BE DELETED AFTER THE REFACTOR IS DONE -->
+      <JetpackPDP
+        v-cloak
+        v-else-if="product.productType === 'Single Jetpack'"
+        :product="product"
+        :page="page"
+      />
+      <ProductDetail v-cloak v-else :product="product" :page="page" />
+    </transition>
+    <!-- </template> -->
+    <!-- </transition> -->
+    <!-- <recharge-widget
   v-if="isSubscription"
   :product="product"
   :variant="currentVariant"
   :metafields.sync="metafields"
   :frequency.sync="frequency"
 /> -->
-      <!-- </div>
+    <!-- </div>
     </section> -->
     <!-- <section class="section product-meta" v-if="product">
       <div class="container">
@@ -81,8 +96,6 @@ import ProductDetail from '~/components/ProductDetail'
 import BlendjetPDP from '~/components/blendJetPDP'
 import JetpackPDP from '~/components/jetpackPDP'
 import JetpackVariantPDP from '~/components/jetpackVariantPDP'
-import JetpackProteinVariantPDP from '~/components/jetpackProteinVariantPDP'
-import BlendjetOnePDP from '~/components/blendJetOnePDP'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
@@ -92,20 +105,19 @@ export default {
     ProductDetails,
     BlendjetPDP,
     JetpackPDP,
-    JetpackVariantPDP,
-    JetpackProteinVariantPDP,    
-    BlendjetOnePDP
+    JetpackVariantPDP
   },
-  mixins: [
-    getProduct(),
-    productMetafields,
-    viewEvent('product')
-  ],
+  mixins: [getProduct(), productMetafields, viewEvent('product')],
   computed: {
     ...mapGetters('space', ['getMetatag']),
     productAnnouncement() {
-      if (this.page && this.page.fields.productAnnouncement && this.page.fields.productAnnouncement.content[0] && this.page.fields.productAnnouncement.content[0].content[0]) {
-        return this.page.fields.productAnnouncement.content[0].content[0].value;
+      if (
+        this.page &&
+        this.page.fields.productAnnouncement &&
+        this.page.fields.productAnnouncement.content[0] &&
+        this.page.fields.productAnnouncement.content[0].content[0]
+      ) {
+        return this.page.fields.productAnnouncement.content[0].content[0].value
       }
     }
   },
@@ -115,7 +127,6 @@ export default {
   },
 
   mounted() {
-    console.log('product handle', this.product)
     if (this.product) {
       this.productView(this.product)
     }
@@ -143,13 +154,15 @@ export default {
         // }
       }
 
-      if(this.product.handle === 'blendjet-2-influencer-kit' ||
+      if (
+        this.product.handle === 'blendjet-2-influencer-kit' ||
         this.product.handle === 'blendjet-2-press-kit' ||
-        this.product.handle === 'youtube-blendjet-2') {
-          meta.push({
-            "name": "robots",
-            "content": "noindex"
-          })
+        this.product.handle === 'youtube-blendjet-2'
+      ) {
+        meta.push({
+          name: 'robots',
+          content: 'noindex'
+        })
       }
 
       return {
@@ -162,8 +175,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-[v-cloak] > * { display:none; }
-[v-cloak]::before { content: "loading..."; }
+[v-cloak] > * {
+  display: none;
+}
+[v-cloak]::before {
+  content: 'loading...';
+}
 .price {
   margin-bottom: 1rem;
 }
@@ -188,7 +205,6 @@ export default {
 .fade-enter-active {
   animation: fadeIn;
   animation-duration: 0.6s;
-
 }
 .fade-leave-active {
   animation: fadeOut;

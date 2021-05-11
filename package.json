@@ -1,7 +1,5 @@
 {
-  "name": "BlendJet",
-  "version": "1.0.3",
-  "author": "Alpha Omega Agency",
+  "private": true,
   "scripts": {
     "test": "jest",
     "test:ci": "jest --no-coverage",
@@ -28,6 +26,8 @@
     "@nuxtjs/axios": "^5.9.5",
     "@nuxtjs/bulma": "^1.2.7",
     "@nuxtjs/dotenv": "^1.3.0",
+    "@nuxtjs/google-gtag": "^1.0.4",
+    "@nuxtjs/gtm": "^2.4.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "@nuxtjs/robots": "^2.4.2",
     "@recart/nacelle-nuxt-module": "^0.1.1",
@@ -128,7 +128,7 @@
   },
   "prettier": {
     "semi": false,
-    "printWidth": 80,
+    "printWidth": 100,
     "singleQuote": true
   },
   "lint-staged": {

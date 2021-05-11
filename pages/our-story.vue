@@ -1,217 +1,189 @@
 <template>
-<div>
-  <div class="page-container">
-    <content-hero-banner
+  <div>
+    <div class="page-container">
+      <content-hero-banner
         id="hero-banner"
-        :imageUrl="optimizeSource({ url: page.fields.heroImage.fields.file.url + '?w=2000' })"
+        :imageUrl="optimizeSource({ url: page.fields.heroImage.fields.file.url, width: 2000 })"
         backgroundAltTag="A girl with her BlendJet"
         :title="page.fields.title"
         :subtitle="page.fields.subhead"
         :location="'about-us'"
         :textColor="'white'"
       />
-    <div class="title-banner">
-      <div class="title-banner__text-block">
-        <RichTextRenderer :document="page.fields.missionText" />
-      </div>
-    </div>
-    <div class="about-us-video">
-      <img class="about-us-video__img" :src="optimizeSource({ url: page.fields.missionHero.fields.file.url + '?w=2000' })" :alt="page.fields.missionHero.fields.description"/>
-    </div>
-
-    <div class="what-drives-us">
-      <div class="what-drives-us__banner">
-        <div class="what-drives-us__banner__text-block">
-          <RichTextRenderer :document="page.fields.pillarsText" />
+      <div class="title-banner">
+        <div class="title-banner__text-block">
+          <RichTextRenderer :document="page.fields.missionText" />
         </div>
       </div>
-      <div class="what-drives-us__image-grid">
-        <div v-for="(pillar, index) in page.fields.pillars" class="what-drives-us__image-grid__section" @click="openDriveModal(index)">
-          <div class="what-drives-us__image-grid__section__text">
-            {{ pillar.fields.title }}
-          </div>
-          <img class="what-drives-us__image-grid__section__img darken-image" :src="optimizeSource({ url: pillar.fields.image.fields.file.url })" :alt="pillar.fields.image.fields.description"/>
-        </div>
+      <div class="about-us-video">
+        <img
+          class="about-us-video__img"
+          :src="optimizeSource({ url: page.fields.missionHero.fields.file.url, width: 2000 })"
+          :alt="page.fields.missionHero.fields.description"
+        />
       </div>
-      <modal name="drive-modal" :width="'100%'" height="auto">
-        <div class="drive__container">
-          <div slot="top-right" @click="$modal.hide('drive-modal')">
-            <Close :color="'purple'"/>
-          </div>
-          <div class="drive__image-container">
-            <div class="drive__decrement" @click="decrementDrive">
-              <PrevSlide />
-            </div>
-             <img :src="optimizeSource({url: page.fields.pillars[openDrive].fields.image.fields.file.url})" />
-             <div class="drive__increment" @click="incrementDrive">
-               <NextSlide />
-             </div>
-          </div>
-          <div class="drive__text-container">
-            <div class="drive__text-container__heading">
-              {{ page.fields.pillars[openDrive].fields.title  }}
-            </div>
-            <div class="drive__text-container__main">
-              <RichTextRenderer :document="page.fields.pillars[openDrive].fields.text" />
-            </div>
+
+      <div class="what-drives-us">
+        <div class="what-drives-us__banner">
+          <div class="what-drives-us__banner__text-block">
+            <RichTextRenderer :document="page.fields.pillarsText" />
           </div>
         </div>
-      </modal>
-    </div>
-
-    <div class="our-journey">
-      <div class="our-journey__title">
-        Our Journey
-      </div>
-      <div class="our-journey__container">
-
-        <div v-for="(journey, index) in page.fields.journey" class="our-journey__container-inner">
-          <ImageTextSet :content="journey" :color="index === 0 ? 'dark' : 'white'" />
-        </div>
-
-        <div class="our-journey__cheers">
-          <div class="our-journey__cheers__svg">
-            <Cheers />
-          </div>
-          <div class="text-centered text-purple our-journey__blendjet-team">
-            The Blendjet Team
+        <div class="what-drives-us__image-grid">
+          <div
+            v-for="(pillar, index) in page.fields.pillars"
+            :key="index"
+            class="what-drives-us__image-grid__section"
+            @click="openDriveModal(index)"
+          >
+            <div class="what-drives-us__image-grid__section__text">
+              {{ pillar.fields.title }}
+            </div>
+            <img
+              class="what-drives-us__image-grid__section__img darken-image"
+              :src="optimizeSource({ url: pillar.fields.image.fields.file.url, width: 700 })"
+              :alt="pillar.fields.image.fields.description"
+            />
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="leadership">
-      <div class="leadership__heading">
-        Our Leadership
-      </div>
-      <div class="leadership__grid">
-        <div class="leadership__grid__entry" v-for="(leadership, i) in page.fields.leadership" :key="i" @click="openBioModal(i)">
-          <img class="leadership__grid__entry__img" :src="optimizeSource({url: leadership.fields.image.fields.file.url})" :alt="leadership.fields.image.fields.description" />
-          <div class="leadership__grid__entry__name">
-            {{ leadership.fields.name }}
-          </div>
-          <div class="leadership__grid__entry__title">
-            {{ leadership.fields.title }}
-          </div>
-          <div v-if="leadership.fields.tag" class="leadership__grid__entry__tag">
-            {{ leadership.fields.tag }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <modal name="bio-modal" :adaptive="true" height="auto" width="810px">
-      <div class="bio__container">
-        <div slot="top-right" @click="$modal.hide('bio-modal')">
-          <Close />
-        </div>
-        <div class="bio__content">
-          <div class="bio__content__image-container">
-            <img :src="optimizeSource({ url: page.fields.leadership[openBio].fields.image.fields.file.url })" class="bio__content__image-container__img" />
-          </div>
-          <div class="bio__content__text-container">
-            <div class="bio__content__text-container__name">
-              {{ page.fields.leadership[openBio].fields.name }}
+        <modal name="drive-modal" :width="'100%'" height="auto">
+          <div class="drive__container">
+            <div slot="top-right" @click="$modal.hide('drive-modal')">
+              <Close :color="'purple'" />
             </div>
-            <div class="bio__content__text-container__title">
-              {{ page.fields.leadership[openBio].fields.title }}
-            </div>
-            <div v-if="page.fields.leadership[openBio].fields.tag" class="bio__content__text-container__tag leadership__grid__entry__tag">
-              {{ page.fields.leadership[openBio].fields.tag }}
-            </div>
-            <div class="bio__content__text-container__text-block">
-              <RichTextRenderer :document="page.fields.leadership[openBio].fields.body" />
-            </div>
-          </div>
-        </div>
-
-        <div class="bio__favorites">
-
-          <div class="bio__favorites__item">
-            <div class="bio__favorites__item__category">
-              Favorite BlendJet:
-            </div>
-            <n-link :to="page.fields.leadership[openBio].fields.favoriteBlendJet.fields.path" class="bio__favorites__item__image-container" >
+            <div class="drive__image-container">
+              <div class="drive__decrement" @click="decrementDrive">
+                <PrevSlide />
+              </div>
               <img
-                class="bio__favorites__item__image-container__img"
-                :src="optimizeSource({ url: page.fields.leadership[openBio].fields.favoriteBlendJet.fields.image.fields.file.url  + '?w=250'})"
+                :src="
+                  optimizeSource({
+                    url: page.fields.pillars[openDrive].fields.image.fields.file.url
+                  })
+                "
               />
-            </n-link>
-            <div class="bio__favories__item__name">
-              {{ page.fields.leadership[openBio].fields.favoriteBlendJet.fields.title }}
+              <div class="drive__increment" @click="incrementDrive">
+                <NextSlide />
+              </div>
+            </div>
+            <div class="drive__text-container">
+              <div class="drive__text-container__heading">
+                {{ page.fields.pillars[openDrive].fields.title }}
+              </div>
+              <div class="drive__text-container__main">
+                <RichTextRenderer :document="page.fields.pillars[openDrive].fields.text" />
+              </div>
             </div>
           </div>
+        </modal>
+      </div>
 
-          <div class="bio__favorites__item">
-            <div class="bio__favorites__item__category">
-              Favorite JetPack:
-            </div>
-            <n-link :to="page.fields.leadership[openBio].fields.favoriteJetPack.fields.path" class="bio__favorites__item__image-container" >
-              <img
-                class="bio__favorites__item__image-container__img"
-                :src="optimizeSource({ url: page.fields.leadership[openBio].fields.favoriteJetPack.fields.image.fields.file.url + '?w=250'})"
-              />
-            </n-link>
-            <div class="bio__favories__item__name">
-              {{ page.fields.leadership[openBio].fields.favoriteJetPack.fields.title }}
-            </div>
+      <div class="our-journey">
+        <div class="our-journey__title">
+          Our Journey
+        </div>
+        <div class="our-journey__container">
+          <div
+            v-for="(journey, index) in page.fields.journey"
+            :key="index"
+            class="our-journey__container-inner"
+          >
+            <ImageTextSet :content="journey" :color="index === 0 ? 'dark' : 'white'" />
           </div>
 
-          <div class="bio__favorites__item">
-            <div class="bio__favorites__item__category">
-              Favorite Recipe:
+          <div class="our-journey__cheers">
+            <div class="our-journey__cheers__svg">
+              <Cheers />
             </div>
-            <n-link :to="`/recipes/${page.fields.leadership[openBio].fields.favoriteRecipe.fields.handle}`" class="bio__favorites__item__image-container" >
-              <img
-                class="bio__favorites__item__image-container__img"
-                :src="optimizeSource({ url: page.fields.leadership[openBio].fields.favoriteRecipe.fields.teaserImage.fields.file.url  + '?w=250'})"
-              />
-            </n-link>
-            <div class="bio__favories__item__name">
-              {{ page.fields.leadership[openBio].fields.favoriteRecipe.fields.title }}
+            <div class="text-centered text-purple our-journey__blendjet-team">
+              The Blendjet Team
             </div>
           </div>
-
         </div>
       </div>
-    </modal>
 
-
-     <modal name="bio-modal-mobile" height="auto" width="100%" :adaptive="false" :scrollable="true" transition="fade">
-      <div class="bio__container">
-        <div slot="top-right" @click="$modal.hide('bio-modal-mobile')">
-          <Close :color="'purple'"/>
+      <div class="leadership">
+        <div class="leadership__heading">
+          Our Leadership
         </div>
-        <div class="bio__content">
-          <div class="bio__content__image-container">
-
-            <img :src="optimizeSource({ url: page.fields.leadership[openBio].fields.image.fields.file.url })" class="bio__content__image-container__img-mobile" />
-          </div>
-          <div class="bio__content__text-container">
-            <div class="bio__content__text-container__name">
-              {{ page.fields.leadership[openBio].fields.name }}
+        <div class="leadership__grid">
+          <div
+            class="leadership__grid__entry"
+            v-for="(leadership, i) in page.fields.leadership"
+            :key="i"
+            @click="openBioModal(i)"
+          >
+            <img
+              class="leadership__grid__entry__img"
+              :src="optimizeSource({ url: leadership.fields.image.fields.file.url })"
+              :alt="leadership.fields.image.fields.description"
+            />
+            <div class="leadership__grid__entry__name">
+              {{ leadership.fields.name }}
             </div>
-            <div class="bio__content__text-container__title">
-              {{ page.fields.leadership[openBio].fields.title }}
+            <div class="leadership__grid__entry__title">
+              {{ leadership.fields.title }}
             </div>
-            <div v-if="page.fields.leadership[openBio].fields.tag" class="bio__content__text-container__tag leadership__grid__entry__tag">
-              {{ page.fields.leadership[openBio].fields.tag }}
-            </div>
-            <div class="bio__content__text-container__text-block">
-              <RichTextRenderer :document="page.fields.leadership[openBio].fields.body" />
+            <div v-if="leadership.fields.tag" class="leadership__grid__entry__tag">
+              {{ leadership.fields.tag }}
             </div>
           </div>
         </div>
-        <div class="bio__favorites">
-          <div class="bio__favorites__mobile__top-row">
-            <div class="bio__favorites__item bio__favorites__mobile__blendjet-margin">
+      </div>
+
+      <modal name="bio-modal" :adaptive="true" height="auto" width="810px">
+        <div class="bio__container">
+          <div slot="top-right" @click="$modal.hide('bio-modal')">
+            <Close />
+          </div>
+          <div class="bio__content">
+            <div class="bio__content__image-container">
+              <img
+                :src="
+                  optimizeSource({
+                    url: page.fields.leadership[openBio].fields.image.fields.file.url
+                  })
+                "
+                class="bio__content__image-container__img"
+              />
+            </div>
+            <div class="bio__content__text-container">
+              <div class="bio__content__text-container__name">
+                {{ page.fields.leadership[openBio].fields.name }}
+              </div>
+              <div class="bio__content__text-container__title">
+                {{ page.fields.leadership[openBio].fields.title }}
+              </div>
+              <div
+                v-if="page.fields.leadership[openBio].fields.tag"
+                class="bio__content__text-container__tag leadership__grid__entry__tag"
+              >
+                {{ page.fields.leadership[openBio].fields.tag }}
+              </div>
+              <div class="bio__content__text-container__text-block">
+                <RichTextRenderer :document="page.fields.leadership[openBio].fields.body" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bio__favorites">
+            <div class="bio__favorites__item">
               <div class="bio__favorites__item__category">
                 Favorite BlendJet:
               </div>
-              <n-link :to="page.fields.leadership[openBio].fields.favoriteBlendJet.fields.path" class="bio__favorites__item__image-container" >
+              <n-link
+                :to="page.fields.leadership[openBio].fields.favoriteBlendJet.fields.path"
+                class="bio__favorites__item__image-container"
+              >
                 <img
                   class="bio__favorites__item__image-container__img"
-                  :src="optimizeSource({ url: page.fields.leadership[openBio].fields.favoriteBlendJet.fields.image.fields.file.url  + '?w=250'})"
+                  :src="
+                    optimizeSource({
+                      url:
+                        page.fields.leadership[openBio].fields.favoriteBlendJet.fields.image.fields
+                          .file.url + '?w=250'
+                    })
+                  "
                 />
               </n-link>
               <div class="bio__favories__item__name">
@@ -223,26 +195,45 @@
               <div class="bio__favorites__item__category">
                 Favorite JetPack:
               </div>
-              <n-link :to="page.fields.leadership[openBio].fields.favoriteJetPack.fields.path" class="bio__favorites__item__image-container" >
+              <n-link
+                :to="page.fields.leadership[openBio].fields.favoriteJetPack.fields.path"
+                class="bio__favorites__item__image-container"
+              >
                 <img
                   class="bio__favorites__item__image-container__img"
-                  :src="optimizeSource({ url: page.fields.leadership[openBio].fields.favoriteJetPack.fields.image.fields.file.url + '?w=250'})"
+                  :src="
+                    optimizeSource({
+                      url:
+                        page.fields.leadership[openBio].fields.favoriteJetPack.fields.image.fields
+                          .file.url + '?w=250'
+                    })
+                  "
                 />
               </n-link>
               <div class="bio__favories__item__name">
                 {{ page.fields.leadership[openBio].fields.favoriteJetPack.fields.title }}
               </div>
             </div>
-          </div>
-          <div class="bio__favorites__mobile__bottom-row">
+
             <div class="bio__favorites__item">
               <div class="bio__favorites__item__category">
                 Favorite Recipe:
               </div>
-              <n-link :to="`/recipes/${page.fields.leadership[openBio].fields.favoriteRecipe.fields.handle}`" class="bio__favorites__item__image-container" >
+              <n-link
+                :to="
+                  `/recipes/${page.fields.leadership[openBio].fields.favoriteRecipe.fields.handle}`
+                "
+                class="bio__favorites__item__image-container"
+              >
                 <img
                   class="bio__favorites__item__image-container__img"
-                  :src="optimizeSource({ url: page.fields.leadership[openBio].fields.favoriteRecipe.fields.teaserImage.fields.file.url  + '?w=250'})"
+                  :src="
+                    optimizeSource({
+                      url:
+                        page.fields.leadership[openBio].fields.favoriteRecipe.fields.teaserImage
+                          .fields.file.url + '?w=250'
+                    })
+                  "
                 />
               </n-link>
               <div class="bio__favories__item__name">
@@ -251,10 +242,131 @@
             </div>
           </div>
         </div>
-      </div>
-    </modal>
+      </modal>
 
-    <!-- <div class="press-contact">
+      <modal
+        name="bio-modal-mobile"
+        height="auto"
+        width="100%"
+        :adaptive="false"
+        :scrollable="true"
+        transition="fade"
+      >
+        <div class="bio__container">
+          <div slot="top-right" @click="$modal.hide('bio-modal-mobile')">
+            <Close :color="'purple'" />
+          </div>
+          <div class="bio__content">
+            <div class="bio__content__image-container">
+              <img
+                :src="
+                  optimizeSource({
+                    url: page.fields.leadership[openBio].fields.image.fields.file.url
+                  })
+                "
+                class="bio__content__image-container__img-mobile"
+              />
+            </div>
+            <div class="bio__content__text-container">
+              <div class="bio__content__text-container__name">
+                {{ page.fields.leadership[openBio].fields.name }}
+              </div>
+              <div class="bio__content__text-container__title">
+                {{ page.fields.leadership[openBio].fields.title }}
+              </div>
+              <div
+                v-if="page.fields.leadership[openBio].fields.tag"
+                class="bio__content__text-container__tag leadership__grid__entry__tag"
+              >
+                {{ page.fields.leadership[openBio].fields.tag }}
+              </div>
+              <div class="bio__content__text-container__text-block">
+                <RichTextRenderer :document="page.fields.leadership[openBio].fields.body" />
+              </div>
+            </div>
+          </div>
+          <div class="bio__favorites">
+            <div class="bio__favorites__mobile__top-row">
+              <div class="bio__favorites__item bio__favorites__mobile__blendjet-margin">
+                <div class="bio__favorites__item__category">
+                  Favorite BlendJet:
+                </div>
+                <n-link
+                  :to="page.fields.leadership[openBio].fields.favoriteBlendJet.fields.path"
+                  class="bio__favorites__item__image-container"
+                >
+                  <img
+                    class="bio__favorites__item__image-container__img"
+                    :src="
+                      optimizeSource({
+                        url:
+                          page.fields.leadership[openBio].fields.favoriteBlendJet.fields.image
+                            .fields.file.url + '?w=250'
+                      })
+                    "
+                  />
+                </n-link>
+                <div class="bio__favories__item__name">
+                  {{ page.fields.leadership[openBio].fields.favoriteBlendJet.fields.title }}
+                </div>
+              </div>
+
+              <div class="bio__favorites__item">
+                <div class="bio__favorites__item__category">
+                  Favorite JetPack:
+                </div>
+                <n-link
+                  :to="page.fields.leadership[openBio].fields.favoriteJetPack.fields.path"
+                  class="bio__favorites__item__image-container"
+                >
+                  <img
+                    class="bio__favorites__item__image-container__img"
+                    :src="
+                      optimizeSource({
+                        url:
+                          page.fields.leadership[openBio].fields.favoriteJetPack.fields.image.fields
+                            .file.url + '?w=250'
+                      })
+                    "
+                  />
+                </n-link>
+                <div class="bio__favories__item__name">
+                  {{ page.fields.leadership[openBio].fields.favoriteJetPack.fields.title }}
+                </div>
+              </div>
+            </div>
+            <div class="bio__favorites__mobile__bottom-row">
+              <div class="bio__favorites__item">
+                <div class="bio__favorites__item__category">
+                  Favorite Recipe:
+                </div>
+                <n-link
+                  :to="
+                    `/recipes/${page.fields.leadership[openBio].fields.favoriteRecipe.fields.handle}`
+                  "
+                  class="bio__favorites__item__image-container"
+                >
+                  <img
+                    class="bio__favorites__item__image-container__img"
+                    :src="
+                      optimizeSource({
+                        url:
+                          page.fields.leadership[openBio].fields.favoriteRecipe.fields.teaserImage
+                            .fields.file.url + '?w=250'
+                      })
+                    "
+                  />
+                </n-link>
+                <div class="bio__favories__item__name">
+                  {{ page.fields.leadership[openBio].fields.favoriteRecipe.fields.title }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </modal>
+
+      <!-- <div class="press-contact">
       <div class="press-contact__press-container">
         <div class="press-contact__svg-container">
           <svg width="62px" height="62px" viewBox="0 0 62 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -327,8 +439,8 @@
         </div>
       </div>
     </div> -->
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -355,29 +467,31 @@ export default {
         {
           imageUrl: '/images/about-us/quality-innovation.jpg',
           heading: 'Quality & Innovation',
-          main: 'We invented the original portable blender so that you can make your favorite recipes beyond the confines of your kitchen. The ability to go anywhere and make anything without a cord has defined a new category and shaken up the industry. Our patented technologies deliver big blender performance on the go, along with unique, must-have features.'
+          main:
+            'We invented the original portable blender so that you can make your favorite recipes beyond the confines of your kitchen. The ability to go anywhere and make anything without a cord has defined a new category and shaken up the industry. Our patented technologies deliver big blender performance on the go, along with unique, must-have features.'
         },
         {
           imageUrl: '/images/about-us/nutrition.jpg',
           heading: 'Nutrition',
-          main: 'Enjoy delicious and nutritious smoothies on the fly and make more homemade. BlendJet can kick-start a weight loss journey or simply help you sneak more fruits and veggies into your daily diet. And it will keep you fueled with protein and healthy nutrients even when you don’t have access to a fridge or grocery store thanks to our innovative JetPack Ready-to-Blend smoothies.'
+          main:
+            'Enjoy delicious and nutritious smoothies on the fly and make more homemade. BlendJet can kick-start a weight loss journey or simply help you sneak more fruits and veggies into your daily diet. And it will keep you fueled with protein and healthy nutrients even when you don’t have access to a fridge or grocery store thanks to our innovative JetPack Ready-to-Blend smoothies.'
         },
         {
           imageUrl: '/images/about-us/drive-quality.jpg',
           heading: 'Service & Support',
-          main: 'We take great pride in handling product development, fulfillment and customer service in-house because we care about being directly connected to our customers. We built BlendJet by listening to our customers, and we strive to exceed your expectations.'
+          main:
+            'We take great pride in handling product development, fulfillment and customer service in-house because we care about being directly connected to our customers. We built BlendJet by listening to our customers, and we strive to exceed your expectations.'
         },
         {
           imageUrl: '/images/about-us/health-and-wellness.jpg',
           heading: 'Health & Wellness',
-          main: 'BlendJet is a lifestyle and it promises to make your life sweeter in so many ways. Whether your idea of wellness is chilling with a frozen margarita on a beach, an ice cream milkshake on the couch or a protein smoothie at the gym, we’re excited to serve up a product that helps you be the healthiest and happiest version of yourself. Whatever that means to you.'
+          main:
+            'BlendJet is a lifestyle and it promises to make your life sweeter in so many ways. Whether your idea of wellness is chilling with a frozen margarita on a beach, an ice cream milkshake on the couch or a protein smoothie at the gym, we’re excited to serve up a product that helps you be the healthiest and happiest version of yourself. Whatever that means to you.'
         }
       ],
 
       metaTitle: '',
       metaDescription: ''
-
-
     }
   },
   components: {
@@ -393,67 +507,62 @@ export default {
   mixins: [imageOptimize],
   methods: {
     openBioModal(i) {
-      this.openBio = i;
-      if(this.screenWidth > 768) {
+      this.openBio = i
+      if (this.screenWidth > 768) {
         this.$modal.show('bio-modal')
       } else {
         this.$modal.show('bio-modal-mobile')
       }
     },
     openDriveModal(i) {
-      this.openDrive = i;
+      this.openDrive = i
       this.$modal.show('drive-modal')
     },
 
     decrementDrive() {
-      if(this.openDrive === 0) {
+      if (this.openDrive === 0) {
         this.openDrive = this.driveContent.length - 1
       } else {
-        this.openDrive --
+        this.openDrive--
       }
     },
 
     incrementDrive() {
-      if(this.openDrive === this.driveContent.length - 1) {
+      if (this.openDrive === this.driveContent.length - 1) {
         this.openDrive = 0
       } else {
-        this.openDrive ++
+        this.openDrive++
       }
     },
 
     handleResize() {
-      this.screenWidth = window.innerWidth;
-    },
-
+      this.screenWidth = window.innerWidth
+    }
   },
   head() {
     let properties = {}
     let meta = []
     const mdescription = this.metaDescription
     const title = this.metaTitle
-    if(title.length) {
+    if (title.length) {
       properties.title = title
     }
 
-    if(mdescription.length) {
+    if (mdescription.length) {
       meta.push({
         hid: 'description',
         name: 'description',
         content: mdescription
       })
     }
-    
-    return {...properties, meta}
-    
+
+    return { ...properties, meta }
   },
   async asyncData() {
-    let ourStory = await client.getEntry('4RIljQvzSmaaa8i2QyfgTY')
-    .then(async (res) => {
-      console.log(res.fields)
+    let ourStory = await client.getEntry('4RIljQvzSmaaa8i2QyfgTY').then(async res => {
       let leadershipList = []
       for (const leadership of res.fields.leadership) {
-        await client.getEntry(leadership.sys.id)
-        .then(async (res) => {
+        await client.getEntry(leadership.sys.id).then(async res => {
           leadershipList.push(res)
         })
       }
@@ -465,9 +574,8 @@ export default {
   },
   async mounted() {
     const vm = this
-    await client.getEntry('4RIljQvzSmaaa8i2QyfgTY')
-    .then((res) => {
-      if ( res.fields.metaInfo ) {
+    await client.getEntry('4RIljQvzSmaaa8i2QyfgTY').then(res => {
+      if (res.fields.metaInfo) {
         this.metaTitle = res.fields.metaInfo.fields.metaTitle
         this.metaDescription = res.fields.metaInfo.fields.metaDescription
       }
@@ -483,28 +591,33 @@ export default {
   /*Organization schema*/
   jsonld() {
     return {
-        "@context": "http://www.schema.org",
-        "@type": "Organization",
-        "name": "BlendJet",
-        "url": "https://blendjet.com/",
-        "contactPoint": [{
-          "@type": "ContactPoint",
-          "contactType": "Customer Service",
-          "telephone": "+1 844-588-1555",
-          "email": "support@blendjet.com"
-      }],
-        "sameAs": [
-          "https://www.facebook.com/blendjet/",
-          "https://www.instagram.com/BlendJet/",
-          "https://twitter.com/BlendJet",
-          "https://www.pinterest.com/blendjet/",
-          "https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w"
-        ],
-        "logo": "https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844",
-        "image": "https://images.ctfassets.net/strhx3d94c40/1YTbF5tGizsjmmGtmDf7tx/c3593da25daef024771437dac2589dfb/BLENDJET-2-HERO-LANDSCAPE-CROP-BLACK.jpeg?w=2100",
-        "description": "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
+      '@context': 'http://www.schema.org',
+      '@type': 'Organization',
+      name: 'BlendJet',
+      url: 'https://blendjet.com/',
+      contactPoint: [
+        {
+          '@type': 'ContactPoint',
+          contactType: 'Customer Service',
+          telephone: '+1 844-588-1555',
+          email: 'support@blendjet.com'
+        }
+      ],
+      sameAs: [
+        'https://www.facebook.com/blendjet/',
+        'https://www.instagram.com/BlendJet/',
+        'https://twitter.com/BlendJet',
+        'https://www.pinterest.com/blendjet/',
+        'https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w'
+      ],
+      logo:
+        'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844',
+      image:
+        'https://images.ctfassets.net/strhx3d94c40/1YTbF5tGizsjmmGtmDf7tx/c3593da25daef024771437dac2589dfb/BLENDJET-2-HERO-LANDSCAPE-CROP-BLACK.jpeg?w=2100',
+      description:
+        "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
     }
-  },
+  }
 }
 </script>
 
@@ -577,7 +690,6 @@ export default {
 }
 
 .what-drives-us {
-
   h1 {
     font-family: Medium;
     font-size: 37px;
@@ -605,7 +717,6 @@ export default {
     text-align: center;
   }
 
-
   &__banner {
     height: 257px;
     display: flex;
@@ -623,7 +734,6 @@ export default {
       @include respond-to('small') {
         margin-bottom: 52px;
       }
-
     }
   }
 
@@ -679,7 +789,6 @@ export default {
 }
 
 .drive {
-
   &__container {
     background: $primary-purple-tint;
 
@@ -759,7 +868,14 @@ export default {
 }
 
 .our-journey {
-  background-image: linear-gradient(to bottom, #eeeeee, #6f6fc9 24%, #363996 53%, #1e90bb 77%, #c2e3f0 98%);
+  background-image: linear-gradient(
+    to bottom,
+    #eeeeee,
+    #6f6fc9 24%,
+    #363996 53%,
+    #1e90bb 77%,
+    #c2e3f0 98%
+  );
   display: flex;
   align-items: center;
   flex-flow: column nowrap;
@@ -834,7 +950,7 @@ export default {
         margin-bottom: 30px;
       }
 
-      &__heading  {
+      &__heading {
         font-family: Bold;
         font-size: 24px;
         line-height: 1.1;
@@ -873,7 +989,7 @@ export default {
       margin-bottom: 0px;
     }
 
-    &__img  {
+    &__img {
       object-fit: cover;
       object-position: center;
       @include respond-to('small') {
@@ -894,7 +1010,7 @@ export default {
       @include respond-to('small') {
         top: 135px;
         left: 0;
-        right:0;
+        right: 0;
         margin-left: auto;
         margin-right: auto;
         text-align: center;
@@ -971,7 +1087,6 @@ export default {
 }
 
 .leadership {
-
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -1023,7 +1138,6 @@ export default {
           height: 260px;
           width: 260px;
         }
-
       }
 
       &__name {
@@ -1099,7 +1213,7 @@ export default {
       position: absolute;
 
       @include respond-to('small') {
-        top:170px;
+        top: 170px;
         left: 0;
       }
     }
@@ -1208,7 +1322,6 @@ export default {
           display: block;
           border-radius: 12px;
         }
-
       }
 
       &__name {
@@ -1222,7 +1335,6 @@ export default {
     }
 
     &__mobile {
-
       &__top-row {
         display: flex;
         justify-content: space-evenly;
@@ -1240,7 +1352,6 @@ export default {
     }
   }
 }
-
 
 .press-contact {
   display: flex;
@@ -1310,7 +1421,6 @@ export default {
   }
 
   &__link {
-
   }
 }
 
@@ -1345,11 +1455,9 @@ export default {
 .fade-enter-active {
   animation: fadeIn;
   animation-duration: 0.6s;
-
 }
 .fade-leave-active {
   animation: fadeOut;
   animation-duration: 0.6s;
 }
-
 </style>

@@ -1,14 +1,21 @@
 <template>
   <div class="jetpack-container" v-if="product && jetpacks">
     <div class="text-block">
-      <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Add FREE JetPacks to Cart</a><br/> <span style="font-size: 75%;color:gold;">With Each BlendJet</span>
-    <br/>
-<span style="font-size: 75%;color:white;">Discount Applied at Checkout</span>  
-      
+      <a href="/products/jetpack-smoothies" style="color:white;"
+        >Add FREE JetPacks to Cart</a
+      ><br />
+      <span style="font-size: 75%;color:gold;">With Each BlendJet</span>
+      <br />
+      <span style="font-size: 75%;color:white;"
+        >Discount Applied at Checkout</span
+      >
     </div>
     <div class="jetpack-image">
-      <transition name="fade">
-        <img class="jetpack-image__img" :src="optimizeSource({url:varietyPack.media[0].src})"/>
+      <transition name="fade" v-if="varietyPack.media">
+        <img
+          class="jetpack-image__img"
+          :src="optimizeSource({ url: varietyPack.media[0].src })"
+        />
       </transition>
     </div>
     <div class="add-to-cart-controls">
@@ -21,7 +28,7 @@
           :productType="'jetpacks'"
         /> -->
       </div>
-<!--
+      <!--
       <div class="quantity-select">
         <div class="quantity-select__label">Quantity:</div> 
         <div class="quantity-select__dropdown-container">
@@ -33,13 +40,17 @@
       </div>
 -->
       <div class="add-to-cart-container" :class="buttonClass">
-        <div v-if="variety" class="variety-button" @click="addVarietyPackToCart">
-			<span v-if="this.subscriptionChecked" class="inner--text">	        
-	          {{ buttonSubscriptionText }}
-	        </span>
-	        <span v-else class="inner--text">
-	          {{ buttonText }}
-	        </span>
+        <div
+          v-if="variety"
+          class="variety-button"
+          @click="addVarietyPackToCart"
+        >
+          <span v-if="this.subscriptionChecked" class="inner--text">
+            {{ buttonSubscriptionText }}
+          </span>
+          <span v-else class="inner--text">
+            {{ buttonText }}
+          </span>
         </div>
         <!-- <SubscriptionAddToCartButton
           :product="product"
@@ -53,7 +64,13 @@
         /> -->
       </div>
       <div class="subscribe-select">
-        <Checkbox v-if="variety" :color="'white'" :initialCheck="false" :label="'Subscribe to Get All 6 Flavors for FREE'" @checked="handleCheck"/>
+        <Checkbox
+          v-if="variety"
+          :color="'white'"
+          :initialCheck="false"
+          :label="'Subscribe to Get All 6 Flavors for FREE'"
+          @checked="handleCheck"
+        />
         <!-- <SubscriptionSelect 
             v-if="jetpacks.length"
             :products="jetpacks"
@@ -61,9 +78,12 @@
             :metafields="product.metafields"
             :checkbox="true"
         /> -->
-       
       </div>
-      <div style="text-align: center;color:white;margin-bottom:10px;font-size:75%;padding-top:5px;">You can cancel anytime.</div> 
+      <div
+        style="text-align: center;color:white;padding-bottom:10px;font-size:75%;padding-top:5px;"
+      >
+        You can cancel anytime.
+      </div>
     </div>
   </div>
 </template>
@@ -75,7 +95,7 @@ import QuantityDropdown from '~/components/quantityDropdown'
 import imageOptimize from '~/mixins/imageOptimize'
 import SubscriptionToggle from '~/components/subscriptionToggle'
 import SubscriptionSelect from '~/components/subscriptionSelect'
-import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton';
+import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 
 import Axios from 'axios'
@@ -102,7 +122,8 @@ export default {
       defaultButtonSubscriptionText: 'Add 6 FREE JetPacks to Cart',
       buttonText: 'Add 3 FREE JetPacks to Cart',
       buttonSubscriptionText: 'Add 6 FREE JetPacks to Cart',
-      buttonClass:''
+      buttonClass: '',
+      varietyPack: {},
     }
   },
   components: {
@@ -116,24 +137,30 @@ export default {
   },
   mixins: [imageOptimize],
   async mounted() {
-    this.jetpacks = await this.$nacelle.data.collectionPage({ 
-      handle: 'jetpack-ready-to-blend-smoothies',
-      paginate: false,
-    }).then((results) => {
-      return results.filter((item) => {
-        return item.availableForSale
+    if (this.product) {
+      this.jetpacks = this.product.variants.filter(variant => {
+        return variant.availableForSale
       })
-    })
+    } else {
+      this.product = await this.$nacelle.data.product({
+        handle: 'jetpack-smoothies'
+      })
+
+      if (this.product && this.product.availableForSale) {
+        this.jetpacks = this.product.variants.filter(variant => {
+          return variant.availableForSale
+        })
+      }
+    }
+
     this.varietyPack = await this.$nacelle.data.product({
       handle: 'variety-jetpack-ready-to-blend-smoothie'
     })
 
     this.getDisplayPrice()
-
-    this.product = this.jetpacks[0]
   },
   methods: {
-     ...mapActions('cart', [
+    ...mapActions('cart', [
       'addLineItem',
       'removeLineItem',
       'incrementLineItem',
@@ -144,213 +171,217 @@ export default {
       return title.split('-')[0].trim()
     },
     updateJetpack(jetpack) {
-      this.product = jetpack;
+      this.product = jetpack
     },
     updateQuantity(newQuantity) {
       this.quantity = newQuantity
     },
     handleCheck(check) {
-      if(check) {
-        this.toggleSubscriptions(true)
+      if (check) {
         this.subscriptionChecked = true
-        this.displayPrice = (this.subUnitDisplayPrice * 6) 
+        this.displayPrice = this.subUnitDisplayPrice * 6
+        this.toggleSubscriptions(this.subscriptionChecked)
+        
       } else {
-        this.toggleSubscriptions(false)
         this.subscriptionChecked = false
-        this.displayPrice = (this.unitDisplayPrice * 6) 
+        this.displayPrice = this.unitDisplayPrice * 6
+        this.toggleSubscriptions(this.subscriptionChecked)
+        
       }
     },
     toggleSubscriptions(sub) {
-      if(sub) {
-        this.jetpacks.forEach((jetpack) => {
-          const rechargeFields = [
+      if (sub) {
+             const rechargeFields = [
             {
-              key: "charge_interval_frequency",
-              value: "30"
+              key: 'charge_interval_frequency',
+              value: '30'
             },
             {
-              key: "order_interval_frequency",
-              value: "30"
+              key: 'order_interval_frequency',
+              value: '30'
             },
             {
-              key: "order_interval_unit",
-              value: "day"
+              key: 'order_interval_unit',
+              value: 'day'
             }
           ]
-          let metafields = jetpack.metafields
+          let metafields = this.product.metafields
           let newMeta = metafields.concat(rechargeFields)
-          jetpack.metafields = newMeta
-        })
-        
+          this.product.metafields = newMeta
       } else {
-        this.jetpacks.forEach((jetpack) => {
-          const updatedMeta = jetpack.metafields.filter((metafield) => metafield.id === null)
-          jetpack.metafields = [...updatedMeta]
-        })
-
+         const updatedMeta = this.product.metafields.filter(
+            metafield => metafield.id === null
+          )
+          this.product.metafields = [...updatedMeta]
       }
-    }, 
-    decodeBase64VariantId (encodedId) {
+    },
+    decodeBase64VariantId(encodedId) {
       console.log('encodedId', encodedId)
       const decodedId = atob(encodedId)
       return decodedId.split('gid://shopify/ProductVariant/')[1]
     },
-    isSubscription (item) {
-      return !!item.metafields.find(meta => meta.key === 'charge_interval_frequency')
+    isSubscription(item) {
+      return !!item.metafields.find(
+        meta => meta.key === 'charge_interval_frequency'
+      )
     },
-    subscriptionVariant (item) {
+    subscriptionVariant(item) {
       // Deep clone object without references to state.
       const _variant = JSON.parse(JSON.stringify(item))
-      _variant.price = "2.99"
+      _variant.price = '2.99'
 
       return _variant
     },
-     discountVariantMap (item) {
-       const metafieldsObj = 
+    discountVariantMap(item) {
+      const metafieldsObj = item.metafields.reduce((obj, metafield) => {
+        const { namespace, key, value } = metafield
 
-          item.metafields.reduce((obj, metafield) => {
-          const { namespace, key, value } = metafield
-
-          if (obj[namespace]) {
-            obj[namespace][key] = value
-          } else {
-            obj[namespace] = {}
-            obj[namespace][key] = value
-          }
-          console.log('metaFieldsObj', obj)
-          return obj
-        }, {})
-      return JSON.parse(metafieldsObj.subscriptions.original_to_hidden_variant_map)
+        if (obj[namespace]) {
+          obj[namespace][key] = value
+        } else {
+          obj[namespace] = {}
+          obj[namespace][key] = value
+        }
+        return obj
+      }, {})
+      return JSON.parse(
+        metafieldsObj.subscriptions.original_to_hidden_variant_map
+      )
     },
 
     async getDisplayPrice() {
-      let variantId = atob(this.jetpacks[0].variants[0].id).split('/').pop()
-      const price = encodeURIComponent(JSON.stringify(
-          [
-            {
-              "Price": 2.99,
-              "Tag": variantId
-            },
-            {
-              "Price": 3.99,
-              "Tag": variantId
-            }
-          ]
-        ))
+      let variantId = atob(this.jetpacks[0].id)
+        .split('/')
+        .pop()
+      const price = encodeURIComponent(
+        JSON.stringify([
+          {
+            Price: 2.99,
+            Tag: variantId
+          },
+          {
+            Price: 3.99,
+            Tag: variantId
+          }
+        ])
+      )
 
-/*
+      /*
         const config = {
           method: 'get',
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
         }
 */
 
-		//START OF RYAN MOD to override currency
-       
-        //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
-		if(document.cookie.includes('_rchcur')){
-			var config = {
-			    method: 'get',
-			    url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=`+document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop()+`&MerchantPrices=${price}`,
-		    }
-		}
-		else {
-			var config = {
-		    	method: 'get',
-				url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
-		    }			
-		}
-		//END OF RYAN MOD
+      //START OF RYAN MOD to override currency
 
-        const localPrice = await Axios(config)
-          .then((res) => {
-            // console.log(res)
-            if(!res.data.ConsumerPrices[0]) {
-            } else {
-              this.symbol = res.data.Symbol
-              this.symbolDefault = res.data.Symbol;
-              		if(this.symbol == null){this.symbol = res.data.Currency}
-              this.subUnitDisplayPrice = res.data.ConsumerPrices[0]
-              this.unitDisplayPrice = res.data.ConsumerPrices[1]
-              this.subscriptionChecked ? this.displayPrice = this.subUnitDisplayPrice * 6 : this.displayPrice = this.unitDisplayPrice * 6
+      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      if (document.cookie.includes('_rchcur')) {
+        var config = {
+          method: 'get',
+          url:
+            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            document.cookie
+              .match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)')
+              .pop() +
+            `&MerchantPrices=${price}`
+        }
+      } else {
+        var config = {
+          method: 'get',
+          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+        }
+      }
+      //END OF RYAN MOD
+
+      const localPrice = await Axios(config)
+        .then(res => {
+          if (!res.data.ConsumerPrices[0]) {
+          } else {
+            this.symbol = res.data.Symbol
+            this.symbolDefault = res.data.Symbol
+            if (this.symbol == null) {
+              this.symbol = res.data.Currency
             }
-          })
-          .catch((res) => {
-            console.error('Currency Request Failed', res)
-            this.displayPrice = `$${this.variant.price}`
-          })
+            this.subUnitDisplayPrice = res.data.ConsumerPrices[0]
+            this.unitDisplayPrice = res.data.ConsumerPrices[1]
+            this.subscriptionChecked
+              ? (this.displayPrice = this.subUnitDisplayPrice * 6)
+              : (this.displayPrice = this.unitDisplayPrice * 6)
+          }
+        })
+        .catch(res => {
+          console.error('Currency Request Failed', res)
+          this.displayPrice = `$${this.variant.price}`
+        })
     },
     addVarietyPackToCart() {
-      
-      if(!this.subscriptionChecked){      
-      
-      this.jetpacks.slice(-3).forEach((jetpack) => {
-        
-        const variant = this.isSubscription(jetpack) ? this.subscriptionVariant(jetpack.variants[0]) : jetpack.variants[0]
-        const cartMeta = jetpack.metafields.filter((field) => {
-          return !field.id && field.id !== null
-        })
+      if (!this.subscriptionChecked) {
+        this.jetpacks.slice(-3).forEach(jetpack => {
+          const variant = this.isSubscription(this.product)
+            ? this.subscriptionVariant(jetpack)
+            : jetpack
+          const cartMeta = this.product.metafields.filter(field => {
+            return !field.id && field.id !== null
+          })
 
-        const lineItem = {
-          image: jetpack.featuredMedia,
-          title: jetpack.title,
-          variant,
-          quantity: 1 * this.quantity,
-          productId: jetpack.id,
-          handle: jetpack.handle,
-          vendor: jetpack.vendor,
-          tags: jetpack.tags,
-          metafields: cartMeta
-        }
-        this.addLineItem(lineItem);
-        this.buttonClass = 'clicked';
-        this.buttonText = 'Added!';
-        setTimeout( () => {
-          this.buttonText = this.defaultButtonText;
-          this.buttonClass = '';
-        },2000 );
-      })
-      
-      }
-      
-      if(this.subscriptionChecked){
-      
-      this.jetpacks.forEach((jetpack) => {
-        
-        const variant = this.isSubscription(jetpack) ? this.subscriptionVariant(jetpack.variants[0]) : jetpack.variants[0]
-        const cartMeta = jetpack.metafields.filter((field) => {
-          return !field.id && field.id !== null
+          const lineItem = {
+            image: jetpack.featuredMedia,
+            title: this.product.title,
+            variant,
+            quantity: 1 * this.quantity,
+            productId: this.product.id,
+            handle: this.product.handle,
+            vendor: this.product.vendor,
+            tags: this.product.tags,
+            metafields: cartMeta
+          }
+          this.addLineItem(lineItem)
+          this.buttonClass = 'clicked'
+          this.buttonText = 'Added!'
+          setTimeout(() => {
+            this.buttonText = this.defaultButtonText
+            this.buttonClass = ''
+          }, 2000)
         })
-
-        const lineItem = {
-          image: jetpack.featuredMedia,
-          title: jetpack.title,
-          variant,
-          quantity: 1 * this.quantity,
-          productId: jetpack.id,
-          handle: jetpack.handle,
-          vendor: jetpack.vendor,
-          tags: jetpack.tags,
-          metafields: cartMeta
-        }
-        this.addLineItem(lineItem);
-        this.buttonSubscriptionText = 'Added!';
-        this.buttonClass = 'clicked';
-        setTimeout( () => {
-          this.buttonSubscriptionText = this.defaultButtonSubscriptionText;
-          this.buttonClass = '';
-        },2000 );
-      })      
-      
       }
-      
+
+      if (this.subscriptionChecked) {
+        this.jetpacks.forEach(jetpack => {
+          const variant = this.isSubscription(this.product)
+            ? this.subscriptionVariant(jetpack)
+            : jetpack
+          const cartMeta = this.product.metafields.filter(field => {
+            return !field.id && field.id !== null
+          })
+
+          const lineItem = {
+            image: jetpack.featuredMedia,
+            title: this.product.title,
+            variant,
+            quantity: 1 * this.quantity,
+            productId: this.product.id,
+            handle: this.product.handle,
+            vendor: this.product.vendor,
+            tags: this.product.tags,
+            metafields: cartMeta
+          }
+          this.addLineItem(lineItem)
+          this.buttonSubscriptionText = 'Added!'
+          this.buttonClass = 'clicked'
+          setTimeout(() => {
+            this.buttonSubscriptionText = this.defaultButtonSubscriptionText
+            this.buttonClass = ''
+          }, 2000)
+        })
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
- .text-block {
+.text-block {
   font-family: Bold;
   font-size: 24px;
   line-height: 1.17;
@@ -361,7 +392,7 @@ export default {
   margin-bottom: 80px;
   padding-right: 55px;
   padding-left: 55px;
-   @include respond-to('small') {
+  @include respond-to('small') {
     font-size: 16px;
     margin-bottom: 15px;
     padding-top: 15px;
@@ -376,7 +407,7 @@ export default {
 }
 
 .variety-button {
-  @include button-primary('white')
+  @include button-primary('white');
 }
 
 .jetpack-image {
@@ -452,7 +483,7 @@ export default {
 }
 
 .clicked {
-    opacity: .7;
-    transition: 0.5s ease;
-  }
+  opacity: 0.7;
+  transition: 0.5s ease;
+}
 </style>

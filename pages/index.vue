@@ -24,30 +24,28 @@
       <div class="section__hero-banner__media" >
         <div class="section__hero-banner__media__desktop" >
           <video class="section__hero-banner__media__desktop__video" v-if="loaded" autoplay="autoplay" loop="loop" muted="" webkit-playsinline="" playsinline="">
-            <source :src="videos.desktopHeroVideo" type="video/mp4">
+            <source :src="externalDesktopVideoUrl" type="video/mp4">
           </video>
         </div>
         <div class="section__hero-banner__media__mobile" >
           <video class="section__hero-banner__media__mobile__video" v-if="loaded" autoplay="autoplay" loop="loop" muted="" webkit-playsinline="" playsinline="">
-            <source :src="videos.mobileHeroVideo" type="video/mp4">
+            <source :src="externalMobileVideoUrl" type="video/mp4">
           </video>
         </div>
 
       </div>
     </div>
-    	  <!-- START BFCM -->
-<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
-		<div class="canvas-bfcm">
-			<div class="col-bfcm">
-				<span class="entry-title-bfcm">Spring Sale</span>
-				<span class="content-split-element-bfcm">Free JetPack Smoothies</span>
-				
-				
-				<span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
-			</div>
-		</div>
-	</div>
-<!-- END BFCM -->
+    <!-- START BFCM -->
+    <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+      <div class="canvas-bfcm">
+        <div class="col-bfcm">
+          <span class="entry-title-bfcm">Spring Sale</span>
+          <span class="content-split-element-bfcm">Free JetPack Smoothies</span>
+          <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
+        </div>
+      </div>
+    </div> -->
+    <!-- END BFCM -->
       <div class="section section__as-seen-on">
         <Ticker type="asSeenOn"/>
       </div>
@@ -57,12 +55,6 @@
       <div class="section section__free-shipping" >
         <FreeShippingMarquee />
       </div>
-
-        <div class="section section__jetpacks"  >
-          <transition name="fade">
-             <JetpacksProtein  />
-           </transition>
-        </div>
 
         <div class="section section__jetpacks"  >
           <transition name="fade">
@@ -86,7 +78,6 @@
               <picture>
                 <img class="section__recipes__explore__image" :src="optimizeSource({url: `${images.blendEndlessly}?w=800`})" alt="BlendJet 2 - The Portable Blender in different colors">
               </picture>
-            
               <div class="section__recipes__explore__content">
                 <div class="section__recipes__explore__content__text">
                   Blend
@@ -111,9 +102,8 @@
 <script>
 import nmerge from 'nuxt-merge-asyncdata'
 import getPage from '~/mixins/getPage'
-import { mapMutations, mapGetters } from 'vuex'
+import { mapMutations } from 'vuex'
 import getCollection from '~/mixins/getCollection'
-import localforage from 'localforage'
 import PageContent from '~/components/nacelle/PageContent'
 import Ticker from '~/components/ticker'
 import debounce from 'lodash.debounce'
@@ -121,14 +111,13 @@ import JetpacksProtein from '~/components/jetpacksProtein'
 import Jetpacks from '~/components/jetpacks'
 import Jetsetter from '~/components/jetsetter'
 import RecipesList from '~/components/recipes-list'
-const Instagram = () => import ('~/components/instagram')
 import BlendJetDemo from '~/components/blendjetDemo'
 import imageOptimize from '~/mixins/imageOptimize'
 import FreeShippingMarquee from '~/components/freeShippingMarquee'
 
 import { createClient } from '~/plugins/contentful.js'
+const Instagram = () => import('~/components/instagram')
 const client = createClient()
-
 
 export default nmerge({
   data() {
@@ -164,37 +153,30 @@ export default nmerge({
   },
 
   head() {
-    let properties = {}
-    let meta = []
+    const properties = {}
+    const meta = []
     const mdescription = this.metaDescription
     const title = this.metaTitle
-    if(title.length) {
+    if (title.length) {
       properties.title = title
     }
 
-    if(mdescription.length) {
+    if (mdescription.length) {
       meta.push({
         hid: 'description',
         name: 'description',
         content: mdescription
       })
     }
-    
-    return {...properties, meta}
-    
+
+    return { ...properties, meta }
   },
   async asyncData() {
     // hard reference hero image for now
     const demoImg = await client.getAsset('2826IGPC4SeJ3ZxguhTAZ4')
-    .then((val) => {
-      if (val.fields) {
-        return val.fields.file.url
-      }
-    })
+      .then(val => val.fields?.file.url)
+
     return { demoImg }
-
-
-
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
@@ -203,7 +185,7 @@ export default nmerge({
     },
 
     setWindowSize() {
-      this.screenWidth = window.innerWidth;
+      this.screenWidth = window.innerWidth
     },
 
     scrollLoad() {
@@ -211,92 +193,93 @@ export default nmerge({
     },
     handleScroll(event) {
       this.scrollY = window.scrollY
-      if(this.screenWidth <= 768) {
-        if(this.scrollY >= 911) {
-          this.jetpackLoaded = true;
+      if (this.screenWidth <= 768) {
+        if (this.scrollY >= 911) {
+          this.jetpackLoaded = true
         }
       }
 
-      if(this.screenWidth > 768) {
-        if(this.scrollY >= 1281) {
-          this.jetpackLoaded = true;
+      if (this.screenWidth > 768) {
+        if (this.scrollY >= 1281) {
+          this.jetpackLoaded = true
         }
       }
     },
     mountScrollWatch() {
-      this.handleDebouncedScroll = debounce(this.handleScroll, 0);
+      this.handleDebouncedScroll = debounce(this.handleScroll, 0)
       window.addEventListener('scroll', this.handleDebouncedScroll, {
         passive: true
-      });
+      })
     },
     removeScrollWatch() {
       window.removeEventListener('scroll', this.handleDebouncedScroll)
-    },
+    }
   },
   async mounted() {
-    if(process.client) {
+    if (process.client) {
       this.setWindowSize()
       this.handleScroll()
       this.mountScrollWatch()
       this.client = createClient()
 
       await this.client.getEntry('YvRGvKeTPPzBNES6g7Hle')
-          .then((entry) => {
-            entry.fields.blnPageImages.forEach((node) => {
-              this.images[node.fields.title] = `${node.fields.file.url}`;
-            })
+        .then(entry => {
+          this.metaTitle = entry.fields.metaTitle
+          this.metaDescription = entry.fields.metaDescription
+          this.externalDesktopVideoUrl = entry.fields.externalDesktopVideoUrl
+          this.externalMobileVideoUrl = entry.fields.externalMobileVideoUrl
 
-            this.metaTitle = entry.fields.metaTitle
-            this.metaDescription = entry.fields.metaDescription
-
-            entry.fields.blnPageVideos.forEach((node) => {
-              this.videos[node.fields.title] = `${node.fields.file.url}`;
-            })
-            this.loaded = true;
+          entry.fields.blnPageImages.forEach((node) => {
+            this.images[node.fields.title] = `${node.fields.file.url}`
           })
-     
-      window.onresize =  this.setWindowSize();
 
-      if(this.$route.query && this.$route.query.cart) {
+          entry.fields.blnPageVideos.forEach((node) => {
+            this.videos[node.fields.title] = `${node.fields.file.url}`
+          })
+
+          this.loaded = true
+        })
+
+      window.onresize = this.setWindowSize()
+
+      if (this.$route.query && this.$route.query.cart) {
         this.showCart()
       }
-      
     }
   },
 
   beforeDestory() {
-    window.onresize = null;
+    window.onresize = null
     this.removeScrollWatch()
   },
   jsonld() {
-      return {
-          "@context": "http://www.schema.org",
-          "@type": "Organization",
-          "name": "BlendJet",
-          "url": "https://blendjet.com/",
-          "contactPoint": [{
-            "@type": "ContactPoint",
-            "contactType": "Customer Service",
-            "telephone": "+1 844-588-1555",
-            "email": "support@blendjet.com"
-        }],
-          "sameAs": [
-            "https://www.facebook.com/blendjet/",
-            "https://www.instagram.com/BlendJet/",
-            "https://twitter.com/BlendJet",
-            "https://www.pinterest.com/blendjet/",
-            "https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w"
-          ],
-          "logo": "https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844",
-          "image": "https://images.ctfassets.net/strhx3d94c40/1YTbF5tGizsjmmGtmDf7tx/c3593da25daef024771437dac2589dfb/BLENDJET-2-HERO-LANDSCAPE-CROP-BLACK.jpeg?w=2100",
-          "description": "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
-      }
+    return {
+      "@context": "http://www.schema.org",
+      "@type": "Organization",
+      "name": "BlendJet",
+      "url": "https://blendjet.com/",
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "contactType": "Customer Service",
+        "telephone": "+1 844-588-1555",
+        "email": "support@blendjet.com"
+      }],
+      "sameAs": [
+        "https://www.facebook.com/blendjet/",
+        "https://www.instagram.com/BlendJet/",
+        "https://twitter.com/BlendJet",
+        "https://www.pinterest.com/blendjet/",
+        "https://www.youtube.com/channel/UCYCxpRsXpNh2REeyATMo_8w"
+      ],
+      "logo": "https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844",
+      "image": "https://images.ctfassets.net/strhx3d94c40/1YTbF5tGizsjmmGtmDf7tx/c3593da25daef024771437dac2589dfb/BLENDJET-2-HERO-LANDSCAPE-CROP-BLACK.jpeg?w=2100",
+      "description": "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
+    }
   },
   mixins: [
     getPage({ pageHandle: 'homepage' }),
     getCollection({ collectionHandle: 'homepage' }),
-    imageOptimize,
-    // getProduct({})
+    imageOptimize
   ]
 })
 </script>

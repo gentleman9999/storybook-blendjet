@@ -25,11 +25,7 @@ export default {
         field.namespace === namespace && field.key === key
       ))
 
-      if (metafield) {
-        return metafield.value
-      }
-
-      return undefined
+      return metafield?.value
     }
   }
 }
