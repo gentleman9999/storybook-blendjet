@@ -13,9 +13,12 @@
       <div class="container"> -->
     <!-- <transition name="fade"> -->
     <!-- <template v-if="product"> -->
-    <div v-if="page && page.fields.productAnnouncement" class="">
-      <div v-html="productAnnouncement" class="product-productAnnouncement"></div>
-    </div>
+    <!--
+      Temporarily removing as part of release 1.1.0
+      <div v-if="page && page.fields.productAnnouncement" class="">
+        <div v-html="productAnnouncement" class="product-productAnnouncement"></div>
+      </div>
+    -->
     <transition name="fade">
       <BlendjetPDP
         v-cloak
