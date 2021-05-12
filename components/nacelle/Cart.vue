@@ -27,7 +27,7 @@
       <transition name="fade">
         <div v-if="!isMobile" style="z-index: 100000000;">
           <div
-            style="position: fixed;width:446px;background-color: #000000;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
+            style="position: fixed;width:446px;background-color: #1e90bb;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
             class="ipadFix"
           >
             <div style="margin: 0 auto; text-align: center;">MUST HAVES</div>
