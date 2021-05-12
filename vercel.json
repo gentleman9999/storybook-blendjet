@@ -1413,6 +1413,26 @@
       "permanent": true
     },
     {
+      "source": "/harpers",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Harpers&discount=harpers",
+      "permanent": true
+    },
+    {
+      "source": "/mens",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Mens&discount=mens",
+      "permanent": true
+    },
+    {
+      "source": "/Harpers",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Harpers&discount=harpers",
+      "permanent": true
+    },
+    {
+      "source": "/Mens",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Mens&discount=mens",
+      "permanent": true
+    },
+    {
       "source": "/allure",
       "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=allure&discount=allure",
       "permanent": true
