@@ -27,10 +27,10 @@
       <transition name="fade">
         <div v-if="!isMobile" style="z-index: 100000000;">
           <div
-            style="position: fixed;width:446px;background-color: #E295C1;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
+            style="position: fixed;width:446px;background-color: #1e90bb;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
             class="ipadFix"
           >
-            <div style="margin: 0 auto; text-align: center;">SPRING SALE</div>
+            <div style="margin: 0 auto; text-align: center;">MUST HAVES</div>
           </div>
 
           <div
@@ -42,14 +42,14 @@
                 <JetpackCartUpsell
                   product-handle="jetpack-protein-smoothie"
                   title="Try JetPack Protein Smoothies"
-                  subtitle="6 ready-to-blend Smoothies"
+                  subtitle="6 Ready-to-Blend Smoothies"
                 />
               </div>
               <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
                 <JetpackCartUpsell
                   product-handle="jetpack-smoothies"
                   title="Try JetPack Smoothies"
-                  subtitle="6 ready-to-blend Smoothies"
+                  subtitle="6 Ready-to-Blend Smoothies"
                 />
               </div>
               <div class="mobile-upsell__blendjet" style="height: unset;">
@@ -122,9 +122,9 @@
       <transition name="fade">
         <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
           <div
-            style="position: fixed;width:377px;background-color: #E295C1;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
+            style="position: fixed;width:377px;background-color: #000000;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
           >
-            <div style="margin: 0 auto; text-align: center;">SPRING SALE</div>
+            <div style="margin: 0 auto; text-align: center;">MUST HAVES</div>
           </div>
           <div class="mobile-upsell__container">
             <div
@@ -139,14 +139,14 @@
                 <JetpackCartUpsell
                   product-handle="jetpack-protein-smoothie"
                   title="Try JetPack Protein Smoothies"
-                  subtitle="6 ready-to-blend Smoothies"
+                  subtitle="6 Ready-to-Blend Smoothies"
                 />
               </div>
               <div class="mobile-upsell__jetpacks">
                 <JetpackCartUpsell
                   product-handle="jetpack-smoothies"
                   title="Try JetPack Smoothies"
-                  subtitle="6 ready-to-blend Smoothies"
+                  subtitle="6 Ready-to-Blend Smoothies"
                 />
               </div>
               <div class="mobile-upsell__blendjet">
