@@ -125,7 +125,7 @@
         <div class="mobile-menu__body">
           <div class="mobile-menu__nav-links">
             <nuxt-link @click.native="handleCloseMenu" to="/products/blendjet-2"> BlendJet 2</nuxt-link>
-            <nuxt-link @click.native="handleCloseMenu" to="/products/banana-blueberry-jetpack-ready-to-blend-smoothie">Jetpacks</nuxt-link>
+            <nuxt-link @click.native="handleCloseMenu" to="/products/banana-blueberry-jetpack-ready-to-blend-smoothie">JetPacks</nuxt-link>
             <n-link @click.native="handleCloseMenu" to="/recipes">Recipes</n-link>
             <nuxt-link @click.native="handleCloseMenu" to="/user-guide/blendjet-2">User Guide</nuxt-link>
             <nuxt-link @click.native="handleCloseMenu" to="/our-story">Our Story</nuxt-link>
@@ -213,7 +213,7 @@ export default {
       screenWidth: 0,
       logoFill: '#373975',
       jetpackMenuVisible: false,
-      freeShippingMessage: "SPRING SALE - FREE S&H & JETPACKS",
+      freeShippingMessage: "FREE EXPRESS SHIPPING",
       navColor: 'white',
       scrollY: 0,
       scrollTarget: 200,
@@ -314,7 +314,7 @@ export default {
         const localPrice = await Axios(config)
           .then((res) => {
             if(res.data.Country !== 'US') {
-              this.freeShippingMessage = "SPRING SALE + FREE WORLDWIDE S&H"
+              this.freeShippingMessage = "FREE WORLDWIDE SHIPPING"
               localStorage.setItem('ww', 'true')
             } else {
               localStorage.setItem('ww', 'false')
