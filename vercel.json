@@ -323,6 +323,16 @@
       "permanent": true
     },
     {
+      "source": "/ppcprotectvip",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=PPCProtectVIP&utm_source=PPCProtectVIP&utm_content=PPCProtectVIP&discount=PPCProtect",
+      "permanent": true
+    },
+    {
+      "source": "/PPCProtectVIP",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=PPCProtectVIP&utm_source=PPCProtectVIP&utm_content=PPCProtectVIP&discount=PPCProtect",
+      "permanent": true
+    },
+    {
       "source": "/Bundle",
       "destination": "/collections/jetpack-ready-to-blend-smoothies",
       "permanent": true
