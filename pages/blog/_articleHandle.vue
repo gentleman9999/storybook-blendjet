@@ -165,9 +165,8 @@ export default nmerge({
 
 <style lang="scss" scoped>
 .article-page {
-  margin-top: 100px;
+  margin-top: 5px;
   // background-image: linear-gradient(to bottom, #ffffff, #f6f5fd);
-
 }
 
 .article-hero {
@@ -201,18 +200,14 @@ export default nmerge({
     align-items: center;
     text-align: center;
     padding: 60px 0 52px 0;
-    // height: 410px;
-    // padding-top: 60px;
     background-color: $primary-purple-tint;
 }
 
 .article .container {
   position: relative;
-  // margin-top: -3rem;
   padding: 2rem;
   padding-bottom: 5rem;
   background-color: #ffffff;
-  border: 1px solid #f5f5f5;
   max-width: 1024px;
 }
 

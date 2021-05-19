@@ -14,6 +14,7 @@
           <img class="blog__hero-banner__image-container__img" :src="optimizeSource({url:heroUrl})" />
         </picture>
       </div>
+      
       <div class="blog__hero-banner__text">
         Blendjet Blog
       </div>
@@ -23,10 +24,14 @@
         <div class="blog__filters__filter">
         </div>
         <div class="blog__filters__filter">
+          
         </div>
       </div>
       <div class="blog__filters__right">
         <div class="blog__filters__filter">
+          <!-- <input v-on:keyup="updatePosts" placeholder="search..."> -->
+          <input v-model="search" placeholder="search..." class="search-box">
+          <svg width="25px" height="27px" viewBox="0 0 25 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-v-3864c2aa=""><g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" data-v-3864c2aa=""><g id="D_Nav-White-Sticky" transform="translate(-1276.000000, -23.000000)" stroke="black" stroke-width="1.5" data-v-3864c2aa=""><g id="Search" transform="translate(1277.000000, 24.000000)" data-v-3864c2aa=""><path d="M8.5,17 C13.1944204,17 17,13.1944204 17,8.5 C17,3.80557963 13.1944204,0 8.5,0 C3.80557963,0 0,3.80557963 0,8.5 C0,13.1944204 3.80557963,17 8.5,17 Z M15.5,14.5 L23.2603795,21.1774074" id="Combined-Shape" data-v-3864c2aa=""></path></g></g></g></svg>
         </div>
       </div>
     </div>
@@ -35,6 +40,7 @@
         <article-preview
           :title="featuredArticle.title || ''"
           :handle="featuredArticle.handle || ''"
+          :description="featuredArticle.description || ''"
           :excerpt="featuredArticle.excerpt || ''"
           :tags="featuredArticle.tags"
           :featured-media="featuredArticle.featuredMedia"
@@ -43,13 +49,52 @@
           :path-fragment="`/${$route.name}/`"
         />
       </div>
-      <div class="section preview-grid">
-        <!-- <div class="container">
-          <div class="columns is-multiline"> -->
+
+      <div v-if="nextFeaturedArticle" class="blog-feature">
+        <article-preview
+          :title="nextFeaturedArticle.title || ''"
+          :handle="nextFeaturedArticle.handle || ''"
+          :description="nextFeaturedArticle.description || ''"
+          :excerpt="nextFeaturedArticle.excerpt || ''"
+          :tags="nextFeaturedArticle.tags"
+          :featured-media="nextFeaturedArticle.featuredMedia"
+          :is-featured="true"
+          :is-reversed="true"
+          :publishDate="nextFeaturedArticle.publishDate"
+          :path-fragment="`/${$route.name}/`"
+        />
+      </div>
+
+      
+
+      
+          <div class="blog-feature columns is-multiline" style="padding: 50px 45px;">
+            <div
+              v-for="article in largeThumbnailArticles"
+              :key="article.id"
+              class="column"
+            >
+              <article-preview
+                :title="article.title || ''"
+                :handle="article.handle || ''"
+                :excerpt="article.excerpt || ''"
+                :tags="article.tags"
+                :publishDate="article.publishDate"
+                :featured-media="article.featuredMedia"
+                :path-fragment="`/${$route.name}/`"
+                :is-large-thumbnail="true"
+              />
+          </div>
+        </div>
+
+      <div class="preview-grid">
+        <!-- <div class="container">-->
+          <div class="columns is-multiline">
             <div
               v-for="article in filteredArticles"
               :key="article.id"
-
+              class="column"
+              :class="[search == '' ? articleGrid : 'is-half']"
             >
               <article-preview
                 :title="article.title || ''"
@@ -60,8 +105,8 @@
                 :featured-media="article.featuredMedia"
                 :path-fragment="`/${$route.name}/`"
               />
-            <!-- </div>
-          </div> -->
+          </div>
+          <!-- </div> -->
           <observe-emitter v-on:observe="fetchMore" />
         </div>
       </div>
@@ -89,10 +134,27 @@ export default {
   ],
   data() {
     return {
-      heroUrl: null
+      heroUrl: null,
+      search: '',
+      blogPosts: [],
+      articleGrid: 'is-one-quarter',
     }
   },
+  methods: {
+    compare(a, b) {
+      if (a.publishDate > b.publishDate)
+        return -1;
+      if (a.publishDate < b.publishDate)
+        return 1;
+      return 0;
+    },
 
+    setWidthData() {
+      if(window.innerWidth < 1024) {
+        this.articleGrid = 'is-full';
+      }
+    },
+  },
   computed: {
     ...mapGetters('space', ['getMetatag']),
     blogProducts() {
@@ -103,15 +165,45 @@ export default {
       return null
     },
     featuredArticle() {
-      if (this.articles.length > 0) {
-        return this.articles[0]
+      if(this.search == ''){
+        if (this.blogPosts.length > 0) {
+          console.log(this.blogPosts.length);
+          //let lastIndex = this.blogPosts.length - 1;
+          return this.blogPosts[0]
+        }
+      }
+      return null
+    },
+    nextFeaturedArticle() {
+      if(this.search == ''){
+        if (this.blogPosts.length > 0) {
+          //let lastIndex = this.blogPosts.length - 2;
+          return this.blogPosts[1]
+        }
+      }
+
+      return null
+    },
+    largeThumbnailArticles() {
+      if(this.search == ''){
+        if (this.blogPosts.length > 0) {
+          //let lastIndex = this.blogPosts.length - 2;
+          const copy  = [...this.blogPosts];
+          return copy.slice(2,4);
+        }
       }
 
       return null
     },
     filteredArticles() {
-      const copy = [...this.articles]
-      return copy.splice(1, copy.length - 1)
+      const copy = [...this.blogPosts]
+      return copy.splice(4, copy.length - 4).filter(item => {
+            let byTitle =
+              item.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
+            if (byTitle === true) {
+              return byTitle;
+            } 
+          });
     }
   },
   async mounted() {
@@ -121,6 +213,14 @@ export default {
     console.log('blog handle');
     console.log(this.$route.name);
     console.log('articles', this.articles)
+    this.blogPosts = [...this.articles.sort(this.compare)];
+
+    this.setWidthData()
+    window.addEventListener('resize', function() {
+      if(window.innerWidth < 1024) {
+        this.articleGrid = 'is-full';
+      }
+      })
   },
   head() {
     const properties = {}
@@ -149,17 +249,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.columns /deep/ .article-preview {
-  // padding: 1rem;
-  // border: 1px solid #f5f5f5;
-}
-
 .blog-feature {
   background-color: #f6f6f6;
 }
 
 .blog {
-  margin-top: 100px;
+  margin-top: 5px;
 
   &__hero-banner {
     position: relative;
@@ -178,6 +273,10 @@ export default {
       letter-spacing: 10px;
       color: $grayscale-white;
       text-transform: uppercase;
+      @include respond-to('small') {
+        font-size: 27px;
+        font-weight: bold;
+      }
     }
 
     &__image-container {
@@ -186,8 +285,18 @@ export default {
       &__img {
         object-fit: cover;
         object-position: center;
-        height: 400px;
+        height: 540px;
         width: 100%;
+        @media screen and (max-width: 1024px) {
+          object-fit: contain 100% 100%;
+          height: 300px;
+        }
+        @media screen and (max-width: 540px) {
+          object-fit: contain 100% 100%;;
+          height: 250px;
+        }
+        
+        
       }
     }
   }
@@ -197,15 +306,45 @@ export default {
 
   }
 }
+.search-box {
+  border: 1px solid #ccc;
+}
 
 .preview-grid {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row;
   padding:0;
   background-color: $grayscale-white;
   padding: 0 30px;
   @include respond-to('small') {
     padding: 0 20px;
   }
+}
+.preview-grid .columns {
+  //margin: 0 auto;
+  width:100%;
+  padding-top: 30px;
+}
+
+
+.blog__filters__right{
+  float: right;
+  width: 20%;
+  margin-top: 7px;
+  @include respond-to('small') {
+    padding: 0 20px;
+    width: 60%;
+  }
+}
+
+.blog__filters__right input{
+   border-radius: 20px;
+   padding: 10px 20px;
+   width: 80%;
+}
+
+.blog__filters__right svg{
+   margin-left: -40px;
+   padding-top: 15px;
 }
 </style>
