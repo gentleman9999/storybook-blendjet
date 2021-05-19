@@ -1986,6 +1986,31 @@
       "source": "/BBB",
       "destination": "https://www.bedbathandbeyond.com/store/product/blendjet-reg-blendjet-2-portable-16-oz-blender/5541084",
       "permanent": true
+    },
+    {
+      "source": "/blogs/news",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/recipes/rum-punch",
+      "destination": "/recipes/citrus-rum-punch",
+      "permanent": true
+    },
+    {
+      "source": "/recipes/blendjet-recipe-jen-selters-homemade-hummus",
+      "destination": "/recipes/jen-selters-homemade-hummus",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/recipes/spring-citrus-salad-dressing",
+      "destination": "/recipes/citrus-salad-dressing",
+      "permanent": true
+    },
+    {
+      "source": "/recipes/spring-citrus-salad-dressing",
+      "destination": "/recipes/citrus-salad-dressing",
+      "permanent": true
     }
   ]
 }
