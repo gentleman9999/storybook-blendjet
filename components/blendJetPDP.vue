@@ -805,8 +805,21 @@
                 Blend your favorite smoothies, shakes, margaritas, or baby food
                 without the limitations of a regular blender - whenever,
                 wherever you want!
+              </div>             
+              <div v-if="['blendjet-one'].includes(product.handle)" class="media-content__main__details__specs__list">
+                <ul>
+                  <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
+                  <li>Product Weight: 1 lb (.45 kg)</li>
+                  <li>12 oz Jar (475 mL)</li>
+                  <li>10+ Blends Per 1 Hour Charge</li>
+                  <li>Micro-USB Port</li>
+                  <li>2000 mAh Rechargeable Battery</li>
+                  <li>7.4V Electric Motor</li>
+                  <li>6-Point Stainless Steel Blade</li>
+                  <li>Durable Built-In Carrying Strap</li>
+                </ul>
               </div>
-              <div class="media-content__main__details__specs__list">
+              <div v-else class="media-content__main__details__specs__list">
                 <ul>
                   <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
                   <li>Product Weight: 1.34 lb (.61 kg)</li>
@@ -818,7 +831,7 @@
                   <li>6-Point Stainless Steel Blade</li>
                   <li>Durable Built-In Carrying Strap</li>
                 </ul>
-              </div>
+              </div>              
             </div>
           </div>
         </div>

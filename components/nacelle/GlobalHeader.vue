@@ -125,7 +125,7 @@
         <div class="mobile-menu__body">
           <div class="mobile-menu__nav-links">
             <nuxt-link @click.native="handleCloseMenu" to="/products/blendjet-2"> BlendJet 2</nuxt-link>
-            <nuxt-link @click.native="handleCloseMenu" to="/products/banana-blueberry-jetpack-ready-to-blend-smoothie">JetPacks</nuxt-link>
+            <nuxt-link @click.native="handleCloseMenu" to="/products/jetpack-smoothies">JetPacks</nuxt-link>
             <n-link @click.native="handleCloseMenu" to="/recipes">Recipes</n-link>
             <nuxt-link @click.native="handleCloseMenu" to="/user-guide/blendjet-2">User Guide</nuxt-link>
             <nuxt-link @click.native="handleCloseMenu" to="/our-story">Our Story</nuxt-link>

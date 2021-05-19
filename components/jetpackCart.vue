@@ -1,7 +1,7 @@
 <template>
   <div class="jetpack-container" v-if="product && jetpacks">
     <div class="text-block">
-      <a href="/products/banana-blueberry-jetpack-ready-to-blend-smoothie" style="color:white;">Try JetPack Variety Pack</a><br/> <span style="font-size: 75%;color:gold;">6 Ready-to-Blend Smoothies</span>
+      <a href="/products/jetpack-smoothies" style="color:white;">Try JetPack Variety Pack</a><br/> <span style="font-size: 75%;color:gold;">6 Ready-to-Blend Smoothies</span>
     </div>
     <div class="jetpack-image">
       <transition name="fade">
