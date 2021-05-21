@@ -160,7 +160,8 @@ export default {
         background: '#fff',
         border: 'none',
         border: '1px solid #fff'
-      }
+      },
+      backdoor: 0,
     }
   },
   methods: {
@@ -188,6 +189,7 @@ export default {
       return null
     },
     featuredArticle() {
+      this.backdoor;
       if(this.search == ''){
         if (this.blogPosts.length > 0) {
           console.log(this.blogPosts.length);
@@ -230,8 +232,7 @@ export default {
     }
   },
   async mounted() {
-  this._computedWatchers.featuredArticle.run();
-   this.$forceUpdate();
+    this.backdoor++;
     const client = createClient()
     const asset = await client.getAsset('3QDrYYQGdBtjLI4VQo1PBH')
     this.heroUrl = `https:${asset.fields.file.url}`
