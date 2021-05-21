@@ -134,6 +134,7 @@ import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 import imageOptimize from '~/mixins/imageOptimize'
 import { createClient } from '~/plugins/contentful.js'
 
+
 export default {
   components: {
     ArticlePreview,
@@ -229,8 +230,8 @@ export default {
     }
   },
   async mounted() {
-    //this._computedWatchers.featuredArticle.run();
-     // this.$forceUpdate();
+  this._computedWatchers.featuredArticle.run();
+   this.$forceUpdate();
     const client = createClient()
     const asset = await client.getAsset('3QDrYYQGdBtjLI4VQo1PBH')
     this.heroUrl = `https:${asset.fields.file.url}`
