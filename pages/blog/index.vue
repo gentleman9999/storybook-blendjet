@@ -49,7 +49,7 @@
 
     -->
     <!-- <div class="blog__preview-container"> -->
-      <div v-if="featuredArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
+      <div v-if="featuredArticle" :key="featuredArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
           :title="featuredArticle.title || ''"
           :handle="featuredArticle.handle || ''"
@@ -63,7 +63,7 @@
         />
       </div>
 
-      <div v-if="nextFeaturedArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
+      <div v-if="nextFeaturedArticle" :key="nextFeaturedArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
           :title="nextFeaturedArticle.title || ''"
           :handle="nextFeaturedArticle.handle || ''"
