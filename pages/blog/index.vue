@@ -10,7 +10,7 @@
   <div class="blog">
     <div class="blog__hero-banner">
       <div class="blog__hero-banner__image-container">
-        <picture>
+        <picture :style="search == '' ? pictureStyle : pictureBgWhite">
           <img class="blog__hero-banner__image-container__img" :src="optimizeSource({url:heroUrl})" />
         </picture>
       </div>
@@ -18,25 +18,38 @@
       <div class="blog__hero-banner__text">
         Blendjet Blog
       </div>
+
+        <div class="blog__filters">
+          <div class="blog__filters__right">
+            <div class="blog__filters__filter">
+              <!-- <input v-on:keyup="updatePosts" placeholder="search..."> -->
+              <input v-model="search" placeholder="search..." class="search-box">
+              <svg width="25px" height="27px" viewBox="0 0 25 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-v-3864c2aa=""><g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" data-v-3864c2aa=""><g id="D_Nav-White-Sticky" transform="translate(-1276.000000, -23.000000)" stroke="black" stroke-width="1.5" data-v-3864c2aa=""><g id="Search" transform="translate(1277.000000, 24.000000)" data-v-3864c2aa=""><path d="M8.5,17 C13.1944204,17 17,13.1944204 17,8.5 C17,3.80557963 13.1944204,0 8.5,0 C3.80557963,0 0,3.80557963 0,8.5 C0,13.1944204 3.80557963,17 8.5,17 Z M15.5,14.5 L23.2603795,21.1774074" id="Combined-Shape" data-v-3864c2aa=""></path></g></g></g></svg>
+            </div>
+          </div>
+        </div>
     </div>
-    <div class="blog__filters">
-      <div class="blog__filters__left">
-        <div class="blog__filters__filter">
+    
+    <!--
+      <div class="blog__filters">
+          <div class="blog__filters__left">
+            <div class="blog__filters__filter">
+            </div>
+            <div class="blog__filters__filter">
+              
+            </div>
+          </div>
+          <div class="blog__filters__right">
+            <div class="blog__filters__filter">
+              <input v-model="search" placeholder="search..." class="search-box">
+              <svg width="25px" height="27px" viewBox="0 0 25 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-v-3864c2aa=""><g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" data-v-3864c2aa=""><g id="D_Nav-White-Sticky" transform="translate(-1276.000000, -23.000000)" stroke="black" stroke-width="1.5" data-v-3864c2aa=""><g id="Search" transform="translate(1277.000000, 24.000000)" data-v-3864c2aa=""><path d="M8.5,17 C13.1944204,17 17,13.1944204 17,8.5 C17,3.80557963 13.1944204,0 8.5,0 C3.80557963,0 0,3.80557963 0,8.5 C0,13.1944204 3.80557963,17 8.5,17 Z M15.5,14.5 L23.2603795,21.1774074" id="Combined-Shape" data-v-3864c2aa=""></path></g></g></g></svg>
+            </div>
+          </div>
         </div>
-        <div class="blog__filters__filter">
-          
-        </div>
-      </div>
-      <div class="blog__filters__right">
-        <div class="blog__filters__filter">
-          <!-- <input v-on:keyup="updatePosts" placeholder="search..."> -->
-          <input v-model="search" placeholder="search..." class="search-box">
-          <svg width="25px" height="27px" viewBox="0 0 25 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-v-3864c2aa=""><g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" data-v-3864c2aa=""><g id="D_Nav-White-Sticky" transform="translate(-1276.000000, -23.000000)" stroke="black" stroke-width="1.5" data-v-3864c2aa=""><g id="Search" transform="translate(1277.000000, 24.000000)" data-v-3864c2aa=""><path d="M8.5,17 C13.1944204,17 17,13.1944204 17,8.5 C17,3.80557963 13.1944204,0 8.5,0 C3.80557963,0 0,3.80557963 0,8.5 C0,13.1944204 3.80557963,17 8.5,17 Z M15.5,14.5 L23.2603795,21.1774074" id="Combined-Shape" data-v-3864c2aa=""></path></g></g></g></svg>
-        </div>
-      </div>
-    </div>
+
+    -->
     <!-- <div class="blog__preview-container"> -->
-      <div v-if="featuredArticle" class="blog-feature">
+      <div v-if="featuredArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
           :title="featuredArticle.title || ''"
           :handle="featuredArticle.handle || ''"
@@ -50,7 +63,7 @@
         />
       </div>
 
-      <div v-if="nextFeaturedArticle" class="blog-feature">
+      <div v-if="nextFeaturedArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
           :title="nextFeaturedArticle.title || ''"
           :handle="nextFeaturedArticle.handle || ''"
@@ -67,25 +80,24 @@
 
       
 
-      
-          <div class="blog-feature columns is-multiline" style="padding: 50px 45px;">
-            <div
-              v-for="article in largeThumbnailArticles"
-              :key="article.id"
-              class="column"
-            >
-              <article-preview
-                :title="article.title || ''"
-                :handle="article.handle || ''"
-                :excerpt="article.excerpt || ''"
-                :tags="article.tags"
-                :publishDate="article.publishDate"
-                :featured-media="article.featuredMedia"
-                :path-fragment="`/${$route.name}/`"
-                :is-large-thumbnail="true"
-              />
-          </div>
+      <div class="columns is-multiline" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
+        <div
+          v-for="article in largeThumbnailArticles"
+          :key="article.id"
+          class="column"
+        >
+          <article-preview
+            :title="article.title || ''"
+            :handle="article.handle || ''"
+            :excerpt="article.excerpt || ''"
+            :tags="article.tags"
+            :publishDate="article.publishDate"
+            :featured-media="article.featuredMedia"
+            :path-fragment="`/${$route.name}/`"
+            :is-large-thumbnail="true"
+          />
         </div>
+      </div>
 
       <div class="preview-grid">
         <!-- <div class="container">-->
@@ -138,6 +150,16 @@ export default {
       search: '',
       blogPosts: [],
       articleGrid: 'is-one-quarter',
+      pictureStyle: {
+        background: '#f6f6f6',
+        border: 'none',
+        border: '1px solid #f6f6f6'
+      },
+      pictureBgWhite: {
+        background: '#fff',
+        border: 'none',
+        border: '1px solid #fff'
+      }
     }
   },
   methods: {
@@ -207,6 +229,8 @@ export default {
     }
   },
   async mounted() {
+    //this._computedWatchers.featuredArticle.run();
+     // this.$forceUpdate();
     const client = createClient()
     const asset = await client.getAsset('3QDrYYQGdBtjLI4VQo1PBH')
     this.heroUrl = `https:${asset.fields.file.url}`
@@ -251,6 +275,12 @@ export default {
 <style lang="scss" scoped>
 .blog-feature {
   background-color: #f6f6f6;
+  padding: 50px 45px;
+}
+
+.blog-feature-no-padding-top {
+  background-color: #f6f6f6;
+  padding: 0px 45px !important;
 }
 
 .blog {
@@ -302,12 +332,13 @@ export default {
   }
 
   &__filters {
-    height: 66px;
+    height: 0px;
 
   }
 }
 .search-box {
   border: 1px solid #ccc;
+  position: relative;
 }
 
 .preview-grid {
@@ -328,23 +359,29 @@ export default {
 
 
 .blog__filters__right{
-  float: right;
-  width: 20%;
+  position: absolute;  
+  top: 87%; 
+  right: 100px;
   margin-top: 7px;
+  width: 15%;
   @include respond-to('small') {
     padding: 0 20px;
-    width: 60%;
+    width: 40%;
   }
 }
 
 .blog__filters__right input{
    border-radius: 20px;
    padding: 10px 20px;
-   width: 80%;
+   width: 100%;
+   position: relative;
 }
 
 .blog__filters__right svg{
-   margin-left: -40px;
-   padding-top: 15px;
+   position: absolute;
+   right: 10px;
+   top: 5px;
+   width: 15px;
+  
 }
 </style>
