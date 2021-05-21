@@ -49,31 +49,31 @@
 
     -->
     <!-- <div class="blog__preview-container"> -->
-      <div v-if="featuredArticle" :key="featuredArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
+      <div v-for="article in featuredArticle" :key="article.id" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
-          :title="featuredArticle.title || ''"
-          :handle="featuredArticle.handle || ''"
-          :description="featuredArticle.description || ''"
-          :excerpt="featuredArticle.excerpt || ''"
-          :tags="featuredArticle.tags"
-          :featured-media="featuredArticle.featuredMedia"
+          :title="article.title || ''"
+          :handle="article.handle || ''"
+          :description="article.description || ''"
+          :excerpt="article.excerpt || ''"
+          :tags="article.tags"
+          :featured-media="article.featuredMedia"
           :is-featured="true"
-          :publishDate="featuredArticle.publishDate"
+          :publishDate="article.publishDate"
           :path-fragment="`/${$route.name}/`"
         />
       </div>
 
-      <div v-if="nextFeaturedArticle" :key="nextFeaturedArticle" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
+      <div v-for="article in nextFeaturedArticle" :key="article.id" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
-          :title="nextFeaturedArticle.title || ''"
-          :handle="nextFeaturedArticle.handle || ''"
-          :description="nextFeaturedArticle.description || ''"
-          :excerpt="nextFeaturedArticle.excerpt || ''"
-          :tags="nextFeaturedArticle.tags"
-          :featured-media="nextFeaturedArticle.featuredMedia"
+          :title="article.title || ''"
+          :handle="article.handle || ''"
+          :description="article.description || ''"
+          :excerpt="article.excerpt || ''"
+          :tags="article.tags"
+          :featured-media="article.featuredMedia"
           :is-featured="true"
           :is-reversed="true"
-          :publishDate="nextFeaturedArticle.publishDate"
+          :publishDate="article.publishDate"
           :path-fragment="`/${$route.name}/`"
         />
       </div>
@@ -194,7 +194,8 @@ export default {
         if (this.blogPosts.length > 0) {
           console.log(this.blogPosts.length);
           //let lastIndex = this.blogPosts.length - 1;
-          return this.blogPosts[0]
+          const copy  = [...this.blogPosts];
+          return copy.slice(0,1);
         }
       }
       return null
@@ -203,7 +204,9 @@ export default {
       if(this.search == ''){
         if (this.blogPosts.length > 0) {
           //let lastIndex = this.blogPosts.length - 2;
-          return this.blogPosts[1]
+          //return this.blogPosts[1]
+          const copy  = [...this.blogPosts];
+          return copy.slice(1,2);
         }
       }
 
