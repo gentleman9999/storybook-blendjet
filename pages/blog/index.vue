@@ -49,7 +49,7 @@
 
     -->
     <!-- <div class="blog__preview-container"> -->
-      <div v-for="article in featuredArticle" :key="article.id" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
+      <div v-for="(article, index) in featuredArticle" :key="index" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
           :title="article.title || ''"
           :handle="article.handle || ''"
@@ -58,11 +58,13 @@
           :tags="article.tags"
           :featured-media="article.featuredMedia"
           :is-featured="true"
+          :is-reversed="index == 0 ? false : true"
           :publishDate="article.publishDate"
           :path-fragment="`/${$route.name}/`"
         />
       </div>
 
+<!--
       <div v-for="article in nextFeaturedArticle" :key="article.id" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
           :title="article.title || ''"
@@ -77,7 +79,7 @@
           :path-fragment="`/${$route.name}/`"
         />
       </div>
-
+-->
       
 
       <div class="columns is-multiline" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
@@ -195,7 +197,7 @@ export default {
           console.log(this.blogPosts.length);
           //let lastIndex = this.blogPosts.length - 1;
           const copy  = [...this.blogPosts];
-          return copy.slice(0,1);
+          return copy.slice(0,2);
         }
       }
       return null
@@ -243,7 +245,7 @@ export default {
     console.log(this.$route.name);
     console.log('articles', this.articles)
     this.blogPosts = [...this.articles.sort(this.compare)];
-
+   
     this.setWidthData()
     window.addEventListener('resize', function() {
       if(window.innerWidth < 1024) {
