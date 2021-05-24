@@ -258,15 +258,26 @@ export default {
    if(this.search == ''){
         if (this.blogPosts.length > 0) {
           console.log(this.blogPosts.length);
+          console.log(this.blogPosts);
           const copy  = [...this.blogPosts];
+          console.log('chy'+ copy.slice(0,2));
           let vm = this;
-         Vue.set(this.topFeatured, 0, copy.slice(0,2));
+          Vue.set(this.topFeatured, 0, copy.slice(0,2));
           //return copy.slice(0,2);
         }
     }
-    else{
-      this.showFeatured = false;
+    /*
+    if (localStorage.getItem('reloaded')) {
+        // The page was just reloaded. Clear the value from local storage
+        // so that it will reload the next time this page is visited.
+        localStorage.removeItem('reloaded');
+    } 
+    else {
+        // Set a flag so that we know not to reload the page twice.
+        localStorage.setItem('reloaded', '1');
+        location.reload();
     }
+    */
     this.setWidthData()
     window.addEventListener('resize', function() {
       if(window.innerWidth < 1024) {
