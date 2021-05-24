@@ -260,24 +260,11 @@ export default {
           console.log(this.blogPosts.length);
           console.log(this.blogPosts);
           const copy  = [...this.blogPosts];
-          console.log('chy'+ copy.slice(0,2));
-          let vm = this;
           Vue.set(this.topFeatured, 0, copy.slice(0,2));
           //return copy.slice(0,2);
         }
     }
-    /*
-    if (localStorage.getItem('reloaded')) {
-        // The page was just reloaded. Clear the value from local storage
-        // so that it will reload the next time this page is visited.
-        localStorage.removeItem('reloaded');
-    } 
-    else {
-        // Set a flag so that we know not to reload the page twice.
-        localStorage.setItem('reloaded', '1');
-        location.reload();
-    }
-    */
+
     this.setWidthData()
     window.addEventListener('resize', function() {
       if(window.innerWidth < 1024) {
@@ -404,6 +391,8 @@ export default {
   margin-top: 7px;
   width: 15%;
   @include respond-to('small') {
+    top: 70%; 
+    right: 5px;
     padding: 0 20px;
     width: 40%;
   }
@@ -421,6 +410,8 @@ export default {
    right: 10px;
    top: 5px;
    width: 15px;
-  
+   @include respond-to('small') {
+     right: 30px;
+   }
 }
 </style>
