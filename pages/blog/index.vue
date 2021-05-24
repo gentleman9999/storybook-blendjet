@@ -49,7 +49,8 @@
 
     -->
     <!-- <div class="blog__preview-container"> -->
-      <div v-for="(article, index) in featuredArticle" :key="index" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
+      <div v-if="showFeatured">
+      <div v-for="(article, index) in topFeatured[0]" :key="index" :class="[search == '' ? 'blog-feature' : 'blog-feature-no-padding-top']">
         <article-preview
           :title="article.title || ''"
           :handle="article.handle || ''"
@@ -62,6 +63,7 @@
           :publishDate="article.publishDate"
           :path-fragment="`/${$route.name}/`"
         />
+      </div>
       </div>
 
 <!--
@@ -135,6 +137,7 @@ import ArticlePreview from '~/components/nacelle/ArticlePreview'
 import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 import imageOptimize from '~/mixins/imageOptimize'
 import { createClient } from '~/plugins/contentful.js'
+import Vue from 'vue'
 
 
 export default {
@@ -152,6 +155,7 @@ export default {
       heroUrl: null,
       search: '',
       blogPosts: [],
+      showF: true,
       articleGrid: 'is-one-quarter',
       pictureStyle: {
         background: '#f6f6f6',
@@ -164,6 +168,7 @@ export default {
         border: '1px solid #fff'
       },
       backdoor: 0,
+      topFeatured: []
     }
   },
   methods: {
@@ -190,6 +195,12 @@ export default {
 
       return null
     },
+    showFeatured() {
+      if(this.search == ''){
+        return true;
+      }
+      return false;
+    },
     featuredArticle() {
       this.backdoor;
       if(this.search == ''){
@@ -197,7 +208,7 @@ export default {
           console.log(this.blogPosts.length);
           //let lastIndex = this.blogPosts.length - 1;
           const copy  = [...this.blogPosts];
-          return copy.slice(0,2);
+          //return copy.slice(0,2);
         }
       }
       return null
@@ -237,7 +248,6 @@ export default {
     }
   },
   async mounted() {
-    this.backdoor++;
     const client = createClient()
     const asset = await client.getAsset('3QDrYYQGdBtjLI4VQo1PBH')
     this.heroUrl = `https:${asset.fields.file.url}`
@@ -245,7 +255,18 @@ export default {
     console.log(this.$route.name);
     console.log('articles', this.articles)
     this.blogPosts = [...this.articles.sort(this.compare)];
-   
+   if(this.search == ''){
+        if (this.blogPosts.length > 0) {
+          console.log(this.blogPosts.length);
+          const copy  = [...this.blogPosts];
+          let vm = this;
+         Vue.set(this.topFeatured, 0, copy.slice(0,2));
+          //return copy.slice(0,2);
+        }
+    }
+    else{
+      this.showFeatured = false;
+    }
     this.setWidthData()
     window.addEventListener('resize', function() {
       if(window.innerWidth < 1024) {
