@@ -6,7 +6,7 @@ export default (config = {}) => {
         blog: null,
         articles: [],
         articleIndex: 0,
-        articlesPerPage: config.itemsPerPage || 15,
+        articlesPerPage: config.itemsPerPage || 25,
         selectedList: config.selectedList || 'default',
         noBlogData: false,
         isLoadingArticles: false
@@ -75,7 +75,7 @@ export default (config = {}) => {
             blog: blogObj.blog,
             selectedList: config.selectedList || 'default',
             paginate: true,
-            itemsPerPage: config.itemsPerPage || 15,
+            itemsPerPage: config.itemsPerPage || 25,
             locale: blogObj.locale
           })
         }
@@ -128,7 +128,7 @@ export default (config = {}) => {
               blog: this.blog,
               selectedList: this.selectedList || 'default',
               paginate: true,
-              itemsPerPage: this.itemsPerPage || 15,
+              itemsPerPage: this.itemsPerPage || 25,
               locale: this.$nacelle.locale
             })
 
@@ -154,7 +154,7 @@ export default (config = {}) => {
             blog: this.blog,
             selectedList: this.selectedList || 'default',
             paginate: true,
-            itemsPerPage: this.articlesPerPage || 15,
+            itemsPerPage: this.articlesPerPage || 25,
             index: this.articleIndex,
             locale: this.locale
           })

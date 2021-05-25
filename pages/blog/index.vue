@@ -155,7 +155,6 @@ export default {
       heroUrl: null,
       search: '',
       blogPosts: [],
-      showF: true,
       articleGrid: 'is-one-quarter',
       pictureStyle: {
         background: '#f6f6f6',
