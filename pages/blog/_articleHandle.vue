@@ -69,7 +69,7 @@
             </div>
             <div class="column is-9 content">
               <blog-article-content :article="article" :products="products">
-              {{ article.excerpt }}
+              <div class="article-excerpt">{{ article.excerpt }}</div>
                 <!-- Extra HTML added after content -->
                 <nuxt-link :to="`/${blogHandle}/`" class="breadcrumb-back">Go Back</nuxt-link>
               </blog-article-content>
@@ -248,5 +248,13 @@ export default nmerge({
 iframe.article-youtube-url {
     height: 100%;
     width: 100%;
+}
+.article-excerpt{
+  font-family: Regular;
+  /*font-size: 14px; */
+  line-height: 1.86;
+  letter-spacing: 0.5px;
+  color: $primary-purple;
+  margin-bottom: 40px;
 }
 </style>
