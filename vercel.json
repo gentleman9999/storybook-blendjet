@@ -2011,6 +2011,36 @@
       "source": "/recipes/spring-citrus-salad-dressing",
       "destination": "/recipes/citrus-salad-dressing",
       "permanent": true
+    },
+    {
+      "source": "/products/banana-blueberry-jetpack-ready-to-blend-smoothie",
+      "destination": "/products/jetpack-smoothies?variant=39289167282242",
+      "permanent": true
+    },
+    {
+      "source": "/products/mango-matcha-jetpack-smoothie",
+      "destination": "/products/jetpack-smoothies?variant=39289167380546",
+      "permanent": true
+    },
+    {
+      "source": "/products/tropical-blue-jetpack-smoothie",
+      "destination": "/products/jetpack-smoothies?variant=39289167446082",
+      "permanent": true
+    },
+    {
+      "source": "/products/mocha-chia-jetpack-ready-to-blend-smoothie",
+      "destination": "/products/jetpack-smoothies?variant=39289167413314",
+      "permanent": true
+    },
+    {
+      "source": "/products/raspberry-dragon-fruit-jetpack-smoothie",
+      "destination": "/products/jetpack-smoothies?variant=39289167315010",
+      "permanent": true
+    },
+    {
+      "source": "/products/green-peach-ginger-jetpack-ready-to-blend-smoothie",
+      "destination": "/products/jetpack-smoothies?variant=39289167347778",
+      "permanent": true
     }
   ]
 }
