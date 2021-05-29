@@ -19,6 +19,18 @@
         <div v-html="productAnnouncement" class="product-productAnnouncement"></div>
       </div>
     -->
+    <!-- START BFCM - TEMP SALE HARDCODED -->
+    <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+      <div class="canvas-bfcm">
+        <div class="col-bfcm">
+          <span class="entry-title-bfcm">Memorial Day Sale</span>
+				<span class="content-split-element-bfcm">10% Off 1</span>
+				<span class="content-split-element-bfcm">15% Off 2+</span>
+          <span class="simple-text-bfcm">Use Code "MEMORIALDAY" at Checkout to Save</span>
+        </div>
+      </div>
+    </div>
+    <!-- END BFCM - TEMP SALE HARDCODED -->
     <transition name="fade">
       <BlendjetPDP
         v-cloak

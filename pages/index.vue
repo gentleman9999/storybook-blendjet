@@ -36,16 +36,18 @@
       </div>
     </div>
     <!-- START BFCM -->
-    <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+    <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
       <div class="canvas-bfcm">
         <div class="col-bfcm">
-          <span class="entry-title-bfcm">Spring Sale</span>
-          <span class="content-split-element-bfcm">Free JetPack Smoothies</span>
-          <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
+          <span class="entry-title-bfcm">Memorial Day Sale</span>
+				<span class="content-split-element-bfcm">10% Off 1</span>
+				<span class="content-split-element-bfcm">15% Off 2+</span>
+          <span class="simple-text-bfcm">Use Code "MEMORIALDAY" at Checkout to Save</span>
         </div>
       </div>
-    </div> -->
+    </div>
     <!-- END BFCM -->
+
       <div class="section section__as-seen-on">
         <Ticker type="asSeenOn"/>
       </div>
