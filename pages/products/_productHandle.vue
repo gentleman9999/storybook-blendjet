@@ -24,9 +24,9 @@
       <div class="canvas-bfcm">
         <div class="col-bfcm">
           <span class="entry-title-bfcm">Memorial Day Sale</span>
-				<span class="content-split-element-bfcm">10% Off 1</span>
+				<span class="content-split-element-bfcm">12% Off 1</span>
 				<span class="content-split-element-bfcm">15% Off 2+</span>
-          <span class="simple-text-bfcm">Use Code "MEMORIALDAY" at Checkout to Save</span>
+				<span class="simple-text-bfcm">Save up to 15% on BlendJets <b class="b-hide-bfcm">|</b> <span>Use Code "MEMORIALDAY" at Checkout</span></span>          
         </div>
       </div>
     </div>
