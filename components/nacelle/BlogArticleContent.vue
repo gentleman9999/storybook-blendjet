@@ -160,7 +160,7 @@ export default {
 <style lang="scss" scoped>
 .content {
   font-family: Regular;
-  font-size: 14px;
+  /*font-size: 14px; */
   line-height: 1.86;
   letter-spacing: 0.5px;
   color: $primary-purple;

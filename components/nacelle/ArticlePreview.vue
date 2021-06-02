@@ -218,7 +218,6 @@ export default {
   flex-wrap: wrap;
   // height: 500px;
   // border-radius: 12px;
-  padding: 50px 45px;
 
 
   @include respond-to('small') {
@@ -379,13 +378,35 @@ export default {
   border-radius: 10px;
 }
 
-.large-thumbnail .featured__img {
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px;
+.large-thumbnail .featured {
+
+  &__img {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+
+  &__content {
+    &__title {
+      min-height: 50px;
+      @media screen and (min-width: 769px) and (max-width: 1248px) {
+        min-height: 100px;
+      }
+    }
+  }
 }
 
 .large-thumbnail .description {
   padding: 30px;
+  height: 270px;
+  @media screen and (min-width: 769px) and (max-width: 1248px) {
+    height: 300px;
+  }
+  @media screen and (max-width: 768px) {
+    height: 250px;
+  }
+  @media screen and (min-width: 1500px) {
+    height: 250px;
+  }
 }
 
 .article-preview {
