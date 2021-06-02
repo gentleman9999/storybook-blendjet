@@ -20,6 +20,7 @@
       </div>
     -->
     <!-- START BFCM - TEMP SALE HARDCODED -->
+<!--
     <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
       <div class="canvas-bfcm">
         <div class="col-bfcm">
@@ -30,6 +31,7 @@
         </div>
       </div>
     </div>
+-->
     <!-- END BFCM - TEMP SALE HARDCODED -->
     <transition name="fade">
       <BlendjetPDP

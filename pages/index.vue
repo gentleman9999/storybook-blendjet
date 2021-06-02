@@ -36,6 +36,7 @@
       </div>
     </div>
     <!-- START BFCM -->
+<!--
     <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
       <div class="canvas-bfcm">
         <div class="col-bfcm">
@@ -46,6 +47,7 @@
         </div>
       </div>
     </div>
+-->
     <!-- END BFCM -->
 
       <div class="section section__as-seen-on">
