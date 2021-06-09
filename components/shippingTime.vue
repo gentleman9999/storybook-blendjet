@@ -5,8 +5,8 @@
   <div class="shipping-container" v-if="!disabled">
     <div v-if="size ==='short'" class="small-size">
       <span v-if="country == 'xxxUS'">Arrives {{shortDate}}</span> <!-- change X to 2 to apply fixed date -->
-      <span v-else>Ships by 6/8</span>
-<!--       <span v-else>Ships by {{shortDate}}</span>       -->
+<!--       <span v-else>Ships by 6/8</span> -->
+      <span v-else>Ships by {{shortDate}}</span>      
     </div>
     <div v-else class="normal-size">
       <div class="normal-size__label">
@@ -20,8 +20,8 @@
         <span v-else >Order within {{24-remaining.hours}} hours {{60-remaining.minutes}} minutes</span>
 	  	</span>
 	  	<span v-else>
-	  	  <span>Tuesday, June 8th</span>
-<!-- 	  	  <span>{{arrivalDate}}</span>  -->
+<!-- 	  	  <span>Tuesday, June 8th</span> -->
+	  	  <span>{{arrivalDate}}</span> 
 	  	</span>
       </div>
     </div>

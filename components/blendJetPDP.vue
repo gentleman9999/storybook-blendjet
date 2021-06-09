@@ -300,38 +300,36 @@
             <div class="product-select__controls__value-props__badges">
               <a
                 target="_blank"
-                rel="nofollow"
+                rel="noopener noreferrer nofollow"
                 class="product-select__controls__value-props__badges__img"
                 :href="mcafeeLink"
               >
-                <img
-                  :src="
-                    optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })
-                  "
-                  alt="McAfee Secure Logo"
-                />
+                  <img
+                    :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                    alt="TrustedSite Seal" style="border: 1px solid #ccc;border-radius: 3px;"
+                  />
               </a>
               <a
                 target="_blank"
-                rel="nofollow"
+                rel="noopener noreferrer nofollow"
                 class="product-select__controls__value-props__badges__img"
                 :href="nortonLink"
               >
                 <img
                   :src="
-                    optimizeSource({ url: '/images/blendjetPDP/norton.png' })
+                    optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })
                   "
                   alt="Norton Secured Logo"
                 />
               </a>
               <a
                 target="_blank"
-                rel="nofollow"
+                rel="noopener noreferrer nofollow"
                 class="product-select__controls__value-props__badges__img"
                 :href="bbbLink"
               >
                 <img
-                  :src="optimizeSource({ url: '/images/blendjetPDP/bbb.png' })"
+                  :src="optimizeSource({ url: '/images/blendjetPDP/BBB-Seal.svg' })"
                   alt="Better Business Bureau Logo"
                 />
               </a>
@@ -904,9 +902,9 @@ export default {
       screenWidth: null,
       heroUrl: null,
       imgWidth: 0,
-      mcafeeLink: 'https://www.mcafeesecure.com/verify?host=blendjet.com',
+      mcafeeLink: 'https://www.trustedsite.com/verify?host=blendjet.com',
       nortonLink:
-        'https://trustsealinfo.websecurity.norton.com/splash?form_file=fdf/splash.fdf&dn=www.blendjet.com',
+        'https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com',
       bbbLink:
         'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
       description: [],

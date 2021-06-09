@@ -1408,6 +1408,21 @@
       "permanent": true
     },
     {
+      "source": "/GQ",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=GQ&discount=GQ",
+      "permanent": true
+    },
+    {
+      "source": "/Gq",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=GQ&discount=GQ",
+      "permanent": true
+    },
+    {
+      "source": "/gq",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=GQ&discount=GQ",
+      "permanent": true
+    },
+    {
       "source": "/peo",
       "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=People&discount=People",
       "permanent": true

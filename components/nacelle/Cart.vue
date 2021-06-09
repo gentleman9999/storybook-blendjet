@@ -122,7 +122,7 @@
       <transition name="fade">
         <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
           <div
-            style="position: fixed;width:377px;background-color: #000000;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
+            style="position: fixed;width:377px;background-color: #1e90bb;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
           >
             <div style="margin: 0 auto; text-align: center;">MUST HAVES</div>
           </div>
@@ -356,24 +356,29 @@
 
           <div class="value-props__badges">
             <div class="value-props__badges__img">
-              <a href="https://www.mcafeesecure.com/verify?host=blendjet.com" target="_blank">
-                <img :src="optimizeSource({ url: '/images/blendjetPDP/mcafee.png' })" />
+              <a href="https://www.trustedsite.com/verify?host=blendjet.com" target="_blank" rel="noopener noreferrer nofollow">
+                  <img
+                    :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                    alt="TrustedSite Seal" style="border: 1px solid #ccc;border-radius: 3px;"
+                  />
               </a>
             </div>
             <div class="value-props__badges__img">
               <a
-                href="https://trustsealinfo.websecurity.norton.com/splash?form_file=fdf/splash.fdf&dn=www.blendjet.com"
+                href="https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com"
                 target="_blank"
+                rel="noopener noreferrer nofollow"	                
               >
-                <img :src="optimizeSource({ url: '/images/blendjetPDP/norton.png' })" />
+                <img :src="optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })" />
               </a>
             </div>
             <div class="value-props__badges__img">
               <a
                 href="https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick"
                 target="_blank"
+                rel="noopener noreferrer nofollow"	                
               >
-                <img :src="optimizeSource({ url: '/images/blendjetPDP/bbb.png' })" />
+                <img :src="optimizeSource({ url: '/images/blendjetPDP/BBB-Seal.svg' })" />
               </a>
             </div>
           </div>
@@ -630,10 +635,12 @@ export default {
 
     &__img {
       &:first-child {
-        margin-right: 25px;
+        margin-right: 13px;
+        margin-left: 12px;
       }
       &:last-child {
-        margin-left: 25px;
+        margin-left: 13px;
+        margin-right: 12px;        
       }
     }
   }
