@@ -800,10 +800,20 @@
                 DETAILS & SPECS
               </div>
               <div class="media-content__main__details__specs__text">
-                Blend your favorite smoothies, shakes, margaritas, or baby food
+                Blend your favorite smoothies, shakes, margaritas, and more
                 without the limitations of a regular blender - whenever,
                 wherever you want!
               </div>             
+
+              <div v-if="['blendjet-2'].includes(product.handle)"          
+              class="media-content__main__details__content-block__image"
+              >
+                <img
+                  class="media-content__main__details__content-block__img" style="margin-bottom:35px"
+                  :src="optimizeSource({ url: '/images/blendjetPDP/Red-Dot-Design-Award-2021.png' })"
+                />
+              </div>
+              
               <div v-if="['blendjet-one'].includes(product.handle)" class="media-content__main__details__specs__list">
                 <ul>
                   <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
@@ -833,6 +843,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <!-- BLENDJET REVIEWS  -->

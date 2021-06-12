@@ -451,7 +451,7 @@
               DETAILS & SPECS
             </div>
             <div class="media-content__main__details__specs__text">
-              Blend your favorite smoothies, shakes, margaritas, or baby food without the limitations of a regular blender - wherever whenevr you want!
+              Blend your favorite smoothies, shakes, margaritas, and more without the limitations of a regular blender - wherever whenevr you want!
             </div>
             <div class="media-content__main__details__specs__list">
               <ul>
