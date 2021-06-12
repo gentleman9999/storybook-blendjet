@@ -844,7 +844,6 @@
           </div>
         </div>
       </div>
-      </div>
 
       <!-- BLENDJET REVIEWS  -->
          <div class="reviews" id="reviews">
