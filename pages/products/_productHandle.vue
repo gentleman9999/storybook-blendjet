@@ -1,7 +1,7 @@
 <!--
 /****
 /* Individual products are loaded with the getProduct mixin.
-/* For instructions related to connecting your invetory to
+/* For instructions related to connecting your inventory to
 /* Nacelle, please refer to:
 /*
 /* https://docs.getnacelle.com/getting-started.html#_2-product-settings
@@ -20,18 +20,17 @@
       </div>
     -->
     <!-- START BFCM - TEMP SALE HARDCODED -->
-<!--
-    <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
-      <div class="canvas-bfcm">
-        <div class="col-bfcm">
-          <span class="entry-title-bfcm">Memorial Day Sale</span>
-				<span class="content-split-element-bfcm">12% Off 1</span>
-				<span class="content-split-element-bfcm">15% Off 2+</span>
-				<span class="simple-text-bfcm">Save up to 15% on BlendJets <b class="b-hide-bfcm">|</b> <span>Use Code "MEMORIALDAY" at Checkout</span></span>          
-        </div>
-      </div>
-    </div>
--->
+<div v-if="product.productType !== 'Jetpack Smoothies'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+<div class="canvas-bfcm">
+  <div class="col-bfcm">
+    <span class="entry-title-bfcm">Prime Sale!</span>
+    <span class="content-split-element-bfcm">12% Off 1</span>
+    <span class="content-split-element-bfcm">15% Off 2</span>
+    <span class="content-split-element-bfcm">20% Off 3+</span>
+    <span class="simple-text-bfcm">Last Chance - Ends Soon <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
+  </div>
+</div>
+</div>
     <!-- END BFCM - TEMP SALE HARDCODED -->
     <transition name="fade">
       <BlendjetPDP
