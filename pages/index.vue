@@ -6,12 +6,12 @@
         <div class="section__hero-banner__cta__text">
           <transition name="slideRight">
             <div v-if="loaded" class="section__hero-banner__cta__text__line1">
-              Be Anywhere.
+              The Original
             </div>
           </transition>
           <transition name="slideLeft">
             <div v-if="loaded" class="section__hero-banner__cta__text__line2">
-              Blend Everywhere.
+              Portable Blender
             </div>
           </transition>
         </div>

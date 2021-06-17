@@ -31,6 +31,7 @@
   </div>
 </div>
 </div>
+<div style="margin-bottom:10px" class="hide-desktop"></div>
     <!-- END BFCM - TEMP SALE HARDCODED -->
     <transition name="fade">
       <BlendjetPDP

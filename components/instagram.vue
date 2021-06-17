@@ -53,7 +53,7 @@
     </div>
     </transition>
     <div class="testimonials-subheading">
-      What Our Customers Think
+      What Our Customers Think of Our Portable Blender
     </div>
     <div class="testimonials-carousel-container">
       <b-carousel class="testimonials-carousel"

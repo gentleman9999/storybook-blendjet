@@ -5,7 +5,7 @@
     <div class="product-select">
       <div class="product-select__controls__mobile-title-container">
         <div class="product-select__controls__title">
-          {{ product.title }}
+          <h1>{{ product.title }}</h1>
         </div>
         <div class="product-select__controls__rating" >
             <loox-product-rating :product="product" />
@@ -49,9 +49,9 @@
 
 
           <div class="product-select__controls__title">
-            {{ product.title }}
+            <h1>{{ product.title }}</h1>
           </div>
-          <div class="product-select__controls__rating">
+          <div class="product-select__controls__rating" style="zoom:1.25">
               <loox-product-rating :product="product" />
           </div>
           <div class="product-select__controls__price">
@@ -2061,6 +2061,10 @@ export default {
 .blendjet-banner__content-block a:hover{
   color:#000;
 }
-
-
+//Reset h1
+h1 {
+  font-family: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
 </style>

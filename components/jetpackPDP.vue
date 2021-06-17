@@ -23,9 +23,9 @@
             {{ formatTitle(product.title) }}
           </div>
           <div class="product-select__controls__category">
-            {{ jetpackCategory }}
+            <h1>{{ jetpackCategory }}</h1>
           </div>
-          <div class="product-select__controls__rating">
+          <div class="product-select__controls__rating" style="zoom:1.25">
             <n-link :to="{ path: `/products/${product.handle}`, hash: '#reviews' }">
               <loox-product-rating :product="product" />
             </n-link>
@@ -55,9 +55,9 @@
                 {{ formatTitle(product.title) }}
               </div>
               <div class="product-select__controls__category">
-                {{ jetpackCategory }}
+                <h1>{{ jetpackCategory }}</h1>
               </div>
-              <div class="product-select__controls__rating">
+              <div class="product-select__controls__rating" style="zoom:1.25">
                 <n-link :to="{ path: `/products/${product.handle}`, hash: '#reviews' }">
                   <loox-product-rating :product="product" />
                 </n-link>
@@ -1403,4 +1403,12 @@ export default {
   justify-content: center;
   display: flex;
 }
+
+//Reset h1
+h1 {
+  font-family: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
 </style>

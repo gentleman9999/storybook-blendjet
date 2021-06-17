@@ -5,9 +5,9 @@
     <div class="product-select">
       <div class="product-select__controls__mobile-title-container">
         <div class="product-select__controls__title">
-          {{product.title}}
+          <h1>{{product.title}}</h1>
         </div>
-        <div class="product-select__controls__rating">
+        <div class="product-select__controls__rating" style="zoom:1.25">
           <n-link :to="{ path: '/products/blendjet-one', hash: '#reviews'}">
             <loox-product-rating :product="product" />
           </n-link>
@@ -46,9 +46,9 @@
       <div class="product-select__controls">
         <div class="product-select__controls__title-container">
           <div class="product-select__controls__title">
-            {{product.title}}
+            <h1>{{product.title}}</h1>
           </div>
-          <div class="product-select__controls__rating">
+          <div class="product-select__controls__rating" style="zoom:1.25">
             <n-link :to="{ path: '/products/blendjet-one', hash: '#reviews'}">
               <loox-product-rating :product="product" />
             </n-link>
@@ -2047,5 +2047,10 @@ export default {
     }
   }
 }
-
+//Reset h1
+h1 {
+  font-family: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
 </style>

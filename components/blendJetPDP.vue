@@ -8,10 +8,15 @@
       <!-- PRODUCT OPTIONS -->
       <div class="product-select">
         <div class="product-select__controls__mobile-title-container">
-          <div class="product-select__controls__title">
+          <div v-if="['blendjet-2'].includes(product.handle)" class="product-select__controls__title">
             {{ product.title }}
+            <br/>
+            <span style="font-size: 12px;line-height: 1.25;letter-spacing: 1.75px;">Portable Blender</span></h1>
           </div>
-          <div class="product-select__controls__rating">
+          <div v-else class="product-select__controls__title">
+            <h1>{{ product.title }}</h1>
+          </div>          
+          <div class="product-select__controls__rating" style="zoom:1.25">
             <loox-product-rating :product="product" />
           </div>
           <div class="product-select__controls__price">
@@ -77,10 +82,15 @@
 
         <div class="product-select__controls">
           <div class="product-select__controls__title-container">
-            <div class="product-select__controls__title">
-              {{ product.title }}
+            <div v-if="['blendjet-2'].includes(product.handle)" class="product-select__controls__title">
+              <h1>{{ product.title }}
+              <br/>
+              <span style="font-family: Bold;font-size: 18px;line-height: 0.83;letter-spacing: 3.5px;">Portable Blender</span></h1>
             </div>
-            <div class="product-select__controls__rating">
+            <div v-else class="product-select__controls__title">
+              <h1>{{ product.title }}</h1>
+            </div>
+            <div class="product-select__controls__rating" style="zoom:1.25">
               <loox-product-rating :product="product" />
             </div>
             <div class="product-select__controls__price">
@@ -2541,5 +2551,11 @@ export default {
       text-align: center;
     }
   }
+}
+//Reset h1
+h1 {
+  font-family: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
 }
 </style>

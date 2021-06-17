@@ -2,7 +2,7 @@
   <div class="blendjet-demo">
     <div class="blendjet-demo__title-block">
         <h1 class="blendjet-demo__title-block__title">
-          Introducing BlendJet 2
+          Introducing BlendJet 2 <br/> <span style="font-size:55%">Next-Gen Portable Blender</span>
         </h1>
         <div class="mobile-demo">
           <picture>
@@ -77,7 +77,7 @@ export default {
 
   .blendjet-demo {
     @include gradient-primary-purple-turquoise(to bottom);
-    height: 920px;
+    height: 950px;
     padding-top: 65px;
     display: flex;
     flex-flow: column nowrap;

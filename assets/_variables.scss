@@ -107,6 +107,12 @@ background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-
   }
 }
 
+@media(min-width:576px) {
+	.hide-desktop{
+		display:none;
+	}
+}
+
 /* END Added by Ryan for BFCM */
 
 // Ryan edit to make sure product title doesn't expand mobile cart
