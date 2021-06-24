@@ -20,7 +20,7 @@
       </div>
     -->
     <!-- START BFCM - TEMP SALE HARDCODED -->
-<div v-if="product.productType !== 'Jetpack Smoothies'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+<!-- <div v-if="product.productType !== 'Jetpack Smoothies'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
 <div class="canvas-bfcm">
   <div class="col-bfcm">
     <span class="entry-title-bfcm">Prime Sale!</span>
@@ -30,9 +30,9 @@
     <span class="simple-text-bfcm">Last Chance - Ends Soon <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
   </div>
 </div>
-</div>
+</div> -->
+<!-- END BFCM - TEMP SALE HARDCODED -->
 <div style="margin-bottom:10px" class="hide-desktop"></div>
-    <!-- END BFCM - TEMP SALE HARDCODED -->
     <transition name="fade">
       <BlendjetPDP
         v-cloak

@@ -36,7 +36,7 @@
       </div>
     </div>
     <!-- START BFCM -->
-<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+<!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
   <div class="canvas-bfcm">
     <div class="col-bfcm">
       <span class="entry-title-bfcm">Prime Sale!</span>
@@ -46,7 +46,7 @@
       <span class="simple-text-bfcm">Last Chance - Ends Soon <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
     </div>
   </div>
-</div>
+</div> -->
     <!-- END BFCM -->
 
       <div class="section section__as-seen-on">
