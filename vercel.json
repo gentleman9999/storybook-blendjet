@@ -251,13 +251,13 @@
       "permanent": true
     },
     {
-      "source": "/collections/jetpack-ready-to-blend-smoothies/products/green-peach-ginger-jetpack-ready-to-blend-smoothie",
+      "source": "/products/jetpack-smoothies/products/green-peach-ginger-jetpack-ready-to-blend-smoothie",
       "destination": "/products/green-peach-ginger-jetpack-ready-to-blend-smoothie",
       "permanent": true
     },
     {
       "source": "/collections/jetpack-ready-to-blend-smoothies/products/mocha-chia-jetpack-ready-to-blend-smoothie",
-      "destination": "/products/mocha-chia-jetpack-ready-to-blend-smoothie",
+      "destination": "/products/jetpack-smoothies?variant=39289167413314",
       "permanent": true
     },
     {
@@ -273,11 +273,6 @@
     {
       "source": "/zoom",
       "destination": "https://zoom.us/j/8464547693?pwd=b0kxODhIOU9HVEFOZmI2SEd6eEQ3QT09",
-      "permanent": true
-    },
-    {
-      "source": "/alpha",
-      "destination": "https://forms.gle/coaa7avU1mNipFWA9",
       "permanent": true
     },
     {
@@ -319,7 +314,7 @@
     },
     {
       "source": "/JenJetPacks",
-      "destination": "/collections/jetpack-ready-to-blend-smoothies?utm_source=JenSelterJetPack",
+      "destination": "/products/jetpack-smoothies?utm_source=JenSelterJetPack",
       "permanent": true
     },
     {
@@ -334,17 +329,17 @@
     },
     {
       "source": "/Bundle",
-      "destination": "/collections/jetpack-ready-to-blend-smoothies",
+      "destination": "/products/jetpack-smoothies",
       "permanent": true
     },
     {
       "source": "/jetpacks",
-      "destination": "/collections/jetpack-ready-to-blend-smoothies",
+      "destination": "/products/jetpack-smoothies",
       "permanent": true
     },
     {
       "source": "/jetpack",
-      "destination": "/collections/jetpack-ready-to-blend-smoothies",
+      "destination": "/products/jetpack-smoothies",
       "permanent": true
     },
     {
@@ -2000,6 +1995,11 @@
     {
       "source": "/BBB",
       "destination": "https://www.bedbathandbeyond.com/store/product/blendjet-reg-blendjet-2-portable-16-oz-blender/5541084",
+      "permanent": true
+    },
+    {
+      "source": "/Macys",
+      "destination": "https://www.macys.com/shop/product/blendjet-blendjet-2-portable-blender?ID=12186748",
       "permanent": true
     },
     {
