@@ -11,129 +11,133 @@
       <!-- <search-box position="global" /> -->
       <search-box position="global" />
     </div>
-    
+
     <transition name="fade">
       <div class="search-suggestions" v-if="!viewAll">
-      
-          <div class="search-suggestions__container" v-show="searchResultsNumber">
-            <div class="search-suggestions__products">
-              <!-- <div class="search-suggestions__heading">
+        <div class="search-suggestions__container" v-show="searchResultsNumber">
+          <div class="search-suggestions__products">
+            <!-- <div class="search-suggestions__heading">
                 Products
               </div> -->
-              <search-results
-                  :searchData="productData"
-                  :searchQuery="query"
-                  slotMode="multiple"
-                  v-if="productData"
-                  @results="showResults"
-                  @no-query="noQuery"
-                >
-                <!-- @results="setAutocompleteVisible" -->
-                <template v-if="resultsVisible" v-slot:result="{ result }">
-                  <search-autocomplete-item
-                    v-for="item in result"
-                    :item="item"
-                    :key="item.id"
-                  />
-                </template>
-              </search-results>
-            </div>
-            <!-- <div class="search-suggestions__pages">
-              <div class="search-suggestions__heading">
-                Pages
-              </div>
-                <search-results
-                  :searchData="blogData"
-                  :searchQuery="query"
-                  slotMode="multiple"
-                  v-if="blogData"
-                  @results="showResults"
-                  @no-query="noQuery"
-                >
-                
-                <template v-if="resultsVisible" v-slot:result="{ result }">
-                  <search-autocomplete-item
-                    v-for="item in result.slice(0, 5)"
-                    :item="item"
-                    :key="item.id"
-                  />
-                </template>
-              </search-results>
-            </div> -->
+            <search-results
+              :searchData="productData"
+              :searchQuery="query"
+              slotMode="multiple"
+              v-if="productData"
+              @results="showResults"
+              @no-query="noQuery"
+            >
+              <!-- @results="setAutocompleteVisible" -->
+              <template v-if="resultsVisible" v-slot:result="{ result }">
+                <search-autocomplete-item
+                  v-for="item in result"
+                  :item="item"
+                  :key="item.id"
+                />
+              </template>
+            </search-results>
           </div>
-          <div class="view-more">
-            <div class="view-more__button" role="button" v-if="searchResultsNumber" @click="viewAll=true">
-              View all results ({{searchResultsNumber}})
+          <!-- <div class="search-suggestions__pages">
+            <div class="search-suggestions__heading">
+              Pages
             </div>
+            <search-results
+              :searchData="blogData"
+              :searchQuery="query"
+              slotMode="multiple"
+              v-if="blogData"
+              @results="showResults"
+              @no-query="noQuery"
+            >
+              <template v-if="resultsVisible" v-slot:result="{ result }">
+                <search-autocomplete-item
+                  v-for="item in result.slice(0, 5)"
+                  :item="item"
+                  :key="item.id"
+                />
+              </template>
+            </search-results>
+          </div> -->
+        </div>
+        <div class="view-more">
+          <div
+            class="view-more__button"
+            role="button"
+            v-if="searchResultsNumber"
+            @click="viewAll = true"
+          >
+            View all results ({{ searchResultsNumber }})
           </div>
+        </div>
       </div>
     </transition>
 
     <div class="search-results" v-if="viewAll">
-       <!-- <div class="search-results__filters">
-       </div>
-       <div class="search-results__grid">
-           <search-results
-                 :searchData="productData"
-                 :searchQuery="query"
-                 slotMode="multiple"
-                 v-if="productData"
-                 @results="showResults"
-                 @no-query="noQuery"
-               >
-         
-               <template v-if="resultsVisible" v-slot:result="{ result }">
-                 <div  v-for="item in result" :key="item.id" class="search-results__grid__item">
-                   <div >
-                     <img class="search-results__grid__item__img" :src="optimizeSource({url: item.featuredMedia.src})" />
-                   </div>
-                   <div class="search-results__grid__item__title"> 
-                     {{item.title}}
-                   </div>
-                   <div class="search-results__grid__item__rating">
-                      <b-rate 
-                         v-model="rating"
-                         :max="5"
-                         :icon-pack="'mdi'"
-                         :disabled="true"
-                         >
-                       </b-rate> 
-                   </div>
-                   <div class="search-results__grid__item__category">
-                   </div>
-                   <div class="search-results__grid__item__price">
-                     <product-price :price="item.priceRange.min" />                                  
-                   </div>
-                 </div>
-               </template>
-             </search-results>
-         </div> -->
-<!-- { field: 'productType', label: 'Product Type' }, -->
-        <refinement-filters
+      <!-- <div class="search-results__filters"></div>
+      <div class="search-results__grid">
+        <search-results
+          :searchData="productData"
+          :searchQuery="query"
+          slotMode="multiple"
           v-if="productData"
-          :propertyFilters="[
-            { field: 'color', label: 'Color' },
-          ]"
-         
-          :inputData="results"
-          v-on:updated="updateFilteredData"
-        />
-        <refinement-results
-            v-if="filteredData"
-            :searchData="filteredData"
-            :searchQuery="query"
-          >
-            <template v-slot:result="{ result }">
+          @results="showResults"
+          @no-query="noQuery"
+        >
+          <template v-if="resultsVisible" v-slot:result="{ result }">
+            <div
+              v-for="item in result"
+              :key="item.id"
+              class="search-results__grid__item"
+            >
               <div>
-                <!-- {{JSON.stringify(result.map(item=>item.title))}} -->
-              <SearchGrid :products="result" :columns="4" />
+                <img
+                  class="search-results__grid__item__img"
+                  :src="optimizeSource({ url: item.featuredMedia.src })"
+                />
               </div>
-            </template>
-            <template v-slot:no-results>
-              <search-no-results />
-            </template>
-          </refinement-results>
-       </div>
+              <div class="search-results__grid__item__title">
+                {{ item.title }}
+              </div>
+              <div class="search-results__grid__item__rating">
+                <b-rate
+                  v-model="rating"
+                  :max="5"
+                  :icon-pack="'mdi'"
+                  :disabled="true"
+                >
+                </b-rate>
+              </div>
+              <div class="search-results__grid__item__category"></div>
+              <div class="search-results__grid__item__price">
+                <product-price :price="item.priceRange.min" />
+              </div>
+            </div>
+          </template>
+        </search-results>
+      </div> -->
+      <!-- { field: 'productType', label: 'Product Type' }, -->
+      <refinement-filters
+        v-if="productData"
+        :propertyFilters="[{ field: 'color', label: 'Color' }]"
+        :inputData="results"
+        v-on:updated="updateFilteredData"
+      />
+      <refinement-results
+        v-if="filteredData"
+        :searchData="filteredData"
+        :searchQuery="query"
+      >
+        <template v-slot:result="{ result }">
+          <div>
+            <!-- {{JSON.stringify(result.map(item=>item.title))}} -->
+            <SearchGrid :products="result" :columns="4" />
+          </div>
+        </template>
+        <template v-slot:no-results>
+          <search-no-results />
+        </template>
+      </refinement-results>
+    </div>
   </div>
   <!-- <div class="search-container">
     <section class="section search-section">
@@ -196,8 +200,6 @@ import SearchNoResults from '~/components/nacelle/SearchNoResults'
 import SearchAutocompleteItem from '~/components/nacelle/SearchAutocompleteItem'
 import RefinementFilters from '~/components/nacelle/RefinementFilters'
 import RefinementResults from '~/components/nacelle/RefinementResults'
-import ProductGrid from '~/components/nacelle/ProductGrid'
-import ProductPrice from '~/components/nacelle/ProductPrice'
 import SearchGrid from '~/components/searchGrid'
 
 import imageOptimize from '~/mixins/imageOptimize'
@@ -212,43 +214,46 @@ export default {
       viewAll: false,
       rating: null,
       metaTitle: 'Search BlendJet.com - BlendJet®',
-      metaDescription: 'Are you looking for a specific product or recipe? Our search function makes quick browsing a breeze. Shop online now, and join the BlendJet revolution!'
+      metaDescription:
+        'Are you looking for a specific product or recipe? Our search function makes quick browsing a breeze. Shop online now, and join the BlendJet revolution!'
     }
   },
   head() {
-    let properties = {}
-    let meta = []
+    const properties = {}
+    const meta = []
     const mdescription = this.metaDescription
     const title = this.metaTitle
-    if(title.length) {
+    if (title.length) {
       properties.title = title
     }
 
-    if(mdescription.length) {
+    if (mdescription.length) {
       meta.push({
         hid: 'description',
         name: 'description',
         content: mdescription
       })
     }
-    
-    return {...properties, meta}
-    
-  }, 
+
+    return { ...properties, meta }
+  },
   components: {
     SearchBox,
     RefinementFilters,
     RefinementResults,
-    ProductGrid,
     SearchNoResults,
     SearchResults,
     SearchAutocompleteItem,
-    ProductPrice,
     SearchGrid
   },
   mixins: [imageOptimize, getDisplayPriceForCurrency],
   computed: {
-    ...mapState('search', ['query', 'loadedData', 'filteredData', 'autocompleteVisible']),
+    ...mapState('search', [
+      'query',
+      'loadedData',
+      'filteredData',
+      'autocompleteVisible'
+    ]),
     ...mapGetters('search', ['productData'])
   },
   watch: {
@@ -263,11 +268,11 @@ export default {
       }
     },
     query() {
-      this.viewAll = false;
+      this.viewAll = false
       // if(!this.query) {
       //   this.viewAll = false
       // }
-    },
+    }
     // $route() {
     //   console.log('SEARCH ROUTE')
     //   this.setQuery(null)
@@ -278,7 +283,6 @@ export default {
     if (process.browser) {
       if (!this.filteredData) {
         this.getProductData()
-        
       }
     }
   },
@@ -297,21 +301,20 @@ export default {
       this.setFilteredData(data)
     },
     noQuery(number) {
-      this.resultsVisible = false;
-      this.viewAll = false;
+      this.resultsVisible = false
+      this.viewAll = false
       this.searchResultsNumber = number
     },
-    showResults(results) { 
-      this.searchResultsNumber = results.length;
+    showResults(results) {
+      this.searchResultsNumber = results.length
       this.results = results
-      this.resultsVisible = true;
+      this.resultsVisible = true
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .search-container {
   // margin-top: 100px;
   min-height: 100vw;
@@ -320,7 +323,6 @@ export default {
   flex-flow: column nowrap;
   align-items: center;
   /* justify-content: center; */
-
 }
 
 .search-box {
@@ -343,7 +345,6 @@ export default {
 
 .search-suggestions {
   margin-top: 60px;
-  
 
   &__container {
     // width: 1198px;
@@ -419,9 +420,8 @@ export default {
   margin: 40px;
 
   &__button {
-    @include button-primary('purple')
+    @include button-primary('purple');
   }
-
 }
 .fade-enter-active,
 .fade-leave-active {

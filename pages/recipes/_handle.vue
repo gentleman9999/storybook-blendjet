@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import JetpackCrossSell from '~/components/jetpackCrossSell'
+import JetpackCrossSell from '~/components/jetpackCrossSellVariants'
 import FacebookFilled from '~/components/svg/FacebookFilled'
 import Facebook from '~/components/svg/Facebook'
 import PinterestFilled from '~/components/svg/PinterestFilled'

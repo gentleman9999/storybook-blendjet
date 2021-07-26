@@ -60,11 +60,12 @@
 <script>
 import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 import productMetafields from '~/mixins/productMetafields'
+import rechargeMixin from '~/mixins/rechargeMixin'
 import Axios from 'axios'
 // import ProductPrice from '~/components/nacelle/Pric'
 
 export default {
-  mixins: [productMetafields],
+  mixins: [productMetafields, rechargeMixin],
   props: {
     product: {
       type: Object,
@@ -128,49 +129,52 @@ export default {
         return false
       }
     },
-
     isProductVariantSelectChild() {
       return this.$parent.$options._componentTag === 'product-variant-select'
-    },
-    /**
-     * Verify if the parent product is subscription-eligible by the presence
-     * of a ReCharge metafield value
-     */
-    verifySubscription() {
-      return !!this.metafields.find(meta => meta.key === 'shipping_interval_frequency')
     },
     disableAtcButton() {
       return (
         !this.allOptionsSelected ||
-        (this.allOptionsSelected && this.variant === undefined) ||
+        this.variant === undefined ||
         (!this.variantInLineItems &&
           this.allOptionsSelected &&
           this.variant.availableForSale !== true)
       )
     },
-    discountVariantMap() {
-      return JSON.parse(this.metafieldsObj.subscriptions.original_to_hidden_variant_map)
-    },
-    subscriptionVariant() {
-      // Deep clone object without references to state.
-      const _variant = JSON.parse(JSON.stringify(this.variant))
-      const variantDiscount = this.discountVariantMap[this.decodeBase64VariantId(_variant.id)]
-
-      if (variantDiscount) {
-        _variant.price = variantDiscount.discount_variant_price
+    /**
+     * Get the subscription price for the current variant.
+     */
+    subscriptionPrice() {
+      if (!this.variant) {
+        return undefined
       }
-
-      return _variant
+      const decodedId = this.decodeBase64VariantId(this.variant.id)
+      const variantSubscriptionPrice =
+        decodedId &&
+        this.hasSubscription &&
+        this.discountVariantMap &&
+        this.discountVariantMap[decodedId]
+      return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
+        ? variantSubscriptionPrice.discount_variant_price
+        : this.variant.price
     }
   },
   watch: {
     confirmedSelection() {
       this.addToCart()
     },
-    isSubscriptionOn() {
+    variant(newValue, oldValue) {
+      if (newValue.id && newValue.id !== oldValue.id) {
+        this.getDisplayPrice()
+      }
+    },
+    subscriptionPrice(newValue, oldValue) {
       this.getDisplayPrice()
     },
-    quantity() {
+    isSubscriptionOn(newValue, oldValue) {
+      this.getDisplayPrice()
+    },
+    quantity(newValue, oldValue) {
       this.getDisplayPrice()
     }
   },
@@ -187,46 +191,59 @@ export default {
     ]),
     ...mapMutations('cart', ['showCart']),
     decodeBase64VariantId(encodedId) {
-      const decodedId = atob(encodedId)
-      return decodedId.split('gid://shopify/ProductVariant/')[1]
+      // This is wrapped in a try/catch because in some instances it's attempted to be run during
+      // the nuxt build (somehow in advance of the browser), therefore the `window.atob` method
+      // doesn't exist yet.
+      let decodedId = undefined
+      try {
+        decodedId = atob(encodedId).split('gid://shopify/ProductVariant/')[1]
+      } catch (e) {
+        // console.warn(`Error decoding variant ID "${encodedId}"`)
+      }
+      return decodedId
     },
     async getDisplayPrice() {
+      // Bail if no variant is specified
+      if (!this.variant || !this.variant.id) return undefined
+
       let _vprice =
-        this.isSubscriptionOn && this.verifySubscription
-          ? this.subscriptionVariant.price
+        this.hasSubscription && this.isSubscriptionOn && this.subscriptionPrice
+          ? this.subscriptionPrice
           : this.variant.price
+
       const vm = this
+
       const price = encodeURIComponent(
         JSON.stringify([
           {
             Price: _vprice,
-            Tag: atob(this.variant.id)
-              .split('/')
-              .pop()
+            Tag: this.decodeBase64VariantId(this.variant.id)
           }
         ])
       )
 
-      //START OF RYAN MOD to override currency
+      let config
 
-      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      // START OF RYAN MOD to override currency
+
+      // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
       if (document.cookie.includes('_rchcur')) {
-        var config = {
+        config = {
           method: 'get',
           url:
-            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
             document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
             `&MerchantPrices=${price}`
         }
       } else {
-        var config = {
+        config = {
           method: 'get',
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
         }
       }
-      //END OF RYAN MOD
+      // END OF RYAN MOD
 
-      const localPrice = await Axios(config)
+      await Axios(config)
         .then(res => {
           if (!res.data.ConsumerPrices[0]) {
             vm.subPrice = `${res.data.Symbol}${(Number(_vprice) * this.quantity).toFixed(2)}`
@@ -241,8 +258,8 @@ export default {
               ).toFixed(2)}`
             }
           }
-          ;(this.defaultText = `Add to Cart - ${vm.subPrice}`),
-            (this.buttonText = `Add to Cart - ${vm.subPrice}`)
+          this.defaultText = `Add to Cart - ${vm.subPrice}`
+          this.buttonText = `Add to Cart - ${vm.subPrice}`
         })
         .catch(res => {
           console.error('Currency Request Failed', res)
@@ -250,7 +267,11 @@ export default {
         })
     },
     setButtonText() {
-      if (this.onlyOneOption && !this.variantInLineItems && this.variant.availableForSale == true) {
+      if (
+        this.onlyOneOption &&
+        !this.variantInLineItems &&
+        this.variant.availableForSale === true
+      ) {
         this.butttonText = this.defaultText
       } else if (this.onlyOneOption && this.variantInLineItems) {
         this.buttonText = 'Added!'
@@ -266,24 +287,33 @@ export default {
     },
     addToCart() {
       if (this.allOptionsSelected && this.product.availableForSale) {
-        const subscribed = this.isSubscriptionOn && this.verifySubscription
-        const variant = subscribed ? this.subscriptionVariant : this.variant
-        const cartMeta = subscribed
-          ? this.metafields.filter(field => {
-              return !field.id && field.id !== null
-            })
-          : []
+        const subscribed = this.isSubscriptionOn && this.hasSubscription
+
+        const rechargeFields = [
+          {
+            key: 'charge_interval_frequency',
+            value: this.getMetafield('subscriptions', 'shipping_interval_frequency')
+          },
+          {
+            key: 'order_interval_frequency',
+            value: this.getMetafield('subscriptions', 'shipping_interval_frequency')
+          },
+          {
+            key: 'order_interval_unit',
+            value: 'day'
+          }
+        ]
 
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,
-          variant,
+          variant: subscribed ? { ...this.variant, price: this.subscriptionPrice } : this.variant,
           quantity: this.quantity || 1,
           productId: this.product.id,
           handle: this.product.handle,
           vendor: this.product.vendor,
           tags: this.product.tags,
-          metafields: cartMeta
+          metafields: subscribed ? [...rechargeFields] : []
         }
 
         this.addLineItem(lineItem)
@@ -314,8 +344,5 @@ export default {
 .clicked {
   @include hover-transition;
   width: 217.58px;
-}
-
-.unclicked {
 }
 </style>

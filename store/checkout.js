@@ -1,5 +1,5 @@
 import localforage from 'localforage'
-const isFunc = (func) => (typeof func === 'function')
+const isFunc = func => typeof func === 'function'
 
 export const state = () => ({
   id: null,
@@ -64,7 +64,11 @@ export const actions = {
       throw new Error('Cannot checkout with an empty cart')
     }
 
-    let checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId, metafields: this.$recart.getMetafieldsForCheckout() })
+    let checkout = await this.$nacelle.checkout.process({
+      cartItems,
+      checkoutId,
+      metafields: this.$recart.getMetafieldsForCheckout()
+    })
     if (checkout && checkout.completed) {
       checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
     }
@@ -83,7 +87,10 @@ export const actions = {
   async addCheckoutParams({ commit, dispatch, state, rootState }) {
     const queryOperator = state.url.includes('?') ? '&' : '?'
     const linkerParam = await dispatch('getLinkerParam')
-    await commit('setUrl', `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}`)
+    await commit(
+      'setUrl',
+      `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}`
+    )
   },
 
   async getLinkerParam() {
@@ -91,7 +98,7 @@ export const actions = {
       const gaClient = process.browser ? window.ga : undefined
 
       if (typeof gaClient !== 'undefined') {
-        gaClient((tracker) => resolve(tracker.get('linkerParam')))
+        gaClient(tracker => resolve(tracker.get('linkerParam')))
       }
 
       // if no ga resolve with empty string
@@ -99,8 +106,7 @@ export const actions = {
     })
   },
 
-  async checkoutRedirect ({ state }) {
-
+  async checkoutRedirect({ state }) {
     if (process.browser) {
       const discountCode = await localforage.getItem('discount')
       window.location = discountCode ? state.url + '&discount=' + discountCode : state.url

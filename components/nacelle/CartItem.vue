@@ -2,60 +2,71 @@
   <div>
     <!-- <hr class="item-divider"/> -->
     <div class="columns is-marginless is-mobile flyout-cart-item">
-    
-    <router-link
-      :to="`${pathFragment}${item.handle}`"
-      class="column is-3 product-image"
-      :class="[item.vendor === 'Extend' ? 'disabled' : null]"
-      @click.native="hideCart"
-    >
-      <product-image
-        v-if="productThumbnail && productThumbnail.length > 0"
-        :source="productThumbnail"
-        :alt="item.title"
-      />
-    </router-link>
+      <router-link
+        :to="`${pathFragment}${item.handle}`"
+        class="column is-3 product-image"
+        :class="[item.vendor === 'Extend' ? 'disabled' : null]"
+        @click.native="hideCart"
+      >
+        <product-image
+          v-if="productThumbnail && productThumbnail.length > 0"
+          :source="productThumbnail"
+          :alt="item.title"
+        />
+      </router-link>
 
-    <div class="product-details">
-      <div class="product-row">
-        <div class="product-title-container">
-          <router-link
-          :to="`${pathFragment}${item.handle}`"
-          :class="[item.vendor === 'Extend' ? 'disabled' : null]"
-          @click.native="hideCart"
-        >
-        <div class="product-details__title">
-          {{formatTitle(item.title)}} 
-        </div>
-        </router-link>
-        </div>
-        
-        <div class="product-details__price">   
-          <product-price class="flyout-item-price" :price="item.variant.price" :variantId="item.variant.id"/>
-        </div>
-      </div>
-      
-     
-      <div class="product-row">
-        <div v-if="item.vendor !=='Extend'" class="product-details__variant">{{formatVariantTitle(variant.title)}}</div>
-        <div v-else class="product-details__variant">{{warrantyVariant(item)}}</div>
-      </div>
-      <div class="product-row">
-        <div class="product-details__quanity">
-          <quantity-selector :item="item" :quantity="item.quantity" :isCheckout="true" :styleObj="quanitySelectorStyle"/>
-        </div>
-      </div>
-      <div class="product-row">
-        <SubscriptionCartLineItemDetails :line-item="item">
-          <template v-slot:default="{ subscription }">
-            <div class="subscription-pill">
-              25% off w/ auto delivery
-            </div>
-          </template>
-        </SubscriptionCartLineItemDetails>
-      </div>
-    </div>
+      <div class="product-details">
+        <div class="product-row">
+          <div class="product-title-container">
+            <router-link
+              :to="`${pathFragment}${item.handle}`"
+              :class="[item.vendor === 'Extend' ? 'disabled' : null]"
+              @click.native="hideCart"
+            >
+              <div class="product-details__title">
+                {{ formatTitle(item.title) }}
+              </div>
+            </router-link>
+          </div>
 
+          <div class="product-details__price">
+            <product-price
+              class="flyout-item-price"
+              :price="item.variant.price"
+              :variantId="item.variant.id"
+            />
+          </div>
+        </div>
+
+        <div class="product-row">
+          <div v-if="item.vendor !== 'Extend'" class="product-details__variant">
+            {{ formatVariantTitle(variant.title) }}
+          </div>
+          <div v-else class="product-details__variant">{{ warrantyVariant(item) }}</div>
+        </div>
+        <div class="product-row">
+          <div class="product-details__quanity">
+            <quantity-selector
+              :item="item"
+              :quantity="item.quantity"
+              :isCheckout="true"
+              :styleObj="quanitySelectorStyle"
+            />
+          </div>
+        </div>
+        <div class="product-row">
+          <SubscriptionCartLineItemDetails :line-item="item">
+            <template v-slot:default="{ subscription }">
+              <div v-if="variant.discountPercentage" class="subscription-pill">
+                {{ variant.discountPercentage }}% off w/ auto delivery
+              </div>
+               <div v-else class="subscription-pill">
+                Auto delivery
+              </div>
+            </template>
+          </SubscriptionCartLineItemDetails>
+        </div>
+      </div>
     </div>
     <!-- <hr class="item-divider"/> -->
   </div>
@@ -94,10 +105,10 @@ export default {
     return {
       quanitySelectorStyle: {
         height: '24px'
-      }, 
+      },
       cartBalanceMessage: ''
     }
-  },  
+  },
   computed: {
     productThumbnail() {
       if (this.item && this.item.variant && this.item.variant.featuredMedia) {
@@ -121,56 +132,51 @@ export default {
       }
       return defaultVariant
     },
-     ...mapState('cart', ['lineItems', 'cartVisible']),
+    ...mapState('cart', ['lineItems', 'cartVisible'])
   },
   methods: {
     ...mapMutations('cart', ['hideCart']),
-   
+
     formatTitle(title) {
-      if(title.includes('JetPack')) {
+      if (title.includes('JetPack')) {
         return title.split('-')[0].trim()
       }
-      if(title.includes('Book')) {
+      if (title.includes('Book')) {
         return title.split('- Recipe Book')[0].trim()
       }
-      if(title.includes('Extend')) {
+      if (title.includes('Extend')) {
         return 'Extend Protection Plan'
       }
-      return title;
+      return title
     },
-    jetpackVariant(variant) {
-
-    },
+    jetpackVariant(variant) {},
     formatVariantTitle(title) {
-      if(title === 'Default Title') {
-	      if(this.item.title.includes('Book')) {
-	        return 'Recipe Book';
-	      }
-	      else{return 'JetPack Smoothie';}
+      if (title === 'Default Title') {
+        if (this.item.title.includes('Book')) {
+          return 'Recipe Book'
+        } else {
+          return 'JetPack Smoothie'
+        }
       }
       return title
     },
     warrantyVariant(item) {
       let variantId = btoa(`gid://shopify/ProductVariant/${item.metafields[0].value}`)
-      let warrantyProduct = this.lineItems.filter((item) => {
+      let warrantyProduct = this.lineItems.filter(item => {
         return item.variant.id === variantId
       })
       try {
         return `${warrantyProduct[0].title} - ${warrantyProduct[0].variant.title}`
-      } catch(e) {
-        
-      }
-      
+      } catch (e) {}
     }
   },
   mounted() {
- 
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .product-image {
   display: flex;
   align-items: center;
@@ -228,11 +234,8 @@ export default {
     font-family: Regular;
     font-size: 14px;
     color: $grayscale-gray;
-    line-height: 1.57px;
     letter-spacing: 0.5px;
-    height: 10px;
   }
-
 }
 
 .subscription-pill {

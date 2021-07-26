@@ -84,12 +84,9 @@
             <div class="product-select__controls__add-to-cart">
               <div class="product-select__controls__add-to-cart__subscribe-select">
                 <SubscriptionToggle
-                  :value="isSubscriptionActive"
+                  :value.sync="isSubscriptionActive"
                   :product="productData"
                   :variant="currentVariant"
-                  :metafields.sync="productData.metafields"
-                  :frequency.sync="frequency"
-                  v-on:input="handleSubscriptionToggle"
                 />
                 <div
                   class="product-select__controls__add-to-cart__subscribe-select__about"
@@ -537,46 +534,15 @@
             />
           </div>
           <div class="media-content__main__details" v-if="loaded && productDescription">
-            <div
+            <ProductMediaTile
+              class="media-content__main__details__content-block"
               v-for="(section, i) of productDescription"
               :key="i"
-              class="media-content__main__details__content-block"
-            >
-              <div class="media-content__main__details__content-block__heading">
-                {{ section.fields.heading }}
-              </div>
-              <div class="media-content__main__details__content-block__text">
-                <RichTextRenderer :document="section.fields.text" />
-              </div>
-              <div
-                v-if="
-                  section.fields.video &&
-                    section.fields.video.fields.file.contentType.includes('video')
-                "
-                class="media-content__main__details__content-block__media rounded-video-container"
-              >
-                <VideoContainer
-                  :source="section.fields.video.fields.file.url"
-                  class="media-content__main__details__content-block__media__video"
-                />
-              </div>
-              <div
-                v-if="
-                  section.fields.video &&
-                    section.fields.video.fields.file.contentType.includes('image')
-                "
-                class="media-content__main__details__content-block__media rounded-video-container"
-              >
-                <img
-                  class="media-content__main__details__content-block__img"
-                  :src="
-                    optimizeSource({
-                      url: section.fields.video.fields.file.url
-                    })
-                  "
-                />
-              </div>
-            </div>
+              :title="section.fields.heading"
+              :text="section.fields.text"
+              :contentful-media="section.fields.video"
+              :external-media-url="section.fields.externalVideoUrl"
+            />
           </div>
         </div>
       </div>
@@ -611,6 +577,7 @@ import SubscriptionToggle from '~/components/subscriptionToggle'
 import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton'
 import JetpackVariantsDropdown from '~/components/jetpackVariantsDropdown'
 import ShippingTime from '~/components/shippingTime'
+import ProductMediaTile from '~/components/ProductMediaTile'
 
 import imageOptimize from '~/mixins/imageOptimize'
 
@@ -678,7 +645,8 @@ export default {
     Info,
     ModelIcon,
     RichTextRenderer,
-    CaretDown
+    CaretDown,
+    ProductMediaTile
   },
   mixins: [imageOptimize],
   props: {
@@ -845,13 +813,6 @@ export default {
           this.productDescription = something.fields.productDescription
           this.features = something.fields.features
         })
-    },
-    /**
-     * Handler for the subscription toggle checkbox.
-     * If checked, set the flag on this component to true.
-     */
-    handleSubscriptionToggle(active) {
-      this.isSubscriptionActive = active
     }
   },
   async mounted() {

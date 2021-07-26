@@ -1,10 +1,7 @@
 <template>
   <div class="checkout-button" role="button" :class="{ 'is-loading': loading }" @click="checkout">
     {{ checkoutText }}
-    <span 
-      class="subtotal" 
-      v-if="cartSubtotal > 0 && showPrice && displayPrice"
-    >
+    <span class="subtotal" v-if="cartSubtotal > 0 && showPrice && displayPrice">
       &nbsp;—&nbsp;{{ displayPrice }}
     </span>
   </div>
@@ -23,7 +20,7 @@ export default {
       type: Boolean,
       default: true
     },
-    // Can be toggled on to prevent the normal checkout redirection behavior 
+    // Can be toggled on to prevent the normal checkout redirection behavior
     preventCheckout: {
       type: Boolean,
       default: false
@@ -86,9 +83,9 @@ export default {
 
       await Axios(config)
         .then(res => {
-          const consumerPrices = res.data?.ConsumerPrices; 
-          if (!Array.isArray(consumerPrices) || !consumerPrices.length || !consumerPrices[0] ) {
-            // Currently the API returns an array of `null` values, 
+          const consumerPrices = res.data?.ConsumerPrices
+          if (!Array.isArray(consumerPrices) || !consumerPrices.length || !consumerPrices[0]) {
+            // Currently the API returns an array of `null` values,
             // so we also are checking the first index to make sure
             // the value isn't null.
             this.displayPrice = `${res.data.Symbol}${_price.toFixed(2)}`
@@ -114,7 +111,7 @@ export default {
     },
     async checkout() {
       // If prevent flag is enabled, bail
-      if (this.preventCheckout) return;
+      if (this.preventCheckout) return
 
       this.loading = true
 

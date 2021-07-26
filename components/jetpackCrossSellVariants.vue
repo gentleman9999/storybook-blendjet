@@ -24,24 +24,9 @@
     <div class="carousel-indicator-container" v-if="showIndicator">
       <div class="carousel-indicator">
         <div class="carousel-indicator__left" @click="back">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="29"
-            height="29"
-            viewBox="0 0 29 29"
-          >
-            <g
-              fill="none"
-              fill-rule="evenodd"
-              transform="matrix(-1 0 0 1 28 1)"
-            >
-              <circle
-                cx="13.5"
-                cy="13.5"
-                r="13.5"
-                stroke="#373795"
-                stroke-width="1.5"
-              />
+          <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
+            <g fill="none" fill-rule="evenodd" transform="matrix(-1 0 0 1 28 1)">
+              <circle cx="13.5" cy="13.5" r="13.5" stroke="#373795" stroke-width="1.5" />
               <g fill="#373795">
                 <path
                   d="M0 3.6L9 3.6 9 5.4 0 5.4z"
@@ -55,27 +40,13 @@
             </g>
           </svg>
         </div>
-        <progress
-          class="progress is-small"
-          :value="jetpackIndex + 1"
-          :max="jetpacks.length"
+        <progress class="progress is-small" :value="jetpackIndex + 1" :max="jetpacks.length"
           >15%</progress
         >
         <div class="carousel-indicator__right" @click="forward">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="29"
-            height="29"
-            viewBox="0 0 29 29"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
             <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
-              <circle
-                cx="13.5"
-                cy="13.5"
-                r="13.5"
-                stroke="#373795"
-                stroke-width="1.5"
-              />
+              <circle cx="13.5" cy="13.5" r="13.5" stroke="#373795" stroke-width="1.5" />
               <g fill="#373795">
                 <path
                   d="M0 3.6L9 3.6 9 5.4 0 5.4z"
@@ -98,15 +69,7 @@
 </template>
 
 <script>
-// import Tabs from './tabs';
-// import JetpackPDPModal from '~/components/jetpackPDPModal'
-import imageOptimize from '~/mixins/imageOptimize'
 import JetpackCrossSellItem from '~/components/jetpackCrossSellItem'
-import QuantitySelector from '~/components/nacelle/QuantitySelector'
-import SubscriptionToggle from '~/components/subscriptionToggle'
-import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton'
-import RechargeModal from '~/components/rechargeModal'
-import Info from '~/components/svg/info'
 
 export default {
   data() {
@@ -143,7 +106,7 @@ export default {
         textTransform: 'uppercase',
         marginBottom: '8px'
       },
-      category: 'Smoothie',
+      category: '',
       frequency: null,
       quantity: 1,
       showIndicator: false
@@ -155,20 +118,10 @@ export default {
       this.jetpackIndex > 0 ? this.jetpackIndex-- : (this.jetpackIndex = 0)
     },
     forward() {
-      this.jetpackIndex < this.jetpacks.length
-        ? this.jetpackIndex++
-        : (this.jetpackIndex = 0)
+      this.jetpackIndex < this.jetpacks.length ? this.jetpackIndex++ : (this.jetpackIndex = 0)
     },
     formatTitle(title) {
       return title.split('-')[0].trim()
-    },
-
-    openRechargeModal() {
-      this.$modal.show(RechargeModal, {
-        height: 'auto',
-        adaptive: true,
-        scrollable: false
-      })
     },
     setWidthData() {
       console.log('size', window.innerWidth)
@@ -206,11 +159,6 @@ export default {
   },
 
   components: {
-    Info,
-    SubscriptionToggle,
-    QuantitySelector,
-    SubscriptionAddToCartButton,
-    RechargeModal,
     JetpackCrossSellItem
   },
   props: {

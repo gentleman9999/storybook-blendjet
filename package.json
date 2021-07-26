@@ -11,17 +11,16 @@
     "serve": "serve dist -p 4000",
     "storybook": "start-storybook -p 3333",
     "storybook:build": "build-storybook -c .storybook -o .out",
-    "storybook:serve": "serve .out -p 4444",
-    "postinstall": "patch-package"
+    "storybook:serve": "serve .out -p 4444"
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^13.4.0",
     "@contentful/rich-text-types": "^14.1.0",
-    "@nacelle/client-js-sdk": "1.0.5",
+    "@nacelle/client-js-sdk": "3.2.1",
     "@nacelle/contentful-preview-connector": "^0.1.4",
     "@nacelle/nacelle-klaviyo-nuxt-module": "^0.0.12",
     "@nacelle/nacelle-loox-nuxt-module": "^0.0.1",
-    "@nacelle/nacelle-nuxt-module": "5.0.7",
+    "@nacelle/nacelle-nuxt-module": "5.6.0",
     "@nuxt/core": "^2.14.7",
     "@nuxtjs/axios": "^5.9.5",
     "@nuxtjs/bulma": "^1.2.7",

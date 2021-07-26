@@ -2,7 +2,7 @@
   <div class="app nacelle" :style="`padding-top: ${headerHeight}px;`">
     <global-header ref="header" />
     <!-- <nuxt :style="{ 'margin-top': `${headerHeight}px` }" /> -->
-      <nuxt  :style="{ 'min-height': '100vh' }"/>
+    <nuxt :style="{ 'min-height': '100vh' }" />
 
     <!-- <site-footer /> -->
     <Footer />
@@ -41,14 +41,14 @@ export default {
   methods: {
     ...mapActions('cart', ['initializeCart']),
     ...mapActions('checkout', ['initializeCheckout']),
-    ...mapActions('user', ['readSession']),
+    ...mapActions('user', ['readSession', 'initUserCountry']),
     setHeader(indexPage = true) {
       if (this.$refs.header) {
-        if(indexPage === 'index') {
-          this.headerHeight = 40;
+        if (indexPage === 'index') {
+          this.headerHeight = 40
         } else {
           // this.headerHeight = this.$refs.header.$el.clientHeight
-          this.headerHeight = 100;
+          this.headerHeight = 100
         }
       }
     }
@@ -64,7 +64,6 @@ export default {
     ...mapGetters('space', ['getMetatag'])
   },
   created() {
-
     // Discounts
     if (process.client || process.browser) {
       if (this.$route.query && this.$route.query.discount) {
@@ -72,9 +71,13 @@ export default {
       }
     }
 
+    // Geolocation + Country blacklisting
+    if (process.client || process.browser) {
+      // This method hits the gointerpay API, which adds the user's location to the user store
+      this.initUserCountry()
+    }
   },
   async mounted() {
-
     this.setHeader($nuxt.$route.name)
     await this.initializeCheckout()
     await this.initializeCart()
@@ -86,21 +89,22 @@ export default {
     this.readSession()
     Weglot.initialize({
       api_key: 'wg_2a912f6180e1cf676bb2149a31de8a0a9'
-    });
+    })
 
-    const client = createClient();
+    const client = createClient()
 
-    client.getAsset('6GbAkBDBztUgEO6mC6Eabg')
-      .then((asset)=>{
+    client
+      .getAsset('6GbAkBDBztUgEO6mC6Eabg')
+      .then(asset => {
         // console.log('asset', asset)
         this.previewUrl = asset.fields.file.url
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error)
       })
   },
   watch: {
-    "$nuxt.$route.name"(value) {
+    '$nuxt.$route.name'(value) {
       this.setHeader(value)
       // track(value)
       // this.routeName = value;
@@ -134,24 +138,26 @@ export default {
     }
 
     // if (description) {
-      // meta.push({
-      //   hid: 'description',
-      //   name: 'description',
-      //   content: "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
-      // })
-      meta.push({
-        hid: 'og:description',
-        property: 'og:description',
-        content: "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
-      })
+    // meta.push({
+    //   hid: 'description',
+    //   name: 'description',
+    //   content: "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
+    // })
+    meta.push({
+      hid: 'og:description',
+      property: 'og:description',
+      content:
+        "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
+    })
     // }
 
     // if (image) {
-      meta.push({
-        hid: 'og:image',
-        property: 'og:image',
-        content: 'https://images.ctfassets.net/strhx3d94c40/6GbAkBDBztUgEO6mC6Eabg/72dd482c9a3c3a2177565efdca57616b/BlendJet-Social-Share-Thumbnail.png'
-      })
+    meta.push({
+      hid: 'og:image',
+      property: 'og:image',
+      content:
+        'https://images.ctfassets.net/strhx3d94c40/6GbAkBDBztUgEO6mC6Eabg/72dd482c9a3c3a2177565efdca57616b/BlendJet-Social-Share-Thumbnail.png'
+    })
     // }
 
     meta.push({
@@ -181,13 +187,15 @@ export default {
     meta.push({
       hid: 'twitter:description',
       name: 'twitter:description',
-      content: "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
+      content:
+        "The BlendJet 2 portable blender packs big blender power on the go. It crushes ice or almost anything. It even cleans itself. It's USB-C rechargeable and water-resistant too. Get your BlendJet 2 today!"
     })
 
     meta.push({
       hid: 'twitter:image',
       property: 'twitter:image',
-      content: 'https://images.ctfassets.net/strhx3d94c40/6GbAkBDBztUgEO6mC6Eabg/72dd482c9a3c3a2177565efdca57616b/BlendJet-Social-Share-Thumbnail.png'
+      content:
+        'https://images.ctfassets.net/strhx3d94c40/6GbAkBDBztUgEO6mC6Eabg/72dd482c9a3c3a2177565efdca57616b/BlendJet-Social-Share-Thumbnail.png'
     })
 
     return {
@@ -196,7 +204,7 @@ export default {
       link: [
         {
           rel: 'canonical',
-          href: `https://blendjet.com${this.$route.path}` 
+          href: `https://blendjet.com${this.$route.path}`
         }
       ]
     }
@@ -205,15 +213,14 @@ export default {
 </script>
 
 <style lang="scss">
-
 .cart {
   z-index: 9999;
   background: white;
 }
 
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -260,8 +267,8 @@ html {
 }
 
 .page-enter-active {
-   animation: fadeIn;
-    animation-duration: 0.3s;
+  animation: fadeIn;
+  animation-duration: 0.3s;
 }
 .page-leave-active {
   animation: fadeOut;
@@ -273,6 +280,4 @@ html {
 .page-leave-active {
   // opacity: 0;
 }
-
-
 </style>

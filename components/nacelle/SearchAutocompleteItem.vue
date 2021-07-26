@@ -1,13 +1,13 @@
 <template>
   <div>
-  <!-- <router-link :to="`${pathFragment}${item.handle}`"> -->
+    <!-- <router-link :to="`${pathFragment}${item.handle}`"> -->
     <div v-if="list" class="autocomplete-item" @click="emitQuery(item)">
-      {{item.title}}
+      {{ item.title }}
     </div>
-    <router-link v-if="!list" :to="`${pathFragment}${item.handle}`"> 
+    <router-link v-if="!list" :to="`${pathFragment}${item.handle}`">
       <div class="autocomplete-item nacelle">
         <div class="item__image">
-           <product-image 
+          <product-image
             v-if="productThumbnail && productThumbnail.length > 0"
             :source="item.featuredMedia.thumbnailSrc"
             :alt="item.title"
@@ -15,11 +15,9 @@
         </div>
         <div class="item__details">
           <div class="item__details__title">
-            {{item.title}}
+            {{ item.title }}
           </div>
-          <div class="item__details__category">
-
-          </div>
+          <div class="item__details__category"></div>
           <div class="item__details__price">
             <product-price :price="productPrice" />
           </div>
@@ -60,30 +58,26 @@ export default {
     ...mapMutations('search', ['setAutocompleteNotVisible']),
     emitQuery(item) {
       // this.setQuery(item)
-      this.setQuery({value: this.item.title, origin: 'global'})
+      this.setQuery({ value: this.item.title, origin: 'global' })
       // this.setAutocompleteNotVisible()
       // console.log('item selecte', item)
       this.$emit('selectedQuery', item.title)
     }
-    
+
     //  ...mapMutations('search', ['setQuery']),
     // setQuery(term) {
     //   t
     // }
   },
   computed: {
-    productThumbnail () {
-      if (
-        this.item &&
-        this.item.featuredMedia &&
-        this.item.featuredMedia.thumbnailSrc
-      ) {
+    productThumbnail() {
+      if (this.item && this.item.featuredMedia && this.item.featuredMedia.thumbnailSrc) {
         return this.item.featuredMedia.thumbnailSrc
       }
 
       return ''
     },
-    productPrice () {
+    productPrice() {
       if (
         this.item &&
         this.item.variants &&
@@ -102,7 +96,7 @@ export default {
 
 <style lang="scss" scoped>
 .autocomplete-item {
-  // margin-top:10px;
+  // margin-top: 10px;
   // margin-bottom: 10px;
   color: $primary-purple;
   font-family: Medium;
@@ -115,13 +109,16 @@ export default {
 }
 
 .item {
-
   &__image {
-    height: 112px;
+    margin-right: 16px;
+    img {
+      height: 112px;
+      width: 112px;
+      display: block;
+    }
   }
 
   &__details {
-
     &__title {
       font-family: Bold;
       font-size: 14px;

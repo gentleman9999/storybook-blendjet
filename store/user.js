@@ -1,7 +1,9 @@
 import { uuid } from 'uuidv4'
 import localforage from 'localforage'
 import * as Cookies from 'es-cookie'
+import Axios from 'axios'
 
+// Note on locales - BlendJet does not use Nacelle's base locale structure.
 export const state = () => ({
   anonymousID: null,
   userID: null,
@@ -18,7 +20,11 @@ export const state = () => ({
     locale: 'en-US',
     symbol: '$'
   },
-  acceptCookies: false
+  acceptCookies: false,
+  // BlendJet doesn't seem to use `user.locale`, but we needed a `country`
+  // prop to reference for country-specific modules + product blacklisting,
+  // so this root-level country property was created.
+  country: 'US'
 })
 
 export const mutations = {
@@ -41,6 +47,10 @@ export const mutations = {
     state.locale = locale
   },
 
+  setCountry(state, countryCode) {
+    state.country = countryCode
+  },
+
   setAcceptCookies(state, payload) {
     state.acceptCookies = payload
   }
@@ -53,10 +63,46 @@ export const actions = {
 
     if (process.browser) {
       const userData = Cookies.get('user-data')
-
       if (userData) {
         context.commit('setUserData', JSON.parse(userData))
       }
+    }
+  },
+
+  async initUserCountry(context) {
+    if (process.browser) {
+      // Get country by pinging the gointerpay API
+      // Note: The call will defer to the `_rchcountry` cookie (if it's set)
+      const fakePrice = encodeURIComponent(
+        JSON.stringify([
+          {
+            Price: 10.99
+          }
+        ])
+      )
+      const baseUrl = 'https://checkout.gointerpay.net/v2.21/localize'
+      const params = {
+        MerchantId: '3af65681-4f06-46e4-805a-f2cb8bdaf1d4',
+        Country:
+          document.cookie.includes('_rchcountry') &&
+          document.cookie.match('(^|;)\\s*' + '_rchcountry' + '\\s*=\\s*([^;]+)').pop(),
+        MerchantPrices: fakePrice
+      }
+      await Axios({
+        method: 'get',
+        url: `${baseUrl}?${Object.keys(params)
+          .filter(k => params[k])
+          .map(k => `${k}=${params[k]}`)
+          .join('&')}`
+      })
+        .then(res => {
+          if (res.data.Country) {
+            context.commit('setCountry', res.data.Country)
+          }
+        })
+        .catch(res => {
+          console.error('Country Detection Failed')
+        })
     }
   },
 

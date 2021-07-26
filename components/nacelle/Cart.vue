@@ -1,241 +1,24 @@
 <template>
   <transition name="fade">
-    <div class="cart-container" v-if="cartVisible">
-      <!-- <div
-        v-if="!isMobile"
-        style="background: black;height: 100px;color:white;position: absolute;text-align: center;font-size:42px;line-height: 100px;width:calc(100% - 394px);"
-      >
-        BLACK FRIDAY DEALS
-      </div> -->
-
-      <!-- <div v-if="!isMobile" class="jetpack-upsell">
-        <BlendJetCart />
-      </div> -->
-
-      <!-- <div v-if="!isMobile" class="blendjet-upsell">
-        <JetpackCart />
-      </div> -->
-
-      <!-- <div v-if="!isMobile" class="jetpack-upsell">
-        <SleeveCart />
-      </div> -->
-
-      <!-- <div v-if="!isMobile" class="blendjet-upsell">
-        <ToteCart />
-      </div> -->
-
-      <transition name="fade">
-        <div v-if="!isMobile" style="z-index: 100000000;">
-          <div
-            style="position: fixed;width:446px;background-color: #1e90bb;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
-            class="ipadFix"
-          >
-            <div style="margin: 0 auto; text-align: center;">MUST HAVES</div>
-          </div>
-
-          <div
-            class="mobile-upsell__container"
-            style="overflow: auto;height: 100%;padding-top:40px;"
-          >
-            <div class="mobile-upsell__component-container">
-              <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
-                <JetpackCartUpsell
-                  product-handle="jetpack-protein-smoothie"
-                  title="Try JetPack Protein Smoothies"
-                  subtitle="6 Ready-to-Blend Smoothies"
-                />
-              </div>
-              <div class="mobile-upsell__jetpacks" style="height: unset;padding-bottom: 40px;">
-                <JetpackCartUpsell
-                  product-handle="jetpack-smoothies"
-                  title="Try JetPack Smoothies"
-                  subtitle="6 Ready-to-Blend Smoothies"
-                />
-              </div>
-              <div class="mobile-upsell__blendjet" style="height: unset;">
-                <BlendJetCart />
-              </div>
-              <div class="mobile-upsell__blendjet" style="height: unset;">
-                <SleeveCart />
-              </div>
-              <div class="mobile-upsell__blendjet" style="height: unset;">
-                <BookCart />
-              </div>
-              <div class="mobile-upsell__blendjet" style="height: unset;padding-bottom: 40px;">
-                <ToteCart />
-              </div>
-              <div class="mobile-upsell__blendjet" style="height: unset;">
-                <BlendJetOneCart />
-              </div>
-
-              <div
-                style="background: #1E90BB;z-index: 9999;width:100%;height:50px;position: relative;box-shadow: 0 0 50px 50px #1E90BB;"
-              ></div>
-            </div>
-
-            <div
-              style="position: fixed;width:446px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 200px;z-index: 10000000;font-size:18px;font-family: 'Medium';line-height: 180px;bottom: 0;pointer-events: none;z-index: 99;"
-              class="ipadFix"
-            >
-              <div style="margin: 0 auto; text-align: center;line-height: 320px;">
-                <svg
-                  width="18px"
-                  height="18px"
-                  viewBox="0 0 16 16"
-                  class="bi bi-chevron-double-down"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                </svg>
-                SCROLL FOR MORE
-                <svg
-                  width="18px"
-                  height="18px"
-                  viewBox="0 0 16 16"
-                  class="bi bi-chevron-double-down"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </transition>
-
-      <transition name="fade">
-        <div class="mobile-upsell" v-if="showUpsell" style="z-index: 100000000;">
-          <div
-            style="position: fixed;width:377px;background-color: #1e90bb;color:white;height: 60px;z-index: 10000000;font-size:24px;font-family: 'Bold';line-height: 60px;"
-          >
-            <div style="margin: 0 auto; text-align: center;">MUST HAVES</div>
-          </div>
-          <div class="mobile-upsell__container">
-            <div
-              class="mobile-upsell__close"
-              @click="closeUpsellModal"
-              style="z-index: 1000000000;position: fixed;top:0;right:0;"
-            >
-              <Close :color="'white'" />
-            </div>
-            <div class="mobile-upsell__component-container" style="padding-top:60px;">
-              <div class="mobile-upsell__jetpacks">
-                <JetpackCartUpsell
-                  product-handle="jetpack-protein-smoothie"
-                  title="Try JetPack Protein Smoothies"
-                  subtitle="6 Ready-to-Blend Smoothies"
-                />
-              </div>
-              <div class="mobile-upsell__jetpacks">
-                <JetpackCartUpsell
-                  product-handle="jetpack-smoothies"
-                  title="Try JetPack Smoothies"
-                  subtitle="6 Ready-to-Blend Smoothies"
-                />
-              </div>
-              <div class="mobile-upsell__blendjet">
-                <BlendJetCart />
-              </div>
-              <div class="mobile-upsell__blendjet">
-                <SleeveCart />
-              </div>
-              <div class="mobile-upsell__blendjet">
-                <BookCart />
-              </div>
-              <div class="mobile-upsell__blendjet" style="padding-bottom: 20px;">
-                <ToteCart />
-              </div>
-              <div class="mobile-upsell__blendjet">
-                <BlendJetOneCart />
-              </div>
-            </div>
-
-            <div
-              style="position: fixed;width:377px;text-align: center;background: linear-gradient(transparent, #1E90BB);color:white;height: 100px;z-index: 10000000;font-size:12px;font-family: 'Medium';line-height: 180px;bottom: 79px;pointer-events: none;"
-            >
-              <div style="margin: 0 auto; text-align: center;">
-                <svg
-                  width="12px"
-                  height="12px"
-                  viewBox="0 0 16 16"
-                  class="bi bi-chevron-double-down"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                </svg>
-                SCROLL FOR MORE
-                <svg
-                  width="12px"
-                  height="12px"
-                  viewBox="0 0 16 16"
-                  class="bi bi-chevron-double-down"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div class="mobile-upsell__checkout" style="z-index:100000001;">
-              <cart-flyout-checkout-button
-                :checkoutText="'Continue to Checkout'"
-                :showPrice="false"
-                :class="[checkoutDisabled ? 'checkout-disabled' : null]"
-                :key="1"
-              />
-            </div>
-          </div>
-        </div>
-      </transition>
+    <div class="cart-container" v-show="cartVisible">
+      <CartUpsells
+        :closeUpsellModal="closeUpsellModal"
+        :checkoutDisabled="checkoutDisabled"
+        :showUpsell="showUpsell"
+        :isMobile="isMobile"
+      />
 
       <div class="flyout">
         <cart-flyout-header @close="handleClose" />
 
-        <!-- <cart-flyout-messaging>
-          <messaging-free-shipping-counter />
-        </cart-flyout-messaging> -->
         <div class="cart-items">
           <cart-item
             v-for="item in lineItems"
             :key="item.variant.id"
             :item="item"
             @checkoutDisabled="handleCheckoutDisable"
-          ></cart-item>
+          />
         </div>
-        <!-- <div v-if="loaded" class="route-insurance">
-          <div id="RouteWidget"></div>
-        </div> -->
         <div class="cart-message">{{ cartMessage }}</div>
         <div class="free-shipping" v-if="country === 'US'">
           <div class="free-shipping__svg">
@@ -321,9 +104,7 @@
             </svg>
           </div>
         </div>
-        <!-- Checkout CTA -->
         <div class="cart-checkout">
-          <!-- On mobile, the CTA triggers the upsell window.  On desktop, it redirects to checkout immediately -->
           <cart-flyout-checkout-button
             @Country="setCountry"
             @DisplayPrice="setDisplayPrice"
@@ -334,40 +115,26 @@
           />
         </div>
 
-        <div class="shipping-time">
-          <!-- <ShippingTime /> -->
-        </div>
         <div class="value-props">
-          <!-- <div class="value-props__payment-options">
-            <div class="value-props__payment-options__amazon">
-              <img class="amazonpay" :src="optimizeSource({url: '/images/blendjetPDP/amazonpay.png'})" />
-            </div>
-            <div class="value-props__payment-options__apple">
-              <img class="applepay" :src="optimizeSource({url: '/images/blendjetPDP/applepay.png'})" />
-            </div>
-            <div class="value-props__payment-options__paypal">
-              <img class="paypal" :src="optimizeSource({url: '/images/blendjetPDP/paypal.png'})" />
-            </div>
-          </div> -->
-
-          <!-- <div class="mobile-divider-container">
-            <hr class="mobile-divider" />
-          </div> -->
-
           <div class="value-props__badges">
             <div class="value-props__badges__img">
-              <a href="https://www.trustedsite.com/verify?host=blendjet.com" target="_blank" rel="noopener noreferrer nofollow">
-                  <img
-                    :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
-                    alt="TrustedSite Seal" style="border: 1px solid #ccc;border-radius: 3px;"
-                  />
+              <a
+                href="https://www.trustedsite.com/verify?host=blendjet.com"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+              >
+                <img
+                  :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                  alt="TrustedSite Seal"
+                  style="border: 1px solid #ccc;border-radius: 3px;"
+                />
               </a>
             </div>
             <div class="value-props__badges__img">
               <a
                 href="https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com"
                 target="_blank"
-                rel="noopener noreferrer nofollow"	                
+                rel="noopener noreferrer nofollow"
               >
                 <img :src="optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })" />
               </a>
@@ -376,14 +143,13 @@
               <a
                 href="https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick"
                 target="_blank"
-                rel="noopener noreferrer nofollow"	                
+                rel="noopener noreferrer nofollow"
               >
                 <img :src="optimizeSource({ url: '/images/blendjetPDP/BBB-Seal.svg' })" />
               </a>
             </div>
           </div>
         </div>
-        <!-- <cart-flyout-subtotal /> -->
       </div>
     </div>
   </transition>
@@ -394,36 +160,18 @@ import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import CartFlyoutHeader from '~/components/nacelle/CartFlyoutHeader'
 import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
 import CartItem from '~/components/nacelle/CartItem'
-// import MessagingFreeShippingCounter from '~/components/nacelle/MessagingFreeShippingCounter'
-import JetpackCartUpsell from '~/components/JetpackCartUpsell'
-import BlendJetCart from '~/components/blendjetCart'
-import SleeveCart from '~/components/sleeveCart'
-import BookCart from '~/components/bookCart'
-import ToteCart from '~/components/toteCart'
-import BlendJetOneCart from '~/components/blendjetOneCart'
-import Close from '~/components/svg/modalClose'
-// import ShippingTime from '~/components/shippingTime'
 
-// const routeapp = () => import('~/plugins/routeApp.js');
+import CartUpsells from '~/components/CartUpsells'
 
 import imageOptimize from '~/mixins/imageOptimize'
 import customerChat from '~/mixins/customerChat'
+
 export default {
   components: {
-    // CartFlyoutMessaging,
-    // CartFlyoutSubtotal,
-    // MessagingFreeShippingCounter,
-    // ShippingTime,
+    CartUpsells,
     CartFlyoutHeader,
     CartFlyoutCheckoutButton,
-    CartItem,
-    BlendJetCart,
-    SleeveCart,
-    BookCart,
-    ToteCart,
-    BlendJetOneCart,
-    Close,
-    JetpackCartUpsell
+    CartItem
   },
   mixins: [imageOptimize, customerChat],
   data() {
@@ -470,7 +218,7 @@ export default {
   watch: {
     lineItems(newValue) {
       // console.log('cart', newValue)
-      if (newValue.length == 0) {
+      if (newValue.length === 0) {
         // this.hideCart()
         this.checkoutDisabled = true
         if (this.isMobile) {
@@ -640,7 +388,7 @@ export default {
       }
       &:last-child {
         margin-left: 13px;
-        margin-right: 12px;        
+        margin-right: 12px;
       }
     }
   }

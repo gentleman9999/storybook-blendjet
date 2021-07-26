@@ -71,12 +71,9 @@
             <div class="product-select__controls__add-to-cart">
               <div class="product-select__controls__add-to-cart__subscribe-select">
                 <SubscriptionToggle
-                  :value="isSubscriptionActive"
+                  :value.sync="isSubscriptionActive"
                   :product="productData"
                   :variant="productData.variants[0]"
-                  :metafields.sync="productData.metafields"
-                  :frequency.sync="frequency"
-                  v-on:input="handleSubscriptionToggle"
                 />
                 <div
                   class="product-select__controls__add-to-cart__subscribe-select__about"
@@ -114,7 +111,7 @@
                     :only-one-option="true"
                     :quantity="quantity"
                     :showPrice="true"
-                    :isSubscriptionOn="isSubscriptionActive"
+                    :is-subscription-on="isSubscriptionActive"
                     :styleObj="{
                       height: '50px',
                       marginRight: '6px'
@@ -583,7 +580,7 @@
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
-const JetpackCrossSell = () => import('~/components/jetpackCrossSell')
+const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
 import ModelIcon from '~/components/ModelIcon'
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
 
@@ -727,6 +724,7 @@ export default {
   computed: {
     ...mapState('user', ['locale'])
   },
+  watch: {},
   methods: {
     ...mapMutations('cart', ['showCart']),
     setDefaultVariant() {
@@ -770,13 +768,6 @@ export default {
     },
     setCurrency(data) {
       this.currency = data
-    },
-    /**
-     * Handler for the subscription toggle checkbox.
-     * If checked, set the flag on this component to true.
-     */
-    handleSubscriptionToggle(active) {
-      this.isSubscriptionActive = active
     }
   },
   async mounted() {

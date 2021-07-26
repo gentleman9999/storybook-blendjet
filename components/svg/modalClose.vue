@@ -1,6 +1,6 @@
 <template>
   <!-- <?xml version="1.0" encoding="UTF-8"?> -->
-  <div class="close-container" @click="close">
+  <div class="close-container" @click="onClick">
     <svg  width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="D-BlendJet-PDP-BlendJet-More-Options" transform="translate(-894.000000, -318.000000)" :fill="computedColor" :stroke="computedColor">
@@ -20,20 +20,15 @@ export default {
     color: {
       type: String,
       default: 'purple'
-    }
-  },
-  methods: {
-    close() {
-      // console.log('close')
-      // return this.$modal.hideAll()
+    },
+    onClick: {
+      type: Function,
+      default: f => f
     }
   },
   computed: {
     computedColor() {
-      if(this.color === 'white') {
-        return '#FFFFFF'
-      }
-      return '#373795'
+      return this.color === 'white' ? '#FFFFFF' : '#373795'
     }
   }
 }

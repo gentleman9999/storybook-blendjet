@@ -4,32 +4,20 @@ const contentful = require('contentful')
 
 require('dotenv').config()
 
-function contentfulRoutes() {
+function getContentfulRoutes() {
   // Get routes we care about from Contentful -test
   const client = contentful.createClient({
-    space:  process.env.CTF_SPACE_ID,
+    space: process.env.CTF_SPACE_ID,
     accessToken: process.env.CTF_CDA_ACCESS_TOKEN
-  });
+  })
 
   return Promise.all([
-    client.getEntries({
-      content_type: 'recipe',
-    }),
-    client.getEntries({
-      content_type: 'userGuide',
-    })
+    client.getEntries({ content_type: 'recipe' }),
+    client.getEntries({ content_type: 'userGuide' })
+  ]).then(([recipes, userGuide]) => [
+    ...recipes.items.map(r => ({ route: `recipes/${r.fields.handle}` })),
+    ...userGuide.items.map(r => ({ route: `user-guide/${r.fields.handle}` }))
   ])
-  .then(([recipes, userGuide]) => {
-    // Contentful routes
-    recipes = recipes.items.map(entry => {
-      return  `recipes/${entry.fields.handle}`;
-    });
-    userGuide = userGuide.items.map(entry => {
-      return  `user-guide/${entry.fields.handle}`;
-    });
-    return recipes.concat(userGuide);
-  })
-  .catch(console.error);
 }
 
 export default {
@@ -42,32 +30,73 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { property: 'og:title', hid:'og:title', content: 'Meet BlendJet® - The Next-Gen Blender'}
-
+      { property: 'og:title', hid: 'og:title', content: 'Meet BlendJet® - The Next-Gen Blender' }
     ],
     link: [
-      { rel: 'icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-32.png', sizes:'32x32'},
-      { rel: 'icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-57.png', sizes:'57x57'},
-      { rel: 'icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-76.png', sizes:'76x76'},
-      { rel: 'icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-96.png', sizes:'96x96'},
-      { rel: 'icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-128.png', sizes:'128x128'},
-      { rel: 'icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-192.png', sizes:'192x192'},
-
-
-      { rel: 'shortcut icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-196.png' },
-
-
-      { rel: 'apple-touch-icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-152.png', sizes:'152x152' },
-      { rel: 'apple-touch-icon', type: 'image/png', href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-180.png', sizes:'180x180'},
-
       {
-        rel: "preconnect",
-        href: "static.klaviyo.com"
+        rel: 'icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-32.png',
+        sizes: '32x32'
       },
       {
-        rel: "preconnect",
-        href: "fast.a.klaviyo.com"
+        rel: 'icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-57.png',
+        sizes: '57x57'
       },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-76.png',
+        sizes: '76x76'
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-96.png',
+        sizes: '96x96'
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-128.png',
+        sizes: '128x128'
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-192.png',
+        sizes: '192x192'
+      },
+
+      {
+        rel: 'shortcut icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-196.png'
+      },
+
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-152.png',
+        sizes: '152x152'
+      },
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        href: 'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-Fav-180.png',
+        sizes: '180x180'
+      },
+
+      {
+        rel: 'preconnect',
+        href: 'static.klaviyo.com'
+      },
+      {
+        rel: 'preconnect',
+        href: 'fast.a.klaviyo.com'
+      }
       // {
       //   rel: 'stylesheet',
       //   type: 'text/css',
@@ -77,17 +106,15 @@ export default {
       //   reL: 'stylesheet',
       //   href: 'https://fonts.googleapis.com/icon?family=Material+Icons'
       // }
-
     ],
     script: [
-      { src: '/scripts/optimonk.js', body: true, defer:true},
+      { src: '/scripts/optimonk.js', body: true, defer: true },
       // Disabled for Nuxt version of GTM
       // { src: '/scripts/gtm.js'},
-      { src: '/scripts/currencycookie.js'},
+      { src: '/scripts/currencycookie.js' },
       // { src: 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=NhVDeY', async: true},
-      { src: 'https://cdn.weglot.com/weglot.min.js', async: true},
-      { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true}
-
+      { src: 'https://cdn.weglot.com/weglot.min.js', async: true },
+      { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true }
     ]
   },
   /*
@@ -98,17 +125,10 @@ export default {
   /*
    ** Global CSS
    */
-  css: [
-    '@/assets/global.scss',
-    'vue-glide-js/dist/vue-glide.css',
-    'animate.css',
-  ],
+  css: ['@/assets/global.scss', 'vue-glide-js/dist/vue-glide.css', 'animate.css'],
 
   styleResources: {
-    scss: [
-      '@/assets/_variables.scss',
-      '@/assets/_mixins.scss'
-    ]
+    scss: ['@/assets/_variables.scss', '@/assets/_mixins.scss']
   },
 
   env: {
@@ -139,13 +159,12 @@ export default {
     'vue-social-sharing/nuxt',
     '@nuxtjs/gtm',
     '@nuxtjs/google-gtag',
-    "@nacelle/nacelle-klaviyo-nuxt-module",
-    "nuxt-robots-module",
+    '@nacelle/nacelle-klaviyo-nuxt-module',
+    'nuxt-robots-module',
     // ['nuxt-buefy', { css: false, materialDesignIcons: false }],
 
-    ["@recart/nacelle-nuxt-module", { recartSiteId: '5b18bf7940348200075173e6' }]
+    ['@recart/nacelle-nuxt-module', { recartSiteId: '5b18bf7940348200075173e6' }]
   ],
-
 
   plugins: [
     { src: '~plugins/buefy' },
@@ -153,15 +172,64 @@ export default {
     '~plugins/contentful.js',
     '~plugins/timeAgo.js',
     // removing gtag plugin below to use nuxt gtag module
-    //"~/plugins/gtag.js",
-    "~/plugins/pinterest-pixel.client.js",
-    "~/plugins/snap-pixel.client.js",
+    // "~/plugins/gtag.js",
+    '~/plugins/pinterest-pixel.client.js',
+    '~/plugins/snap-pixel.client.js',
     '~/plugins/vue-mq.js',
     '~/plugins/nuxt-jsonld'
   ],
 
   router: {
-    middleware: ['cart', 'cartRedirect']
+    middleware: ['cart', 'cartRedirect'],
+    /**
+     * Override the vue-router's scroll behavior
+     * This allows relative hash links to smooth scroll to the relevant content
+     * Docs: https://next.router.vuejs.org/guide/advanced/scroll-behavior.html
+     *
+     * Note: There's a Vue Router issue where clicking on the same relative hash
+     * consecutively will not trigger an update (since the router ignores it)
+     * See https://github.com/vuejs/vue-router/issues/1668 for more details
+     *
+     * @param {Object} to - where the vue-router is navigating to
+     * @param {Object} from - where the vue-router is navigation from
+     * @param {} savedPosition - previous state (only present on popState resolutions, i.e. browser forward/back buttons)
+     * @returns {Promise} a promise (async function) that returns the intended scroll x/y
+     */
+    scrollBehavior(to, from, savedPosition) {
+      return (async () => {
+        const offset = 140
+        if (savedPosition) {
+          return savedPosition
+        }
+
+        const findEl = async (hash, x) => {
+          return (
+            document.querySelector(hash) ||
+            new Promise((resolve, reject) => {
+              if (x > 50) {
+                return resolve()
+              }
+              setTimeout(() => {
+                resolve(findEl(hash, ++x || 1))
+              }, 100)
+            })
+          )
+        }
+
+        if (to.hash) {
+          let el = await findEl(to.hash)
+          // Pass 'noScroll' param to prevent the smooth scrolling
+          if (to.params.noScroll) {
+            return false
+          } else if ('scrollBehavior' in document.documentElement.style) {
+            return window.scrollTo({ top: el.offsetTop - offset, behavior: 'smooth' })
+          } else {
+            return window.scrollTo(0, el.offsetTop - offset)
+          }
+        }
+        return { x: 0, y: 0 }
+      })()
+    }
   },
 
   gtm: {
@@ -173,7 +241,7 @@ export default {
   'google-gtag': {
     id: 'UA-111004875-4',
     config: {
-      anonymize_ip: true, // anonymize IP 
+      anonymize_ip: true, // anonymize IP
       send_page_view: false, // might be necessary to avoid duplicated page track on page reload
       linker: {
         domains: ['blendjet.com']
@@ -181,18 +249,20 @@ export default {
     },
     debug: false, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
-    additionalAccounts: [{
-      id: 'AW-758185293'
-    },
-    {
-      id: 'AW-800828740'
-    },
-    {
-      id: 'AW-707656444'
-    },
-    {
-      id: 'DC-9973664'
-    }]
+    additionalAccounts: [
+      {
+        id: 'AW-758185293'
+      },
+      {
+        id: 'AW-800828740'
+      },
+      {
+        id: 'AW-707656444'
+      },
+      {
+        id: 'DC-9973664'
+      }
+    ]
   },
 
   publicRuntimeConfig: {
@@ -220,19 +290,21 @@ export default {
     gzip: true,
     hostname: 'https://blendjet.com', // When deploying, change this to your production URL
     routes: async () => {
-      const staticDir = path.resolve(__dirname, './static/data')
-      const routes = fs.readJsonSync(`${staticDir}/routes.json`)
-      const routesOnly = routes.map(route => route.route)
+      try {
+        const staticDir = path.resolve(__dirname, './static/data')
+        const routes = fs.readJsonSync(`${staticDir}/routes.json`)
+        const contentfulRoutes = await getContentfulRoutes()
 
-      let recipes = await contentfulRoutes();
-
-      return [...routesOnly, ...recipes]
+        return [...routes, ...contentfulRoutes].map(r => r.route)
+      } catch (err) {
+        console.error(err)
+      }
     }
   },
   robots: {
-    UserAgent: "*",
+    UserAgent: '*',
     Disallow: [
-      '/cart*', 
+      '/cart*',
       '/account/login',
       '/account/register',
       '/privacy-policy',
@@ -271,7 +343,7 @@ export default {
     routeConfig: {
       products: '/products',
       collections: '/collections',
-      page: '',
+      page: ''
       // article: '',
       // blog: '',
       // content: ''
@@ -285,11 +357,7 @@ export default {
     // routes during generate.
     // Learn more in our docs: https://docs.getnacelle.com/nuxt/nuxt-config.html#extendroutes
     // extendRoutes: null,
-    // extendRoutes: routes => {
-    //   // do something with routes
-    //
-    //   return routes
-    // },
+    extendRoutes: routes => routes.filter(r => r.route !== '/shop'),
 
     // Optional array of data type strings to direct Nacelle to include other data types
     // besides products in search data.
@@ -319,43 +387,16 @@ export default {
   generate: {
     concurrency: 5,
     fallback: true,
-    routes: function () {
-      // Get routes we care about from Contentful
-      const client = contentful.createClient({
-        space:  process.env.CTF_SPACE_ID,
-        accessToken: process.env.CTF_CDA_ACCESS_TOKEN
-      });
-
-      return Promise.all([
-        client.getEntries({
-          content_type: 'recipe',
-        }),
-        client.getEntries({
-          content_type: 'userGuide',
-        })
-      ])
-      .then(([recipes, userGuide]) => {
-
-        // Contentful Routes
-        recipes = recipes.items.map(entry => {
-          return {
-            route: `recipes/${entry.fields.handle}`,
-          };
-        });
-
-        userGuide = userGuide.items.map(entry => {
-          return {
-            route: `user-guide/${entry.fields.handle}`,
-          };
-        });
-
-        return recipes.concat(userGuide)
-      })
-      .catch(console.error);
+    async routes() {
+      try {
+        return getContentfulRoutes()
+      } catch (err) {
+        console.error(err)
+      }
     },
     done({ errors }, nuxt) {
-      nuxt.callHook('generate:done', ({ nuxt, errors }))
-    },
+      nuxt.callHook('generate:done', { nuxt, errors })
+    }
   },
 
   vue: {
@@ -376,15 +417,15 @@ export default {
       terserOptions: {
         compress: {
           pure_funcs: ['console.info', 'console.debug', 'console.warn', 'console.error']
-        },
+        }
         // format: {
         //   comments: false
         // }
-      },
+      }
       // extractComments: false
     },
     extractCSS: true,
-    analyze:true,
+    analyze: true,
     html: {
       minify: {
         collapseBooleanAttributes: true,

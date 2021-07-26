@@ -1,8 +1,31 @@
 <template>
   <div class="page" v-if="page">
-    <div class="page__container">
+    <template v-if="page.sections">
+      <template v-for="s in page.sections">
+        <template v-if="isVisibleToUserCountry(s)" v-cloak>
+          <TextRibbon :key="s.fields.title" v-if="isOfType(s, 'textRibbon')" :section="s.fields" />
+          <ScrollingMarquee
+            :key="s.fields.title"
+            v-if="isOfType(s, 'scrollingMarquee')"
+            :section="s.fields"
+          />
+          <SubNavMenu :key="s.fields.title" v-if="isOfType(s, 'subNavMenu')" :section="s.fields" />
+          <LinkTileGrid
+            :key="s.fields.title"
+            v-if="isOfType(s, 'linkTileGrid')"
+            :section="s.fields"
+          />
+          <ProductGrid
+            :key="s.fields.title"
+            v-if="isOfType(s, 'productGrid')"
+            :section="s.fields"
+          />
+        </template>
+      </template>
+    </template>
+    <div class="page__container" v-else>
       <h1 class="page__title">{{ page.title }}</h1>
-      <div class="page__body">
+      <div class="page__body" v-if="hasRichText">
         <RichTextRenderer :document="page.fields.body" />
       </div>
     </div>
@@ -11,59 +34,129 @@
 
 <script>
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
+import debounce from 'lodash.debounce'
+
+// Components
+import TextRibbon from '~/components/TextRibbon'
+import ScrollingMarquee from '~/components/ScrollingMarquee'
+import SubNavMenu from '~/components/SubNavMenu'
+import LinkTileGrid from '~/components/LinkTileGrid'
+import ProductGrid from '~/components/ProductGrid'
+
+// Mixins
+import locationBasedRendering from '~/mixins/locationBasedRendering'
 import getPage from '~/mixins/getPage'
-import { createClient } from '~/plugins/contentful.js'
-const client = createClient();
 
 export default {
-  data() {
-    return {
-      metaTitle: '',
-      metaDescription: ''
-    }
-  },
   components: {
+    TextRibbon,
+    ScrollingMarquee,
+    SubNavMenu,
+    LinkTileGrid,
+    ProductGrid,
     RichTextRenderer
   },
-  mixins: [getPage()],
+  mixins: [getPage(), locationBasedRendering],
   head() {
-    let properties = {}
-    let meta = []
-    const mdescription = this.metaDescription
-    const title = this.metaTitle
-    if(title.length) {
-      properties.title = title
+    const properties = {}
+    const meta = []
+    const { metaTitle, metaDescription } = this.page?.fields?.metaInfo?.fields ?? {}
+
+    if (metaTitle) {
+      properties.title = metaTitle
     }
 
-    if(mdescription.length) {
+    if (metaDescription) {
       meta.push({
         hid: 'description',
         name: 'description',
-        content: mdescription
+        content: metaDescription
       })
     }
-    
-    return {...properties, meta}
-    
-  }, 
-  async mounted() {
-    const vm = this
-    await client.getEntries({
-      content_type: 'page',
-    'fields.handle': this.$route.params.pageHandle,
-    })
-    .then((res) => {
-      if ( res.items[0].fields.metaInfo ) {
-        this.metaTitle = res.items[0].fields.metaInfo.fields.metaTitle
-        this.metaDescription = res.items[0].fields.metaInfo.fields.metaDescription
-      }
+
+    return { ...properties, meta }
+  },
+  mounted() {
+    this.handleDebouncedScroll = debounce(this.handleScroll, 200)
+    window.addEventListener('scroll', this.handleDebouncedScroll, {
+      passive: true
     })
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleDebouncedScroll)
+  },
+  methods: {
+    isOfType(section, type) {
+      return section.sys.contentType.sys.id === type
+    },
+    /**
+     * Scroll Handler - updates the page hash as the user scrolls through sections.
+     */
+    handleScroll(event) {
+      const viewportHeight = window.innerHeight
+      const anchorableSelectors = '.text-ribbon'
+      // On scroll, find the most recently visible anchorable (in terms of vertical placement)
+      const anchorSections = document.querySelectorAll(anchorableSelectors)
+      const enhancedAnchorSections = anchorSections
+        ? Array.from(anchorSections).map(node => ({
+            node: node,
+            rect: node.getBoundingClientRect()
+          }))
+        : []
+
+      // If any anchor sections are present...
+      if (enhancedAnchorSections.length) {
+        // Find the last one that was visible...
+        const visibleSection = enhancedAnchorSections.reduce((closest, curr) => {
+          if (curr && curr.rect.top > viewportHeight) {
+            return closest // if this element is below the viewport, bail
+          } else if (curr.rect.top < 0 && closest && curr.rect.top > closest.rect.top) {
+            return curr // if this element is above the viewport, but closer than the current closest, set it
+          } else if (curr.rect.top > 0 && curr.rect.top < 0.5 * viewportHeight) {
+            return curr // otherwise, if the top of this element is in the first 50% of the viewport
+          } else {
+            return closest
+          }
+        })
+
+        // Bail if the current hash matches this sections to prevent redundant updates.
+        if (this.$route.hash && this.$route.hash === `#${visibleSection.node.id}`) {
+          return
+        }
+
+        this.$router.replace({
+          name: this.$route.name,
+          hash: `#${visibleSection.node.id}`,
+          params: { noScroll: true }
+        })
+      }
+    }
+  },
+  computed: {
+    /**
+     * The contentful vue richtext renderer causes build errors if the page's `content` isn't
+     * in the shape of actual Contentful richtext. Adding this check to make sure it is...
+     */
+    hasRichText() {
+      return (
+        this.page &&
+        this.page.fields &&
+        this.page.fields.body &&
+        this.page.fields.body.content &&
+        Array.isArray(this.page.fields.body.content)
+      )
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-
+[v-cloak] {
+  display: none;
+  > * {
+    display: none;
+  }
+}
 .page {
   @include gradient-primary-light-purple(to bottom);
 
@@ -119,5 +212,4 @@ export default {
     margin-bottom: 15px;
   }
 }
-
 </style>

@@ -28,6 +28,9 @@ export default {
     }
   },
   computed: {
+    hasSubscription() {
+      return !!this.metafieldsObj?.subscriptions
+    },
     frequencies() {
       return this.metafieldsObj.subscriptions?.shipping_interval_frequency.split(',') ?? []
     },
@@ -35,10 +38,10 @@ export default {
       return this.metafieldsObj.subscriptions?.shipping_interval_unit_type ?? ''
     },
     discountVariantMap() {
-      return JSON.parse(this.metafieldsObj.subscriptions.original_to_hidden_variant_map)
+      return JSON.parse(this.metafieldsObj.subscriptions?.original_to_hidden_variant_map)
     },
     discountPercentage() {
-      return Number(this.metafieldsObj.subscriptions.discount_percentage)
+      return Number(this.metafieldsObj.subscriptions?.discount_percentage)
     },
     discountPrice() {
       const price = this.product.priceRange.max
@@ -52,7 +55,10 @@ export default {
       const subscriptionMetafields = [
         { key: 'charge_interval_frequency', value: frequency },
         { key: 'order_interval_frequency', value: frequency },
-        { key: 'order_interval_unit', value: this.frequencyUnit.toLowerCase().replace('s', '') }
+        {
+          key: 'order_interval_unit',
+          value: this.frequencyUnit.toLowerCase().replace('s', '')
+        }
       ]
       return this.purchaseType === 'subscription' ? subscriptionMetafields : []
     }

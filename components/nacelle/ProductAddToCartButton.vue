@@ -6,32 +6,23 @@
       :style="styleObj"
       @click="addToCart"
       class="add-to-cart-button button nacelle"
-      
     >
-      <span
-        v-if="
-          !variantInLineItems && !allOptionsSelected && product.availableForSale
-        "
+      <span v-if="!variantInLineItems && !allOptionsSelected && product.availableForSale"
         >Select Options</span
       >
       <span
         v-if="
           (!variantInLineItems && allOptionsSelected && variant == undefined) ||
-            (!variantInLineItems &&
-              allOptionsSelected &&
-              variant.availableForSale === false) ||
+            (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
             !product.availableForSale
         "
         >Out of Stock</span
       >
       <span
         v-if="
-          !variantInLineItems &&
-            allOptionsSelected &&
-            variant &&
-            variant.availableForSale == true
+          !variantInLineItems && allOptionsSelected && variant && variant.availableForSale == true
         "
-        >{{buttonText}}</span
+        >{{ buttonText }}</span
       >
       <span v-if="variantInLineItems">Added!</span>
     </button>
@@ -44,21 +35,14 @@
       :class="buttonClass"
     >
       <slot>
-        <span v-if="!onlyOneOption && product.availableForSale"
-          >Select Options</span
-        >
-        <span class="inner-text"
-          v-if="displayPrice && variant.availableForSale === true"
-          >{{buttonText}}</span
-        >
+        <span v-if="!onlyOneOption && product.availableForSale">Select Options</span>
+        <span class="inner-text" v-if="displayPrice && variant.availableForSale === true">{{
+          buttonText
+        }}</span>
         <span
           v-if="
-            (!variantInLineItems &&
-              allOptionsSelected &&
-              variant == undefined) ||
-              (!variantInLineItems &&
-                allOptionsSelected &&
-                variant.availableForSale === false) ||
+            (!variantInLineItems && allOptionsSelected && variant == undefined) ||
+              (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
               !product.availableForSale
           "
           >Out of Stock</span
@@ -72,15 +56,19 @@
 <script>
 import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 import ProductPrice from '~/components/nacelle/ProductPrice'
+import rechargeMixin from '~/mixins/rechargeMixin'
+import productMetafields from '~/mixins/productMetafields'
 import Axios from 'axios'
 
 export default {
+  components: {
+    ProductPrice
+  },
+  mixins: [rechargeMixin, productMetafields],
+
   props: {
     product: {
       type: Object
-    },
-    components: {
-      ProductPrice
     },
     variant: {
       type: Object
@@ -105,28 +93,43 @@ export default {
         return {}
       }
     },
-
-
-
+    isSubscriptionOn: {
+      type: Boolean
+    },
     quantity: { type: Number, default: 1 },
     allOptionsSelected: { type: Boolean, default: true },
     confirmedSelection: { type: Boolean, default: true },
     onlyOneOption: { type: Boolean, default: true }
   },
+
   data() {
     return {
-     
       warrantyPrice: 0,
       displayPrice: 0,
       defaultText: `Add to Cart - ${this.displayPrice}`,
       buttonText: `Add to Cart - ${this.displayPrice}`,
-      buttonClass:''
-      
+      buttonClass: ''
     }
   },
   computed: {
     ...mapState('cart', ['lineItems']),
-
+    /**
+     * Get the subscription price for the current variant.
+     */
+    subscriptionPrice() {
+      if (!this.variant) {
+        return undefined
+      }
+      const decodedId = this.decodeBase64VariantId(this.variant.id)
+      const variantSubscriptionPrice =
+        decodedId &&
+        this.isSubscriptionOn &&
+        this.discountVariantMap &&
+        this.discountVariantMap[decodedId]
+      return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
+        ? variantSubscriptionPrice.discount_variant_price
+        : this.variant.price
+    },
     variantInLineItems() {
       const vm = this
       if (vm.variant != null) {
@@ -169,10 +172,13 @@ export default {
       this.$emit('cartVariant', this.variant)
       this.getDisplayPrice()
     },
-   
+
     quantity() {
       this.getDisplayPrice()
     },
+    isSubscriptionOn() {
+      this.getDisplayPrice()
+    }
   },
 
   methods: {
@@ -187,79 +193,88 @@ export default {
       return !!Object.keys(this.warranty).length
     },
     async getDisplayPrice() {
-      
-      let _price = this.variant.price;
-      const decodedId = atob(this.variant.id).split('/').pop()
-      const price = encodeURIComponent(JSON.stringify(
-          [
-            {
-              "Price": _price,
-              "Tag": decodedId
-            }
-          ]
-        ))
-        
-		//START OF RYAN MOD to override currency
-       
-        //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
-		if(document.cookie.includes('_rchcur')){
-			var config = {
-			    method: 'get',
-			    url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=`+document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop()+`&MerchantPrices=${price}`,
-		    }
-		}
-		else {
-			var config = {
-		    	method: 'get',
-				url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`,
-		    }			
-		}
-		//END OF RYAN MOD
-		
-        const localPrice = await Axios(config)
-          .then((res) => {
-	          
-            if(!res.data.ConsumerPrices[0]) {
-              this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
+      if (!this.variant || !this.variant.id) {
+        return undefined
+      }
+
+      let _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
+  
+      const decodedId = atob(this.variant.id)
+        .split('/')
+        .pop()
+      const price = encodeURIComponent(
+        JSON.stringify([
+          {
+            Price: _price,
+            Tag: decodedId
+          }
+        ])
+      )
+
+      //START OF RYAN MOD to override currency
+
+      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      if (document.cookie.includes('_rchcur')) {
+        var config = {
+          method: 'get',
+          url:
+            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
+            `&MerchantPrices=${price}`
+        }
+      } else {
+        var config = {
+          method: 'get',
+          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+        }
+      }
+      //END OF RYAN MOD
+
+      const localPrice = await Axios(config)
+        .then(res => {
+          if (!res.data.ConsumerPrices[0]) {
+            this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
+          } else {
+            //Ryan's fix with Michael's help for UAE and some currency symbols
+            if (res.data.Symbol == null) {
+              this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(
+                2
+              )} ${res.data.Currency}`
             } else {
-	        //Ryan's fix with Michael's help for UAE and some currency symbols	          
-				if(res.data.Symbol == null){
-					this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(2)} ${res.data.Currency}`
-				}
-				else {
-					this.displayPrice = `${res.data.Symbol}${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(2)}`
-            	}
+              this.displayPrice = `${res.data.Symbol}${(
+                Number(res.data.ConsumerPrices[0]) * this.quantity
+              ).toFixed(2)}`
             }
-            this.defaultText = `Add to Cart - ${this.displayPrice}`,
-            this.buttonText = `Add to Cart - ${this.displayPrice}`          
-          })
-          .catch((res) => {
-            console.error('Currency Request Failed', res)
-            this.displayPrice = `$${Number(this.variant.price * this.quantity).toFixed(2)}`
-            this.defaultText = `Add to Cart - ${this.displayPrice}`,
-            this.buttonText = `Add to Cart - ${this.displayPrice}` 
-          })
+          }
+          ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
+            (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+        })
+        .catch(res => {
+          console.error('Currency Request Failed', res)
+          this.displayPrice = `$${Number(this.variant.price * this.quantity).toFixed(2)}`
+          ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
+            (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+        })
     },
 
-     setButtonText() {
-      if(this.onlyOneOption &&
-        !this.variantInLineItems &&
-        this.variant.availableForSale == true) {
-          this.butttonText = this.defaultText
-      } else if(this.onlyOneOption && this.variantInLineItems) {
+    setButtonText() {
+      if (this.onlyOneOption && !this.variantInLineItems && this.variant.availableForSale == true) {
+        this.butttonText = this.defaultText
+      } else if (this.onlyOneOption && this.variantInLineItems) {
         this.buttonText = 'Added!'
         this.buttonClass = 'clicked'
-        setTimeout(()=> {
+        setTimeout(() => {
           this.buttonText = this.defaultText
           this.buttonClass = 'unclicked'
         }, 2000)
       }
     },
     addToCart() {
-      if(this.discount) {
-        let _dvar =  JSON.parse(JSON.stringify(this.variant))
+      if (this.discount) {
+        let _dvar = JSON.parse(JSON.stringify(this.variant))
         _dvar.price = 0.0
-      } else {}
+      } else {
+      }
       if (this.allOptionsSelected && this.product.availableForSale) {
         const lineItem = {
           image: this.product.featuredMedia,
@@ -272,8 +287,7 @@ export default {
           tags: this.product.tags,
           metafields: this.metafields
         }
-        if(this.hasWarranty()) {
-          
+        if (this.hasWarranty()) {
           const warrantyItem = {
             image: this.warranty.featuredMedia,
             title: this.warranty.title,
@@ -286,7 +300,9 @@ export default {
             metafields: [
               {
                 key: 'Ref',
-                value: atob(this.variant.id).split('/').pop()
+                value: atob(this.variant.id)
+                  .split('/')
+                  .pop()
               }
             ]
           }
@@ -297,35 +313,47 @@ export default {
         this.showCart()
         this.$emit('addedToCart')
       }
+    },
+    decodeBase64VariantId(encodedId) {
+      // This is wrapped in a try/catch because in some instances it's attempted to be run during
+      // the nuxt build (somehow in advance of the browser), therefore the `window.atob` method
+      // doesn't exist yet.
+      let decodedId = undefined
+      try {
+        decodedId = atob(encodedId).split('gid://shopify/ProductVariant/')[1]
+      } catch (e) {
+        // console.warn(`Error decoding variant ID "${encodedId}"`)
+      }
+      return decodedId
     }
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
-  .add-to-cart-button {
-    @include button-primary('purple');
-    height: 50px;
-    width: 264px;
-    flex-flow: row nowrap;
-    min-width: 202.08px;
-    &:disabled {
-      opacity: 0.5;
-    }
-
-    @include respond-to('small') {
-      width: auto;
-    }
+.add-to-cart-button {
+  @include button-primary('purple');
+  height: 50px;
+  width: 264px;
+  flex-flow: row nowrap;
+  min-width: 202.08px;
+  &:disabled {
+    opacity: 0.5;
   }
 
-  .clicked {
-    @include hover-transition;
+  @include respond-to('small') {
+    width: auto;
   }
+}
 
-  .unclicked {}
+.clicked {
+  @include hover-transition;
+}
 
-  .inner-text {
-    transition: all ease 1s;
-  }
+.unclicked {
+}
+
+.inner-text {
+  transition: all ease 1s;
+}
 </style>

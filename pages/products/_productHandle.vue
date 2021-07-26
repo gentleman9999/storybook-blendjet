@@ -9,10 +9,9 @@
 -->
 <template>
   <div class="product" v-if="product">
-    <!-- <section class="section">
-      <div class="container"> -->
-    <!-- <transition name="fade"> -->
-    <!-- <template v-if="product"> -->
+    <!-- INELIGIBLE COUNTRY WARNING -->
+    <ShippingIneligibilityWarning v-if="!isShippableToUser" />
+
     <!--
       Temporarily removing as part of release 1.1.0
       <div v-if="page && page.fields.productAnnouncement" class="">
@@ -20,18 +19,18 @@
       </div>
     -->
     <!-- START BFCM - TEMP SALE HARDCODED -->
-<!-- <div v-if="product.productType !== 'Jetpack Smoothies'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
-<div class="canvas-bfcm">
-  <div class="col-bfcm">
-    <span class="entry-title-bfcm">4th of July Sale!</span>
-    <span class="content-split-element-bfcm">10% Off 1</span>
-    <span class="content-split-element-bfcm">15% Off 2</span>
-    <span class="content-split-element-bfcm">20% Off 3+</span>
-    <span class="simple-text-bfcm">Last Chance - Ends Soon <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
-  </div>
-</div>
-</div> -->
-<!-- END BFCM - TEMP SALE HARDCODED -->
+    <!-- <div v-if="product.productType !== 'Jetpack Smoothies'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+    <div class="canvas-bfcm">
+      <div class="col-bfcm">
+        <span class="entry-title-bfcm">4th of July Sale!</span>
+        <span class="content-split-element-bfcm">10% Off 1</span>
+        <span class="content-split-element-bfcm">15% Off 2</span>
+        <span class="content-split-element-bfcm">20% Off 3+</span>
+        <span class="simple-text-bfcm">Last Chance - Ends Soon <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
+      </div>
+    </div>
+    </div> -->
+    <!-- END BFCM - TEMP SALE HARDCODED -->
 <div style="margin-bottom:10px" class="hide-desktop"></div>
     <transition name="fade">
       <BlendjetPDP
@@ -99,40 +98,56 @@
           </div>
         </div>
       </div>
-    </section> -->
+    </div>
+-->
+    <!-- END BFCM - TEMP SALE HARDCODED -->
+
+    <!-- PDP Conditional -->
+    <div class="product__scroll-pin" />
+    <BlendjetPDP
+      v-cloak
+      v-if="product.productType === 'BlendJet'"
+      :product="product"
+      :page="page"
+    />
+    <JetpackVariantPDP
+      v-cloak
+      v-else-if="
+        ['jetpack smoothies'].includes(product.productType && product.productType.toLowerCase())
+      "
+      :product="product"
+      :page="page"
+    />
+    <ProductDetail v-cloak v-else :product="product" :page="page" />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+
+// Mixins
 import getProduct from '~/mixins/getProduct'
-import ProductDetails from '~/components/nacelle/ProductDetails'
+import viewEvent from '~/mixins/viewEvent'
+import productMetafields from '~/mixins/productMetafields'
+import productShippingEligibility from '~/mixins/productShippingEligibility'
+// Components
 import ProductDetail from '~/components/ProductDetail'
 import BlendjetPDP from '~/components/blendJetPDP'
-import JetpackPDP from '~/components/jetpackPDP'
 import JetpackVariantPDP from '~/components/jetpackVariantPDP'
-import productMetafields from '~/mixins/productMetafields'
-import viewEvent from '~/mixins/viewEvent'
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import ShippingIneligibilityWarning from '~/components/ProductShippingIneligibilityWarning'
+
 export default {
   components: {
     ProductDetail,
-    ProductDetails,
     BlendjetPDP,
-    JetpackPDP,
-    JetpackVariantPDP
+    JetpackVariantPDP,
+    ShippingIneligibilityWarning
   },
-  mixins: [getProduct(), productMetafields, viewEvent('product')],
+  mixins: [getProduct(), productMetafields, viewEvent('product'), productShippingEligibility],
   computed: {
     ...mapGetters('space', ['getMetatag']),
     productAnnouncement() {
-      if (
-        this.page &&
-        this.page.fields.productAnnouncement &&
-        this.page.fields.productAnnouncement.content[0] &&
-        this.page.fields.productAnnouncement.content[0].content[0]
-      ) {
-        return this.page.fields.productAnnouncement.content[0].content[0].value
-      }
+      return this.page?.fields.productAnnouncement?.content?.[0]?.content?.[0]
     }
   },
   methods: {
@@ -158,14 +173,14 @@ export default {
           fullTitle = `${fullTitle} | ${title.value}`
         }
 
-        // properties.title = fullTitle
-        // if(!this.product.handle.includes('blendjet')) {
-        //   meta.push({
-        //   hid: 'og:title',
-        //   property: 'og:title',
-        //   content: fullTitle
-        // })
-        // }
+        properties.title = fullTitle
+        if (!this.product.handle.includes('blendjet')) {
+          meta.push({
+            hid: 'og:title',
+            property: 'og:title',
+            content: fullTitle
+          })
+        }
       }
 
       if (
@@ -199,6 +214,15 @@ export default {
   margin-bottom: 1rem;
 }
 
+.product__scroll-pin {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
 .product-meta .column {
   padding-bottom: 2rem;
 
@@ -214,14 +238,5 @@ export default {
   @media screen and (min-width: 769px) {
     padding: 3rem;
   }
-}
-
-.fade-enter-active {
-  animation: fadeIn;
-  animation-duration: 0.6s;
-}
-.fade-leave-active {
-  animation: fadeOut;
-  animation-duration: 0.6s;
 }
 </style>

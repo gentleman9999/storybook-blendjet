@@ -5,7 +5,7 @@
         <img
           class="jetpack-image"
           :style="imageStyle"
-          :src="variant.featuredMedia.src"
+          :src="optimizeSource({url: variant.featuredMedia.src, width: 400})"
           @click="
             $router.push(
               `/products/${product.handle}?variant=${variant.formatedId}`
@@ -45,22 +45,19 @@
               <SubscriptionAddToCartButton
                 :product="product"
                 :variant="variant"
-                :metafields="metafields"
+                :is-subscription-on="isSubscriptionActive"
                 :all-options-selected="true"
                 :only-one-option="true"
                 :quantity="quantity"
                 :showPrice="true"
-                :isSubscriptionOn="isSubscriptionActive"
               />
             </div>
           </div>
           <div class="subscribe-select">
             <SubscriptionToggle
               :product="product"
-              :metafields.sync="metafields"
-              :frequency.sync="frequency"
               :checkbox="true"
-              v-on:subscriptionChanged="handleSubscriptionCheck"
+              :value.sync="isSubscriptionActive"
             />
             <div class="info" @click="openRechargeModal">
               <Info />
@@ -112,11 +109,10 @@ export default {
       frequency: null,
       quantity: 1,
       showIndicator: false,
-      isSubscriptionActive: true,
-      metafields: this.product.metafields
+      isSubscriptionActive: true
     }
   },
-
+  mixins: [imageOptimize],
   methods: {
     openRechargeModal() {
       this.$modal.show(RechargeModal, {
@@ -124,12 +120,11 @@ export default {
         adaptive: true,
         scrollable: false
       })
-    },
-    handleSubscriptionCheck(event) {
-      this.isSubscriptionActive = event
     }
   },
+  watch: {
 
+  },
   components: {
     Info,
     SubscriptionToggle,

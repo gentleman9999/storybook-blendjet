@@ -1,553 +1,683 @@
-
 <template>
-<transition name="fade" >
-  <div class="pdp-container" v-if="currentVariant" :style="[!currentVariant ? 'height:100vh': 'auto']">
-    <div class="product-select">
-      <div class="product-select__controls__mobile-title-container">
-        <div class="product-select__controls__title">
-          <h1>{{ product.title }}</h1>
+  <transition name="fade">
+    <div
+      class="pdp-container"
+      v-if="product && product.variants && product.variants.length"
+      :style="{
+        '--header-background': headerBackground,
+        '--features-background': featuresBackground
+      }"
+    >
+      <ProductStickyAddToCart
+        :product="product"
+        :currentVariant.sync="currentVariant"
+        :quantity.sync="quantity"
+        :updateVariant="setSelectedVariant"
+        :isSubscriptionOn="isSubscriptionActive"
+      />
+
+      <div class="product-select">
+        <!-- TODO: Figure out what this component's purpose is...? -->
+        <div class="hidden-product-price" v-show="false">
+          <product-price
+            :price="currentVariant.price"
+            @DisplayPrice="setDisplayPrice"
+            @Currency="setCurrency"
+          />
+          <afterpay-placement
+            data-locale="en_US"
+            :data-currency="currency"
+            :data-amount="displayPrice"
+            data-modal-theme="white"
+            data-size="xs"
+            data-logo-type="lockup"
+          ></afterpay-placement>
         </div>
-        <div class="product-select__controls__rating" >
-            <loox-product-rating :product="product" />
-        </div>
-        <div class="product-select__controls__price">
-          <product-price @DisplayPrice="setDisplayPrice" @Currency="setCurrency" v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
-          <product-price v-show="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice" @CompareAtLocal="setCompareAtPrice"
-              :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
-	              <div class="product-select__controls__price__installments" v-if="country == 'US'">
-            <afterpay-placement
-                  data-locale="en_US"
-                  :data-currency="currency"
-                  :data-amount="displayPrice"
-                  data-modal-theme="white"
-                  data-size="xs"
-                  data-logo-type="lockup"
-              ></afterpay-placement>
-          </div>
 
-        </div>
-      </div>
-      <div class="product-select__image-carousel">
-        <div v-if="variants.length > 1" class="product-select__image-carousel__prev-variant" @click="decrementVariant">
-          <PrevSlide />
-        </div>
-        <div v-if="variants.length > 1" class="product-select__image-carousel__next-variant" @click="incrementVariant">
-          <NextSlide />
-        </div>
-
-
-      <transition name="fade" mode="out-in">
-        <picture v-if="currentVariant && currentVariant.featuredMedia">
-          <source :srcset="optimizeSource({url: currentVariant.featuredMedia.src })" />
-          <img class="product-select__image-carousel__img" :src="optimizeSource({url: currentVariant.featuredMedia.src })" :alt="currentVariant.featuredMedia.altText"/>
-        </picture>
-      </transition>
-
-      </div>
-      <div class="product-select__controls">
-        <div class="product-select__controls__title-container">
-
-
+        <!-- MOBILE PRODUCT INFO - Title, Variant Title, Rating -->
+        <div class="product-select__controls__mobile-title-container">
           <div class="product-select__controls__title">
             <h1>{{ product.title }}</h1>
           </div>
+          <div class="product-select__controls__category">
+            {{ currentVariant.title }}
+          </div>
           <div class="product-select__controls__rating" style="zoom:1.25">
+            <n-link :to="{ path: `/products/${product.handle}`, hash: '#reviews' }">
+              <!-- TODO: Change to be variant based -->
               <loox-product-rating :product="product" />
-          </div>
-          <div class="product-select__controls__price">
-            <product-price v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
-            <product-price v-if="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice"
-                :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id"/>
-	          <div class="product-select__controls__price__installments" v-if="country == 'US'">
-              <afterpay-placement
-                  data-locale="en_US"
-                  :data-currency="currency"
-                  :data-amount="displayPrice"
-                  data-modal-theme="white"
-                  data-size="xs"
-                  data-logo-type="lockup"
-              ></afterpay-placement>
-            </div>
-
+            </n-link>
           </div>
         </div>
 
-        <div v-if="variants.length > 1" class="product-select__controls__variant-color">
-          <div class="product-select__controls__variant-color__text">
-            <span class="product-select__controls__variant-color__text__label">Color: </span><span class="product-select__controls__variant-color__text__selected-color">{{currentVariant.title}}</span>
-          </div>
-          <div class="product-select__controls__variant-color__swatches" >
-            <product-options
-              :options="allOptions"
-              :variant="selectedVariant"
-              @selectedOptionsSet="setSelected"
-              :variants="variants"
-              @clear="selectedOptions = []"
-              :currentOption="currentVariant.selectedOptions[0].value"
-              :key="1"
-              v-if="!showMobileVariants && !showDesktopHeader"
-            />
-          </div>
+        <!-- GALLERY -->
+        <div class="product-select__image-carousel">
+          <transition name="fade" mode="out-in">
+            <img class="product-select__image-carousel__img" :src="productImage" />
+          </transition>
         </div>
 
-        <div class="product-select__controls__add-to-cart">
-          <div class="product-select__controls__add-to-cart__button-group">
-
-            <div class="product-select__controls__add-to-cart__quantity-select-container">
-              <quantity-selector :quantity.sync="quantity" />
-            </div>
-            <div class="product-select__controls__add-to-cart__add-to-cart-button">
-              <product-add-to-cart-button
-                :quantity="quantity"
-                :product="product"
-                :variant="currentVariant"
-                :allOptionsSelected="true"
-                :onlyOneOption="true"
-                @addedToCart="quantity = 1"
-              />
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="product-select__controls__shipping-notification">
-          <ShippingTime :country="country"/>
-        </div>
-        <div class="product-select__controls__payments">
-          <div v-if="applePay" class="pay-with-modal__container__apple apple-pay-with" @click="expressCheckout">
-               <img :src="optimizeSource({url: '/images/blendjetPDP/applepay.png'})" />
-            </div>
-          <div v-if="!applePay" role="button" class="product-select__controls__payments__paypal" @click="expressCheckout">
-            Pay with <img class="product-select__controls__payments__paypal__logo" :src="optimizeSource({url: '/images/blendjetPDP/paypal.png'})" alt="Paypal Logo"/>
-          </div>
-          <div role="button" class="product-select__controls__payments__more-options" @click="$modal.show('pay-with-modal')">
-            More payment options
-          </div>
-        </div>
-        <div class="product-select__controls__value-props">
-          <div class="product-select__controls__value-props__guarantee" @click="$modal.show('guarantee-modal')">
-              <Guarantee :size="'40px'" /> <span class="product-select__controls__value-props__guarantee__text">30 day money back guarantee</span>
-          </div>
-          <div class="product-select__controls__value-props__badges">
-            <a target="_blank" rel="noopener noreferrer nofollow" class="product-select__controls__value-props__badges__img"
-               :href="mcafeeLink">
-                  <img :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })" alt="TrustedSite Seal" style="border: 1px solid #ccc;border-radius: 3px;" />
-            </a>
-            <a target="_blank" rel="noopener noreferrer nofollow" class="product-select__controls__value-props__badges__img"
-               :href="nortonLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/nortonsiteseal.svg'})" alt="Norton Secured Logo"/>
-            </a>
-            <a target="_blank" rel="noopener noreferrer nofollow" class="product-select__controls__value-props__badges__img"
-               :href="bbbLink">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/BBB-Seal.svg'})" alt="Better Business Bureau Logo"/>
-            </a>
-          </div>
-        </div>
-
-        <transition name="fade">
-          <div class="product-select__controls__add-to-cart__mobile-float" v-show="showMobileHeader">
-            <div class="product-select__controls__add-to-cart__button-group">
-              <!-- <transition name="expand" > -->
-                <div v-if="variants.length > 1" class="product-select__controls__add-to-cart__selected-swatch mobile-swatch"  @click.prevent="toggleMobileVariants">
-                  <product-option-swatch
-                    :value="currentVariant.selectedOptions[0].value"
-                    :optionName="'Color'"
-                    :swatchStyle="'bubble'"
-                    :class="{selected: true}"
-                    :variants="variants"
-                    :selectedOptions="currentVariant.selectedOptions"
-                  />
-                </div>
-              <!-- </transition> -->
-
-              <div class="product-select__controls__add-to-cart__quantity-select-container">
-                <quantity-selector :quantity.sync="quantity" />
+        <div class="product-select__controls">
+          <div class="product-select__controls__container">
+            <!-- DESKTOP PRODUCT INFO - Title, Variant Title, Ratings -->
+            <div class="product-select__controls__title-container">
+              <div class="product-select__controls__title">
+                {{ product.title }}
               </div>
-              <div class="product-select__controls__add-to-cart__add-to-cart-button">
-                <product-add-to-cart-button
-                  :quantity="quantity"
-                  :product="product"
+              <div
+                v-if="product.variants.length > 1 && currentVariant.title !== 'default title'"
+                class="product-select__controls__category"
+              >
+                {{ currentVariant.title }}
+              </div>
+              <div class="product-select__controls__rating">
+                <n-link
+                  :to="{
+                    path: `/products/${product.handle}`,
+                    hash: '#reviews'
+                  }"
+                >
+                  <loox-product-rating :product="product" />
+                </n-link>
+              </div>
+            </div>
+
+            <!-- VARIANT SELECTOR DROPDOWN MENU -->
+            <div class="product-select__controls__option-select" v-if="product.variants.length > 1">
+              <template v-if="hasColorVariants">
+                <div class="product-select__controls__variant-color__text">
+                  <span class="product-select__controls__variant-color__text__label">
+                    Color:
+                  </span>
+                  <span class="product-select__controls__variant-color__text__selected-color">
+                    {{ currentVariant.title }}
+                  </span>
+                </div>
+                <product-options
+                  :options="allOptions"
                   :variant="currentVariant"
-                  :allOptionsSelected="true"
-                  :onlyOneOption="true"
-                  @addedToCart="quantity = 1"
+                  :update="setSelectedOption"
+                  :variants="variants"
+                  @clear="selectedOptions = []"
+                  :currentOption="currentOption"
+                />
+              </template>
+
+              <div class="variant-dropdown-container" v-else>
+                <CustomProductOptions
+                  v-if="allOptions.length > 1"
+                  :options="allOptions"
+                  :variant="currentVariant"
+                  :update="setSelectedOption"
+                  :variants="variants"
+                  @clear="selectedOptions = []"
+                  :currentOption="currentOption"
+                />
+                <ProductVariantsDropdown
+                  v-else
+                  :variants="variants"
+                  :currentVariant="currentVariant"
+                  @update="setSelectedVariant"
                 />
               </div>
             </div>
 
-          </div>
-        </transition>
-        <transition name="fade">
-          <div class="mobile-variant-select" v-if="showMobileVariants ">
-            <div class="mobile-variant-select__close" @click="toggleMobileVariants">
-              <Close />
-            </div>
-            <div class="product-select__controls__variant-color__text">
-              <span class="product-select__controls__variant-color__text__label">Color: </span><span class="product-select__controls__variant-color__text__selected-color">{{currentVariant.title}}</span>
-            </div>
-            <product-options
-              :options="allOptions"
-              :variant="selectedVariant"
-              @selectedOptionsSet="setSelected"
-              :variants="variants"
-              @clear="selectedOptions = []"
-              :currentOption="currentVariant.selectedOptions[0].value"
-              :key="3"
-            />
-            <div class="mobile-variant-select__shipping">
-          <ShippingTime :country="country"/>
-            </div>
-          </div>
-        </transition>
+            <div class="product-select__controls__add-to-cart">
+              <!-- SUBSCRIPTION TOGGLE -->
+              <div
+                class="product-select__controls__add-to-cart__subscribe-select"
+                v-if="hasSubscription"
+              >
+                <SubscriptionToggle
+                  :value.sync="isSubscriptionActive"
+                  :product="productData"
+                  :variant="currentVariant"
+                />
 
-        <modal name="guarantee-modal" width="414px" height="auto" :adaptive="true">
-          <div class="guarantee-modal__container">
-            <div slot="top-right" @click="$modal.hide('guarantee-modal')">
-              <Close />
-            </div>
-            <Guarantee />
-            <div class="guarantee-modal__container__heading">
-              30-day Money Back Guarantee
-            </div>
-            <div class="guarantee-modal__container__text">
-              We believe in 100% customer satisfaction and that is why we are offering all customers a 30 day money-back guarantee! If you are not satisfied with your BlendJet blender, you may return the item within 30 days from the order date for a full refund. If you don't like your product, get a full refund within 30 days, no questions asked. <br/>
-              — <br />
-              Please <a class="guarantee-modal__container__text__contact-link" >contact our customer happiness</a> team to start your return process.
-            </div>
-          </div>
-        </modal>
-
-        <modal name="pay-with-modal" width="414px" height="auto" :adaptive="true">
-          <div class="pay-with-modal__container">
-            <div slot="top-right" @click="$modal.hide('pay-with-modal')">
-              <Close />
-            </div>
-            <div class="pay-with-modal__container__text">
-              Pay with
-            </div>
-
-            <div class="pay-with-modal__container__amazon" @click="expressCheckout">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/amazonpay.png'})" />
-            </div>
-            <div v-if="applePay" class="pay-with-modal__container__apple" @click="expressCheckout">
-              <img :src="optimizeSource({url: '/images/blendjetPDP/applepay.png'})" />
-            </div>
-            <div class="pay-with-modal__container__paypal" @click="expressCheckout">
-              <img class="pay-with-modal__container__paypal__logo" :src="optimizeSource({url: '/images/blendjetPDP/paypal.png'})" />
-            </div>
-          </div>
-        </modal>
-      </div>
-    </div>
-
-    <div v-if="page && page.fields.headerText" class="blendjet-banner">
-      <div class="blendjet-banner__content-block">
-        <RichTextRenderer :document="page.fields.headerText" />
-      </div>
-    </div>
-
-    <transition name="fade">
-      <div class="header-product-select" v-if="showDesktopHeader">
-        <div class="header-product-select__info-container">
-          <div class="header-product-select__thumbnail">
-            <img class="header-product-select__thumbnail__img" :src="optimizeSource({url: currentVariant.featuredMedia.thumbnailSrc})" />
-          </div>
-          <div class="header-product-select__title-container">
-            <div class="header-product-select__title-container__title">
-              {{product.title}}
-            </div>
-            <div class="header-product-select__title-container__price">
-              <product-price v-if="currentVariant" :price="currentVariant.price" :variantId="currentVariant.id"/>
-              <product-price v-if="currentVariant.compareAtPrice && currentVariant.compareAtPrice !== currentVariant.price && compareAtPrice !== displayPrice"
-                  :price="currentVariant.compareAtPrice" :strikethrough="true" :variantId="currentVariant.id" />
-            </div>
-          </div>
-        </div>
-        <div class="header-product-select__controls-container">
-        <div v-if="variants.length > 1" class="header-product-select__swatches">
-
-          <div class="dropdown" tabindex="0"  @focusout="showHeaderVariants = false" @click.prevent="toggleHeaderVariants">
-            <div class="dropbtn" role="button">
-              <div class="dropbtn__swatch">
-              <product-option-swatch
-                    :value="currentVariant.selectedOptions[0].value"
-                    :style={}
-                    :optionName="'Color'"
-                    :swatchStyle="'bubble'"
-                    :class="{selected: false}"
-                    :variants="variants"
-                    :selectedOptions="currentVariant.selectedOptions"
-                  />
-              </div>
-              <div class="dropbtn__text">
-                <div class="dropbtn__text__color">
-                  {{currentVariant.title}}
-                </div>
-                <div class="dropbtn__text__shipping">
-                  <ShippingTime :size="'short'" :country="country"/>
+                <!-- SUBSCRIPTION MODAL TRIGGER -->
+                <div
+                  class="product-select__controls__add-to-cart__subscribe-select__about"
+                  @click="$modal.show('about-subscriptions')"
+                >
+                  <div>How do subscriptions work?</div>
+                  <div class="product-select__controls__add-to-cart__subscribe-select__about__icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      width="18"
+                    >
+                      <path d="M0 0h24v24H0V0z" fill="none" />
+                      <path
+                        fill="#373975"
+                        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
-              <div class="dropbtn__caret-down">
-                <CaretDown />
-              </div>
-            </div>
-            <transition name="fade">
-              <div v-if="showHeaderVariants" class="dropdown-content">
-                <div class="dropdown-content__swatches">
-                  <product-options
-                    :options="allOptions"
-                    :variant="selectedVariant"
-                    @selectedOptionsSet="setSelected"
-                    :variants="variants"
-                    @clear="selectedOptions = []"
-                    :currentOption="currentVariant.selectedOptions[0].value"
-                    :key="2"
-                  />
-                </div>
-              </div>
-            </transition>
-            </div>
-          </div>
-          <div class="header-product-select__add-buttons">
-            <div class="add-to-cart-buttons">
-                <div class="quantity-select-container">
+
+              <div class="product-select__controls__add-to-cart__quantity-add-button">
+                <!-- QUANTITY ADJUSTER -->
+                <div class="product-select__controls__add-to-cart__quantity-add-button__quantity">
                   <quantity-selector :quantity.sync="quantity" />
                 </div>
-                <div class="add-to-cart">
-                  <product-add-to-cart-button
-                    :quantity="quantity"
-                    :product="product"
+                <!-- ADD-TO-CART CTA -->
+                <div
+                  class="product-select__controls__add-to-cart__quantity-add-button__quantity__add-to-cart"
+                >
+                  <SubscriptionAddToCartButton
+                    :product="productData"
                     :variant="currentVariant"
-                    :allOptionsSelected="true"
-                    :onlyOneOption="true"
-                    @addedToCart="quantity = 1"
+                    :metafields="productData.metafields"
+                    :all-options-selected="true"
+                    :only-one-option="true"
+                    :quantity="quantity"
+                    :showPrice="true"
+                    :isSubscriptionOn="isSubscriptionActive"
+                    :styleObj="{
+                      height: '50px',
+                      marginRight: '6px'
+                    }"
                   />
                 </div>
               </div>
-          </div>
-        </div>
-      </div>
-    </transition>
+            </div>
+            <!--
+            <div class="product-select__controls__shipping-notification">
+              TODO: Shipping estimate for normal products should go here
+            </div>
+            -->
+            <hr class="product-select__controls__divider" />
 
-    <div class="media-content" >
-      <div v-if="heroImages && heroImages.length" class="media-content__carousel">
-        <b-carousel class="media-content__carousel"
-          :arrow="true"
-          :repeat="true"
-          :indicator="true"
-          :has-drag="true"
-          :autoplay="false"
-          v-model="heroIndex"
-        >
-          <b-carousel-item v-for="(image, i) in heroImages" :key="i">
-            <section class="`hero is-large`">
-              <span class="image">
-                <img class="media-content__carousel__img" :src="optimizeSource({url: image})">
-              </span>
-
-            </section>
-          </b-carousel-item>
-        </b-carousel>
-      </div>
-      <div class="media-content__main" v-if="loadDescription && page && page.fields.features">
-        <div class="media-content__main__features">
-          <div v-if="page && page.fields.features" class="features-container sticky">
-            <div class="features-column">
-              <div class="features-heading">
-                {{ page.fields.features.fields.title }}
-              </div>
-              <div v-if="page.fields.features.fields.description" class="features-text">
-                <RichTextRenderer :document="page.fields.features.fields.description" />
-              </div>
+            <!-- VALUE PROPS - TODO: Abstract into component -->
+            <div class="product-select__controls__value-props">
               <div
-                v-if="page.fields.features.fields.features"
-                v-for="feature in page.fields.features.fields.features"
-                class="features-row"
+                class="product-select__controls__value-props__guarantee"
+                @click="$modal.show('guarantee-modal')"
               >
-                <div class="features-icon">
-                  <ModelIcon :type="feature.fields.icon"/>
-                </div>
-                <div class="features-text-block">
-                  <div class="features-text-block__title">
-                    {{ feature.fields.title }}
-                  </div>
-                  <div class="features-text-block__text">
-                    <RichTextRenderer :document="feature.fields.description" />
-                  </div>
-                </div>
+                <Guarantee :size="'40px'" />
+                <span class="product-select__controls__value-props__guarantee__text"
+                  >30 day money back guarantee</span
+                >
+              </div>
+              <div class="product-select__controls__value-props__badges">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  class="product-select__controls__value-props__badges__img"
+                  :href="mcafeeLink"
+                >
+                  <img
+                    :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                    alt="TrustedSite Seal"
+                    style="border: 1px solid #ccc;border-radius: 3px;"
+                  />
+                </a>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  class="product-select__controls__value-props__badges__img"
+                  :href="nortonLink"
+                >
+                  <img
+                    :src="optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })"
+                    alt="Norton Secured Logo"
+                  />
+                </a>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  class="product-select__controls__value-props__badges__img"
+                  :href="bbbLink"
+                >
+                  <img
+                    :src="optimizeSource({ url: '/images/blendjetPDP/BBB-Seal.svg' })"
+                    alt="Better Business Bureau Logo"
+                  />
+                </a>
               </div>
             </div>
           </div>
-        </div>
-        <div class="media-content__main__details">
 
-          <div v-for="(section, i) of description" :key="i" class="media-content__main__details__content-block">
-            <div class="media-content__main__details__content-block__heading">
-              {{section.heading}}
+          <!-- MODAL (Purchase Guarantee) - TODO: Abstract into a component -->
+          <modal name="guarantee-modal" width="414px" height="auto" :adaptive="true">
+            <div class="guarantee-modal__container">
+              <div slot="top-right" @click="$modal.hide('guarantee-modal')">
+                <Close />
+              </div>
+              <Guarantee />
+              <div class="guarantee-modal__container__heading">
+                30-day Money Back Guarantee
+              </div>
+              <div class="guarantee-modal__container__text">
+                We believe in 100% customer satisfaction and that is why we are offering all
+                customers a 30 day money-back guarantee! If you are not satisfied with your BlendJet
+                blender, you may return the item within 30 days from the order date for a full
+                refund. If you don't like your product, get a full refund within 30 days, no
+                questions asked. <br />
+                — <br />
+                Please
+                <a class="guarantee-modal__container__text__contact-link"
+                  >contact our customer happiness</a
+                >
+                team to start your return process.
+              </div>
             </div>
-            <div class="media-content__main__details__content-block__text">
-                <RichTextRenderer :document="section.text" />
+          </modal>
+
+          <!-- Modal (Subscriptions) — TODO: Abstract into a component, selectively render only if product is a subscription. Pull discount data dynamically -->
+          <modal name="about-subscriptions" height="auto" width="494px" :adaptive="true">
+            <div class="about-subscriptions__container">
+              <div slot="top-right" @click="$modal.hide('about-subscriptions')">
+                <Close />
+              </div>
+              <div class="about-subscriptions__heading">
+                Get Delicious On Demand <br />
+                And save 25%
+              </div>
+              <div class="about-subscriptions__column">
+                <div class="about-subscriptions__icon">
+                  <svg
+                    width="70px"
+                    height="70px"
+                    viewBox="0 0 70 70"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <title>Group 2</title>
+                    <defs>
+                      <linearGradient
+                        x1="50%"
+                        y1="0%"
+                        x2="50%"
+                        y2="98.7331081%"
+                        id="linearGradient-1"
+                      >
+                        <stop stop-color="#1E90BB" offset="0%"></stop>
+                        <stop stop-color="#373795" offset="100%"></stop>
+                      </linearGradient>
+                    </defs>
+                    <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g
+                        id="D-BlendJet-PDP-JetPack-Copy"
+                        transform="translate(-685.000000, -289.000000)"
+                      >
+                        <g id="Group-4" transform="translate(472.000000, 170.000000)">
+                          <g id="Portable" transform="translate(113.000000, 120.000000)">
+                            <g id="Group-2" transform="translate(101.000000, 0.000000)">
+                              <circle
+                                id="Oval-Copy"
+                                stroke="#373795"
+                                stroke-width="1.5"
+                                cx="34"
+                                cy="34"
+                                r="34"
+                              ></circle>
+                              <circle
+                                id="Oval-Copy"
+                                fill="url(#linearGradient-1)"
+                                cx="34"
+                                cy="34"
+                                r="30"
+                              ></circle>
+                              <text
+                                id="30"
+                                font-family="Helvetica"
+                                font-size="26"
+                                font-weight="normal"
+                                line-spacing="14"
+                                fill="#FFFFFF"
+                              >
+                                <tspan x="19" y="37">30</tspan>
+                              </text>
+                              <text
+                                id="DAYS"
+                                font-family="Helvetica"
+                                font-size="11"
+                                font-weight="normal"
+                                line-spacing="14"
+                                fill="#FFFFFF"
+                              >
+                                <tspan x="19" y="47">DAYS</tspan>
+                              </text>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <div class="about-subscriptions__text">
+                  AUTOMATICALLY DELIVERED <br />
+                  EVERY 30 DAYS
+                </div>
+                <div class="about-subscriptions__icon">
+                  <svg
+                    width="70px"
+                    height="70px"
+                    viewBox="0 0 70 70"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <title>Group 2</title>
+                    <defs>
+                      <linearGradient
+                        x1="50%"
+                        y1="0%"
+                        x2="50%"
+                        y2="98.7331081%"
+                        id="linearGradient-1"
+                      >
+                        <stop stop-color="#1E90BB" offset="0%"></stop>
+                        <stop stop-color="#373795" offset="100%"></stop>
+                      </linearGradient>
+                    </defs>
+                    <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g
+                        id="D-BlendJet-PDP-JetPack-Copy"
+                        transform="translate(-685.000000, -438.000000)"
+                      >
+                        <g id="Group-4" transform="translate(472.000000, 170.000000)">
+                          <g id="Portable-Copy" transform="translate(113.000000, 269.000000)">
+                            <g id="Group-2" transform="translate(101.000000, 0.000000)">
+                              <circle
+                                id="Oval-Copy"
+                                stroke="#373795"
+                                stroke-width="1.5"
+                                cx="34"
+                                cy="34"
+                                r="34"
+                              ></circle>
+                              <circle
+                                id="Oval-Copy"
+                                fill="url(#linearGradient-1)"
+                                cx="34"
+                                cy="34"
+                                r="30"
+                              ></circle>
+                              <path
+                                d="M44.16,22.2928932 L45.7071068,23.84 L36.0471068,33.5 L45.7071068,43.16 L44.1599817,44.7071251 L34.5,35.0461434 L24.8400183,44.7071251 L23.2929115,43.1600183 L32.9528932,33.4990366 L23.2928749,23.8400183 L24.84,22.2928932 L34.5,31.9528932 L44.16,22.2928932 Z"
+                                id="Ham___Mobile_2"
+                                stroke="#FFFFFF"
+                                fill="#FFFFFF"
+                                stroke-linejoin="round"
+                              ></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <div class="about-subscriptions__text">
+                  NO STRINGS ATTACHED <br />
+                  CANCEL ANYTIME
+                </div>
+                <div class="about-subscriptions__icon">
+                  <svg
+                    width="70px"
+                    height="70px"
+                    viewBox="0 0 70 70"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <title>Group 2</title>
+                    <defs>
+                      <linearGradient
+                        x1="50%"
+                        y1="0%"
+                        x2="50%"
+                        y2="98.7331081%"
+                        id="linearGradient-1"
+                      >
+                        <stop stop-color="#1E90BB" offset="0%"></stop>
+                        <stop stop-color="#373795" offset="100%"></stop>
+                      </linearGradient>
+                    </defs>
+                    <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g
+                        id="D-BlendJet-PDP-JetPack-Copy"
+                        transform="translate(-685.000000, -588.000000)"
+                      >
+                        <g id="Group-4" transform="translate(472.000000, 170.000000)">
+                          <g id="Portable-Copy-2" transform="translate(93.000000, 419.000000)">
+                            <g id="Group-2" transform="translate(121.000000, 0.000000)">
+                              <circle
+                                id="Oval-Copy"
+                                stroke="#373795"
+                                stroke-width="1.5"
+                                cx="34"
+                                cy="34"
+                                r="34"
+                              ></circle>
+                              <circle
+                                id="Oval-Copy"
+                                fill="url(#linearGradient-1)"
+                                cx="34"
+                                cy="34"
+                                r="30"
+                              ></circle>
+                              <path
+                                d="M55.6609355,29.0887521 C55.4439559,28.8708588 55.1496012,28.7484382 54.8426666,28.7484382 C54.535732,28.7484382 54.2413773,28.8708588 54.0243977,29.0887521 L49.9567895,33.1711748 L49.9567895,32.5392549 C49.9567895,23.41941 42.564682,16 33.4783959,16 C24.3921098,16 17,23.4194065 17,32.5392514 C17,41.7770723 24.3921075,49.2926829 33.4783924,49.2926829 C37.8511133,49.3047352 42.0468827,47.5603041 45.1302435,44.4482522 C45.5817098,43.9945884 45.5814958,43.2595498 45.1297654,42.8061509 C44.6780349,42.352752 43.9457012,42.3525372 43.4937068,42.805671 C40.843304,45.480434 37.2368968,46.9797534 33.4783959,46.9694131 C25.6686786,46.9694131 19.3146638,40.4960767 19.3146638,32.5392537 C19.3146638,24.6879483 25.6559829,18.3232078 33.4783965,18.3232078 C41.30081,18.3232078 47.6421291,24.6879483 47.6421291,32.5392537 L47.6421291,33.1711748 L43.5745197,29.0887556 C43.1226016,28.6351693 42.3898985,28.6351701 41.9379813,29.0887573 C41.4860642,29.5423446 41.486065,30.277754 41.9379831,30.7313402 L47.9804491,36.7961228 C48.0346724,36.8504135 48.0941085,36.8991928 48.157891,36.9417497 C48.1854042,36.9601832 48.2151788,36.972732 48.2437869,36.9885426 C48.3135337,37.034337 48.3910952,37.0668317 48.4725818,37.0843971 C48.5060645,37.094359 48.53817,37.1073329 48.5728876,37.1142503 C48.7223985,37.1448315 48.8765189,37.1448315 49.0260298,37.1142503 C49.0607497,37.1073376 49.0928529,37.0943636 49.1263356,37.0843971 C49.2078225,37.0668314 49.2853843,37.0343368 49.3551317,36.9885426 C49.3837398,36.972732 49.4135132,36.9601832 49.4410264,36.9417497 C49.5048093,36.8991928 49.5642458,36.8504135 49.6184695,36.7961228 L55.6609355,30.7313402 C55.8780288,30.513559 56,30.2181159 56,29.9100462 C56,29.6019765 55.8780288,29.3065334 55.6609355,29.0887521 L55.6609355,29.0887521 Z"
+                                id="Path"
+                                fill="#FFFFFF"
+                                fill-rule="nonzero"
+                              ></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <div class="about-subscriptions__text">
+                  UPDATE YOUR SUBSCRIPTION <br />
+                  WHEN YOU WANT
+                </div>
+              </div>
             </div>
-            <div v-if="section.video.length && section.video.includes('video')" class="media-content__main__details__content-block__media rounded-video-container" >
-              <VideoContainer :source="section.video" class="media-content__main__details__content-block__media__video" />
-            </div>
-            <div v-if="section.video.includes('images')" class="media-content__main__details__content-block__image">
-              <img class="media-content__main__details__content-block__img" :src="optimizeSource({url: section.video})" />
-            </div>
+          </modal>
+        </div>
+      </div>
+
+      <!-- HEADER TEXT - Variant-specific text banner directly below the main product-detail gallery + form -->
+      <div v-if="headerText" class="blendjet-banner">
+        <div class="blendjet-banner__content-block">
+          <RichTextRenderer :document="headerText" />
+        </div>
+      </div>
+
+      <div class="media-content">
+        <!-- VARIANT HERO IMAGES - Variant-specific hero imagery -->
+        <div class="media-content__carousel__container" v-if="heroImages.length">
+          <b-carousel
+            class="media-content__carousel"
+            :arrow="heroImages.length > 1"
+            :repeat="true"
+            :indicator="heroImages.length > 1"
+            :autoplay="false"
+            :has-drag="true"
+          >
+            <b-carousel-item v-for="(image, i) in heroImages" :key="i">
+              <img
+                class="media-content__carousel__img"
+                :src="optimizeSource({ url: image, height: 800 })"
+              />
+            </b-carousel-item>
+          </b-carousel>
+        </div>
+
+        <div class="media-content__main" v-if="features && features.features.length">
+          <!-- FEATURES - Title, Description, and Features (text, icon) array -->
+          <div class="media-content__main__features">
+            <ProductFeatures
+              :title="features.title"
+              :description="features.description"
+              :features="features.features"
+            />
+          </div>
+          <!-- PRODUCT MEDIA LOOP - Title/Description & either image or video -->
+          <div class="media-content__main__media" v-if="loaded && productDescription">
+            <ProductMediaTile
+              class="media-content__main__details__content-block"
+              v-for="(section, i) of productDescription"
+              :key="i"
+              :title="section.fields.heading"
+              :text="section.fields.text"
+              :contentful-media="section.fields.video"
+              :external-media-url="section.fields.externalVideoUrl"
+            />
           </div>
         </div>
       </div>
-    </div>
-    <div class="reviews" id="reviews">
-      <loox-product-reviews :product="product" />
-    </div>
 
-    <div class="jetpacks" v-if="loadDescription">
-      <JetpackCrossSell  :heading="'Power up with Jetpacks'" />
-    </div>
+      <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
+      <div class="reviews" id="reviews">
+        <loox-product-reviews :product="product" />
+      </div>
 
-  </div>
-</transition>
+      <!-- TODO: Make this dynamic using contentful
+      <div class="jetpacks" v-if="product.variants && product.variants.length > 1">
+        <JetpackCrossSell :product="product" heading="You may also like these" />
+      </div>
+      -->
+    </div>
+  </transition>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
-import ProductPrice from '~/components/nacelle/ProductPrice'
-const JetpackCrossSell = () => import('~/components/jetpackCrossSell')
-const BlendjetFeatures = () => import('~/components/blendjetFeatures')
-import ModelIcon from '~/components/ModelIcon'
-import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
-
-import ProductOptions from '~/components/nacelle/ProductOptions'
-import ProductOptionSwatches from '~/components/nacelle/ProductOptionSwatches'
-import ProductOptionSwatch from '~/components/nacelle/ProductOptionSwatch'
-import QuantitySelector from '~/components/nacelle/QuantitySelector'
-import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
-import allOptionsSelected from '~/mixins/allOptionsSelected'
-import availableOptions from '~/mixins/availableOptions'
-import ShippingTime from '~/components/shippingTime'
-
-const VideoContainer = () => import('~/components/VideoContainer')
+import { mapState, mapMutations } from 'vuex'
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
 
+import ProductPrice from '~/components/nacelle/ProductPrice'
+import ProductFeatures from '~/components/ProductFeaturesPDP'
+import QuantitySelector from '~/components/nacelle/QuantitySelector'
+import CustomProductOptions from '~/components/CustomProductOptions'
+import ProductOptions from '~/components/nacelle/ProductOptions'
+import SubscriptionToggle from '~/components/subscriptionToggle'
+import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton'
+import ProductVariantsDropdown from '~/components/ProductVariantsDropdown'
+import ProductStickyAddToCart from '~/components/ProductStickyAddToCart'
+import ProductMediaTile from '~/components/ProductMediaTile'
+
 import imageOptimize from '~/mixins/imageOptimize'
-import debounce from 'lodash.debounce'
+import rechargeProperties from '~/mixins/rechargeMixin'
+import productMetafields from '~/mixins/productMetafields'
+import allOptionsSelected from '~/mixins/allOptionsSelected'
+import availableOptions from '~/mixins/availableOptions'
 
 import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
-import Info from '~/components/svg/info'
-import CaretDown from '~/components/svg/caretDown'
-import BlnExtend from '~/components/svg/blnExtend'
-import NextSlide from '~/components/svg/NextSlide'
-import PrevSlide from '~/components/svg/PrevSlide'
+
+import { createClient } from '~/plugins/contentful.js'
+const VideoContainer = () => import('~/components/VideoContainer')
 
 export default {
   data() {
     return {
-      imageStyle: {
-        height: '252px',
-        width:'auto'
-      },
-      currentVariant: null,
-      quantity: 1,
-      variants:[],
-      selectedOptions: [],
-      showMobileVariants: false,
-      showMobileHeader: false,
-      showDesktopHeader: false,
-      showHeaderVariants: false,
-      loadDescription: false,
-      scrollY: 0,
-      screenWidth: null,
-      heroUrl: null,
+      currentVariant: {},
+      productImage: null,
+      heroImages: [],
       imgWidth: 0,
+      isSubscriptionActive: false, // whether the subscription toggle is active or not — this is toggled to true if the product has RC metafields in the created() method
+      loaded: false,
+      variantsMenuVisible: false,
+      quantity: 1,
+      variants: [],
+      productData: { ...this.product },
+      pageData: { ...this.page },
+      headerBackground: null,
+      headerText: null,
+      productDescription: null,
+      features: null,
+      featuresBackground: null,
+      media: {},
+      bannerText: '',
+      description: {},
+      client: null,
+      addToCartWidth: '260px',
+      currency: 'USD',
+      displayPrice: '0',
       mcafeeLink: 'https://www.trustedsite.com/verify?host=blendjet.com',
       nortonLink: 'https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com',
-      bbbLink: 'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
-
-      description: [],
-      variantMedia: {},
+      bbbLink:
+        'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
       applePay: false,
-      country: 'US',
-      currency: 'USD',
-      displayPrice: 0,
-      compareAtPrice: 0,
-      heroIndex: 0,
-      variantIndex: 0,
       metaTitle: null,
       metaDescription: null
     }
   },
   components: {
-    VideoContainer,
     ProductPrice,
-    ModelIcon,
-    RichTextRenderer,
-    JetpackCrossSell,
-    BlendjetFeatures,
+    VideoContainer,
+    QuantitySelector,
+    SubscriptionAddToCartButton,
+    SubscriptionToggle,
+    ProductFeatures,
+    ProductVariantsDropdown,
+    ProductOptions,
     Guarantee,
     Close,
-    Info,
-    CaretDown,
-    ProductVariantSelect,
-    ProductOptions,
-    ProductOptionSwatches,
-    ProductOptionSwatch,
-    QuantitySelector,
-    ProductAddToCartButton,
-    ShippingTime,
-    BlnExtend,
-    NextSlide,
-    PrevSlide
+    RichTextRenderer,
+    ProductStickyAddToCart,
+    ProductMediaTile,
+    CustomProductOptions
   },
-  mixins: [imageOptimize, availableOptions, allOptionsSelected],
+  mixins: [
+    imageOptimize,
+    rechargeProperties,
+    productMetafields,
+    availableOptions,
+    allOptionsSelected
+  ],
   props: {
     product: {
       type: Object,
-      default: () => {}
-    },
-     country: {
-      type: Object,
-      default: () => {}
+      default: () => ({})
     },
     page: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
-
   head() {
-    let productCurrency = this.currency
-    let productPrice = this.displayPrice
-    let image = this.selectedVariant.featuredMedia ? this.selectedVariant.featuredMedia.src : ''
-    let properties = {}
-    let meta = []
-    let script = [{
+    const productCurrency = this.currency
+    const productPrice = this.displayPrice
+    const image = this.productImage
+    const name = this.product.title
+    const properties = {}
+    const meta = []
+    const script = [
+      {
         type: 'application/ld+json',
         json: {
-          "@context" : "http://schema.org",
-          "@type": "Product",
-          "name": "BlendJet 2",
-          "image": [
-            `${image}`
-          ],
-          "offers": {
-            "@type": "Offer",
-            "url": "https://blendjet.com/products/blendjet-2",
-            "itemCondition": "http://schema.org/NewCondition",
-            "availability": "http://schema.org/InStock",
-            "price": `${productPrice}`,
-            "priceCurrency": `${productCurrency}`,
+          '@context': 'http://schema.org',
+          '@type': 'Product',
+          name: `${name}`,
+          image: [`${image}`],
+          offers: {
+            '@type': 'Offer',
+            url: 'https://blendjet.com/products/blendjet-2',
+            itemCondition: 'http://schema.org/NewCondition',
+            availability: 'http://schema.org/InStock',
+            price: `${productPrice}`,
+            priceCurrency: `${productCurrency}`
           }
         }
-      }]
+      }
+    ]
 
-    if(this.metaTitle) {
+    if (this.metaTitle) {
       properties.title = this.metaTitle
+    } else {
+      properties.title = name
     }
 
-    if(this.metaDescription) {
+    if (this.metaDescription) {
       meta.push({
         hid: 'description',
         name: 'description',
@@ -555,397 +685,324 @@ export default {
       })
     }
 
-    return {
-      ...properties, meta, script
+    if (image && productCurrency && productPrice) {
+      return {
+        ...properties,
+        meta,
+        script
+      }
     }
   },
   computed: {
     ...mapState('user', ['locale']),
-    ...mapGetters('cart', ['cartBalance']),
-    // currentVariant() {
-    //   if (this.selectedVariant) {
-    //     return this.selectedVariant
-    //   } else if (
-    //     this.product &&
-    //     this.product.variants &&
-    //     this.product.variants.length
-    //   ) {
-    //     return this.product.variants[0]
-    //   }
-    //
-    //   return undefined
-    // }
+    hasColorVariants() {
+      return this.product.variants[0].selectedOptions.some(o => /color/i.test(o.name))
+    },
+    currentOption() {
+      return this.currentVariant.selectedOptions?.[0]?.value || ''
+    }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
-    ...mapMutations('cart', ['setCartError']),
-    ...mapActions('cart', [
-      'addLineItem',
-      'removeLineItem',
-      'incrementLineItem',
-      'decrementLineItem'
-    ]),
-    ...mapActions('checkout', ['processCheckout']),
-    setDefaultVariant() {
-      if (this.currentVariant) {
-        return this.currentVariant
-      } else if (
-        this.product &&
-        this.product.variants &&
-        this.product.variants.length
-      ) {
-        if(this.$route.query && this.$route.query.variant) {
-           let variantId = btoa(`gid://shopify/ProductVariant/${this.$route.query.variant}`)
-           return this.product.variants.filter((variant) => {
-             return variant.id === variantId
-           })[0]
-        } else {
-          for(let i = 0; i < this.product.variants.length; i++) {
-            if(this.product.variants[i].availableForSale === true) {
-              return this.product.variants[i]
-            }
-          }
+    camelize(str) {
+      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+        if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
+        return index === 0 ? match.toLowerCase() : match.toUpperCase()
+      })
+    },
+    /**
+     * Sets the selected variant for the add-to-cart form
+     */
+    setSelectedVariant(selectedVariant) {
+      this.currentVariant = selectedVariant
+      this.addHashToLocation()
+    },
+    //Set the currentVaraint using the options selected
+    //If there is only one option selected, it will take the first varaint with that option
+    setSelectedOption(opt) {
+      let variant = null
+
+      variant = this.variants.find(v => {
+        if (opt.length > 1) {
+          return JSON.stringify(v.selectedOptions) === JSON.stringify(opt)
         }
+      })
+
+      if (!variant) {
+        variant = this.variants.find(v => {
+          return v.selectedOptions.some(option => {
+            return JSON.stringify(option) === JSON.stringify(Array.isArray(opt) ? opt[0] : opt)
+          })
+        })
       }
-      return this.product.variants[0]
+
+      if (variant) {
+        this.currentVariant = variant
+        this.addHashToLocation()
+      }
+    },
+    /**
+     * Toggles the visibility of the variant selection dropdown menu
+     */
+    toggleVariantsMenu() {
+      this.variantsMenuVisible = !this.variantsMenuVisible
+    },
+    formatTitle(title) {
+      return title.replace(/\s/g, '')
     },
     setDisplayPrice(data) {
       this.displayPrice = data
     },
-    setCompareAtPrice(data) {
-      this.compareAtPrice = data
-    },
     setCurrency(data) {
       this.currency = data
     },
-    handleScroll (event) {
-      this.scrollY = window.scrollY;
-      if (this.screenWidth > 768) {
-        if(window.scrollY > 300) {
-          this.showDesktopHeader = true;
-        } else {
-          this.showDesktopHeader = false;
-          this.showHeaderVariants = false;
-        }
-      } else {
-        if(window.scrollY < 900) {
-          this.showMobileHeader = false
-          if(this.showMobileVariants ) {
-            this.showMobileVariants = false
-          }
+    /**
+     * Adds the variant hash to the URL.
+     * TODO: This should be done using the vue-router...
+     */
+    addHashToLocation() {
+      window.history.pushState(
+        {},
+        null,
+        this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
+      )
+    },
+    /**
+     * Formats a Storefront API encoded ID to a plain-language variant ID
+     * TODO: Move this to a mixin, it's used in like every product-based component...
+     */
+    formatVariantId(value) {
+      const url = atob(value)
+      return url.replace('gid://shopify/ProductVariant/', '')
+    },
+    /**
+     * Sets the initial variant for the PDP.  Derives it from
+     * the ?variant= query param in the URL (if present).
+     */
+    setInitialVariant() {
+      const urlVariantId = this.$route.query.variant
+      const variantsWithIds = Array.isArray(this.product.variants)
+        ? this.product.variants.map(variant => ({
+            ...variant,
+            formattedId: this.formatVariantId(variant.id)
+          }))
+        : []
 
-        } else {
-          this.showMobileHeader = true
-        }
-      }
+      const matchingVariant = variantsWithIds.find(v => v && v.formattedId === urlVariantId)
 
-      if(window.scrollY > 300) {
-        this.loadDescription = true
-      }
-    },
-    camelize(str) {
-      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-        if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-        return index === 0 ? match.toLowerCase() : match.toUpperCase();
-      });
-    },
-    updateVariant(variant) {
-      this.currentVariant = variant
-      this.variantIndex = this.variants.findIndex((variant) => {
-        return variant.title == this.currentVariant.title
-      })
-    },
-    incrementVariant() {
-      if(this.variantIndex === this.variants.length -1) {
-        this.variantIndex = 0;
-      } else {
-         this.variantIndex++
-      }
-      const newVar = this.variants[this.variantIndex]
-      this.updateVariant(newVar)
-      // this.currentVariant = {...this.product.variants[this.variantIndex]}
-    },
-    decrementVariant() {
-
-      if(this.variantIndex === 0) {
-        this.variantIndex = this.variants.length - 1
-      } else {
-        this.variantIndex--
-      }
-      let newVar = this.variants[this.variantIndex]
-      this.updateVariant(newVar)
-    },
-    toggleMobileVariants() {
-      this.showMobileVariants = !this.showMobileVariants
-    },
-    toggleHeaderVariants() {
-      this.showHeaderVariants = !this.showHeaderVariants
-    },
-    iOS() {
-      return [
-        'iPad Simulator',
-        'iPhone Simulator',
-        'iPod Simulator',
-        'iPad',
-        'iPhone',
-        'iPod'
-      ].includes(navigator.platform)
-      // iPad on iOS 13 detection
-      || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-    },
-    productId() {
-      if (this.product && this.product.pimSyncSourceProductId) {
-        return Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
-      }
-
-      return null
-    },
-
-    expressAdd() {
-
-      const lineItem = {
-          image: this.product.featuredMedia,
-          title: this.product.title,
-          variant: this.currentVariant,
-          quantity: this.quantity || 1,
-          productId: this.product.id,
-          handle: this.product.handle,
-          vendor: this.product.vendor,
-          tags: this.product.tags,
-          metafields: []
-        }
-
-        this.addLineItem(lineItem)
-
-    },
-
-    async expressCheckout() {
-      if(this.currentVariant.availableForSale) {
-        await this.expressAdd()
-        if(this.cartBalance) {
-          try {
-            await this.processCheckout({
-              async beforeCreate() {
-                // Allows processing of cart before checkout creation.
-              },
-              async beforeRedirect() {
-                // Allows processing after checkout create and before redirecting.
-              }
-            })
-          } catch(err) {
-            console.log(err)
-            this.setCartError(err)
-            // this.loading = false
-          }
-        } else {
-          this.showCart()
-        }
-      }
+      // Set current variant equal to the variant indicated by the param, or the product's first variant.
+      this.currentVariant = matchingVariant || this.product.variants[0]
     }
   },
   watch: {
-    //Variant from mixin
-    selectedVariant() {
-      this.updateVariant(this.selectedVariant)
-    },
-    //Local Variant
-    currentVariant() {
-      if(this.variantMedia[this.camelize(this.currentVariant.title)]) {
-        this.heroImages = this.variantMedia[this.camelize(this.currentVariant.title)].heroImages
+    currentVariant(newVariant) {
+      if (!newVariant) return
+      // Anytime the selected variant changes, update the media
+      const key = newVariant.title.toLowerCase().replace(/\s/g, '')
+      const vMedia = this.media[key]
 
+      if (vMedia) {
+        this.productImage = vMedia.productImage
+        this.heroImages = vMedia.heroImages
+        this.bannerText = vMedia.bannerText
       } else {
-        this.heroImages = [];
+        this.productImage = newVariant.featuredMedia.src
       }
-      this.heroIndex = 0
-
-      let variantId = atob(this.currentVariant.id).split('/').pop()
-      let path = `${this.$route.path}?variant=${variantId}`
-      this.$router.push(path)
+    },
+    showDesktopHeader(newValue, oldValue) {
+      // If show desktop header gets toggled to false, hide the variant selector menu too
     }
   },
   created() {
-    // this.currentVariant = this.setDefaultVariant();
+    // If this product has ReCharge metafields, toggle the subscription active state to true
+    this.isSubscriptionActive = this.hasSubscription
   },
-  async mounted() {
+  mounted() {
+    const vm = this
+    // Create contentful client
+    // TODO:
+    // Once nacelle-nuxt-module is upgrade to 5.5.7, replace the contentful API with a call to the SDK!
+    this.client = createClient()
 
-    if(process.client) {
+    // Check to see if Contentful data is present in page
+    if (!this?.page?.fields) {
+      // If page data doesn't exist, fail
+      // TODO - Figure out failure logic?
+      console.warn(`No content model found for product with handle "${this.product.handle}"`)
 
-      this.screenWidth = window.innerWidth
-      this.imgWidth = 2600
+      //Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
+      this.productImage = this.product.media[0].src
 
-      this.variants = this.product.variants.filter((variant)=>variant.availableForSale)
-      // this.variants = this.product.variants
+      this.product.variants.forEach(variant => {
+        const variantTitle = variant.title.toLowerCase().replace(/\s/g, '')
 
-
-
-      if(window.ApplePaySession) {
-        this.applePay = true;
-      }
-      const vm = this
-
-      let entry = this.page
-
-      if (entry && entry.fields) {
-        // Product Hero Images
-        if (entry.fields.variants) {
-          console.log(entry.fields.variants)
-          entry.fields.variants.forEach((node) => {
-            if (node.fields.heroImages) {
-              vm.variantMedia[node.fields.title] = {
-                heroImages: node.fields.heroImages.map((image) => {
-                  return `${image.fields.file.url}?w=2100`
-                })
-              }
-            }
-          })
+        const variantData = {
+          productImage: variant.featuredMedia?.src,
+          heroImages: [],
+          bannerText: this.product.description
         }
 
-        // Product Descriptions
-        if (entry.fields.productDescription) {
-          let sections = entry.fields.productDescription
+        // Add variant data to component's `media` object
+        vm.media[variantTitle] = variantData
+      })
 
-          vm.description = sections.map((node) => {
-            return {
-              heading: node.fields.heading,
-              text: node.fields.text,
-              video: node.fields.video ? node.fields.video.fields.file.url : ''
-            }
-          })
-        }
+      this.setInitialVariant()
 
-        // Meta fields
-        if(entry.fields.metaTitle) {
-          this.metaTitle = entry.fields.metaTitle
-        }
-        if(entry.fields.metaDescription) {
-          this.metaDescription = entry.fields.metaDescription
-        }
-      }
-
-
-
-      this.currentVariant = this.setDefaultVariant()
-
-      this.handleScroll();
-      this.handleDebouncedScroll = debounce(this.handleScroll, 0);
-
-      window.addEventListener('scroll', this.handleDebouncedScroll, {
-        passive: true
-      });
-    }
-  },
-  beforeDestroy() {
-    if(process.client) {
-      window.removeEventListener('scroll', this.handleDebouncedScroll)
+      return
     }
 
+    //Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
+    this.productImage = this.product.media[0].src
+
+    // Set component data based on the matching Contentful entry
+    const fields = this.page.fields
+
+    // Set metadata
+    if (fields.metaTitle) {
+      this.metaTitle = this.page.fields.metaTitle
+    }
+    if (fields.metaDescription) {
+      this.metaDescription = this.page.fields.metaDescription
+    }
+
+    // Get 'Header' (product description beneath the product form)
+    this.headerText = fields.headerText
+    this.headerBackground =
+      fields.headerBackground || 'linear-gradient(to bottom right,#373795 0,#1e90bb)'
+
+    // 'Media' tiles
+    this.productDescription = fields.productDescription
+
+    // 'Features' array
+    const featureFields = fields.features?.fields || {}
+    if (featureFields) {
+      const featureItems = featureFields.features || []
+      this.features = {
+        ...featureFields,
+        features: Array.isArray(featureItems) ? featureItems.map(fi => fi.fields) : []
+      }
+    }
+    this.featuresBackground = fields.featuresBackgroundColor || '#33499d'
+
+    // Loop over the `variants` fields to assemble the variant-specific data
+    // for this product that updates on variant change
+    if (Array.isArray(fields.variants)) {
+      fields.variants.forEach(node => {
+        // Assemble ProductVariant data into usable object
+        const variantTitle = node.fields.title.toLowerCase()
+
+        const variantData = {
+          productImage: node?.fields?.productImage?.fields?.file?.url
+            ? `https:${node.fields.productImage.fields.file.url}`
+            : null, // hero image
+          heroImages: Array.isArray(node?.fields?.heroImages)
+            ? node.fields.heroImages.map(image => `${image.fields.file.url}?w=2100`)
+            : [],
+          bannerText: node?.fields?.description
+        }
+
+        // Add variant data to component's `media` object
+        vm.media[variantTitle] = variantData
+      })
+    } else {
+      this.product.variants.forEach(variant => {
+        const variantTitle = variant.title.toLowerCase().replace(/\s/g, '')
+
+        const variantData = {
+          productImage: variant.featuredMedia?.src,
+          heroImages: [],
+          bannerText: this.product.description
+        }
+        // Add variant data to component's `media` object
+        vm.media[variantTitle] = variantData
+      })
+    }
+
+    // Set loaded flag
+    this.loaded = true
+
+    // Set the product's forms initially selected variant
+    // Note: this is run after the contentful data-fetch so that the
+    // various media is available for the `currentVariant` watcher.
+    this.setInitialVariant()
+
+    this.variants = this.product.variants
+      .filter(v => v.availableForSale)
+      .map(v => {
+        const variantId = atob(v.id)
+          .split('/')
+          .pop()
+
+        return {
+          ...v,
+          discountPercentage: this.discountPercentage,
+          plainId: variantId
+        }
+      })
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
-.price {
-  margin-bottom: 1rem;
+.media-content__main__features {
+  background: var(--features-background) !important;
 }
-
-.pdp-container {
-
-}
-
 .product-select {
   display: flex;
-  flex-flow: row nowrap;
-  min-height: 900px;
+  flex-flow: row wrap;
+
   @include respond-to('small') {
     height: auto;
-    min-height: none;
-    flex-flow: row wrap;
   }
 
   &__image-carousel {
     background-image: linear-gradient(to bottom, #ededf5 1%, #ffffff 49%);
     width: 65%;
-    display: flex;
-    justify-content: center;
     height: 900px;
-    position: relative;
-    background: white;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
 
     @include respond-to('small') {
+      height: auto;
       width: 100%;
-      padding-top: 0px;
-      height: 400px;
-    }
-
-    &__prev-variant {
-      position: absolute;
-      top: 50%;
-      left: 20px;
-      cursor: pointer;
-      @include respond-to('small') {
-        left: 10px;
-      }
-    }
-
-    &__next-variant {
-      position: absolute;
-      top: 50%;
-      right: 20px;
-      cursor: pointer;
-      @include respond-to('small') {
-        right: 10px;
-      }
-    }
-
-    picture {
-      display: flex;
-      align-items: center;
+      padding-top: 100%;
+      position: relative;
     }
 
     &__img {
-      margin: 0 auto;
-      display: block;
-
+      width: 100%;
+      height: 100%;
+      object-position: center;
+      object-fit: contain; // this was changed from cover -> contain at Ryan's request (BLEN-139)
       @include respond-to('small') {
-        height: auto;
-        height: 400px;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
     }
   }
 
   &__controls {
     width: 35%;
-    min-width: 550px;
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
     background-color: $primary-purple-tint;
     text-align: center;
-    padding: 0 75px 30px 75px;
-    height: 900px;
-
+    height: 848px;
     @include respond-to('small') {
-      padding: 0;
       width: 100%;
-      min-width: auto;
+      padding: 0;
       height: auto;
+    }
+
+    &__container {
+      max-width: 360px;
     }
 
     &__mobile-title-container {
       width: 100%;
 
       @media screen and (min-width: 768px) {
-        display: none
+        display: none;
       }
     }
 
@@ -960,11 +1017,11 @@ export default {
       font-size: 28px;
       line-height: 1.14;
       letter-spacing: 3.5px;
-      margin-top: 45px;
+      margin-top: 75px;
       color: $primary-purple;
       margin-bottom: 7px;
-      text-align: center;
       text-transform: uppercase;
+      text-align: center;
 
       @include respond-to('small') {
         font-size: 24px;
@@ -974,19 +1031,36 @@ export default {
       }
     }
 
+    &__category {
+      font-family: Bold;
+      text-align: center;
+      text-transform: uppercase;
+      color: $primary-purple;
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: 3.5px;
+      @include respond-to('small') {
+        font-size: 12px;
+        line-height: 1.25;
+        letter-spacing: 1.75px;
+      }
+    }
+
     &__rating {
       display: flex;
       justify-content: center;
       font-family: Regular;
       font-size: 13px;
       color: $primary-purple;
-
-      margin-bottom: 10px;
+      margin-top: 14px;
+      margin-bottom: 42px;
+      @include respond-to('small') {
+        margin-bottom: 30px;
+      }
 
       & > a {
         color: $primary-purple;
       }
-
     }
 
     &__price {
@@ -995,9 +1069,7 @@ export default {
       font-size: 18px;
       line-height: 0.83;
       letter-spacing: 3.5px;
-      margin-bottom: 31px;
-      text-align: center;
-
+      margin-bottom: 52px;
       @include respond-to('small') {
         font-size: 14px;
         line-height: 1.07;
@@ -1014,8 +1086,6 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        text-align: center;
-
         @include respond-to('small') {
           margin-top: 6px;
         }
@@ -1029,7 +1099,6 @@ export default {
     }
 
     &__variant-color {
-
       &__text {
         font-family: Bold;
         font-size: $text-small;
@@ -1038,7 +1107,7 @@ export default {
         letter-spacing: 1.75px;
         margin-bottom: 20px;
 
-         &__selected-color {
+        &__selected-color {
           color: $primary-purple;
         }
 
@@ -1051,91 +1120,82 @@ export default {
           margin-bottom: 10px;
         }
       }
+    }
 
+    &__option-select {
+      margin-bottom: 20px;
+
+      &__text {
+        font-family: Bold;
+        font-size: $text-small;
+        text-transform: uppercase;
+        line-height: 1.33;
+        letter-spacing: 1.75px;
+        margin-bottom: 20px;
+      }
+
+      &__label {
+        color: $grayscale-gray;
+      }
+
+      &__selected-color {
+        color: $primary-purple;
+      }
 
       &__swatches {
-        // margin-bottom: 20px;
-        // height: 120px;
-        // max-width: 390px;
-        // ::v-deep
-        min-height: 170px;
-        @include respond-to('small') {
-          height: auto;
-          min-height: 115px;
-        }
+        margin-bottom: 20px;
       }
     }
 
     &__add-to-cart {
-      ::v-deep .add-to-cart-button {
-        width: 275px;
-      }
-      @include respond-to('small') {
-        // position: fixed;
-        // width: 100%;
-        // bottom: 0;
-        height: 75px;
-        // background-color: $primary-purple-tint;
+      margin-bottom: 24px;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+      &__subscribe-select {
+        margin-bottom: 17px;
 
-      &__button-group {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 1s ease-in-out;
-
-        @include respond-to('small') {
-          justify-content: space-between;
-        }
-      }
-
-      &__add-to-cart-button {
-        ::v-deep .add-to-cart-button {
-          @include respond-to('small') {
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-        }
-      }
-
-
-      &__mobile-float {
-        @include respond-to('small') {
-          position: fixed;
-          width: 100%;
-          bottom: 0;
-          background-color: $primary-purple-tint;
-          z-index: 10;
-          height: 75px;
-          // background-color: $primary-purple-tint;
-
+        &__about {
+          margin-top: 17px;
           display: flex;
           align-items: center;
           justify-content: center;
-        }
+          font-family: Regular;
+          font-size: 13px;
+          line-height: 1.38;
+          letter-spacing: 0.46px;
+          color: $primary-purple;
+          cursor: pointer;
 
+          &__icon {
+            margin-left: 7px;
+            display: flex;
+            align-items: center;
+          }
+        }
       }
+      &__quantity-add-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
 
-      &__selected-swatch {
-        ::v-deep .bubble {
-          margin-left: 0;
-          margin-bottom: 0;
+        ::v-deep .add-to-cart-button {
+          width: 260px;
         }
+        // The sticky bar behavior is now handed in ProductStickyAddToCart
+        /*@include respond-to('small') {
+          position: fixed;
+          bottom: 0;
+          padding: 10px;
+          z-index: 10;
+          width: 100%;
+          background-color: $grayscale-white;
+        }*/
 
-        @media screen and (min-width: 768px) {
-          display: none
-        }
-      }
-
-      &__quantity-select-container {
-        margin-right: 10px;
-        @include respond-to('small') {
-          margin-right: 5px;
-          margin-left: 2px;
+        &__quantity {
+          margin-right: 6px;
         }
       }
     }
@@ -1146,17 +1206,9 @@ export default {
       text-align: center;
       line-height: 1.33;
       font-size: $text-small;
-      // margin-bottom: 20px;
+      margin-bottom: 20px;
       margin-top: 20px;
-
-      height: 40px;
       text-transform: uppercase;
-
-      @include respond-to('small') {
-        margin-top: 10px;
-        margin-bottom: 15px;
-        height: auto;
-      }
 
       &__label {
         color: $primary-purple;
@@ -1167,112 +1219,10 @@ export default {
       }
     }
 
-    &__extend-warranty {
-      display: flex;
-      flex-flow: column nowrap;
-      // flex-flow: row nowrap;
-      justify-content: center;
-      margin-bottom: 25px;
-      cursor: pointer;
-      @include respond-to('small') {
-        margin-bottom: 10px;
-      }
-
-      &__text {
-        font-family: Regular;
-        margin-bottom: 15px;
-        color: $primary-purple;
-        font-size: 13px;
-        letter-spacing: 0.46px;
-        line-height: 1.38;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        // margin-top: 25px;
-
-      }
-
-      &__logo {
-        margin-left: 7px;
-      }
-
-      &__button-group {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: center;
-      }
-
-      &__button {
-
-        font-size: 10px;
-        letter-spacing: 0.83px;
-        line-height: 1.4;
-        padding: 0 16px;
-
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        @include respond-to('small') {
-          padding: 0 10px;
-        }
-
-        &:first-child {
-          margin-right: 7px;
-          // cursor: pointer;
-        }
-
-        &:last-child {
-          margin-left: 7px;
-        }
-      }
-    }
-
-    &__payments {
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      margin-bottom: 20px;
-
-      &__paypal {
-        @include button-primary('purple-ghost');
-        width: 370px;
-        background-color: #ffc51f;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px;
-        margin-bottom: 25px;
-        border: none;
-
-        @include respond-to('small') {
-          // width: 370px;
-        }
-
-        @media screen and (max-width: 320px) {
-          width: 300px;
-        }
-
-        &__logo {
-          height: 19px;
-          margin-left: 10px;
-        }
-      }
-
-      &__more-options {
-        @include button-primary('purple-ghost');
-        width: 370px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px;
-        @include respond-to('small') {
-          // width: 370px;
-        }
-         @media screen and (max-width: 320px) {
-          width: 300px;
-        }
-      }
+    &__divider {
+      width: 100%;
+      height: 1px;
+      background-color: #7f7fd1;
     }
 
     &__value-props {
@@ -1284,8 +1234,8 @@ export default {
         flex-flow: row nowrap;
         justify-content: center;
         align-items: center;
-        margin-bottom: 10px;
         cursor: pointer;
+        margin-bottom: 30px;
 
         &__text {
           margin-left: 15px;
@@ -1304,12 +1254,13 @@ export default {
         justify-content: center;
         align-items: center;
         margin-bottom: 20px;
+
         &__img {
           &:first-child {
-            margin-right: 25px;
+            margin-right: 15px;
           }
           &:last-child {
-            margin-left: 25px;
+            margin-left: 15px;
           }
         }
       }
@@ -1317,37 +1268,7 @@ export default {
   }
 }
 
-.mobile-swatch {
-  margin-right: 5px;
-   ::v-deep .bubble .inside-color {
-      height: 44px;
-      width: 44px;
-    }
-}
-
-.extend-active {
-  @include button-primary('purple');
-  border: 2px solid #373975;
-  height: 30px;
-  padding: 0 16px;
-  font-size: 10px;
-  @include respond-to('small') {
-    padding: 0 10px;
-  }
-}
-
-.extend-inactive {
-  @include button-primary('purple-ghost');
-  height: 30px;
-  padding: 0 16px;
-  font-size: 10px;
-  @include respond-to('small') {
-    padding: 0 10px;
-  }
-}
-
 .guarantee-modal {
-
   &__container {
     padding: 40px;
 
@@ -1375,174 +1296,54 @@ export default {
   }
 }
 
-.extend-modal {
+.about-subscriptions {
+  &__heading {
+    font-family: Medium;
+    font-size: 22px;
+    line-height: 1.14;
+    letter-spacing: 3.21px;
+    text-transform: uppercase;
+    color: $primary-purple;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
 
-  &__container {
+  &__column {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    padding: 25px;
-    font-family: Regular;
-    font-size: 14px;
-    line-height: 1.33;
-    letter-spacing: 0.5px;
-    color: $primary-purple;
-  }
-
-  &__svg-container {
-    margin-bottom: 20px;
   }
 
   &__text {
-    max-width: 340px;
-
-    &__block {
-      margin-bottom: 15px;
-    }
-
-    &__list {
-
-      &__subheading {
-        font-size: 16px;
-        font-family: Bold;
-        letter-spacing: 2.5px;
-        margin-bottom: 15px;
-      }
-
-      &__items {
-        display: list-item;
-        list-style-type: disc;
-        text-align: left;
-      }
-    }
-
-    &__plan-details {
-      font-size: 14px;
-      margin-top: 15px;
-      margin-bottom: 15px;
-    }
-  }
-
-  &__why-choose {
-
-    &__support {
-      display: flex;
-      align-items: center;
-
-      margin-bottom: 15px;
-
-      &__icon {
-        margin-right: 10px;
-      }
-    }
-
-    &__fees {
-      display: flex;
-      align-items: center;
-
-      &__icon {
-        margin-right: 10px;
-      }
-    }
-  }
-
-
-}
-
-.apple-pay-with {
-  width: 370px;
-
-   @media screen and (max-width: 320px) {
-          width: 300px;
-        }
-}
-
-.pay-with-modal {
-  &__container {
-    padding: 1rem;
-    display: flex;
-    justify-content: center;
-    // align-items: center;
-    flex-flow: column nowrap;
-
-
-    &__text {
-      font-family: Bold;
-      color: $primary-purple;
-      font-size: $text-small;
-      text-transform: uppercase;
-      line-height: 1.17;
-      letter-spacing: 1.75px;
-      margin-bottom: 20px;
-      text-align: center;
-
-    }
-    &__amazon {
-      @include button-primary('white');
-      background-color: #FFC51F;
-      height: 50px;
-      margin-bottom: 15px;
-    }
-
-    &__apple {
-      @include button-primary('white');
-      background-color: black;
-      height: 50px;
-      margin-bottom: 15px;
-    }
-
-    &__paypal {
-      @include button-primary('white');
-      background-color: #ffc51f;
-      height: 50px;
-
-      &__logo {
-        height: 19px;
-      }
-    }
-  }
-}
-
-.mobile-variant-select {
-  position: fixed;
-  bottom: 75px;
-  background-color: $primary-purple-tint;
-  width: 100%;
-  // height: 220px;
-  z-index: 10;
-  padding-top: 20px;
-
-  &__shipping {
-    font-size: $text-small;
     font-family: Bold;
-    line-height: 1.33;
+    font-size: $text-small;
+    line-height: 1.17;
     letter-spacing: 1.75px;
+    color: $primary-purple;
+    text-align: center;
     text-transform: uppercase;
-    color: $secondary-purple-2;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
 }
 
 .blendjet-banner {
-  height: 205px;
-  @include gradient-primary-purple-turquoise(to bottom right);
+  height: auto;
+  background: var(--header-background);
   display: flex;
   justify-content: center;
   align-items: center;
-  // background-image: linear-gradient(350deg, #1e90bb 110%, #373795 14%);
-
+  padding-top: 5%;
+  padding-bottom: 5%;
 
   &__content-block {
-    // width: 681px;
-    max-width: 700px;
+    width: 681px;
     color: $grayscale-white;
     text-align: center;
     font-family: Medium;
 
     @include respond-to('small') {
       width: auto;
-      padding: 15px;
+      padding: 50px 27px;
     }
 
     h2 {
@@ -1551,110 +1352,44 @@ export default {
       letter-spacing: 4px;
       margin-bottom: 15px;
       text-transform: uppercase;
+
+      @include respond-to('small') {
+        font-size: 18px;
+        line-height: 1.22;
+        letter-spacing: 2.5px;
+      }
     }
 
     &__content {
       font-size: 16px;
       line-height: 1.25;
       letter-spacing: 0.5px;
-
     }
   }
 }
 
-.header-product-select {
-  height: 110px;
-  background-color: $grayscale-white;
+.variant-dropdown-container {
   display: flex;
-  position: fixed;
-  width: 100%;
-  top: 100px;
-  z-index: 10;
-  padding-right: 45px;
-  padding-left: 45px;
-
-  @include respond-to('small') {
-    display: none;
-  }
-
-  &__thumbnail {
-
-    &__img {
-      height: 75px;
-    }
-  }
-
-  &__info-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 50%;
-  }
-
-  &__controls-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 50%;
-  }
-
-  &__title-container {
-    margin-left: 32px;
-    &__title {
-      font-family: Medium;
-      font-size: 24px;
-      line-height: 1.33;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: $primary-purple;
-    }
-
-    &__price {
-      font-size: $text-small;
-      font-family: Bold;
-      line-height: 1.17;
-      letter-spacing: 1.75px;
-      color: $primary-purple;
-    }
-
-  }
-
-  &__swatches {
-    margin-right: 20px;
-  }
-
-  &__add-buttons {
-
-  }
+  justify-content: center;
+  margin-top: 15px;
 }
 
 .media-content {
-
-
   &__carousel {
     height: 800px;
     @include respond-to('small') {
       height: auto;
     }
+
     &__img {
       height: 800px;
       max-width: 100%;
-      width: 100%;
       object-fit: cover;
       object-position: center;
+      width: 100%;
       @include respond-to('small') {
         height: 400px;
       }
-    }
-  }
-
-  &__hero-banner {
-
-    &__img {
-      // height: 600px;
-      object-position: center;
-      object-fit: cover;
-      // width: auto;
     }
   }
 
@@ -1663,403 +1398,56 @@ export default {
     flex-flow: row wrap;
 
     &__features {
-      // @include gradient-primary-purple-turquoise(to bottom);
-      background-color: #33499D;
+      background-image: linear-gradient(to bottom, #5555b1 0%, #474699 98%);
+
       width: 50%;
       padding: 50px;
-
       @include respond-to('small') {
         width: 100%;
         padding: 20px 0 0 0;
       }
     }
 
-    &__details {
+    &__media {
+      width: 50%;
+      padding: 50px;
       width: 50%;
       background: $primary-purple-tint;
-      padding-top: 50px;
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
+
       @include respond-to('small') {
         width: 100%;
-      }
-
-      &__content-block {
-
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        margin-bottom: 80px;
-        width: 520px;
-        // &:nth-last-child()
-
-        @include respond-to('small') {
-          width: auto;
-        }
-
-        &__heading {
-          font-size: 24px;
-          font-family: Bold;
-          letter-spacing: 4px;
-          line-height: 1.17;
-          text-transform: uppercase;
-          text-align: center;
-          color: $primary-purple;
-          margin-bottom: 15px;
-          max-width: 475px;
-
-          @include respond-to('small') {
-            font-size: 18px;
-            line-height: 1.22;
-            letter-spacing: 2.5px;
-            padding: 0 15px;
-          }
-        }
-
-        &__text {
-          font-family: Regular;
-          font-size: 14px;
-          letter-spacing: 0.51px;
-          line-height: 1.29;
-          color: $grayscale-gray;
-          text-align: center;
-          margin-bottom: 35px;
-          padding-right: 15px;
-          padding-left: 15px;
-        }
-
-        &__media {
-          &__video {
-            width: 520px;
-            object-fit: contain;
-
-            @include respond-to('small') {
-              height: auto;
-              width: 100%;
-
-              video {
-                width: 100%;
-              }
-            }
-          }
-        }
-
-        &__image-container {
-          display: flex;
-          justify-content: center;
-        }
-
-        &__img {
-          border-radius: 12px;
-          object-fit: cover;
-          object-position: center;
-          @include respond-to('small') {
-            border-radius: 0;
-          }
-        }
-      }
-
-      &__specs {
-
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        width: 520px;
-        padding: 0 20px;
-        @include respond-to('small') {
-          width: auto;
-        }
-        // padding: 15px;
-
-
-        &__heading {
-          font-size: 24px;
-          font-family: Bold;
-          letter-spacing: 4px;
-          line-height: 1.17;
-          text-transform: uppercase;
-          text-align: center;
-          color: $primary-purple;
-          margin-bottom: 15px;
-
-        }
-
-        &__text {
-          font-family: Regular;
-          font-size: 14px;
-          letter-spacing: 0.5px;
-          line-height: 1.29;
-          color: $grayscale-gray;
-          text-align: center;
-          margin-bottom: 35px;
-          padding: 0 15px;
-        }
-
-        &__list {
-          font-family: Regular;
-          font-size: 14px;
-          letter-spacing: 0.5px;
-          line-height: 1.29;
-          color: $grayscale-gray;
-          // text-align: center;
-          // margin-bottom: 35px;
-          & ul {
-            list-style-type: square;
-            padding: 0 35px;
-          }
-          & li {
-            margin-bottom: 15px;
-          }
-        }
+        padding: 20px 0 0 0;
       }
     }
   }
 }
 
 .rounded-video-container {
-    width: 520px;
-    height: 520px;
-    border-radius: 12px;
-    overflow: hidden;
+  width: 520px;
+  height: 520px;
+  border-radius: 12px;
+  overflow: hidden;
 
-    @include respond-to('small') {
-      width: auto;
-      height: auto;
-      border-radius: 0;
-    }
+  @include respond-to('small') {
+    width: auto;
+    height: auto;
+    border-radius: 0;
+  }
 }
 
-.reviews {
-  height: auto;
-  padding: 20px;
-}
-
-.fade-enter-active {
-  animation: fadeIn;
-  animation-duration: 0.6s;
-
-}
-.fade-leave-active {
-  animation: fadeOut;
-  animation-duration: 0.6s;
-}
-
-
-.dropbtn {
-  color: $primary-purple;
-  outline: none;
-  display: flex;
-  align-items: center;
-  z-index: 10;
+.carousel {
   width: 100%;
-
-  &__swatch {
-    // margin-top: 7px;
-    ::v-deep .inside-color {
-      width: 30px;
-      height: 30px;
-    }
-  }
-
-  &__caret-down {
-    position: absolute;
-    right: 15px;
-  }
 }
 
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  color: $primary-purple;
-  display: flex;
+.carousel-item {
   justify-content: center;
-  align-items: center;
-  height: 50px;
-  border: 2px solid $grayscale-black;
-  border-radius: 25px;
-  align-items: center;
-  width: 231px;
-  font-family: Bold;
-  letter-spacing: 1.75px;
-  text-transform:uppercase;
-  font-size: $text-small;
-  background-color: $grayscale-white;
-  cursor: pointer;
-  &:focus {
-    outline: none;
-  }
-}
-
-.dollar-strike {
-    text-decoration: line-through;
-  opacity: 0.3;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  position: absolute;
-  top: -0.5px;
-  background-color: $grayscale-white;
-  border-radius: 25px;
-  width: 231px;
-  min-width: 160px;
-  box-shadow: none;
   display: flex;
-  justify-content: flex-start;
-  flex-flow: column nowrap;
-  border: 2px solid $grayscale-black;
-  border-top: none;
-  font-family: Bold;
-  text-transform: uppercase;
-  letter-spacing: 1.75px;
-  padding-top: 0;
-  padding-bottom: 0;
-  cursor: pointer;
-
-  &__swatches {
-    margin-top: 60px;
-    // ::v-deep .
-  }
 }
-
-.fade-enter-active {
-  animation: fadeIn;
-  animation-duration: 0.6s;
-
-}
-.fade-leave-active {
-  animation: fadeOut;
-  animation-duration: 0.6s;
-}
-
-.slide-enter-active {
-  animation: slideInLeft;
-  animation-duration: 0.6s
-}
-
-.slide-leave-active {
-  animation: slideOutLeft;
-  animation-duration: 0.6s
-}
-
-.carousel-arrow .icon {
-    background: #f6f5fd !important;
-
-}
-
-
-.expand-enter-active {
-  animation: expand .6s;
-}
-.expand-leave-active {
-  animation: expand .6s reverse;
-}
-@keyframes expand {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-
-
-
-.sticky {
-  position: sticky;
-  top: 260px;
-}
-
-.features-container {
-  display: flex;
-  justify-content: center;
-  color: $grayscale-white;
-
-
-}
-
-.features-heading {
-  font-size:24px;
-  font-family: Medium;
-  letter-spacing: 4px;
-  line-height: 1.17;
-  text-transform: uppercase;
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.features-column {
-  width: 60%;
-  display: flex;
-  flex-flow: column nowrap;
-  @include respond-to('small') {
-    width: 80%;
-  }
-}
-
-.features-row {
-  display: flex;
-  margin-bottom: 40px;
-  @include respond-to('small') {
-    flex-flow: column nowrap;
-  }
-}
-
-.features-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &__img {
-    height: 70px;
-    width: 70px;
-    max-width: auto;
-  }
-}
-
-.features-text-block {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  margin-left: 25px;
-
-  @include respond-to('small') {
-    margin-left: 0;
-    margin-top: 20px;
-  }
-
-  &__title {
-    font-family: Bold;
-    font-size: $text-small;
-    letter-spacing: 1.75px;
-    line-height: 1.17;
-    text-transform: uppercase;
-
-    @include respond-to('small') {
-      text-align: center;
-    }
-  }
-
-  &__text {
-    font-family: Regular;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-    line-height: 1.29;
-    @include respond-to('small') {
-      text-align: center;
-    }
-  }
-}
-.blendjet-banner__content-block a{
-  color:#ffffff
-}
-.blendjet-banner__content-block a:hover{
-  color:#000;
+.blendjet-banner__content-block a:hover {
+  color: #000;
 }
 //Reset h1
 h1 {

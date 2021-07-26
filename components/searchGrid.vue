@@ -3,7 +3,7 @@
     <div v-for="item in products" :key="item.id" class="search-results__grid__item" :class="columnClasses">
       <router-link :to="`${pathFragment}${item.handle}`">
         <div>
-          <img class="search-results__grid__item__img" :src="optimizeSource({url: item.featuredMedia.src})" />
+          <img class="search-results__grid__item__img" :src=" item.featuredMedia.src" />
         </div>
         <div class="search-results__grid__item__container">
           <div class="search-results__grid__item__title"> 

@@ -15,7 +15,7 @@
           </div>
           <div v-else class="product-select__controls__title">
             <h1>{{ product.title }}</h1>
-          </div>          
+          </div>
           <div class="product-select__controls__rating" style="zoom:1.25">
             <loox-product-rating :product="product" />
           </div>
@@ -39,10 +39,7 @@
               :strikethrough="true"
               :variantId="currentVariant.id"
             />
-            <div
-              class="product-select__controls__price__installments"
-              v-if="showAfterPay"
-            >
+            <div class="product-select__controls__price__installments" v-if="showAfterPay">
               <afterpay-placement
                 data-locale="en_US"
                 :data-currency="currency"
@@ -74,7 +71,7 @@
               <source :srcset="optimizeSource({ url: heroUrl })" />
               <img
                 class="product-select__image-carousel__img"
-                :src="optimizeSource({url: productImage, width: 2100})"
+                :src="optimizeSource({ url: productImage, width: 2100 })"
               />
             </picture>
           </transition>
@@ -109,10 +106,7 @@
                 :strikethrough="true"
                 :variantId="currentVariant.id"
               />
-              <div
-                class="product-select__controls__price__installments"
-                v-if="showAfterPay"
-              >
+              <div class="product-select__controls__price__installments" v-if="showAfterPay">
                 <afterpay-placement
                   data-locale="en_US"
                   :data-currency="currency"
@@ -125,17 +119,12 @@
             </div>
           </div>
 
-          <div
-            v-if="variants.length > 1"
-            class="product-select__controls__variant-color"
-          >
+          <div v-if="variants.length > 1" class="product-select__controls__variant-color">
             <div class="product-select__controls__variant-color__text">
-              <span class="product-select__controls__variant-color__text__label"
-                >Color: </span
-              ><span
-                class="product-select__controls__variant-color__text__selected-color"
-                >{{ currentVariant.title }}</span
-              >
+              <span class="product-select__controls__variant-color__text__label">Color: </span
+              ><span class="product-select__controls__variant-color__text__selected-color">{{
+                currentVariant.title
+              }}</span>
             </div>
             <div class="product-select__controls__variant-color__swatches">
               <product-options
@@ -163,14 +152,10 @@
                 Add accident protection offered by
                 <img
                   class=" product-select__controls__extend-warranty__logo"
-                  :src="
-                    optimizeSource({ url: '/images/blendjetPDP/extend.png' })
-                  "
+                  :src="optimizeSource({ url: '/images/blendjetPDP/extend.png' })"
                 />&nbsp;<Info />
               </div>
-              <div
-                class="product-select__controls__extend-warranty__button-group"
-              >
+              <div class="product-select__controls__extend-warranty__button-group">
                 <div
                   role="buton"
                   class="product-select__controls__extend-warranty__button"
@@ -216,14 +201,10 @@
 
           <div class="product-select__controls__add-to-cart">
             <div class="product-select__controls__add-to-cart__button-group">
-              <div
-                class="product-select__controls__add-to-cart__quantity-select-container"
-              >
+              <div class="product-select__controls__add-to-cart__quantity-select-container">
                 <quantity-selector :quantity.sync="quantity" />
               </div>
-              <div
-                class="product-select__controls__add-to-cart__add-to-cart-button"
-              >
+              <div class="product-select__controls__add-to-cart__add-to-cart-button">
                 <product-add-to-cart-button
                   :quantity="quantity"
                   :product="product"
@@ -243,18 +224,13 @@
             :page="page"
             class="product-select__controls__shipping-notification"
           >
-            <div
-              class="shipping-container"
-            >
+            <div class="shipping-container">
               <div class="normal-size">
                 <div class="normal-size__label">
                   <span>Order now and it ships by</span>
                 </div>
                 <div class="normal-size__countdown">
-                  <span><span style="color:#7f7fd1;"
-                      >Friday, April 30</span
-                    ></span
-                  >
+                  <span><span style="color:#7f7fd1;">Friday, April 30</span></span>
                 </div>
               </div>
             </div>
@@ -269,11 +245,7 @@
               class="pay-with-modal__container__apple apple-pay-with"
               @click="expressCheckout"
             >
-              <img
-                :src="
-                  optimizeSource({ url: '/images/blendjetPDP/applepay.png' })
-                "
-              />
+              <img :src="optimizeSource({ url: '/images/blendjetPDP/applepay.png' })" />
             </div>
             <div
               v-if="!applePay"
@@ -302,8 +274,7 @@
               @click="$modal.show('guarantee-modal')"
             >
               <Guarantee :size="'40px'" />
-              <span
-                class="product-select__controls__value-props__guarantee__text"
+              <span class="product-select__controls__value-props__guarantee__text"
                 >30 day money back guarantee</span
               >
             </div>
@@ -366,14 +337,10 @@
                     :selectedOptions="currentVariant.selectedOptions"
                   />
                 </div>
-                <div
-                  class="product-select__controls__add-to-cart__quantity-select-container"
-                >
+                <div class="product-select__controls__add-to-cart__quantity-select-container">
                   <quantity-selector :quantity.sync="quantity" />
                 </div>
-                <div
-                  class="product-select__controls__add-to-cart__add-to-cart-button"
-                >
+                <div class="product-select__controls__add-to-cart__add-to-cart-button">
                   <product-add-to-cart-button
                     :quantity="quantity"
                     :product="product"
@@ -389,20 +356,14 @@
           </transition>
           <transition name="fade">
             <div class="mobile-variant-select" v-if="showMobileVariants">
-              <div
-                class="mobile-variant-select__close"
-                @click="toggleMobileVariants"
-              >
+              <div class="mobile-variant-select__close" @click="toggleMobileVariants">
                 <Close />
               </div>
               <div class="product-select__controls__variant-color__text">
-                <span
-                  class="product-select__controls__variant-color__text__label"
-                  >Color: </span
-                ><span
-                  class="product-select__controls__variant-color__text__selected-color"
-                  >{{ currentVariant.title }}</span
-                >
+                <span class="product-select__controls__variant-color__text__label">Color: </span
+                ><span class="product-select__controls__variant-color__text__selected-color">{{
+                  currentVariant.title
+                }}</span>
               </div>
               <product-options
                 :options="allOptions"
@@ -429,8 +390,8 @@
               </div>
               <div class="extend-modal__text">
                 <div class="extend-modal__text__block">
-                  Keep your product protected from accidents right away, plus
-                  full coverage after manufacturer warranties expire.
+                  Keep your product protected from accidents right away, plus full coverage after
+                  manufacturer warranties expire.
                 </div>
               </div>
               <div class="extend-modal__text__list">
@@ -468,12 +429,7 @@
             </div>
           </modal>
 
-          <modal
-            name="guarantee-modal"
-            width="414px"
-            height="auto"
-            :adaptive="true"
-          >
+          <modal name="guarantee-modal" width="414px" height="auto" :adaptive="true">
             <div class="guarantee-modal__container">
               <div slot="top-right" @click="$modal.hide('guarantee-modal')">
                 <Close />
@@ -483,12 +439,11 @@
                 30-day Money Back Guarantee
               </div>
               <div class="guarantee-modal__container__text">
-                We believe in 100% customer satisfaction and that is why we are
-                offering all customers a 30 day money-back guarantee! If you are
-                not satisfied with your BlendJet blender, you may return the
-                item within 30 days from the order date for a full refund. If
-                you don't like your product, get a full refund within 30 days,
-                no questions asked. <br />
+                We believe in 100% customer satisfaction and that is why we are offering all
+                customers a 30 day money-back guarantee! If you are not satisfied with your BlendJet
+                blender, you may return the item within 30 days from the order date for a full
+                refund. If you don't like your product, get a full refund within 30 days, no
+                questions asked. <br />
                 — <br />
                 Please
                 <a class="guarantee-modal__container__text__contact-link"
@@ -499,12 +454,7 @@
             </div>
           </modal>
 
-          <modal
-            name="pay-with-modal"
-            width="414px"
-            height="auto"
-            :adaptive="true"
-          >
+          <modal name="pay-with-modal" width="414px" height="auto" :adaptive="true">
             <div class="pay-with-modal__container">
               <div slot="top-right" @click="$modal.hide('pay-with-modal')">
                 <Close />
@@ -513,36 +463,20 @@
                 Pay with
               </div>
 
-              <div
-                class="pay-with-modal__container__amazon"
-                @click="expressCheckout"
-              >
-                <img
-                  :src="
-                    optimizeSource({ url: '/images/blendjetPDP/amazonpay.png' })
-                  "
-                />
+              <div class="pay-with-modal__container__amazon" @click="expressCheckout">
+                <img :src="optimizeSource({ url: '/images/blendjetPDP/amazonpay.png' })" />
               </div>
               <div
                 v-if="applePay"
                 class="pay-with-modal__container__apple"
                 @click="expressCheckout"
               >
-                <img
-                  :src="
-                    optimizeSource({ url: '/images/blendjetPDP/applepay.png' })
-                  "
-                />
+                <img :src="optimizeSource({ url: '/images/blendjetPDP/applepay.png' })" />
               </div>
-              <div
-                class="pay-with-modal__container__paypal"
-                @click="expressCheckout"
-              >
+              <div class="pay-with-modal__container__paypal" @click="expressCheckout">
                 <img
                   class="pay-with-modal__container__paypal__logo"
-                  :src="
-                    optimizeSource({ url: '/images/blendjetPDP/paypal.png' })
-                  "
+                  :src="optimizeSource({ url: '/images/blendjetPDP/paypal.png' })"
                 />
               </div>
             </div>
@@ -560,31 +494,31 @@
         <div class="blendjet-banner__content-block">
           <h2>IF YOU LIKE PIÑA COLADAS...</h2>
           <p>
-            Then you’ll love this BlendJet x Baileys collab! Kick back, relax,
-            and escape to a tropical paradise with our limited run, special
-            edition BlendJet, the perfect way to enjoy<strong data-v-621d5369=""
-              >&nbsp;</strong
+            Then you’ll love this BlendJet x Baileys collab! Kick back, relax, and escape to a
+            tropical paradise with our limited run, special edition BlendJet, the perfect way to
+            enjoy<strong data-v-621d5369="">&nbsp;</strong
             ><a
               style="color:white;"
               href="https://www.baileys.com/en-us/products/#baileys-colada"
               target="_blank"
               ><strong>Baileys Colada</strong></a
-            >, the all new limited time offering that blends Baileys
-            irresistible Irish cream with the rich flavors of creamy coconut and
-            sweet pineapples.
+            >, the all new limited time offering that blends Baileys irresistible Irish cream with
+            the rich flavors of creamy coconut and sweet pineapples.
           </p>
           <p style="padding: 10px;">
             <a
               href="https://www.baileys.com/en-us/products/#baileys-colada"
               target="_blank"
-              style="font-weight: bold;/* padding: 10px; */">BUY BAILEYS COLADA HERE</a>
+              style="font-weight: bold;/* padding: 10px; */"
+              >BUY BAILEYS COLADA HERE</a
+            >
           </p>
           <p style="font-size: 75%;">
             Please Enjoy Responsibly.
           </p>
           <p style="font-size: 70%;">
-            BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by
-            Paddington, Ltd., New York, NY.
+            BAILEYS Colada Irish Cream Liqueur. 17% Alc/Vol. Imported by Paddington, Ltd., New York,
+            NY.
           </p>
         </div>
       </div>
@@ -634,10 +568,7 @@
             </div>
           </div>
           <div class="header-product-select__controls-container">
-            <div
-              v-if="variants.length > 1"
-              class="header-product-select__swatches"
-            >
+            <div v-if="variants.length > 1" class="header-product-select__swatches">
               <div
                 class="dropdown"
                 tabindex="0"
@@ -661,11 +592,7 @@
                       {{ currentVariant.title }}
                     </div>
                     <div class="dropbtn__text__shipping">
-                      <ShippingTime
-                        :size="'short'"
-                        :product="'blendjet-2'"
-                        :country="country"
-                      />
+                      <ShippingTime :size="'short'" :product="'blendjet-2'" :country="country" />
                     </div>
                   </div>
                   <div class="dropbtn__caret-down">
@@ -726,25 +653,16 @@
             <b-carousel-item v-for="(image, i) in heroImages" :key="i">
               <section class="`hero is-large`">
                 <span class="image">
-                  <img
-                    class="media-content__carousel__img"
-                    :src="optimizeSource({ url: image })"
-                  />
+                  <img class="media-content__carousel__img" :src="optimizeSource({ url: image })" />
                 </span>
               </section>
             </b-carousel-item>
           </b-carousel>
         </div>
         <div class="media-content__hero-banner"></div>
-        <div
-          class="media-content__main"
-          v-if="loadDescription && page && page.fields.features"
-        >
+        <div class="media-content__main" v-if="loadDescription && page && page.fields.features">
           <div class="media-content__main__features">
-            <div
-              v-if="page && page.fields.features"
-              class="features-container sticky"
-            >
+            <div v-if="page && page.fields.features" class="features-container sticky">
               <div class="features-column">
                 <div class="features-heading">
                   {{ page.fields.features.fields.title }}
@@ -762,9 +680,7 @@
                       {{ feature.fields.title }}
                     </div>
                     <div class="features-text-block__text">
-                      <RichTextRenderer
-                        :document="feature.fields.description"
-                      />
+                      <RichTextRenderer :document="feature.fields.description" />
                     </div>
                   </div>
                 </div>
@@ -772,39 +688,16 @@
             </div>
           </div>
           <div class="media-content__main__details">
-            <div
+            <ProductMediaTile
+              class="media-content__main__details__content-block"
               v-for="(section, i) of description"
               :key="i"
-              class="media-content__main__details__content-block"
-            >
-              <div class="media-content__main__details__content-block__heading">
-                {{ section.heading }}
-              </div>
-              <div class="media-content__main__details__content-block__text">
-                <!-- <div v-for="(paragraph, i) of section.text" :key="paragraph[0]+i"> -->
-                <!-- {{paragraph}} -->
-                {{ section.text[0][0] }}
-                <!-- </div> -->
-              </div>
-              <div
-                v-if="section.video.length && section.video.includes('video')"
-                class="media-content__main__details__content-block__media rounded-video-container"
-              >
-                <VideoContainer
-                  :source="section.video"
-                  class="media-content__main__details__content-block__media__video"
-                />
-              </div>
-              <div
-                v-if="section.video.includes('images')"
-                class="media-content__main__details__content-block__image"
-              >
-                <img
-                  class="media-content__main__details__content-block__img"
-                  :src="optimizeSource({ url: section.video })"
-                />
-              </div>
-            </div>
+              :title="section.fields.heading"
+              :text="section.fields.text"
+              :contentful-media="section.fields.video"
+              :external-media-url="section.fields.externalVideoUrl"
+            />
+
             <div class="media-content__main__details__content-block">
               <div class="media-content__main__details__specs__heading">
                 DETAILS & SPECS
@@ -813,9 +706,9 @@
                 Blend your favorite smoothies, shakes, margaritas, and more
                 without the limitations of a regular blender - whenever,
                 wherever you want!
-              </div>             
+              </div>
 
-              <div v-if="['blendjet-2'].includes(product.handle)"          
+              <div v-if="['blendjet-2'].includes(product.handle)"
               class="media-content__main__details__content-block__image"
               >
                 <img
@@ -823,7 +716,7 @@
                   :src="optimizeSource({ url: '/images/blendjetPDP/Red-Dot-Design-Award-2021.png' })"
                 />
               </div>
-              
+
               <div v-if="['blendjet-one'].includes(product.handle)" class="media-content__main__details__specs__list">
                 <ul>
                   <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
@@ -849,16 +742,16 @@
                   <li>6-Point Stainless Steel Blade</li>
                   <li>Durable Built-In Carrying Strap</li>
                 </ul>
-              </div>              
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- BLENDJET REVIEWS  -->
-         <div class="reviews" id="reviews">
-      <loox-product-reviews :product="product" />
-    </div>
+      <div class="reviews" id="reviews">
+        <loox-product-reviews :product="product" />
+      </div>
 
       <!-- JETPACKS CROSS-SELL -->
       <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
@@ -883,6 +776,7 @@ import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
 import ShippingTime from '~/components/shippingTime'
+import ProductMediaTile from '~/components/ProductMediaTile'
 
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
 import { createClient } from '~/plugins/contentful.js'
@@ -958,7 +852,8 @@ export default {
     ShippingTime,
     BlnExtend,
     NextSlide,
-    PrevSlide
+    PrevSlide,
+    ProductMediaTile
   },
   mixins: [imageOptimize, availableOptions, allOptionsSelected],
   props: {
@@ -978,25 +873,25 @@ export default {
     const image = this.productImage
     const properties = {}
     const meta = []
-    const script = [{
-      type: 'application/ld+json',
-      json: {
-        '@context': 'http://schema.org',
-        '@type': 'Product',
-        name: 'BlendJet 2',
-        image: [
-            `${image}`
-        ],
-        offers: {
-          '@type': 'Offer',
-          url: 'https://blendjet.com/products/blendjet-2',
-          itemCondition: 'http://schema.org/NewCondition',
-          availability: 'http://schema.org/InStock',
-          price: `${productPrice}`,
-          priceCurrency: `${productCurrency}`
+    const script = [
+      {
+        type: 'application/ld+json',
+        json: {
+          '@context': 'http://schema.org',
+          '@type': 'Product',
+          name: 'BlendJet 2',
+          image: [`${image}`],
+          offers: {
+            '@type': 'Offer',
+            url: 'https://blendjet.com/products/blendjet-2',
+            itemCondition: 'http://schema.org/NewCondition',
+            availability: 'http://schema.org/InStock',
+            price: `${productPrice}`,
+            priceCurrency: `${productCurrency}`
+          }
         }
       }
-    }]
+    ]
 
     if (this.metaTitle) {
       properties.title = this.metaTitle
@@ -1035,15 +930,9 @@ export default {
     setDefaultVariant() {
       if (this.currentVariant) {
         return this.currentVariant
-      } else if (
-        this.product &&
-        this.product.variants &&
-        this.product.variants.length
-      ) {
+      } else if (this.product && this.product.variants && this.product.variants.length) {
         if (this.$route.query && this.$route.query.variant) {
-          let variantId = btoa(
-            `gid://shopify/ProductVariant/${this.$route.query.variant}`
-          )
+          let variantId = btoa(`gid://shopify/ProductVariant/${this.$route.query.variant}`)
           return this.product.variants.filter(variant => {
             return variant.id === variantId
           })[0]
@@ -1157,14 +1046,9 @@ export default {
     },
     iOS() {
       return (
-        [
-          'iPad Simulator',
-          'iPhone Simulator',
-          'iPod Simulator',
-          'iPad',
-          'iPhone',
-          'iPod'
-        ].includes(navigator.platform) ||
+        ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(
+          navigator.platform
+        ) ||
         // iPad on iOS 13 detection
         (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
       )
@@ -1248,16 +1132,11 @@ export default {
     // Local Variant
     currentVariant() {
       if (this.variantMedia[this.camelize(this.currentVariant.title)]) {
-        let variantImage = this.variantMedia[
-          this.camelize(this.currentVariant.title)
-        ].productImage
-          ? this.variantMedia[this.camelize(this.currentVariant.title)]
-              .productImage
+        let variantImage = this.variantMedia[this.camelize(this.currentVariant.title)].productImage
+          ? this.variantMedia[this.camelize(this.currentVariant.title)].productImage
           : this.currentVariant.featuredMedia.src
         this.productImage = variantImage
-        this.heroImages = this.variantMedia[
-          this.camelize(this.currentVariant.title)
-        ].heroImages
+        this.heroImages = this.variantMedia[this.camelize(this.currentVariant.title)].heroImages
       } else {
         this.productImage =
           'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
@@ -1278,24 +1157,19 @@ export default {
     if (process.client) {
       this.client = createClient()
       this.extend1yr = await this.$nacelle.data.product({
-        handle:
-          '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'
+        handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-1y'
       })
       this.extend2yr = await this.$nacelle.data.product({
-        handle:
-          '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'
+        handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10003-blendjet-adh-replace-2y'
       })
       this.extend3yr = await this.$nacelle.data.product({
-        handle:
-          '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'
+        handle: '8862eff0-e8c2-47bc-a194-157f853043ec-10002-blendjet-adh-replace-3y'
       })
 
       this.screenWidth = window.innerWidth
       this.imgWidth = 2600
 
-      this.variants = this.product.variants.filter(
-        variant => variant.availableForSale
-      )
+      this.variants = this.product.variants.filter(variant => variant.availableForSale)
 
       if (window.ApplePaySession) {
         this.applePay = true
@@ -1332,20 +1206,7 @@ export default {
             let sections = item.fields.productDescription
             vm.specs = sections.pop()
 
-            vm.description = sections.map(node => {
-              return {
-                heading: node.fields.heading,
-                text: node.fields.text.content.map(p => {
-                  return p.content.map(line => {
-                    return line.value
-                  })
-                }),
-
-                video: node.fields.video
-                  ? node.fields.video.fields.file.url
-                  : ''
-              }
-            })
+            vm.description = sections
 
             if (item.fields.metaTitle) {
               this.metaTitle = item.fields.metaTitle
@@ -2148,6 +2009,12 @@ export default {
   }
 
   &__add-buttons {
+    .add-to-cart-buttons {
+      display: flex;
+      > * + * {
+        margin-left: 15px;
+      }
+    }
   }
 }
 

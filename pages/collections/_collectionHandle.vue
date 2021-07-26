@@ -91,7 +91,7 @@ import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
 import ProductGrid from '~/components/nacelle/ProductGrid'
 import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 // import JetpackFeatures from '~/components/jetpackFeatures'
-import JetpackCrossSell from '~/components/jetpackCrossSell'
+import JetpackCrossSell from '~/components/jetpackCrossSellVariants'
 import Ticker from '~/components/ticker'
 import Testimonials from '~/components/testimonials'
 
