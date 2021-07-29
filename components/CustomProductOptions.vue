@@ -3,13 +3,12 @@
     <div class="option">
       <ProductOptionsDropdown
         :variants="variants"
-        :currentOption="getOptionFromVariant(options[0])"
+        :currentOption="getOptionFromVariant(mainOptions)"
         @optionSet="setSelectedOptions"
         @updateOptions="updateAvailableOptions"
         :option="options[0]"
         :selectedOptions="selectedOptions"
         :clearOptionValue="clearOptionValue"
-        :show-variant-images="true"
       />
     </div>
     <div class="option">
@@ -39,9 +38,12 @@ export default {
     variant: {
       type: Object
     },
+    product: {
+      type: Object
+    },
     currentOption: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {}
     },
     update: {
       type: Function,
@@ -52,7 +54,8 @@ export default {
     return {
       selectedOptions: [],
       clearOptionValue: false,
-      availableOptions: this.options[1]
+      availableOptions: this.options[1],
+      mainOptions: this.getOptionsImages()
     }
   },
   components: {
@@ -68,7 +71,34 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getOptionsImages()
+  },
   methods: {
+    getOptionsImages() {
+      const updatedOptionsValues = this.options[0].values.map(optionValue => {
+        const variants = this.variantsWithOptionValue(optionValue.value)
+        return {
+          value: optionValue.value,
+          image: variants && variants.length > 0 ? variants[0].featuredMedia.thumbnailSrc : null
+        }
+      })
+      this.options[0].values = updatedOptionsValues
+      return this.options[0]
+    },
+    variantsWithOptionValue(currentOption) {
+      if (this.product?.variants) {
+        return this.product.variants.filter(variant => {
+          return (
+            variant.selectedOptions.filter(option => {
+              if (option.name !== 'Size') {
+                return option.value == currentOption
+              }
+            }).length > 0
+          )
+        })
+      }
+    },
     //An array of the options selected by the user.
     setSelectedOptions(selectedOption) {
       const vm = this
@@ -82,23 +112,34 @@ export default {
         const index = vm.selectedOptions.findIndex(option => {
           return option.name === selectedOption.name
         })
+
         vm.selectedOptions.splice(index, 1, selectedOption)
       }
-
       this.update(vm.selectedOptions)
     },
     // Gets the selected option using the selectedOptions of the current variant
     getOptionFromVariant(option) {
-        if (this.variant.selectedOptions && option) {
-          let currentOption = this.variant.selectedOptions.filter(opt => {
-            if (opt.name == option.name) {
-              return opt.value
-            }
-          })
-          if (currentOption) {
-            return currentOption[0].value
+      if (this.variant.selectedOptions && option) {
+        let currentOption = this.variant.selectedOptions.filter(opt => {
+          if (opt.name == option.name) {
+            return opt.value
+          }
+        })
+
+        if (currentOption) {
+          if (option.name == 'Flavor') {
+            let optionValue = option.values.filter(opt => {
+              if (opt.value == currentOption[0].value) {
+                return opt
+              }
+            })
+
+            return optionValue[0]
+          } else if (option.name == 'Size') {
+            return currentOption[0]
           }
         }
+      }
     },
     //Updates the options available depending the first option selected
     updateAvailableOptions(options) {

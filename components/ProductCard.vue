@@ -4,7 +4,7 @@
       <figure class="product-card__picture">
         <img
           class="product-card__image"
-          :src="featuredImage.src"
+          :src="optimizeSource({ url: featuredImage.src, width: 800 })"
           :alt="featuredImage.alt"
         />
       </figure>

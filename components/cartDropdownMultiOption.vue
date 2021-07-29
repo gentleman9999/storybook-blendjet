@@ -42,8 +42,8 @@ export default {
       type: Object
     },
     currentOption: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {}
     },
     update: {
       type: Function,
@@ -60,6 +60,10 @@ export default {
   components: {
     ProductOptionsDropdown,
     CartDropdown
+  },
+  mounted() {
+    this.setSelectedOptions({ name: this.options[0].name, value: this.options[0].values[0].value })
+    this.setSelectedOptions({ name: this.options[1].name, value: this.options[1].values[0].value })
   },
   watch: {
     clearOptionValue(val) {
@@ -85,9 +89,9 @@ export default {
         const index = vm.selectedOptions.findIndex(option => {
           return option.name === selectedOption.name
         })
+
         vm.selectedOptions.splice(index, 1, selectedOption)
       }
-
       this.update(vm.selectedOptions)
     },
     // Gets the selected option using the selectedOptions of the current variant
@@ -99,7 +103,16 @@ export default {
           }
         })
         if (currentOption) {
-          return currentOption[0].value
+          if (option.name == 'Flavor') {
+            let optionValue = option.values.filter(opt => {
+              if (opt.value == currentOption[0].value) {
+                return opt
+              }
+            })
+            return optionValue[0].value
+          } else if (option.name == 'Size') {
+            return currentOption[0].value
+          }
         }
       }
     },

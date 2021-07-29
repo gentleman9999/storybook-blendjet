@@ -20,19 +20,24 @@
         @click.prevent="toggleOpen"
         v-show="!isOpen"
       >
-        <!-- VARIANT IMAGE -->
         <div
-          v-if="showVariantImages && getImageForOption(selectedOptionValue)"
+          v-if="selectedOptionValue && selectedOptionValue.image && !upsellStyle"
           class="dropdown-thumb"
         >
-          <img class="dropdown-thumb-image" :src="getImageForOption(selectedOptionValue)" />
+          <img class="dropdown-thumb-image" :src="selectedOptionValue.image" />
         </div>
-
         <!-- LABEL -->
-        <span>{{ selectedOptionValue }}</span>
+        <span v-if="selectedOptionValue && selectedOptionValue.value">{{
+          selectedOptionValue.value
+        }}</span>
+        <span v-else>{{ selectedOptionValue }}</span>
+
         <!-- DROPDOWN INDICATOR -->
         <CaretDown
-          :styleObj="{ marginLeft: upsellStyle ? '16px' : '30px' }"
+          :styleObj="{
+            marginLeft: upsellStyle ? '16px' : '10px',
+            marginRight: upsellStyle ? '0px' : '10px'
+          }"
           :color="upsellStyle ? 'white' : '#373975'"
         />
       </div>
@@ -47,21 +52,17 @@
           }"
         >
           <li class="cart-title" v-if="upsellStyle">
-            <span>{{ option.name }}</span>
+            {{ option.name }}
           </li>
           <li
             v-for="(optionItem, i) in option.values"
             :key="i"
-            @click.prevent="setOptionValue(optionItem.value)"
+            @click.prevent="setOptionValue(optionItem)"
           >
-            <!-- THUMBNAIL - Variant Image -->
-            <div
-              v-if="showVariantImages && getImageForOption(optionItem.value)"
-              class="dropdown-thumb"
-            >
-              <img class="dropdown-thumb-image" :src="getImageForOption(optionItem.value)" />
-            </div>
-            <span>{{ optionItem.value }}</span>
+            <span v-if="optionItem.image" class="dropdown-thumb">
+              <img class="dropdown-thumb-image" :src="optionItem.image" />
+            </span>
+            {{ optionItem.value }}
           </li>
         </ul>
       </transition>
@@ -96,8 +97,8 @@ export default {
       default: ''
     },
     currentOption: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {}
     },
     styleObj: {
       type: Object,
@@ -109,10 +110,6 @@ export default {
       validator(value) {
         return ['up', 'down'].indexOf(value) !== -1
       }
-    },
-    showVariantImages: {
-      type: Boolean,
-      default: false
     }
   },
   components: {
@@ -125,11 +122,21 @@ export default {
       selectedOptionValue: this.currentOption
     }
   },
+  mounted() {
+    if (this.option.name == 'Flavor') this.setOptionValue(this.option.values[0].value)
+  },
   computed: {
     getAvailableOptions() {
-      if (this.variantsWithOptionValue() && this.variantsWithOptionValue().length >= 1) {
-        let values = []
-        this.variantsWithOptionValue().map(variant => {
+      let selectedOptionValue = this.upsellStyle
+        ? this.selectedOptionValue
+        : this.selectedOptionValue.value
+      let values = []
+      if (
+        this.variantsWithOptionValue(selectedOptionValue) &&
+        this.variantsWithOptionValue(selectedOptionValue).length >= 1
+      ) {
+        // let selectedOption =
+        this.variantsWithOptionValue(selectedOptionValue).map(variant => {
           let option = variant.selectedOptions.filter(option => {
             return option.name == 'Size'
           })
@@ -155,52 +162,36 @@ export default {
     toggleOpen() {
       this.isOpen = !this.isOpen
     },
-    setOptionValue(value) {
-      this.selectedOptionValue = value
+    setOptionValue(optionItem) {
+      this.selectedOptionValue = optionItem
+
       this.isOpen = false
       if (this.option.name !== 'Size') this.$emit('updateOptions', this.getAvailableOptions)
     },
-    variantsWithOptionValue() {
+
+    variantsWithOptionValue(currentOption) {
+      currentOption = currentOption?.value ? currentOption.value : currentOption
       if (this.variants) {
-        let vm = this
         return this.variants.filter(variant => {
           return (
             variant.selectedOptions.filter(option => {
               if (option.name !== 'Size') {
-                return option.value == vm.selectedOptionValue
+                return option.value == currentOption
               }
             }).length > 0
           )
         })
       }
-    },
-    /**
-     * Provided an option value, fetches the variant image for the first
-     * variant that has the option set to that value.
-     */
-    getImageForOption(optionValue) {
-      if (!Array.isArray(this.variants) || !this.option) return undefined
-
-      // Get all variants that have the argument as an option value
-      const variantsWithOption = this.variants.filter(v =>
-        v.selectedOptions.some(
-          o => o.name === this.option.name && o.value === this.selectedOptionValue
-        )
-      )
-
-      // Filter for those with an image
-      const variantWithImage = variantsWithOption.find(
-        v => v && v.featuredMedia && v.featuredMedia.src
-      )
-
-      // Return the first image (assuming one was found)
-      return variantWithImage ? variantWithImage.featuredMedia.src : undefined
     }
   },
   watch: {
     selectedOptionValue(newVal) {
+      newVal = newVal.value ? newVal.value : newVal
       if (newVal != null) {
-        this.$emit('optionSet', { name: this.option.name, value: newVal })
+        this.$emit('optionSet', {
+          name: this.option.name,
+          value: newVal
+        })
       }
     },
     clearOptionValue(newVal) {
@@ -226,6 +217,7 @@ export default {
   outline: none;
   display: flex;
   align-items: center;
+  margin: 0 auto;
 }
 
 .dropbtn-upsell {
@@ -395,6 +387,7 @@ export default {
 
 .dropdown-thumb {
   margin-right: 20px;
+  margin-left: 20px;
 }
 
 .dropdown-thumb-image {

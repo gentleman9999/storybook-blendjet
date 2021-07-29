@@ -39,7 +39,7 @@
               :strikethrough="true"
               :variantId="currentVariant.id"
             />
-            <div class="product-select__controls__price__installments" v-if="showAfterPay">
+            <div class="product-select__controls__price__installments" v-if="productType == 'BlendJet' && showAfterPay">
               <afterpay-placement
                 data-locale="en_US"
                 :data-currency="currency"
@@ -71,7 +71,8 @@
               <source :srcset="optimizeSource({ url: heroUrl })" />
               <img
                 class="product-select__image-carousel__img"
-                :src="optimizeSource({ url: productImage, width: 2100 })"
+                currentVariant.featuredMedia.thumbnailSrc
+                :src="optimizeSource({ url: productType == 'BlendJet' ? productImage : currentVariant.featuredMedia.thumbnailSrc, width: 2100 })"
               />
             </picture>
           </transition>
@@ -106,7 +107,7 @@
                 :strikethrough="true"
                 :variantId="currentVariant.id"
               />
-              <div class="product-select__controls__price__installments" v-if="showAfterPay">
+              <div class="product-select__controls__price__installments" v-if="showAfterPay && productType == 'BlendJet'">
                 <afterpay-placement
                   data-locale="en_US"
                   :data-currency="currency"
@@ -140,7 +141,7 @@
             </div>
           </div>
 
-          <div v-if="country === 'US'">
+          <div v-if="country === 'US' && productType == 'BlendJet'">
             <div
               class="product-select__controls__extend-warranty"
               v-if="extend1yr && extend2yr && extend3yr"
@@ -640,7 +641,7 @@
 
       <!-- BLENDJET FEATURES  -->
       <div class="media-content">
-        <div class="media-content__carousel">
+        <div v-if="heroImages.length > 0" class="media-content__carousel">
           <b-carousel
             class="media-content__carousel"
             :arrow="true"
@@ -650,7 +651,7 @@
             :autoplay="false"
             v-model="heroIndex"
           >
-            <b-carousel-item v-for="(image, i) in heroImages" :key="i">
+            <b-carousel-item  v-for="(image, i) in heroImages" :key="i">
               <section class="`hero is-large`">
                 <span class="image">
                   <img class="media-content__carousel__img" :src="optimizeSource({ url: image })" />
@@ -755,7 +756,7 @@
 
       <!-- JETPACKS CROSS-SELL -->
       <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
-      <div class="jetpacks" v-if="loadDescription">
+      <div class="jetpacks" v-if="loadDescription && productType == 'BlendJet'">
         <JetpackCrossSell :heading="'Power up with Jetpacks'" />
       </div>
     </div>
@@ -864,6 +865,9 @@ export default {
     page: {
       type: Object,
       default: () => {}
+    },
+    productType:{
+      type: String
     }
   },
 
@@ -1191,7 +1195,8 @@ export default {
             const item = data.items[0]
 
             // For each variant content model...
-            item.fields.variants.forEach(node => {
+            if(item.fields.variants){
+    item.fields.variants.forEach(node => {
               let productImage = node.fields.productImage
                 ? `https:${node.fields.productImage.fields.file.url}?w=2100`
                 : null
@@ -1202,6 +1207,8 @@ export default {
                 })
               }
             })
+            }
+        
 
             let sections = item.fields.productDescription
             vm.specs = sections.pop()

@@ -5,10 +5,7 @@
       <div class="dropbtn" role="button" @click.prevent="toggleOpen" v-show="!isOpen">
         <!-- THUMBNAIL - Variant Image (if configured) -->
         <div v-if="variantImage" class="dropdown-thumb">
-          <img
-            class="dropdown-thumb-image"
-            :src="variantImage"
-          />
+          <img class="dropdown-thumb-image" :src="optimizeSource({ url: variantImage, width: 800 })" />
         </div>
         <!-- LABEL -->
         <div>{{ formatTitle(currentVariant.title) }}</div>
@@ -28,10 +25,7 @@
             @click.prevent="setSelectedVariant(variant)"
           >
             <div v-if="variant.featuredMedia.thumbnailSrc" class="dropdown-thumb">
-              <img
-                class="dropdown-thumb-image"
-                :src="variant.featuredMedia.thumbnailSrc"
-              />
+              <img class="dropdown-thumb-image" :src="optimizeSource({ url: variant.featuredMedia.thumbnailSrc, width: 800 })" />
             </div>
             <div>{{ formatTitle(variant.title) }}</div>
           </li>
@@ -147,7 +141,7 @@ export default {
   width: 100%;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   flex-flow: column nowrap;
   border: 2px solid $secondary-purple-4;
   z-index: 1;
@@ -169,6 +163,8 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+    padding: 0 auto;
     &:nth-child(even) {
       background-color: $secondary-purple-4;
     }

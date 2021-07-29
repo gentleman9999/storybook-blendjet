@@ -3,8 +3,8 @@
   <div class="sticky-product-select" v-if="product && currentVariant">
     <!-- INFO - Thumbnail image, title, price (Desktop Only)-->
     <div class="sticky-product-select__info-container">
-      <div class="header-product-select__thumbnail" v-if="variantImage">
-        <img class="header-product-select__thumbnail__img" :src="variantImage" />
+      <div class="header-product-select__thumbnail">
+        <img class="header-product-select__thumbnail__img" :src="optimizeSource({ url: variantImage, width: 80 })" />
       </div>
       <div class="sticky-product-select__title-container">
         <div class="sticky-product-select__title-container__title">
@@ -106,6 +106,10 @@ export default {
     quantity: {
       type: Number,
       default: 1
+    },
+    optionsQty: {
+      type: Number,
+      default: 3
     },
     thresholdMobile: {
       type: Number,

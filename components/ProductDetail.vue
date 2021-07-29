@@ -14,6 +14,7 @@
         :quantity.sync="quantity"
         :updateVariant="setSelectedVariant"
         :isSubscriptionOn="isSubscriptionActive"
+        :optionsQty="allOptions.length"
       />
 
       <div class="product-select">
@@ -53,7 +54,10 @@
         <!-- GALLERY -->
         <div class="product-select__image-carousel">
           <transition name="fade" mode="out-in">
-            <img class="product-select__image-carousel__img" :src="productImage" />
+            <img
+              class="product-select__image-carousel__img"
+              :src="optimizeSource({ url: productImage, height: 700 })"
+            />
           </transition>
         </div>
 
@@ -112,6 +116,7 @@
                   :variants="variants"
                   @clear="selectedOptions = []"
                   :currentOption="currentOption"
+                  :product="product"
                 />
                 <ProductVariantsDropdown
                   v-else
@@ -926,17 +931,17 @@ export default {
     // various media is available for the `currentVariant` watcher.
     this.setInitialVariant()
 
-    this.variants = this.product.variants
+       this.variants = this.product.variants
       .filter(v => v.availableForSale)
       .map(v => {
         const variantId = atob(v.id)
           .split('/')
           .pop()
-
+      
         return {
           ...v,
           discountPercentage: this.discountPercentage,
-          plainId: variantId
+          plainId: variantId,
         }
       })
   }
@@ -944,6 +949,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.product-select__image-carousel{
+  max-height: 800px;
+}
 .media-content__main__features {
   background: var(--features-background) !important;
 }
@@ -1334,7 +1342,7 @@ export default {
   align-items: center;
   padding-top: 5%;
   padding-bottom: 5%;
-
+  
   &__content-block {
     width: 681px;
     color: $grayscale-white;

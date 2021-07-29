@@ -7,12 +7,12 @@
       '--color': section.textColor || '#000'
     }"
   >
-    <Scrollable className="sub-nav-menu__content">
+    <div class="sub-nav-menu__content" ref="root">
       <div class="sub-nav-menu__link" v-for="link in menu" :key="link.title">
         <a v-if="link.type === 'External'" :href="link.to">{{ link.title }}</a>
         <nuxt-link v-else :to="link.to">{{ link.title }}</nuxt-link>
       </div>
-    </Scrollable>
+    </div>
   </div>
 </template>
 

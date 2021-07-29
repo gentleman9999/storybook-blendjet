@@ -6,7 +6,7 @@
         <p v-if="subtitle">{{ subtitle }}</p>
       </div>
       <div class="image" v-if="productImage">
-        <img :src="productImage" :alt="selectedVariant.title" />
+        <img :src="optimizeSource({ url: productImage, width: 800 })" :alt="selectedVariant.title" />
       </div>
       <div class="add-to-cart">
         <CartDropdown
@@ -39,7 +39,7 @@
         <div class="subscribe-select" v-if="hasSubscription">
           <Checkbox
             color="#fff"
-            :label="`Subscribe &amp; Save ${discountPercentage}%`"
+            :label="`Subscribe ${subscribeLabel}`"
             @checked="handleSubscriptionCheck"
           />
         </div>
@@ -94,6 +94,9 @@ export default {
     }
   },
   computed: {
+    subscribeLabel() {
+      return this.discountPercentage > 0 ? `&amp; Save ${this.discountPercentage}%` : ""
+    },
     currentOption() {
       return this.selectedVariant?.selectedOptions?.[0]?.value || ''
     },
@@ -183,7 +186,6 @@ export default {
           .pop()
         this.subscriptionDiscountVariant =
           this.hasSubscription && this.discountVariantMap && this.discountVariantMap[variantId]
-      
         return {
           ...v,
           discountPercentage: this.discountPercentage,
