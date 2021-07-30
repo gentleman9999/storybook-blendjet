@@ -95,7 +95,7 @@ export default {
   },
   computed: {
     subscribeLabel() {
-      return this.discountPercentage > 0 ? `&amp; Save ${this.discountPercentage}%` : ""
+      return this.discountPercentage > 0 ? `& Save ${this.discountPercentage}%` : ""
     },
     currentOption() {
       return this.selectedVariant?.selectedOptions?.[0]?.value || ''
