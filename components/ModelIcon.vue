@@ -23,6 +23,22 @@ import Milkshake from '~/components/svg/Milkshake'
 import HappyHour from '~/components/svg/HappyHour'
 import Protein from '~/components/svg/Protein'
 import Fruit from '~/components/svg/Fruit'
+import DairyFree from '~/components/svg/DairyFree'
+import EssentialOils from '~/components/svg/EssentialOils'
+import GlutenFree from '~/components/svg/GlutenFree'
+import NoArtificialIngredients from '~/components/svg/NoArtificialIngredients'
+import NonGMO from '~/components/svg/NonGMO'
+import NoPreservatives from '~/components/svg/NoPreservatives'
+import NoTransFats from '~/components/svg/NoTransFats'
+import NutFree from '~/components/svg/NutFree'
+import Organic from '~/components/svg/Organic'
+import Paleo from '~/components/svg/Paleo'
+import Raw from '~/components/svg/Raw'
+import RealFood from '~/components/svg/RealFood'
+import SoyFree from '~/components/svg/SoyFree'
+import SustainablePackaging from '~/components/svg/SustainablePackaging'
+import Vegan from '~/components/svg/Vegan'
+import Vegetarian from '~/components/svg/Vegetarian'
 
 export default {
   props: {
@@ -118,6 +134,70 @@ export default {
             mode = 'Fruit'
             break;
          }         
+        case "DairyFree": {
+          mode = 'DairyFree'
+          break;
+          }             
+        case "EssentialOils": {
+          mode = 'EssentialOils'
+          break;
+          }     
+        case "GlutenFree": {
+          mode = 'GlutenFree'
+          break;
+          }     
+        case "NoArtificialIngredients": {
+          mode = 'NoArtificialIngredients'
+          break;
+          }     
+        case "NonGMO": {
+          mode = 'NonGMO'
+          break;
+          }     
+        case "NoPreservatives": {
+          mode = 'NoPreservatives'
+          break;
+          }     
+        case "NoTransFats": {
+          mode = 'NoTransFats'
+          break;
+          }     
+        case "NutFree": {
+          mode = 'NutFree'
+          break;
+          }     
+        case "Organic": {
+          mode = 'Organic'
+          break;
+          }     
+        case "Paleo": {
+          mode = 'Paleo'
+          break;
+          }     
+        case "Raw": {
+          mode = 'Raw'
+          break;
+          }     
+        case "RealFood": {
+          mode = 'RealFood'
+          break;
+          }     
+        case "SoyFree": {
+          mode = 'SoyFree'
+          break;
+          }     
+        case "SustainablePackaging": {
+          mode = 'SustainablePackaging'
+          break;
+          }     
+        case "Vegan": {
+          mode = 'Vegan'
+          break;
+          }     
+        case "Vegetarian": {
+          mode = 'Vegetarian'
+          break;
+          }     
       }
 
       return mode
@@ -144,7 +224,23 @@ export default {
     Milkshake,
     Protein,
     HappyHour,
-    Fruit
+    Fruit,
+    DairyFree,
+    EssentialOils,
+    GlutenFree,
+    NoArtificialIngredients,
+    NonGMO,
+    NoPreservatives,
+    NoTransFats,
+    NutFree,
+    Organic,
+    Paleo,
+    Raw,
+    RealFood,
+    SoyFree,
+    SustainablePackaging,
+    Vegan,
+    Vegetarian    
   }
 }
 </script>
