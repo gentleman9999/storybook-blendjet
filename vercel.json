@@ -6,6 +6,11 @@
       "permanent": true
     },
     {
+      "source": "/Marketplace",
+      "destination": "/marketplace",
+      "permanent": true
+    },
+    {
       "source": "/blogs/recipes",
       "destination": "/recipes",
       "permanent": true
