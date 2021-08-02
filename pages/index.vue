@@ -76,7 +76,7 @@
       <span class="content-split-element-bfcm">Free JetPack Protein Smoothies</span>
       
       
-      <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Auto Applied at Checkout</span></span>
+      <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
     </div>
   </div>
 </div>
