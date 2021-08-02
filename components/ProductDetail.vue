@@ -278,8 +278,8 @@
                 <Close />
               </div>
               <div class="about-subscriptions__heading">
-                Get Delicious On Demand <br />
-                And save 25%
+                Get Delicious On<br />
+                Demand And Save
               </div>
               <div class="about-subscriptions__column">
                 <div class="about-subscriptions__icon">
