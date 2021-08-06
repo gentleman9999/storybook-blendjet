@@ -1438,6 +1438,21 @@
       "permanent": true
     },
     {
+      "source": "/shape15",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Shape&discount=shape15",
+      "permanent": true
+    },
+    {
+      "source": "/essence",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Essence&discount=essence11",
+      "permanent": true
+    },
+    {
+      "source": "/parents",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Parents&discount=parents11",
+      "permanent": true
+    },
+    {
       "source": "/harpers",
       "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=Harpers&discount=harpers",
       "permanent": true
