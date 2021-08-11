@@ -103,7 +103,7 @@
         <nuxt-link to="/user-guide">User&nbsp;Guide</nuxt-link>
         <nuxt-link to="/faqs">FAQS</nuxt-link>
         <nuxt-link to="/returns">Returns&nbsp;&&nbsp;Guarantees</nuxt-link>
-        <nuxt-link to="/accessibility-statement">Accessibility Statement</nuxt-link>        
+        <nuxt-link to="/replacement-parts">Replacement&nbsp;Parts</nuxt-link>   
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
@@ -111,6 +111,7 @@
         <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Sign&nbsp;Up</a>
         <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Log&#8209;in</a>
         <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Manage&nbsp;Subscription</a>
+        <a href="https://shop.blendjet.com/accessibility-statement">Accessibility Statement</a>        
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
