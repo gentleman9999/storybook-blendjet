@@ -161,6 +161,11 @@
       "permanent": true
     },
     {
+      "source": "/collections/replacement-parts/",
+      "destination": "/replacement-parts",
+      "permanent": true
+    },
+    {
       "source": "/collectionsallsort_by=best-selling",
       "destination": "/products/blendjet-one",
       "permanent": true
