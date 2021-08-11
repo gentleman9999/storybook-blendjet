@@ -90,12 +90,13 @@
       </div>
       <hr class="mobile-divider" />
       <div class="section__footer__links__column">
-        <span class="section__footer__links__column__subheading">About&nbsp;Us</span>
+        <!-- <span class="section__footer__links__column__subheading">About&nbsp;Us</span> -->
         <nuxt-link to="/our-story">Our&nbsp;Story</nuxt-link>
         <!-- <a>Press</a> -->
         <nuxt-link to="/reviews">Reviews</nuxt-link>
         <nuxt-link to="/recipes">Recipes</nuxt-link>
         <nuxt-link to="/products/recipe-book">Recipe Book</nuxt-link>
+        <nuxt-link to="/blog">Blog</nuxt-link>        
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
