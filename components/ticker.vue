@@ -7,55 +7,103 @@
     </div>
     <transition name="fade">
     <div v-show="loaded">
-      <marquee-text :repeat="2" :duration="45">
+      <marquee-text :repeat="2" :duration="90">
           <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Boston-Globe.png" alt="The Boston Globe Logo"/>
-          </span>
-          <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Cosmopolitan.png" alt="Cosmopolitan Logo"/>
-          </span>
-          <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/delish.png" alt="Delish Logo"/>
-          </span>
-          <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Ellen.png" alt="The Ellen DeGeneres Show Logo"/>
-          </span>
-          <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Essence.png" alt="Essence Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Good-Housekeeping.png" alt="Good Housekeeping Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/HBO.png" alt="HBO Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Health.png" alt="Health Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Kelly-Clarkson-Show.png" alt="The Kelly Clarkson Show Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Martha-Stewart-Living.png" alt="Matha Stewart Living Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/New-York.png" alt="New York Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Silicon-Valley.png" alt="Silicon Valley Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/The-Doctors.png" alt="The Doctors Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Today.png" alt="Today Logo"/>
-          </span>
-            <span class="ticker__item">
-            <img class="ticker__img" src="/images/asSeenOn/Wired.png" alt="Wired Logo"/>
-          </span>
-            <span class="ticker__item">
             <img class="ticker__img" src="/images/asSeenOn/Yahoo-News.png" alt="Yahoo News Logo"/>
           </span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Fox-News.png" alt="Fox News Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/CNN.png" alt="CNN Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/MSN.png" alt="MSN Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Washington-Post.png" alt="The Washington Post Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/NBC-News.png" alt="NBC News Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/People.png" alt="People Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/USA-Today.png" alt="USA Today Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Jimmy-Kimmel-Live.png" alt="Jimmy Kimmel Live Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/CBS-News.png" alt="CBS News Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Kelly-Clarkson-Show.png" alt="The Kelly Clarkson Show Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Food-Network.png" alt="Food Network Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Bravo.png" alt="Bravo Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Today-Show.png" alt="The Today Show Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Shape.png" alt="Shape Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Rolling-Stone.png" alt="Rolling Stone Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/HGTV.png" alt="HGTV Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Health.png" alt="Health Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Forbes.png" alt="Forbes Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Good-Morning-America.png" alt="Good Morning America Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/CNET.png" alt="CNET Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Vogue.png" alt="Vogue Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Essence.png" alt="Essence Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Allure.png" alt="Allure Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/New-York.png" alt="New York Magazine Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/GQ.png" alt="GQ Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Refinery29.png" alt="Refinery29 Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Wired.png" alt="Wired Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Parents.png" alt="Parents Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Elle.png" alt="Elle Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Good-Housekeeping.png" alt="Good Housekeeping Logo"/>
+</span>
+<span class="ticker__item">
+  <img class="ticker__img" src="/images/asSeenOn/Martha-Stewart-Living.png" alt="Martha Stewart Living Logo"/>
+</span>
       </marquee-text>
     </div>
     </transition>
