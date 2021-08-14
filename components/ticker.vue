@@ -21,9 +21,6 @@
   <img class="ticker__img" src="/images/asSeenOn/MSN.png" alt="MSN Logo"/>
 </span>
 <span class="ticker__item">
-  <img class="ticker__img" src="/images/asSeenOn/Washington-Post.png" alt="The Washington Post Logo"/>
-</span>
-<span class="ticker__item">
   <img class="ticker__img" src="/images/asSeenOn/NBC-News.png" alt="NBC News Logo"/>
 </span>
 <span class="ticker__item">
