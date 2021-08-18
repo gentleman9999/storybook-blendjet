@@ -699,7 +699,7 @@
               :external-media-url="section.fields.externalVideoUrl"
             />
 
-            <div class="media-content__main__details__content-block">
+            <div v-if="product.title.includes('BlendJet')" class="media-content__main__details__content-block">
               <div class="media-content__main__details__specs__heading">
                 DETAILS & SPECS
               </div>

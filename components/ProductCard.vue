@@ -22,7 +22,7 @@
           </span>
         </h3>
       </nuxt-link>
-      <div class="product-card__rating">
+      <div v-if="!product.title.includes('Replacement')" class="product-card__rating">
         <loox-product-rating :product="product" />
       </div>
       <div class="product-card__subscription" v-if="!isRolledUp && hasSubscription">

@@ -152,10 +152,10 @@ export default {
     jetpackVariant(variant) {},
     formatVariantTitle(title) {
       if (title === 'Default Title') {
-        if (this.item.title.includes('Book')) {
+        if (this.item.title.includes('50 EASY')) {
           return 'Recipe Book'
         } else {
-          return 'JetPack Smoothie'
+          return ' '
         }
       }
       return title

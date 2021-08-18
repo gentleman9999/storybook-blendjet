@@ -40,10 +40,10 @@
           <div class="product-select__controls__title">
             <h1>{{ product.title }}</h1>
           </div>
-          <div class="product-select__controls__category">
+          <div v-if="currentVariant.title !== 'Default Title'" class="product-select__controls__category">
             {{ currentVariant.title }}
           </div>
-          <div class="product-select__controls__rating" style="zoom:1.25">
+          <div v-if="!product.title.includes('Replacement')" class="product-select__controls__rating" style="zoom:1.25">
             <n-link :to="{ path: `/products/${product.handle}`, hash: '#reviews' }">
               <!-- TODO: Change to be variant based -->
               <loox-product-rating :product="product" />
@@ -74,7 +74,7 @@
               >
                 {{ currentVariant.title }}
               </div>
-              <div class="product-select__controls__rating">
+              <div v-if="!product.title.includes('Replacement')" class="product-select__controls__rating">
                 <n-link
                   :to="{
                     path: `/products/${product.handle}`,
@@ -541,7 +541,7 @@
       </div>
 
       <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
-      <div class="reviews" id="reviews">
+      <div v-if="!product.title.includes('Replacement')" class="reviews" id="reviews">
         <loox-product-reviews :product="product" />
       </div>
 
