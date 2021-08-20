@@ -78,11 +78,11 @@ export const actions = {
     }
 
     // Intercept ReCharge checkout hostname URL to 'checkout.blendjet.com'
-    if(checkout.url.includes('rechargeapps.com')){
-      const url = new URL(checkout.url)
-      url.hostname = 'checkout.blendjet.com'
-      checkout.url = url.toString()
-    }
+    // if(checkout.url.includes('rechargeapps.com')){
+    //   const url = new URL(checkout.url)
+    //   url.hostname = 'checkout.blendjet.com'
+    //   checkout.url = url.toString()
+    // }
 
     if (rootState.events) {
       dispatch('events/checkoutInit', { cart: rootState.cart.lineItems }, { root: true })
