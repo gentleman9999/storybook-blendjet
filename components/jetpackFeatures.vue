@@ -48,7 +48,7 @@
                         <g id="Right" transform="translate(0.000000, 1738.000000)">
                             <g id="GMO" transform="translate(334.000000, 398.000000)">
                                 <text id="NO-GMO" font-family="Helvetica" font-size="10" font-weight="normal" line-spacing="12" letter-spacing="1.5" fill="#FFFFFF">
-                                    <tspan x="1.16748047" y="66">NO GMO</tspan>
+                                    <tspan x="1.16748047" y="66">NON-GMO</tspan>
                                 </text>
                                 <g id="Icon" transform="translate(3.000000, 0.000000)">
                                     <path d="M14.2347561,30.0110225 L13.9782827,28.8872843 C13.6584113,29.4912573 12.5662379,30.2926829 10.7766873,30.2926829 C7.47711326,30.2926829 5.6097561,27.3250851 5.6097561,23.0014519 C5.6097561,18.8520416 7.23793017,15.7073171 10.7766873,15.7073171 C13.2405613,15.7073171 14.831273,17.3130721 15.4277898,19.5953929 L13.5402606,20.1964621 C13.2203892,18.7126632 12.3846893,17.5511768 10.8141497,17.5511768 C8.66726529,17.5511768 7.61543602,19.9961057 7.61543602,23.0014519 C7.61543602,26.1665024 8.47130805,28.4488232 10.7968593,28.4488232 C13.0647761,28.4488232 13.7390996,26.2855547 13.7794437,24.2442423 L10.8343218,24.2442423 L10.8141497,22.4410347 L15.7073171,22.4410347 L15.7073171,30.0110225 L14.2347561,30.0110225 Z" id="Fill-1" fill="#FFFFFF"></path>
@@ -115,19 +115,19 @@
           </div>
           <div class="features-icon">
             <svg width="91px" height="92px" viewBox="0 0 91 92" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <title>Fibre</title>
+                <title>Fiber</title>
                 <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                     <g id="D-BlendJet-PDP-JetPack" transform="translate(-313.000000, -2247.000000)">
                         <g id="Right" transform="translate(0.000000, 1738.000000)">
-                            <g id="Fibre" transform="translate(313.000000, 510.000000)">
+                            <g id="Fiber" transform="translate(313.000000, 510.000000)">
                                 <g id="Icon" transform="translate(22.000000, 0.000000)">
                                     <polygon id="Fill-1" fill="#FFFFFF" points="19.2284741 36.0784314 9.92156863 26.0019092 12.6551238 23.4071694 18.8968808 30.1653642 33.0745858 10.8235294 36.0784314 13.0875671"></polygon>
                                     <path d="M46,23 C46,35.7023824 35.7039506,46 23,46 C10.2960494,46 0,35.7023824 0,23 C0,10.2976176 10.2960494,0 23,0 C35.7039506,0 46,10.2976176 46,23 Z" id="Stroke-2" stroke="#FFFFFF" stroke-width="2"></path>
                                 </g>
-                                <text id="GOOD-SOURCE-OF-FIBRE" font-family="Helvetica" font-size="10" font-weight="normal" line-spacing="12" letter-spacing="1.5" fill="#FFFFFF">
+                                <text id="GOOD-SOURCE-OF-FIBER" font-family="Helvetica" font-size="10" font-weight="normal" line-spacing="12" letter-spacing="1.5" fill="#FFFFFF">
                                     <tspan x="27.2216797" y="66">GOOD </tspan>
                                     <tspan x="19.6083984" y="78">SOURCE</tspan>
-                                    <tspan x="16.4433594" y="90">OF FIBRE</tspan>
+                                    <tspan x="16.4433594" y="90">OF FIBER</tspan>
                                 </text>
                             </g>
                         </g>

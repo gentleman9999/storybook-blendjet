@@ -67,7 +67,8 @@ export const actions = {
     let checkout = await this.$nacelle.checkout.process({
       cartItems,
       checkoutId,
-      metafields: this.$recart.getMetafieldsForCheckout()
+      //fix for uBlock breaking checkout recommended by CJ from Nacelle
+      metafields: this.$recart.getMetafieldsForCheckout() || []
     })
     if (checkout && checkout.completed) {
       checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
@@ -116,7 +117,14 @@ export const actions = {
   async checkoutRedirect({ state }) {
     if (process.browser) {
       const discountCode = await localforage.getItem('discount')
-      window.location = discountCode ? state.url + '&discount=' + discountCode : state.url
+      let url = state.url
+      if (url.includes('rechargeapps.com')) {
+        url = url.replace(
+          'checkout.rechargeapps.com',
+          'checkout.blendjet.com'
+        )
+      }
+      window.location = discountCode ? url + '&discount=' + discountCode : url
     }
   }
 }
