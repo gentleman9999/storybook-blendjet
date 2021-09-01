@@ -57,9 +57,7 @@
       </div>
 
 <!-- START BFCM -->
-<div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'"
-:product="product"
-:page="page" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
 <div class="canvas-bfcm">
 <div class="col-bfcm">
 <span class="entry-title-bfcm">Labor Day Sale!</span>
