@@ -1126,6 +1126,38 @@ export default {
           this.showCart()
         }
       }
+    },
+    
+    elevarProductView() {
+      console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var variant = this.currentVariant
+      console.log('v:', variant)
+      window.dataLayer.push({
+        "event": "dl_view_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "detail": {
+            "actionField": {'list': 'location.pathname'}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": this.product.id,
+              "variant_id": ((variant && variant.id) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": 'location.pathname', 
+            }]
+          }
+        }
+      })
+      console.log('wdl:', window.dataLayer)
     }
   },
   watch: {
@@ -1154,6 +1186,11 @@ export default {
       let path = `${this.$route.path}?variant=${variantId}`
 
       this.$router.push(path)
+      
+      this.elevarProductView()
+    },
+    quantity() {
+      this.elevarProductView()
     }
   },
 
@@ -1276,6 +1313,8 @@ export default {
         passive: true
       })
     }
+    
+    this.elevarProductView()
   },
   beforeDestroy() {
     if (process.client) {

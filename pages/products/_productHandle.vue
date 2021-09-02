@@ -103,6 +103,34 @@ export default {
 
   mounted() {
     if (this.product) {
+      //  console.log('product:', this.product)
+      //  window.dataLayer = window.dataLayer || []
+      //   var uuid = '!QAZxsw22143edfRf'
+      //   var variant = this.product.variants[0]
+      //   window.dataLayer.push({
+      //     "event": "dl_view_item",
+      //     "event_id": uuid,
+      //     "ecommerce": {
+      //       "currencyCode": this.product.priceRange.currencyCode,
+      //       "detail": {
+      //         "actionField": {'list': 'location.pathname'}, 
+      //         "products": [{
+      //           "name": this.product.title.replace("'", ''),
+      //           "id": ((variant && variant.sku) || ""),
+      //           "product_id": this.product.id,
+      //           "variant_id": ((variant && variant.id) || ""),
+      //           "image": this.product.featuredMedia.src,
+      //           "price": this.product.priceRange.min,
+      //           "brand": this.product.vendor.replace("'", ''),
+      //           "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+      //           "category": this.product.productType,
+      //           "inventory": "NA",
+      //           "list": 'location.pathname', 
+      //         }]
+      //       }
+      //     }
+      //   })
+      //   console.log('wdl:', window.dataLayer)
       this.productView(this.product)
     }
   },
