@@ -109,10 +109,10 @@
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
         <span class="section__footer__links__column__subheading">Account</span>
-        <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Sign&nbsp;Up</a>
+        <a href="https://shop.blendjet.com/account/register">Sign&nbsp;Up</a>
         <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Log&#8209;in</a>
-        <a href="https://shop.blendjet.com/account/login?return_url=%2Faccount">Manage&nbsp;Subscription</a>
-        <a href="https://shop.blendjet.com/accessibility-statement">Accessibility Statement</a>        
+        <a href="https://shop.blendjet.com/tools/recurring/login">Manage&nbsp;Subscription</a>
+        <a href="https://blendjet.com/accessibility-statement">Accessibility Statement</a>        
       </div>
         <hr class="mobile-divider" />
       <div class="section__footer__links__column">
