@@ -312,6 +312,8 @@ export default {
         this.setButtonText()
         this.showCart()
         this.$emit('addedToCart')
+        
+        this.elevarAddToCart()
       }
     },
     decodeBase64VariantId(encodedId) {
@@ -325,6 +327,37 @@ export default {
         // console.warn(`Error decoding variant ID "${encodedId}"`)
       }
       return decodedId
+    },
+    elevarAddToCart() {
+      // console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var variant = this.variant
+      // console.log('v:', variant)
+      window.dataLayer.push({
+        "event": "dl_view_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "add": {
+            "actionField": {'list': 'location.pathname'}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": this.product.id,
+              "variant_id": ((variant && variant.id) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": 'location.pathname', 
+            }]
+          }
+        }
+      })
+      console.log('wdl_atc:', window.dataLayer)
     }
   }
 }
