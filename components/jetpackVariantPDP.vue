@@ -813,8 +813,51 @@ export default {
           this.productDescription = something.fields.productDescription
           this.features = something.fields.features
         })
+    },
+    
+    elevarProductView() {
+      console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var variant = this.currentVariant
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      console.log(referrer)
+      console.log('v:', variant)
+      window.dataLayer.push({
+        "event": "dl_view_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "detail": {
+            "actionField": {'list': referrer}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": this.product.id,
+              "variant_id": ((variant && variant.id) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": referrer, 
+            }]
+          }
+        }
+      })
+      console.log('wdl_pv:', window.dataLayer)
     }
   },
+  watch: {
+    currentVariant(newVariant) { 
+      this.elevarProductView()
+    },
+    quantity() {
+      this.elevarProductView()
+    }  
+  },
+  
   async mounted() {
     this.screenWidth = screen.innerWidth
     this.client = createClient()
@@ -886,6 +929,8 @@ export default {
       })
       .catch(console.error)
     this.currentVariant = this.setDefaultVariant()
+    
+    this.elevarProductView()
   }
 }
 </script>

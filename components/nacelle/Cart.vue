@@ -213,6 +213,37 @@ export default {
       // If this is mobile, open the upsell.
       // Note the actual checkout redirection logic is handled in CartFlyoutCheckoutButton.vue
       this.isMobile && this.openUpsellModal()
+    },
+    elevarViewCart() {
+      // console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      // console.log(this.lineItems)
+      var cartItems = this.lineItems.map(function(item, idx) {
+        return {
+          position: idx,
+          id: item.variant.sku,
+          product_id: item.productId,
+          variant_id: item.variant.id,
+          name: item.title.replace("'", ''),
+          category: "NA",
+          quantity: item.quantity,
+          price: item.variant.price,
+          brand: item.vendor.replace("'", ''),
+          variant: item.variant.title
+        }
+      })
+      window.dataLayer.push({
+        "event": "dl_view_cart",
+        "event_id": uuid,
+        "cart_total": this.cartSubtotal,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "actionField": { "list": "Shopping Cart" },
+          "impressions": cartItems, 
+        }
+      })
+      // console.log('wdl_vc:', window.dataLayer)
     }
   },
   watch: {
@@ -229,11 +260,12 @@ export default {
       }
     },
     cartVisible(newValue) {
-      // if(this.cartVisible) {
-      //   document.body.style.overflowY = 'hidden'
-      // } else {
-      //   document.body.style.overflowY = 'scroll'
-      // }
+      if(this.cartVisible) {
+        console.log('fire elevar view cart?')
+        this.elevarViewCart()
+      }
+      
+      
 
       this.toggleCustomerChat('cart')
     },

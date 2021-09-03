@@ -176,14 +176,15 @@ export default {
       var uuid = '!QAZxsw22143edfRf'
       var productId = this.item.productId
       var variant = this.variant
-      console.log('item:', this.item)
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      // console.log('item:', this.item)
       window.dataLayer.push({
         "event": "dl_remove_from_cart",
         "event_id": uuid,
         "ecommerce": {
           "currencyCode": variant.priceCurrency,
           "remove": {
-            "actionField": {'list': 'location.pathname'}, 
+            "actionField": {'list': referrer}, 
             "products": [{
               "name": variant.title.replace("'", ''),
               "id": ((variant && variant.sku) || ""),
@@ -195,12 +196,12 @@ export default {
               "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
               "category": 'NA',
               "quantity": [],
-              "list": 'location.pathname' 
+              "list": referrer 
             }]
           }
         }
       })
-      console.log('wdl_rfc:', window.dataLayer)
+      // console.log('wdl_rfc:', window.dataLayer)
     }
   },
   mounted() {

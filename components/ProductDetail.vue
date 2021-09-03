@@ -797,6 +797,39 @@ export default {
 
       // Set current variant equal to the variant indicated by the param, or the product's first variant.
       this.currentVariant = matchingVariant || this.product.variants[0]
+    },
+    
+    elevarProductView() {
+      console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var variant = this.currentVariant
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      console.log('v:', variant)
+      window.dataLayer.push({
+        "event": "dl_view_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "detail": {
+            "actionField": {'list': referrer}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": this.product.id,
+              "variant_id": ((variant && variant.id) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": referrer, 
+            }]
+          }
+        }
+      })
+      console.log('wdl_pv:', window.dataLayer)
     }
   },
   watch: {
@@ -813,9 +846,14 @@ export default {
       } else {
         this.productImage = newVariant.featuredMedia.src
       }
+      
+      this.elevarProductView()
     },
     showDesktopHeader(newValue, oldValue) {
       // If show desktop header gets toggled to false, hide the variant selector menu too
+    },
+    quantity() {
+      this.elevarProductView()
     }
   },
   created() {
@@ -944,6 +982,8 @@ export default {
           plainId: variantId,
         }
       })
+      
+      this.elevarProductView()
   }
 }
 </script>
