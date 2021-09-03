@@ -143,6 +143,10 @@ export default {
       if (this.quantity > _minCount) {
         if (this.item) {
           this.decrementLineItem(this.item.id)
+          if(this.quantity == 1){
+            this.$emit('itemremoved')
+          }
+          
         } else {
           this.update(this.quantity - 1)
         }

@@ -51,6 +51,7 @@
               :quantity="item.quantity"
               :isCheckout="true"
               :styleObj="quanitySelectorStyle"
+              @itemremoved="elevarRemoveFromCart"
             />
           </div>
         </div>
@@ -168,6 +169,38 @@ export default {
       try {
         return `${warrantyProduct[0].title} - ${warrantyProduct[0].variant.title}`
       } catch (e) {}
+    },
+    elevarRemoveFromCart() {
+      // console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var productId = this.item.productId
+      var variant = this.variant
+      console.log('item:', this.item)
+      window.dataLayer.push({
+        "event": "dl_remove_from_cart",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": variant.priceCurrency,
+          "remove": {
+            "actionField": {'list': 'location.pathname'}, 
+            "products": [{
+              "name": variant.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": productId,
+              "variant_id": ((variant && variant.id) || ""),
+              "image": this.item.image.src,
+              "price": variant.price,
+              "brand": this.item.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": 'NA',
+              "quantity": [],
+              "list": 'location.pathname' 
+            }]
+          }
+        }
+      })
+      console.log('wdl_rfc:', window.dataLayer)
     }
   },
   mounted() {
