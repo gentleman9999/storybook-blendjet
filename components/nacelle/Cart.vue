@@ -243,7 +243,7 @@ export default {
           "impressions": cartItems, 
         }
       })
-      // console.log('wdl_vc:', window.dataLayer)
+      console.log('wdl_vc:', window.dataLayer)
     }
   },
   watch: {

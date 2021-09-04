@@ -85,6 +85,43 @@ export default {
 
       return classes
     }
+  },
+  methods: {
+    elevarProductsView() {
+      // console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      console.log(this.products)
+      var visibleProducts = this.products.map(function(product, idx) {
+        var variant = product.variants[0]
+        
+        return {
+          name: product.title.replace("'", ''),
+          id: ((variant && variant.sku) || ""),
+          product_id: product.id,
+          variant_id: variant.id,
+          price: variant.price,
+          brand: product.vendor.replace("'", ''),
+          position: idx,
+          category: product.productType,
+          list: location.pathname
+        };
+      })
+      window.dataLayer.push({
+        "event": "dl_search_results",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "actionField": { "list": 'search results' },
+          "impressions": visibleProducts
+        }
+      })
+      console.log('wdl_search-grid:', window.dataLayer)
+    }
+  },
+  
+  async mounted() {
+    this.elevarProductsView()
   }
 }
 </script>

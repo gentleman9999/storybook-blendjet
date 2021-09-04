@@ -821,8 +821,6 @@ export default {
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.currentVariant
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
-      console.log(referrer)
-      console.log('v:', variant)
       window.dataLayer.push({
         "event": "dl_view_item",
         "event_id": uuid,

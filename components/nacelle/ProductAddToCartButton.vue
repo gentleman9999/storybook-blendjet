@@ -358,7 +358,7 @@ export default {
           }
         }
       })
-      // console.log('wdl_atc:', window.dataLayer)
+      console.log('wdl_atc:', window.dataLayer)
     }
   }
 }

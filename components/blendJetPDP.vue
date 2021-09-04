@@ -1158,7 +1158,7 @@ export default {
           }
         }
       })
-      // console.log('wdl:', window.dataLayer)
+      console.log('wdl:', window.dataLayer)
     }
   },
   watch: {
