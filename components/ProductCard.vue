@@ -1,5 +1,5 @@
 <template>
-  <div class="product-card" v-if="isShippableToUser">
+  <div class="product-card" v-if="isShippableToUser" @click="elevarProductClick(product, variant)">
     <nuxt-link :to="productUrl">
       <figure class="product-card__picture">
         <img
@@ -99,6 +99,39 @@ export default {
     decodeBase64VariantId(encodedId) {
       const decodedId = atob(encodedId)
       return decodedId.split('gid://shopify/ProductVariant/')[1]
+    },
+    
+    elevarProductClick(product, variant) {
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var idx = 'NA'
+      // var variant = product.variants[0]
+      // console.log('clicked product:', product)
+      // alert(product.title)
+      var clickedProduct =  {
+        name: product.title.replace("'", ''),
+        id: ((variant && variant.sku) || ""),
+        product_id: product.id,
+        variant_id: ((variant && variant.id) || ""),
+        price: variant.price,
+        brand: product.vendor.replace("'", ''),
+        position: idx,
+        category: product.productType,
+        list: location.pathname
+      }
+
+      window.dataLayer.push({
+        "event": "dl_select_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "click": {
+            "actionField": { "list": location.pathname },
+            "products": clickedProduct 
+          }
+        }
+      })
+      console.log('wdl_collection-click:', window.dataLayer)
     }
   }
 }

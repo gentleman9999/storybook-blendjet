@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="elevarSearchClick(item)">
     <!-- <router-link :to="`${pathFragment}${item.handle}`"> -->
     <div v-if="list" class="autocomplete-item" @click="emitQuery(item)">
       {{ item.title }}
@@ -62,6 +62,39 @@ export default {
       // this.setAutocompleteNotVisible()
       // console.log('item selecte', item)
       this.$emit('selectedQuery', item.title)
+    },
+    
+    elevarSearchClick(product) {
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var variant = product.variants[0]
+      var idx = 'NA'
+      // console.log('clicked product:', product)
+      // alert(product.title)
+      var clickedProduct =  {
+        name: product.title.replace("'", ''),
+        id: ((variant && variant.sku) || ""),
+        product_id: product.id,
+        variant_id: ((variant && variant.id) || ""),
+        price: variant.price,
+        brand: product.vendor.replace("'", ''),
+        position: idx,
+        category: product.productType,
+        list: location.pathname
+      }
+
+      window.dataLayer.push({
+        "event": "dl_select_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "click": {
+            "actionField": { "list": location.pathname },
+            "products": clickedProduct 
+          }
+        }
+      })
+      console.log('wdl_search-click:', window.dataLayer)
     }
 
     //  ...mapMutations('search', ['setQuery']),

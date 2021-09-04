@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import ProductCard from '~/components/nacelle/ProductCard'
+// import ProductCard from '~/components/nacelle/ProductCard'
 
 export default {
   components: {

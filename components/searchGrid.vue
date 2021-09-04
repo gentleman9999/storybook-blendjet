@@ -1,7 +1,7 @@
 <template>
   <div class="product-grid columns is-multiline is-paddingless nacelle">
-    <div v-for="item in products" :key="item.id" class="search-results__grid__item" :class="columnClasses">
-      <router-link :to="`${pathFragment}${item.handle}`">
+    <div v-for="(item, index) in products" :key="item.id" class="search-results__grid__item" :class="columnClasses" @click="elevarSearchClick(item, index)">
+      <router-link :to="`${pathFragment}${item.handle}`" >
         <div>
           <img class="search-results__grid__item__img" :src=" item.featuredMedia.src" />
         </div>
@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     elevarProductsView() {
-      // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       console.log(this.products)
@@ -117,6 +116,38 @@ export default {
         }
       })
       console.log('wdl_search-grid:', window.dataLayer)
+    },
+    
+    elevarSearchClick(product, idx) {
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      var variant = product.variants[0]
+      // console.log('clicked product:', product)
+      // alert(product.title)
+      var clickedProduct =  {
+        name: product.title.replace("'", ''),
+        id: ((variant && variant.sku) || ""),
+        product_id: product.id,
+        variant_id: ((variant && variant.id) || ""),
+        price: variant.price,
+        brand: product.vendor.replace("'", ''),
+        position: idx,
+        category: product.productType,
+        list: location.pathname
+      }
+
+      window.dataLayer.push({
+        "event": "dl_select_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "click": {
+            "actionField": { "list": location.pathname },
+            "products": clickedProduct 
+          }
+        }
+      })
+      console.log('wdl_search-click:', window.dataLayer)
     }
   },
   
