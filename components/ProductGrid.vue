@@ -39,8 +39,9 @@
   </div>
 </template>
 
+
 <script>
-import ProductCard from '~/components/ProductCard'
+import ProductCard from '~/components/nacelle/ProductCard'
 import productShippingEligibility from '~/mixins/productShippingEligibility'
 
 export default {
