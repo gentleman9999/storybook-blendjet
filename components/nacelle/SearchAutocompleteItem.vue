@@ -2,7 +2,7 @@
   <div @click="elevarSearchClick(item)">
     <!-- <router-link :to="`${pathFragment}${item.handle}`"> -->
     <div v-if="list" class="autocomplete-item" @click="emitQuery(item)">
-      {{ item.title }}
+      {{ item.title }} {{ position}}
     </div>
     <router-link v-if="!list" :to="`${pathFragment}${item.handle}`">
       <div class="autocomplete-item nacelle">
@@ -48,6 +48,10 @@ export default {
       type: String,
       default: '/products/'
     },
+    position: {
+      type: String,
+      default: 'NA'
+    },
     list: {
       type: Boolean,
       defatult: false
@@ -68,7 +72,7 @@ export default {
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = product.variants[0]
-      var idx = 'NA'
+      var idx = this.position
       // console.log('clicked product:', product)
       // alert(product.title)
       var clickedProduct =  {
