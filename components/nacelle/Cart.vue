@@ -214,25 +214,60 @@ export default {
       // Note the actual checkout redirection logic is handled in CartFlyoutCheckoutButton.vue
       this.isMobile && this.openUpsellModal()
     },
-    elevarViewCart() {
+    async getProduct(handle) {
+      var product = await this.$nacelle.data.product({
+          handle: handle
+        })
+        // .then(function(p){
+        //   console.log('product', p)
+        //   return p
+        // })
+        // console.log(product)
+        return product
+    },
+    async elevarViewCart() {
       // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
-      // console.log(this.lineItems)
-      var cartItems = this.lineItems.map(function(item, idx) {
-        return {
-          position: idx,
-          id: item.variant.sku,
-          product_id: item.productId,
-          variant_id: item.variant.id,
-          name: item.title.replace("'", ''),
-          category: "NA",
-          quantity: item.quantity,
-          price: item.variant.price,
-          brand: item.vendor.replace("'", ''),
-          variant: item.variant.title
-        }
+      var self = this
+      console.log(this.lineItems)
+      
+      var cartItems = []
+      
+      await this.lineItems.map(function(item, idx) {
+        self.$nacelle.data.product({
+          handle: item.handle
+        }).then(
+          function(p) {
+            console.log('p:', p)
+            console.log(item)
+             var productId = Buffer.from(p.pimSyncSourceProductId, 'base64')
+                .toString('binary')
+                .split('/')
+                .pop()
+              var variantId = Buffer.from(item.variant.id, 'base64')
+                .toString('binary')
+                .split('/')
+                .pop()
+              var object = {
+                position: idx,
+                id: item.variant.sku,
+                product_id: productId,
+                variant_id: variantId,
+                name: item.title.replace("'", ''),
+                category: "NA",
+                quantity: item.quantity,
+                price: item.variant.price,
+                brand: item.vendor.replace("'", ''),
+                variant: item.variant.title
+              }
+              cartItems.push(object) 
+          }
+        )
+        
+       
       })
+      console.log(cartItems)
       window.dataLayer.push({
         "event": "dl_view_cart",
         "event_id": uuid,
