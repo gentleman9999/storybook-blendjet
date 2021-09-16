@@ -1,8 +1,9 @@
 <template>
-  <div class="product-card" v-if="isShippableToUser" @click="elevarProductClick(product, variant)">
+  <div class="product-card" v-if="isShippableToUser" >
     <nuxt-link :to="productUrl">
       <figure class="product-card__picture">
         <img
+          @click="elevarProductClick(product, variant)"
           class="product-card__image"
           :src="optimizeSource({ url: featuredImage.src, width: 800 })"
           :alt="featuredImage.alt"
@@ -14,7 +15,7 @@
         <img :src="optimizeSource({ url: vendorLogo.src, width: 200 })" :alt="vendorLogo.alt" />
       </div>
       <nuxt-link :to="`/products/${product.handle}`">
-        <h3 class="product-card__title">
+        <h3 class="product-card__title" @click="elevarProductClick(product, variant)">
           {{ product.title }}
 
           <span class="product-card__variant-title" v-if="!isRolledUp && variant && variant.title">

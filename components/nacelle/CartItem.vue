@@ -170,14 +170,24 @@ export default {
         return `${warrantyProduct[0].title} - ${warrantyProduct[0].variant.title}`
       } catch (e) {}
     },
-    elevarRemoveFromCart() {
-      // console.log('product:', this.product)
+    async elevarRemoveFromCart() {
+      
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
-      var productId = this.item.productId
+      var product  = await this.$nacelle.data.product({
+        handle: this.item.handle
+      })
+      
       var variant = this.variant
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
-      // console.log('item:', this.item)
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var productId = Buffer.from(product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
       window.dataLayer.push({
         "event": "dl_remove_from_cart",
         "event_id": uuid,
@@ -189,7 +199,7 @@ export default {
               "name": variant.title.replace("'", ''),
               "id": ((variant && variant.sku) || ""),
               "product_id": productId,
-              "variant_id": ((variant && variant.id) || ""),
+              "variant_id": ((variant && variantId) || ""),
               "image": this.item.image.src,
               "price": variant.price,
               "brand": this.item.vendor.replace("'", ''),
@@ -201,7 +211,7 @@ export default {
           }
         }
       })
-      // console.log('wdl_rfc:', window.dataLayer)
+      console.log('wdl_rfc:', window.dataLayer)
     }
   },
   mounted() {

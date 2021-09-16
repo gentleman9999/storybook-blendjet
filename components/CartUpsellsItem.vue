@@ -281,9 +281,11 @@ export default {
       if (this.selectedVariant.subVariants) {
         this.selectedVariant.subVariants.forEach(v => {
           addVariantToCart(v)
+          this.elevarAddToCart(v)
         })
       } else {
         addVariantToCart(this.selectedVariant)
+        this.elevarAddToCart(this.selectedVariant)
       }
 
       this.justAdded = true
@@ -347,6 +349,47 @@ export default {
       } catch (err) {
         console.error('Currency Request Failed: ', err)
       }
+    },
+    elevarAddToCart(variant) {
+      console.log('product:', this.product)
+      window.dataLayer = window.dataLayer || []
+      var uuid = '!QAZxsw22143edfRf'
+      // var variant = this.selectedVariant
+      console.log('v:', variant)
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      // console.log('v:', variant)
+      window.dataLayer.push({
+        "event": "dl_add_to_cart",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "add": {
+            "actionField": {'list': referrer}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": productId,
+              "variant_id": ((variant && variantId) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": referrer, 
+            }]
+          }
+        }
+      })
+      console.log('wdl_atc:', window.dataLayer)
     }
   }
 }

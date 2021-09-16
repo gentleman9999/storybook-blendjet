@@ -67,15 +67,23 @@ export default {
       // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
-      console.log(this.products)
+      // console.log(this.products)
       var visibleProducts = this.products.map(function(product, idx) {
         var variant = product.variants[0]
+        var productId = Buffer.from(product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
         
         return {
           name: product.title.replace("'", ''),
           id: ((variant && variant.sku) || ""),
-          product_id: product.id,
-          variant_id: variant.id,
+          product_id: productId,
+          variant_id: variantId,
           price: variant.price,
           brand: product.vendor.replace("'", ''),
           position: idx,

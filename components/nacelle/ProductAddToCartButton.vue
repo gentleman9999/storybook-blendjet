@@ -334,6 +334,14 @@ export default {
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.variant
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
       // console.log('v:', variant)
       window.dataLayer.push({
         "event": "dl_add_to_cart",
@@ -345,8 +353,8 @@ export default {
             "products": [{
               "name": this.product.title.replace("'", ''),
               "id": ((variant && variant.sku) || ""),
-              "product_id": this.product.id,
-              "variant_id": ((variant && variant.id) || ""),
+              "product_id": productId,
+              "variant_id": ((variant && variantId) || ""),
               "image": this.product.featuredMedia.src,
               "price": variant.price,
               "brand": this.product.vendor.replace("'", ''),

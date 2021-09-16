@@ -1133,6 +1133,10 @@ export default {
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.currentVariant
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
       // console.log('v:', variant)
       window.dataLayer.push({
@@ -1145,8 +1149,8 @@ export default {
             "products": [{
               "name": this.product.title.replace("'", ''),
               "id": ((variant && variant.sku) || ""),
-              "product_id": this.product.id,
-              "variant_id": ((variant && variant.id) || ""),
+              "product_id": this.productId(),
+              "variant_id": ((variant && variantId) || ""),
               "image": this.product.featuredMedia.src,
               "price": variant.price,
               "brand": this.product.vendor.replace("'", ''),

@@ -805,7 +805,16 @@ export default {
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.currentVariant
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
-      console.log('v:', variant)
+      console.log('pim:', this.product.pimSyncSourceProductId)
+      var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      console.log('pId:', this.product.id)
       window.dataLayer.push({
         "event": "dl_view_item",
         "event_id": uuid,
@@ -816,8 +825,8 @@ export default {
             "products": [{
               "name": this.product.title.replace("'", ''),
               "id": ((variant && variant.sku) || ""),
-              "product_id": this.product.id,
-              "variant_id": ((variant && variant.id) || ""),
+              "product_id": productId,
+              "variant_id": ((variant && variantId) || ""),
               "image": this.product.featuredMedia.src,
               "price": variant.price,
               "brand": this.product.vendor.replace("'", ''),
@@ -846,8 +855,8 @@ export default {
       } else {
         this.productImage = newVariant.featuredMedia.src
       }
-      
-      this.elevarProductView()
+      // console.log('newVariant:', newVariant);
+      this.elevarProductView() // needs flag to only fire once
     },
     showDesktopHeader(newValue, oldValue) {
       // If show desktop header gets toggled to false, hide the variant selector menu too
@@ -982,8 +991,6 @@ export default {
           plainId: variantId,
         }
       })
-      
-      this.elevarProductView()
   }
 }
 </script>
