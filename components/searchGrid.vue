@@ -87,9 +87,16 @@ export default {
     }
   },
   methods: {
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
     elevarProductsView() {
       window.dataLayer = window.dataLayer || []
-      var uuid = '!QAZxsw22143edfRf'
+      var uuid = this.createUUID()
       var visibleProducts = this.products.map(function(product, idx) {
         var variant = product.variants[0]
         
@@ -116,10 +123,16 @@ export default {
       })
       // console.log('wdl_search-grid:', window.dataLayer)
     },
-    
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
     elevarSearchClick(product, idx) {
       window.dataLayer = window.dataLayer || []
-      var uuid = '!QAZxsw22143edfRf'
+      var uuid = this.createUUID()
       var variant = product.variants[0]
       var clickedProduct =  {
         name: product.title.replace("'", ''),
@@ -144,7 +157,7 @@ export default {
           }
         }
       })
-      // console.log('wdl_search-click:', window.dataLayer)
+      console.log('wdl_search-click:', window.dataLayer)
     }
   },
   

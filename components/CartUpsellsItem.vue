@@ -350,9 +350,16 @@ export default {
         console.error('Currency Request Failed: ', err)
       }
     },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
     elevarAddToCart(variant) {
       window.dataLayer = window.dataLayer || []
-      var uuid = '!QAZxsw22143edfRf'
+      var uuid = this.createUUID()
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
           .toString('binary')
@@ -386,7 +393,7 @@ export default {
           }
         }
       })
-      // console.log('wdl_atc:', window.dataLayer)
+      console.log('wdl_atc:', window.dataLayer)
     }
   }
 }

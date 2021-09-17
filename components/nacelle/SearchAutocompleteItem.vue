@@ -68,9 +68,17 @@ export default {
       this.$emit('selectedQuery', item.title)
     },
     
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    
     elevarSearchClick(product) {
       window.dataLayer = window.dataLayer || []
-      var uuid = '!QAZxsw22143edfRf'
+      var uuid = this.createUUID()
       var variant = product.variants[0]
       var idx = this.position
       // console.log('clicked product:', product)

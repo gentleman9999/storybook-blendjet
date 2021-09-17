@@ -1128,9 +1128,17 @@ export default {
       }
     },
     
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+        
     elevarProductView() {
       window.dataLayer = window.dataLayer || []
-      var uuid = '!QAZxsw22143edfRf'
+      var uuid = this.createUUID()
       var variant = this.currentVariant
       var variantId = Buffer.from(variant.id, 'base64')
           .toString('binary')
@@ -1160,7 +1168,7 @@ export default {
           }
         }
       })
-      // console.log('wdl:', window.dataLayer)
+      console.log('wdl:', window.dataLayer)
     }
   },
   watch: {

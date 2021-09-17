@@ -170,10 +170,16 @@ export default {
         return `${warrantyProduct[0].title} - ${warrantyProduct[0].variant.title}`
       } catch (e) {}
     },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
     async elevarRemoveFromCart() {
-      
       window.dataLayer = window.dataLayer || []
-      var uuid = '!QAZxsw22143edfRf'
+      var uuid = this.createUUID()
       var product  = await this.$nacelle.data.product({
         handle: this.item.handle
       })
@@ -211,7 +217,7 @@ export default {
           }
         }
       })
-      // console.log('wdl_rfc:', window.dataLayer)
+      console.log('wdl_rfc:', window.dataLayer)
     }
   },
   mounted() {
