@@ -816,7 +816,6 @@ export default {
     },
     
     elevarProductView() {
-      console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.currentVariant
@@ -852,7 +851,7 @@ export default {
           }
         }
       })
-      console.log('wdl_pv:', window.dataLayer)
+      // console.log('wdl_pv:', window.dataLayer)
     }
   },
   watch: {
@@ -935,8 +934,6 @@ export default {
       })
       .catch(console.error)
     this.currentVariant = this.setDefaultVariant()
-    
-    // this.elevarProductView()
   }
 }
 </script>

@@ -325,7 +325,6 @@ export default {
     },
     getSource(){
       var location = window.location;
-      console.log('ref:', location)
       
       if(location.pathname.includes('products')){
         return 'productpage'
@@ -337,7 +336,6 @@ export default {
       
     },
     elevarAddToCart() {
-      // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.variant
@@ -351,7 +349,6 @@ export default {
           .toString('binary')
           .split('/')
           .pop()
-      // console.log('v:', variant)
       window.dataLayer.push({
         "event": "dl_add_to_cart",
         "event_id": uuid,
@@ -376,7 +373,7 @@ export default {
           }
         }
       })
-      console.log('wdl_atc:', window.dataLayer)
+      // console.log('wdl_atc:', window.dataLayer)
     }
   }
 }

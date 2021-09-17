@@ -211,7 +211,7 @@ export default {
           }
         }
       })
-      console.log('wdl_rfc:', window.dataLayer)
+      // console.log('wdl_rfc:', window.dataLayer)
     }
   },
   mounted() {

@@ -106,9 +106,6 @@ export default {
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var idx = 'NA'
-      // var variant = product.variants[0]
-      // console.log('clicked product:', product)
-      // alert(product.title)
       var clickedProduct =  {
         name: product.title.replace("'", ''),
         id: ((variant && variant.sku) || ""),
@@ -132,7 +129,7 @@ export default {
           }
         }
       })
-      console.log('wdl_collection-click:', window.dataLayer)
+      // console.log('wdl_collection-click:', window.dataLayer)
     }
   }
 }

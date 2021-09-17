@@ -90,7 +90,6 @@ export default {
     elevarProductsView() {
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
-      console.log(this.products)
       var visibleProducts = this.products.map(function(product, idx) {
         var variant = product.variants[0]
         
@@ -115,15 +114,13 @@ export default {
           "impressions": visibleProducts
         }
       })
-      console.log('wdl_search-grid:', window.dataLayer)
+      // console.log('wdl_search-grid:', window.dataLayer)
     },
     
     elevarSearchClick(product, idx) {
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = product.variants[0]
-      // console.log('clicked product:', product)
-      // alert(product.title)
       var clickedProduct =  {
         name: product.title.replace("'", ''),
         id: ((variant && variant.sku) || ""),
@@ -147,7 +144,7 @@ export default {
           }
         }
       })
-      console.log('wdl_search-click:', window.dataLayer)
+      // console.log('wdl_search-click:', window.dataLayer)
     }
   },
   

@@ -1129,7 +1129,6 @@ export default {
     },
     
     elevarProductView() {
-      // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.currentVariant
@@ -1138,7 +1137,6 @@ export default {
           .split('/')
           .pop()
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
-      // console.log('v:', variant)
       window.dataLayer.push({
         "event": "dl_view_item",
         "event_id": uuid,
@@ -1162,7 +1160,7 @@ export default {
           }
         }
       })
-      console.log('wdl:', window.dataLayer)
+      // console.log('wdl:', window.dataLayer)
     }
   },
   watch: {

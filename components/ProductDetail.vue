@@ -800,12 +800,10 @@ export default {
     },
     
     elevarProductView() {
-      console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.currentVariant
       var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
-      console.log('pim:', this.product.pimSyncSourceProductId)
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
           .toString('binary')
           .split('/')
@@ -814,7 +812,6 @@ export default {
           .toString('binary')
           .split('/')
           .pop()
-      console.log('pId:', this.product.id)
       window.dataLayer.push({
         "event": "dl_view_item",
         "event_id": uuid,
@@ -838,7 +835,7 @@ export default {
           }
         }
       })
-      console.log('wdl_pv:', window.dataLayer)
+      // console.log('wdl_pv:', window.dataLayer)
     }
   },
   watch: {

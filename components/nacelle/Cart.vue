@@ -218,20 +218,13 @@ export default {
       var product = await this.$nacelle.data.product({
           handle: handle
         })
-        // .then(function(p){
-        //   console.log('product', p)
-        //   return p
-        // })
-        // console.log(product)
+
         return product
     },
     async elevarViewCart() {
-      // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
-      var self = this
-      console.log(this.lineItems)
-      
+      var self = this      
       var cartItems = []
       
       await this.lineItems.map(function(item, idx) {
@@ -239,8 +232,6 @@ export default {
           handle: item.handle
         }).then(
           function(p) {
-            console.log('p:', p)
-            console.log(item)
              var productId = Buffer.from(p.pimSyncSourceProductId, 'base64')
                 .toString('binary')
                 .split('/')
@@ -264,10 +255,8 @@ export default {
               cartItems.push(object) 
           }
         )
-        
        
       })
-      console.log(cartItems)
       window.dataLayer.push({
         "event": "dl_view_cart",
         "event_id": uuid,
@@ -278,7 +267,7 @@ export default {
           "impressions": cartItems, 
         }
       })
-      console.log('wdl_vc:', window.dataLayer)
+      // console.log('wdl_vc:', window.dataLayer)
     }
   },
   watch: {

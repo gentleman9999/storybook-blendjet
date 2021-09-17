@@ -64,10 +64,8 @@ export default {
   },
   methods: {
     elevarProductsView() {
-      // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
-      // console.log(this.products)
       var visibleProducts = this.products.map(function(product, idx) {
         var variant = product.variants[0]
         var productId = Buffer.from(product.pimSyncSourceProductId, 'base64')
@@ -99,7 +97,7 @@ export default {
           "impressions": visibleProducts
         }
       })
-      console.log('wdl_prod-grid:', window.dataLayer)
+      // console.log('wdl_prod-grid:', window.dataLayer)
     }
   },
   async mounted() {
