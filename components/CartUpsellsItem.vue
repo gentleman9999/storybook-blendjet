@@ -385,6 +385,7 @@ export default {
               "category": this.product.productType,
               "inventory": this.quantity,
               "list": referrer, 
+              "source": "minicart", 
             }]
           }
         }

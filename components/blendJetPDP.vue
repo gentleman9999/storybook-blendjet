@@ -1317,9 +1317,7 @@ export default {
       window.addEventListener('scroll', this.handleDebouncedScroll, {
         passive: true
       })
-    }
-    
-    this.elevarProductView()
+    } 
   },
   beforeDestroy() {
     if (process.client) {

@@ -936,7 +936,7 @@ export default {
       .catch(console.error)
     this.currentVariant = this.setDefaultVariant()
     
-    this.elevarProductView()
+    // this.elevarProductView()
   }
 }
 </script>

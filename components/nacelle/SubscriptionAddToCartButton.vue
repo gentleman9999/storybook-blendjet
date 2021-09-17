@@ -323,12 +323,26 @@ export default {
         this.elevarAddToCart()
       }
     },
+    getSource(){
+      var location = window.location;
+      console.log('ref:', location)
+      
+      if(location.pathname.includes('products')){
+        return 'productpage'
+      }else if( location.pathname.includes('marketplace') ){
+        return 'marketplace'
+      }else{
+        return location.pathname
+      }
+      
+    },
     elevarAddToCart() {
       // console.log('product:', this.product)
       window.dataLayer = window.dataLayer || []
       var uuid = '!QAZxsw22143edfRf'
       var variant = this.variant
-      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
+      var source = this.getSource()
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
           .toString('binary')
           .split('/')
@@ -356,7 +370,8 @@ export default {
               "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
               "category": this.product.productType,
               "inventory": this.quantity,
-              "list": referrer, 
+              "list": referrer,
+              "source": source, 
             }]
           }
         }
