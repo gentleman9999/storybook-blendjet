@@ -21,7 +21,7 @@
     <!-- START BFCM - TEMP SALE HARDCODED -->
     
 <!-- START BFCM -->
-<div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+<!-- <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
 <div class="canvas-bfcm">
 <div class="col-bfcm">
 <span class="entry-title-bfcm">Labor Day Sale!</span>
@@ -31,7 +31,7 @@
 <span class="simple-text-bfcm">BlendJet - Sleeve - Tote - Book <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
 </div>
 </div>
-</div>
+</div> -->
     
     <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
         <div class="canvas-bfcm">
