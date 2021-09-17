@@ -21,6 +21,21 @@
     <!-- START BFCM - TEMP SALE HARDCODED -->
     
 <!-- START BFCM -->
+
+<div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+  <div class="canvas-bfcm">
+    <div class="col-bfcm">
+      <span class="entry-title-bfcm">Fall Sale</span>
+      <span class="content-split-element-bfcm">Free Recipe Book - Save $19.95</span>
+      
+      
+      <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
+    </div>
+  </div>
+</div>
+</div>
+
 <!-- <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
 <div class="canvas-bfcm">
 <div class="col-bfcm">

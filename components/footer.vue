@@ -81,11 +81,10 @@
     <div class="section__footer__links">
       <div class="section__footer__links__column">
         <nuxt-link to="/products/blendjet-2">BlendJet&nbsp;2</nuxt-link>
-        <nuxt-link to="/products/blendjet-one">BlendJet&nbsp;One</nuxt-link>
         <nuxt-link to="/products/jetpack-smoothies">JetPack</nuxt-link>
         <nuxt-link to="/products/jetsetter-insulated-sleeve">Sleeve</nuxt-link>
         <nuxt-link to="/products/jetsetter-insulated-tote">Tote</nuxt-link>
-        <!-- <nuxt-link to="/blog">BlendJet&nbsp;Blog</nuxt-link> -->
+        <nuxt-link to="/blog">BlendJet&nbsp;Blog</nuxt-link>
         <!-- <a>Store&nbsp;Locator</a> -->
       </div>
       <hr class="mobile-divider" />
