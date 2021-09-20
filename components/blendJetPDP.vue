@@ -1126,6 +1126,49 @@ export default {
           this.showCart()
         }
       }
+    },
+    
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+        
+    elevarProductView() {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var variant = this.currentVariant
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      window.dataLayer.push({
+        "event": "dl_view_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "detail": {
+            "actionField": {'list': referrer}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": this.productId(),
+              "variant_id": ((variant && variantId) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": referrer, 
+            }]
+          }
+        }
+      })
+      console.log('wdl:', window.dataLayer)
     }
   },
   watch: {
@@ -1154,6 +1197,11 @@ export default {
       let path = `${this.$route.path}?variant=${variantId}`
 
       this.$router.push(path)
+      
+      this.elevarProductView()
+    },
+    quantity() {
+      this.elevarProductView()
     }
   },
 
@@ -1275,7 +1323,7 @@ export default {
       window.addEventListener('scroll', this.handleDebouncedScroll, {
         passive: true
       })
-    }
+    } 
   },
   beforeDestroy() {
     if (process.client) {

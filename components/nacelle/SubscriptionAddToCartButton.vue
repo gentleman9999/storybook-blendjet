@@ -319,7 +319,68 @@ export default {
         this.addLineItem(lineItem)
         this.setButtonText()
         this.showCart()
+        
+        this.elevarAddToCart()
       }
+    },
+    getSource(){
+      var location = window.location;
+      
+      if(location.pathname.includes('products')){
+        return 'productpage'
+      }else if( location.pathname.includes('marketplace') ){
+        return 'marketplace'
+      }else{
+        return location.pathname
+      }
+      
+    },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    elevarAddToCart() {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var variant = this.variant
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
+      var source = this.getSource()
+      var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      window.dataLayer.push({
+        "event": "dl_add_to_cart",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "add": {
+            "actionField": {'list': referrer}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": productId,
+              "variant_id": ((variant && variantId) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": referrer,
+              "source": source, 
+            }]
+          }
+        }
+      })
+      console.log('wdl_atc:', window.dataLayer)
     }
   }
 }

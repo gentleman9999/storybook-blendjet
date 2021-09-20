@@ -1,7 +1,7 @@
 <template>
   <div class="product-grid columns is-multiline is-paddingless nacelle">
-    <div v-for="item in products" :key="item.id" class="search-results__grid__item" :class="columnClasses">
-      <router-link :to="`${pathFragment}${item.handle}`">
+    <div v-for="(item, index) in products" :key="item.id" class="search-results__grid__item" :class="columnClasses" @click="elevarSearchClick(item, index)">
+      <router-link :to="`${pathFragment}${item.handle}`" >
         <div>
           <img class="search-results__grid__item__img" :src=" item.featuredMedia.src" />
         </div>
@@ -85,6 +85,84 @@ export default {
 
       return classes
     }
+  },
+  methods: {
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    elevarProductsView() {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var visibleProducts = this.products.map(function(product, idx) {
+        var variant = product.variants[0]
+        
+        return {
+          name: product.title.replace("'", ''),
+          id: ((variant && variant.sku) || ""),
+          product_id: product.id,
+          variant_id: variant.id,
+          price: variant.price,
+          brand: product.vendor.replace("'", ''),
+          position: idx,
+          category: product.productType,
+          list: location.pathname
+        };
+      })
+      window.dataLayer.push({
+        "event": "dl_search_results",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "actionField": { "list": 'search results' },
+          "impressions": visibleProducts
+        }
+      })
+      // console.log('wdl_search-grid:', window.dataLayer)
+    },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    elevarSearchClick(product, idx) {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var variant = product.variants[0]
+      var clickedProduct =  {
+        name: product.title.replace("'", ''),
+        id: ((variant && variant.sku) || ""),
+        product_id: product.id,
+        variant_id: ((variant && variant.id) || ""),
+        price: variant.price,
+        brand: product.vendor.replace("'", ''),
+        position: idx,
+        category: product.productType,
+        list: location.pathname
+      }
+
+      window.dataLayer.push({
+        "event": "dl_select_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "click": {
+            "actionField": { "list": location.pathname },
+            "products": clickedProduct 
+          }
+        }
+      })
+      console.log('wdl_search-click:', window.dataLayer)
+    }
+  },
+  
+  async mounted() {
+    this.elevarProductsView()
   }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div @click="elevarSearchClick(item)">
     <!-- <router-link :to="`${pathFragment}${item.handle}`"> -->
     <div v-if="list" class="autocomplete-item" @click="emitQuery(item)">
-      {{ item.title }}
+      {{ item.title }} {{ position}}
     </div>
     <router-link v-if="!list" :to="`${pathFragment}${item.handle}`">
       <div class="autocomplete-item nacelle">
@@ -48,6 +48,10 @@ export default {
       type: String,
       default: '/products/'
     },
+    position: {
+      type: String,
+      default: 'NA'
+    },
     list: {
       type: Boolean,
       defatult: false
@@ -62,6 +66,47 @@ export default {
       // this.setAutocompleteNotVisible()
       // console.log('item selecte', item)
       this.$emit('selectedQuery', item.title)
+    },
+    
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    
+    elevarSearchClick(product) {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var variant = product.variants[0]
+      var idx = this.position
+      // console.log('clicked product:', product)
+      // alert(product.title)
+      var clickedProduct =  {
+        name: product.title.replace("'", ''),
+        id: ((variant && variant.sku) || ""),
+        product_id: product.id,
+        variant_id: ((variant && variant.id) || ""),
+        price: variant.price,
+        brand: product.vendor.replace("'", ''),
+        position: idx,
+        category: product.productType,
+        list: location.pathname
+      }
+
+      window.dataLayer.push({
+        "event": "dl_select_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "click": {
+            "actionField": { "list": location.pathname },
+            "products": clickedProduct 
+          }
+        }
+      })
+      console.log('wdl_search-click:', window.dataLayer)
     }
 
     //  ...mapMutations('search', ['setQuery']),

@@ -30,9 +30,10 @@
               <!-- @results="setAutocompleteVisible" -->
               <template v-if="resultsVisible" v-slot:result="{ result }">
                 <search-autocomplete-item
-                  v-for="item in result"
+                  v-for="(item, index) in result"
                   :item="item"
                   :key="item.id"
+                  :position="index"
                 />
               </template>
             </search-results>

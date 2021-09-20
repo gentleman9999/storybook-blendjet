@@ -1,8 +1,9 @@
 <template>
-  <div class="product-card" v-if="isShippableToUser">
+  <div class="product-card" v-if="isShippableToUser" >
     <nuxt-link :to="productUrl">
       <figure class="product-card__picture">
         <img
+          @click="elevarProductClick(product, variant)"
           class="product-card__image"
           :src="optimizeSource({ url: featuredImage.src, width: 800 })"
           :alt="featuredImage.alt"
@@ -14,7 +15,7 @@
         <img :src="optimizeSource({ url: vendorLogo.src, width: 200 })" :alt="vendorLogo.alt" />
       </div>
       <nuxt-link :to="`/products/${product.handle}`">
-        <h3 class="product-card__title">
+        <h3 class="product-card__title" @click="elevarProductClick(product, variant)">
           {{ product.title }}
 
           <span class="product-card__variant-title" v-if="!isRolledUp && variant && variant.title">
@@ -99,6 +100,42 @@ export default {
     decodeBase64VariantId(encodedId) {
       const decodedId = atob(encodedId)
       return decodedId.split('gid://shopify/ProductVariant/')[1]
+    },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    elevarProductClick(product, variant) {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var idx = 'NA'
+      var clickedProduct =  {
+        name: product.title.replace("'", ''),
+        id: ((variant && variant.sku) || ""),
+        product_id: product.id,
+        variant_id: ((variant && variant.id) || ""),
+        price: variant.price,
+        brand: product.vendor.replace("'", ''),
+        position: idx,
+        category: product.productType,
+        list: location.pathname
+      }
+
+      window.dataLayer.push({
+        "event": "dl_select_item",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "click": {
+            "actionField": { "list": location.pathname },
+            "products": clickedProduct 
+          }
+        }
+      })
+      console.log('wdl_collection-click:', window.dataLayer)
     }
   }
 }

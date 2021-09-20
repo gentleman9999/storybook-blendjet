@@ -88,7 +88,7 @@
 import getCollection from '~/mixins/getCollection'
 import viewEvent from '~/mixins/viewEvent'
 import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
-import ProductGrid from '~/components/nacelle/ProductGrid'
+import ProductGrid from '~/components/ProductGrid'
 import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 // import JetpackFeatures from '~/components/jetpackFeatures'
 import JetpackCrossSell from '~/components/jetpackCrossSellVariants'

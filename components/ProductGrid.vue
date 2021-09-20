@@ -62,6 +62,51 @@ export default {
       return this.products.map(p => p.variants.map(v => ({ ...v, product: p }))).flat()
     }
   },
+  methods: {
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    elevarProductsView() {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var visibleProducts = this.products.map(function(product, idx) {
+        var variant = product.variants[0]
+        var productId = Buffer.from(product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+        
+        return {
+          name: product.title.replace("'", ''),
+          id: ((variant && variant.sku) || ""),
+          product_id: productId,
+          variant_id: variantId,
+          price: variant.price,
+          brand: product.vendor.replace("'", ''),
+          position: idx,
+          category: product.productType,
+          list: location.pathname
+        };
+      })
+      window.dataLayer.push({
+        "event": "dl_view_item_list",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "impressions": visibleProducts
+        }
+      })
+      console.log('wdl_prod-grid:', window.dataLayer)
+    }
+  },
   async mounted() {
     this.products = await this.$nacelle.data
       .collectionPage({ handle: this.section.shopifyCollectionHandle, paginate: false })
@@ -76,6 +121,8 @@ export default {
             .filter(this.checkProductShippingEligibility) // get products that can be shipped to the user
       )
     this.loading = false
+    
+    this.elevarProductsView()
   }
 }
 </script>

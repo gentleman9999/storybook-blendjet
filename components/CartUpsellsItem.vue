@@ -281,9 +281,11 @@ export default {
       if (this.selectedVariant.subVariants) {
         this.selectedVariant.subVariants.forEach(v => {
           addVariantToCart(v)
+          this.elevarAddToCart(v)
         })
       } else {
         addVariantToCart(this.selectedVariant)
+        this.elevarAddToCart(this.selectedVariant)
       }
 
       this.justAdded = true
@@ -347,6 +349,51 @@ export default {
       } catch (err) {
         console.error('Currency Request Failed: ', err)
       }
+    },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    elevarAddToCart(variant) {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      window.dataLayer.push({
+        "event": "dl_add_to_cart",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": this.product.priceRange.currencyCode,
+          "add": {
+            "actionField": {'list': referrer}, 
+            "products": [{
+              "name": this.product.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": productId,
+              "variant_id": ((variant && variantId) || ""),
+              "image": this.product.featuredMedia.src,
+              "price": variant.price,
+              "brand": this.product.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": this.product.productType,
+              "inventory": this.quantity,
+              "list": referrer, 
+              "source": "minicart", 
+            }]
+          }
+        }
+      })
+      console.log('wdl_atc:', window.dataLayer)
     }
   }
 }

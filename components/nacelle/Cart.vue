@@ -213,6 +213,68 @@ export default {
       // If this is mobile, open the upsell.
       // Note the actual checkout redirection logic is handled in CartFlyoutCheckoutButton.vue
       this.isMobile && this.openUpsellModal()
+    },
+    async getProduct(handle) {
+      var product = await this.$nacelle.data.product({
+          handle: handle
+        })
+
+        return product
+    },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    async elevarViewCart() {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var self = this      
+      var cartItems = []
+      
+      await this.lineItems.map(function(item, idx) {
+        self.$nacelle.data.product({
+          handle: item.handle
+        }).then(
+          function(p) {
+             var productId = Buffer.from(p.pimSyncSourceProductId, 'base64')
+                .toString('binary')
+                .split('/')
+                .pop()
+              var variantId = Buffer.from(item.variant.id, 'base64')
+                .toString('binary')
+                .split('/')
+                .pop()
+              var object = {
+                position: idx,
+                id: item.variant.sku,
+                product_id: productId,
+                variant_id: variantId,
+                name: item.title.replace("'", ''),
+                category: "NA",
+                quantity: item.quantity,
+                price: item.variant.price,
+                brand: item.vendor.replace("'", ''),
+                variant: item.variant.title
+              }
+              cartItems.push(object) 
+          }
+        )
+       
+      })
+      window.dataLayer.push({
+        "event": "dl_view_cart",
+        "event_id": uuid,
+        "cart_total": this.cartSubtotal,
+        "ecommerce": {
+          "currencyCode": 'USD',
+          "actionField": { "list": "Shopping Cart" },
+          "impressions": cartItems, 
+        }
+      })
+      console.log('wdl_vc:', window.dataLayer)
     }
   },
   watch: {
@@ -229,11 +291,11 @@ export default {
       }
     },
     cartVisible(newValue) {
-      // if(this.cartVisible) {
-      //   document.body.style.overflowY = 'hidden'
-      // } else {
-      //   document.body.style.overflowY = 'scroll'
-      // }
+      if(this.cartVisible) {
+        this.elevarViewCart()
+      }
+      
+      
 
       this.toggleCustomerChat('cart')
     },

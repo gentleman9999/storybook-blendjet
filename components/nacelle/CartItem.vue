@@ -51,6 +51,7 @@
               :quantity="item.quantity"
               :isCheckout="true"
               :styleObj="quanitySelectorStyle"
+              @itemremoved="elevarRemoveFromCart"
             />
           </div>
         </div>
@@ -168,6 +169,55 @@ export default {
       try {
         return `${warrantyProduct[0].title} - ${warrantyProduct[0].variant.title}`
       } catch (e) {}
+    },
+    createUUID() {
+        var result = ''
+        var length = 16
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+        return result
+    },
+    async elevarRemoveFromCart() {
+      window.dataLayer = window.dataLayer || []
+      var uuid = this.createUUID()
+      var product  = await this.$nacelle.data.product({
+        handle: this.item.handle
+      })
+      
+      var variant = this.variant
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      var productId = Buffer.from(product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+      window.dataLayer.push({
+        "event": "dl_remove_from_cart",
+        "event_id": uuid,
+        "ecommerce": {
+          "currencyCode": variant.priceCurrency,
+          "remove": {
+            "actionField": {'list': referrer}, 
+            "products": [{
+              "name": variant.title.replace("'", ''),
+              "id": ((variant && variant.sku) || ""),
+              "product_id": productId,
+              "variant_id": ((variant && variantId) || ""),
+              "image": this.item.image.src,
+              "price": variant.price,
+              "brand": this.item.vendor.replace("'", ''),
+              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
+              "category": 'NA',
+              "quantity": [],
+              "list": referrer 
+            }]
+          }
+        }
+      })
+      console.log('wdl_rfc:', window.dataLayer)
     }
   },
   mounted() {
