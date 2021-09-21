@@ -106,7 +106,7 @@ export default {
           }
         }
       })
-      console.log('wdl_search-click:', window.dataLayer)
+      // console.log('wdl_search-click:', window.dataLayer)
     }
 
     //  ...mapMutations('search', ['setQuery']),
