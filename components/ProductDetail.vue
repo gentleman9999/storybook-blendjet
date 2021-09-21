@@ -841,7 +841,7 @@ export default {
           }
         }
       })
-      console.log('wdl_pv:', window.dataLayer)
+      // console.log('wdl_pv:', window.dataLayer)
     }
   },
   watch: {

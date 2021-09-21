@@ -104,7 +104,7 @@ export default {
           "impressions": visibleProducts
         }
       })
-      console.log('wdl_prod-grid:', window.dataLayer)
+      // console.log('wdl_prod-grid:', window.dataLayer)
     }
   },
   async mounted() {
