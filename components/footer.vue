@@ -84,7 +84,7 @@
         <nuxt-link to="/products/jetpack-smoothies">JetPack</nuxt-link>
         <nuxt-link to="/products/jetsetter-insulated-sleeve">Sleeve</nuxt-link>
         <nuxt-link to="/products/jetsetter-insulated-tote">Tote</nuxt-link>
-        <nuxt-link to="/blog">BlendJet&nbsp;Blog</nuxt-link>
+        <nuxt-link to="/products/recipe-book">Recipe Book</nuxt-link>
         <!-- <a>Store&nbsp;Locator</a> -->
       </div>
       <hr class="mobile-divider" />
@@ -94,7 +94,6 @@
         <!-- <a>Press</a> -->
         <nuxt-link to="/reviews">Reviews</nuxt-link>
         <nuxt-link to="/recipes">Recipes</nuxt-link>
-        <nuxt-link to="/products/recipe-book">Recipe Book</nuxt-link>
         <nuxt-link to="/blog">Blog</nuxt-link>        
       </div>
         <hr class="mobile-divider" />

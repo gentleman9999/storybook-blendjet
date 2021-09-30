@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="page-container">
-      <content-hero-banner
+     <div style="position:relative;width:100%;height:0;padding-bottom:56.27198%;"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" width='500' height='294' src="https://www.youtube.com/embed/Eo4MMePM4R0?&theme=dark&color=white&autohide=1&modestbranding=1&showinfo=0&rel=0"frameborder="0"></iframe></div>
+    </div>
+      <!-- <content-hero-banner
         id="hero-banner"
         :imageUrl="optimizeSource({ url: page.fields.heroImage.fields.file.url, width: 2000 })"
         backgroundAltTag="A girl with her BlendJet"
@@ -9,7 +11,7 @@
         :subtitle="page.fields.subhead"
         :location="'about-us'"
         :textColor="'white'"
-      />
+      /> -->
       <div class="title-banner">
         <div class="title-banner__text-block">
           <RichTextRenderer :document="page.fields.missionText" />
