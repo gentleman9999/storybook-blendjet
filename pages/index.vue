@@ -68,19 +68,6 @@
 </div>
 </div>
 </div> -->
-
-<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
-  <div class="canvas-bfcm">
-    <div class="col-bfcm">
-      <span class="entry-title-bfcm">Fall Sale</span>
-      <span class="content-split-element-bfcm">Free Recipe Book - Save $19.95</span>
-      
-      
-      <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
-    </div>
-  </div>
-</div>
-
       <!-- END BFCM -->
 
       <div class="section section__as-seen-on">
