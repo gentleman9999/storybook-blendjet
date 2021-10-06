@@ -50,9 +50,9 @@
 <span class="ticker__item">
   <img class="ticker__img" src="/images/asSeenOn/Shape.png" alt="Shape Logo"/>
 </span>
-<span class="ticker__item">
+<!-- <span class="ticker__item">
   <img class="ticker__img" src="/images/asSeenOn/Rolling-Stone.png" alt="Rolling Stone Logo"/>
-</span>
+</span> -->
 <span class="ticker__item">
   <img class="ticker__img" src="/images/asSeenOn/HGTV.png" alt="HGTV Logo"/>
 </span>
