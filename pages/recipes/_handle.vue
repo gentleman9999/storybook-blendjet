@@ -53,7 +53,7 @@
         <!-- <div class="meta__stats">
           <span class="meta__views">450 Views</span><span class="meta__published-at">| <timeago :datetime="page.sys.createdAt" :auto-update="60"></timeago></span>
         </div> -->
-        <div class="meta__description" v-html="productMetaDescription"></div>
+        <div class="meta__description" v-html="$md.render(productMetaDescription)"></div>
       </div>
     </div>
     <div v-if="page.fields.ingredients" class="recipe__ingredients ingredients">

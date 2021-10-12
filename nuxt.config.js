@@ -151,6 +151,7 @@ export default {
     // '@nacelle/nacelle-recharge-nuxt-module',
     '@nuxtjs/sitemap',
     '@nuxtjs/axios',
+    '@nuxtjs/markdownit',
     'nuxt-polyfill',
     'vue-currency-filter/nuxt',
     '@nuxtjs/style-resources',
@@ -217,7 +218,7 @@ export default {
         }
 
         if (to.hash) {
-          let el = await findEl(to.hash)
+          const el = await findEl(to.hash)
           // Pass 'noScroll' param to prevent the smooth scrolling
           if (to.params.noScroll) {
             return false
@@ -314,7 +315,12 @@ export default {
       '/multi-model'
     ]
   },
-
+  markdownit: {
+    preset: 'default',
+    html: true,
+    linkify: true,
+    breaks: true
+  },
   /*
    ** Nacelle Configuration
    * https://docs.getnacelle.com/nuxt/nuxt-config.html
