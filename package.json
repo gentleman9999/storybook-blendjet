@@ -27,6 +27,7 @@
     "@nuxtjs/dotenv": "^1.3.0",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/gtm": "^2.4.0",
+    "@nuxtjs/markdownit": "^2.0.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "@nuxtjs/robots": "^2.4.2",
     "@recart/nacelle-nuxt-module": "^0.1.1",
