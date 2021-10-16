@@ -798,6 +798,26 @@ export default {
       // Set current variant equal to the variant indicated by the param, or the product's first variant.
       this.currentVariant = matchingVariant || this.product.variants[0]
     },
+    async setProductDescription() {
+      this.productDescription = this.page.fields.productDescription
+      // load variant specific product details if available
+      const variantTitle = this.currentVariant?.title?.toLowerCase()?.replace(/\s/g, '')
+      if (this.media[variantTitle]?.nutritionFactsTile) {
+        let nutritionFactsTile = this.media[variantTitle].nutritionFactsTile
+        if (!nutritionFactsTile.heading) {
+          nutritionFactsTile = await this.client.getEntry(nutritionFactsTile.sys.id)
+        }
+        if (this.productDescription && this.productDescription.length) {
+          this.productDescription = this.productDescription.map(descriptionItem => {
+            if (descriptionItem.fields.heading === nutritionFactsTile?.fields?.heading) {
+              return nutritionFactsTile
+            } else {
+              return descriptionItem
+            }
+          })
+        }
+      }
+    },
     createUUID() {
         var result = ''
         var length = 16
@@ -858,6 +878,7 @@ export default {
       } else {
         this.productImage = newVariant.featuredMedia.src
       }
+      this.setProductDescription()
       // console.log('newVariant:', newVariant);
       this.elevarProductView() // needs flag to only fire once
     },
@@ -953,7 +974,8 @@ export default {
           heroImages: Array.isArray(node?.fields?.heroImages)
             ? node.fields.heroImages.map(image => `${image.fields.file.url}?w=2100`)
             : [],
-          bannerText: node?.fields?.description
+          bannerText: node?.fields?.description,
+          nutritionFactsTile: node?.fields?.nutritionFactsTile
         }
 
         // Add variant data to component's `media` object
