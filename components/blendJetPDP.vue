@@ -67,7 +67,7 @@
             <NextSlide />
           </div>
           <transition name="fade" mode="out-in">
-            <picture v-if="productImage">
+            <picture v-if="productImage" class="product-select__image-carousel__img-container">
               <source :srcset="optimizeSource({ url: heroUrl })" />
               <img
                 class="product-select__image-carousel__img"
@@ -1385,6 +1385,10 @@ export default {
       @include respond-to('small') {
         right: 10px;
       }
+    }
+
+    &__img-container {
+      width: 100%;
     }
 
     &__img {
