@@ -817,6 +817,9 @@ export default {
           })
         }
       }
+      if (this.media[variantTitle]?.headerText) {
+        this.headerText = this.media[variantTitle]?.headerText
+      }
     },
     createUUID() {
         var result = ''
@@ -966,7 +969,6 @@ export default {
       fields.variants.forEach(node => {
         // Assemble ProductVariant data into usable object
         const variantTitle = node.fields.title.toLowerCase()
-
         const variantData = {
           productImage: node?.fields?.productImage?.fields?.file?.url
             ? `https:${node.fields.productImage.fields.file.url}`
@@ -975,6 +977,7 @@ export default {
             ? node.fields.heroImages.map(image => `${image.fields.file.url}?w=2100`)
             : [],
           bannerText: node?.fields?.description,
+          headerText: node?.fields?.headerText,
           nutritionFactsTile: node?.fields?.nutritionFactsTile
         }
 
