@@ -71,6 +71,7 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import atob from 'atob'
+import striptags from 'striptags'
 // Mixins
 import getProduct from '~/mixins/getProduct'
 import viewEvent from '~/mixins/viewEvent'
@@ -149,6 +150,11 @@ export default {
         if (this.product?.variants?.length > 1) {
           url += `?variant=${this.formatVariantId(productVariant.id)}`
         }
+
+        let description = this.page.metaDescription
+          ? this.page.metaDescription
+          : this.product.description
+        description = striptags(description)
         structuredData = {
           '@context': 'http://www.schema.org',
           '@type': 'Product',
@@ -158,7 +164,7 @@ export default {
             logo:
               'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844'
           },
-          description: this.product.description,
+          description: description,
           image: images,
           id: productVariant.sku,
           sku: productVariant.sku,
@@ -309,9 +315,10 @@ export default {
       } else if (this.product?.featuredMedia?.src) {
         image = this.product.featuredMedia.src
       }
-      const description = this.page?.fields?.metaDescription
+      let description = this.page?.fields?.metaDescription
         ? this.page.fields.metaDescription
         : this.product.description
+      description = striptags(description)
       const title = this.page?.fields?.metaTitle ? this.page.fields.metaTitle : this.product.title
 
       let url = `https://blendjet.com${this.$route.path}`
