@@ -183,6 +183,13 @@ export default {
             value: '0',
             currency: productVariant.priceCurrency
           }
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '4.9',
+          worstRating: '0',
+          bestRating: '5',
+          ratingCount: '2134'
         }
       }
 
@@ -197,11 +204,6 @@ export default {
       //       "@type": "Person",
       //       "name": "Fred Benson"
       //     }
-      //   },
-      //   "aggregateRating": {
-      //     "@type": "AggregateRating",
-      //     "ratingValue": "4.4",
-      //     "reviewCount": "89"
       //   },
 
       if (this.product.variants.length > 1) {
