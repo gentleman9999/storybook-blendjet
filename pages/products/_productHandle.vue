@@ -155,6 +155,9 @@ export default {
           ? this?.page?.metaDescription
           : this?.product?.description
         description = striptags(description)
+        if (description.length > 160) {
+          description = description.slice(0, 160)
+        }
         structuredData = {
           '@context': 'http://www.schema.org',
           '@type': 'Product',
@@ -319,6 +322,9 @@ export default {
         ? this.page?.fields?.metaDescription
         : this.product?.description
       description = striptags(description)
+      if (description.length > 160) {
+        description = description.slice(0, 160)
+      }
       const title = this.page?.fields?.metaTitle ? this.page.fields.metaTitle : this.product.title
 
       let url = `https://blendjet.com${this.$route.path}`
@@ -328,10 +334,12 @@ export default {
 
       const meta = [
         { hid: 'description', name: 'description', content: description },
+        { hid: 'image', name: 'image', content: image },
         { hid: 'og:type', name: 'og:type', content: 'og:product' },
         { hid: 'og:title', name: 'og:title', content: title },
         { hid: 'og:image', name: 'og:image', content: image },
         { hid: 'og:url', name: 'og:url', content: url },
+        { hid: 'og:description', name: 'og:description', content: description },
         { hid: 'twitter:image', name: 'twitter:image', content: image },
         { hid: 'twitter:title', name: 'twitter:title', content: title },
         { hid: 'twitter:description', name: 'twitter:description', content: description },
