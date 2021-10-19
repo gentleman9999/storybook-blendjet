@@ -281,6 +281,7 @@ export default {
     }
   },
   head() {
+    debugger
     if (this.product) {
       let image = ''
       let pageVariant = {}
@@ -301,14 +302,19 @@ export default {
       }
 
       if (this?.page?.fields?.variants?.length) {
+        let matched = false
         this.page.fields.variants.forEach(contentfulVariant => {
           if (
             contentfulVariant.fields.title.toLowerCase() ===
             productVariant?.title?.toLowerCase()?.replace(/\s/g, '')
           ) {
+            matched = true
             pageVariant = contentfulVariant.fields
           }
         })
+        if (!matched) {
+          pageVariant = this?.page?.fields?.variants[0]
+        }
       }
 
       if (pageVariant?.productImage?.fields?.file?.url) {
