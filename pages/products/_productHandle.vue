@@ -19,10 +19,10 @@
       </div>
     -->
     <!-- START BFCM - TEMP SALE HARDCODED -->
-    
-<!-- START BFCM -->
 
-<!-- <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+    <!-- START BFCM -->
+
+    <!-- <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
 <div class="canvas-bfcm">
 <div class="col-bfcm">
 <span class="entry-title-bfcm">Labor Day Sale!</span>
@@ -33,19 +33,18 @@
 </div>
 </div>
 </div> -->
-    
+
     <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
         <div class="canvas-bfcm">
           <div class="col-bfcm">
             <span class="entry-title-bfcm">Back to School Sale</span>
             <span class="content-split-element-bfcm">Free JetPack Protein Smoothies</span>
-            
-            
+
             <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
           </div>
         </div>
       </div> -->
-  
+
     <!-- END BFCM - TEMP SALE HARDCODED -->
 
     <!-- PDP Conditional -->
@@ -90,6 +89,131 @@ export default {
     JetpackVariantPDP,
     ShippingIneligibilityWarning
   },
+  jsonld() {
+    const structuredDataList = []
+    this.product.variants.forEach(productVariant => {
+      let structuredData = null
+      const images = []
+      let pageVariant = {}
+      // fetch exact variant from contentful if available
+
+      if (this?.page?.fields?.variants?.length) {
+        this.page.fields.variants.forEach(contentfulVariant => {
+          if (
+            contentfulVariant.fields.title.toLowerCase() ===
+            productVariant?.title?.toLowerCase()?.replace(/\s/g, '')
+          ) {
+            pageVariant = contentfulVariant.fields
+          }
+        })
+      }
+
+      // fetch main image (give preference to Contentful)
+
+      if (pageVariant?.productImage?.fields?.file?.url) {
+        images.push(pageVariant.productImage.fields.file.url)
+      } else if (productVariant.featuredMedia?.src) {
+        images.push(this.product.featuredMedia.src)
+      }
+
+      // fetch remaining media (give preference to Contentful)
+
+      if (pageVariant?.heroImages?.length) {
+        pageVariant.heroImages.forEach(item => {
+          if (item?.fields?.file?.url && item.fields.file.url !== images[0]) {
+            images.push(item.fields.file.url)
+          }
+        })
+      } else if (this.product?.media?.length > 1) {
+        this.product.media.forEach(media => {
+          if (media.src !== images[0]) {
+            images.push(media.src)
+          }
+        })
+      }
+
+      let price = productVariant.price
+      if (this?.product?.metafields?.length) {
+        this.product.metafields.forEach(item => {
+          if (item.namespace === 'subscriptions' && item.key === 'discount_percentage') {
+            price =
+              Number(productVariant.price) -
+              (Number(productVariant.price) * Number(item.value)) / 100
+            price = price.toFixed(2)
+          }
+        })
+      }
+
+      let url = `https://blendjet.com${this.$route.path}`
+      if (this.product.variants.length > 1) {
+        url += `?variant=${this.formatVariantId(productVariant.id)}`
+      }
+      structuredData = {
+        '@context': 'http://www.schema.org',
+        '@type': 'Product',
+        brand: {
+          '@type': 'Brand',
+          name: 'BlendJet',
+          logo:
+            'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844'
+        },
+        description: this.product.description,
+        image: images,
+        id: productVariant.sku,
+        sku: productVariant.sku,
+        name:
+          this.product.variants.length === 1
+            ? this.product.title
+            : this.product.title + ' - ' + productVariant.title,
+        category: this.product.productType,
+        model: productVariant.title,
+        offers: {
+          '@type': 'Offer',
+          availability: productVariant.availableForSale
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock',
+          price: price.toString(),
+          priceCurrency: productVariant.priceCurrency,
+          url: url
+        },
+        shippingDetails: {
+          '@type': 'OfferShippingDetails',
+          shippingRate: {
+            '@type': 'MonetaryAmount',
+            value: '0',
+            currency: productVariant.priceCurrency
+          }
+        }
+      }
+
+      // "review": {
+      //     "@type": "Review",
+      //     "reviewRating": {
+      //       "@type": "Rating",
+      //       "ratingValue": "4",
+      //       "bestRating": "5"
+      //     },
+      //     "author": {
+      //       "@type": "Person",
+      //       "name": "Fred Benson"
+      //     }
+      //   },
+      //   "aggregateRating": {
+      //     "@type": "AggregateRating",
+      //     "ratingValue": "4.4",
+      //     "reviewCount": "89"
+      //   },
+
+      if (this.product.variants.length > 1) {
+        structuredData.inProductGroupWithID = this.product.handle
+      }
+      structuredDataList.push(structuredData)
+    })
+    if (structuredDataList.length === 1) {
+      return structuredDataList[0]
+    }
+    return structuredDataList
+  },
   mixins: [getProduct(), productMetafields, viewEvent('product'), productShippingEligibility],
   computed: {
     ...mapGetters('space', ['getMetatag']),
@@ -99,7 +223,16 @@ export default {
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
-    ...mapActions('events', ['productView'])
+    ...mapActions('events', ['productView']),
+    formatVariantId(value) {
+      let url = ''
+      if (atob) {
+        url = atob(value)
+      } else if (window && window.atob) {
+        url = window.atob(value)
+      }
+      return url.replace('gid://shopify/ProductVariant/', '')
+    }
   },
 
   mounted() {
@@ -114,7 +247,7 @@ export default {
       //     "ecommerce": {
       //       "currencyCode": this.product.priceRange.currencyCode,
       //       "detail": {
-      //         "actionField": {'list': 'location.pathname'}, 
+      //         "actionField": {'list': 'location.pathname'},
       //         "products": [{
       //           "name": this.product.title.replace("'", ''),
       //           "id": ((variant && variant.sku) || ""),
@@ -126,7 +259,7 @@ export default {
       //           "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
       //           "category": this.product.productType,
       //           "inventory": "NA",
-      //           "list": 'location.pathname', 
+      //           "list": 'location.pathname',
       //         }]
       //       }
       //     }
@@ -137,26 +270,62 @@ export default {
   },
   head() {
     if (this.product) {
-      const properties = {}
-      const meta = []
-      const title = this.getMetatag('title')
+      let image = ''
+      let pageVariant = {}
+      let productVariant = []
+      const variantId = this?.$route?.query?.variant
 
-      if (this.product.title) {
-        let fullTitle = this.product.title
-
-        if (title) {
-          fullTitle = `${fullTitle} | ${title.value}`
+      // fetch exact variant from contentful if available
+      productVariant = this.product?.variants?.filter(item => {
+        if (Number(this.formatVariantId(item.id)) === Number(variantId)) {
+          return item
         }
+      })
 
-        properties.title = fullTitle
-        if (!this.product.handle.includes('blendjet')) {
-          meta.push({
-            hid: 'og:title',
-            property: 'og:title',
-            content: fullTitle
-          })
-        }
+      if (productVariant.length >= 1) {
+        productVariant = productVariant[0]
+      } else {
+        productVariant = {}
       }
+
+      if (this?.page?.fields?.variants?.length) {
+        this.page.fields.variants.forEach(contentfulVariant => {
+          if (
+            contentfulVariant.fields.title.toLowerCase() ===
+            productVariant?.title?.toLowerCase()?.replace(/\s/g, '')
+          ) {
+            pageVariant = contentfulVariant.fields
+          }
+        })
+      }
+
+      if (pageVariant?.productImage?.fields?.file?.url) {
+        image = pageVariant.productImage.fields.file.url
+      } else if (productVariant.featuredMedia?.src) {
+        image = this.product.featuredMedia.src
+      } else if (this.product?.featuredMedia?.src) {
+        image = this.product.featuredMedia.src
+      }
+      const description = this.page?.fields?.metaDescription
+        ? this.page.fields.metaDescription
+        : this.product.description
+      const title = this.page?.fields?.metaTitle ? this.page.fields.metaTitle : this.product.title
+
+      const meta = [
+        { vmid: 'description', name: 'description', content: description },
+        { vmid: 'og:type', name: 'og:type', content: 'og:product' },
+        { vmid: 'og:title', name: 'og:title', content: title },
+        { vmid: 'og:image', name: 'og:image', content: image },
+        { vmid: 'twitter:image', name: 'twitter:image', content: image }
+      ]
+
+      // if (!this.product.handle.includes('blendjet')) {
+      //   meta.push({
+      //     hid: 'og:title',
+      //     property: 'og:title',
+      //     content: fullTitle
+      //   })
+      // }
 
       if (
         this.product.handle === 'blendjet-2-influencer-kit' ||
@@ -170,7 +339,7 @@ export default {
       }
 
       return {
-        ...properties,
+        title,
         meta
       }
     }
