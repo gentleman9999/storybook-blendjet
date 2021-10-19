@@ -70,7 +70,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
-
+import atob from 'atob'
 // Mixins
 import getProduct from '~/mixins/getProduct'
 import viewEvent from '~/mixins/viewEvent'
@@ -313,12 +313,21 @@ export default {
         : this.product.description
       const title = this.page?.fields?.metaTitle ? this.page.fields.metaTitle : this.product.title
 
+      let url = `https://blendjet.com${this.$route.path}`
+      if (this.product?.variants?.length > 1 && productVariant?.id) {
+        url += `?variant=${this.formatVariantId(productVariant.id)}`
+      }
+
       const meta = [
-        { vmid: 'description', name: 'description', content: description },
-        { vmid: 'og:type', name: 'og:type', content: 'og:product' },
-        { vmid: 'og:title', name: 'og:title', content: title },
-        { vmid: 'og:image', name: 'og:image', content: image },
-        { vmid: 'twitter:image', name: 'twitter:image', content: image }
+        { hid: 'description', name: 'description', content: description },
+        { hid: 'og:type', name: 'og:type', content: 'og:product' },
+        { hid: 'og:title', name: 'og:title', content: title },
+        { hid: 'og:image', name: 'og:image', content: image },
+        { hid: 'og:url', name: 'og:url', content: url },
+        { hid: 'twitter:image', name: 'twitter:image', content: image },
+        { hid: 'twitter:title', name: 'twitter:title', content: title },
+        { hid: 'twitter:description', name: 'twitter:description', content: description },
+        { hid: 'twitter:url', name: 'twitter:url', content: url }
       ]
 
       // if (!this.product.handle.includes('blendjet')) {
