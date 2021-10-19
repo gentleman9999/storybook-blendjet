@@ -151,9 +151,9 @@ export default {
           url += `?variant=${this.formatVariantId(productVariant.id)}`
         }
 
-        let description = this.page.metaDescription
-          ? this.page.metaDescription
-          : this.product.description
+        let description = this?.page?.metaDescription
+          ? this?.page?.metaDescription
+          : this?.product?.description
         description = striptags(description)
         structuredData = {
           '@context': 'http://www.schema.org',
@@ -316,8 +316,8 @@ export default {
         image = this.product.featuredMedia.src
       }
       let description = this.page?.fields?.metaDescription
-        ? this.page.fields.metaDescription
-        : this.product.description
+        ? this.page?.fields?.metaDescription
+        : this.product?.description
       description = striptags(description)
       const title = this.page?.fields?.metaTitle ? this.page.fields.metaTitle : this.product.title
 
