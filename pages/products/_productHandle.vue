@@ -91,126 +91,127 @@ export default {
   },
   jsonld() {
     const structuredDataList = []
-    this.product.variants.forEach(productVariant => {
-      let structuredData = null
-      const images = []
-      let pageVariant = {}
-      // fetch exact variant from contentful if available
+    this.product &&
+      this.product.variants.forEach(productVariant => {
+        let structuredData = null
+        const images = []
+        let pageVariant = {}
+        // fetch exact variant from contentful if available
 
-      if (this?.page?.fields?.variants?.length) {
-        this.page.fields.variants.forEach(contentfulVariant => {
-          if (
-            contentfulVariant.fields.title.toLowerCase() ===
-            productVariant?.title?.toLowerCase()?.replace(/\s/g, '')
-          ) {
-            pageVariant = contentfulVariant.fields
-          }
-        })
-      }
-
-      // fetch main image (give preference to Contentful)
-
-      if (pageVariant?.productImage?.fields?.file?.url) {
-        images.push(pageVariant.productImage.fields.file.url)
-      } else if (productVariant.featuredMedia?.src) {
-        images.push(this.product.featuredMedia.src)
-      }
-
-      // fetch remaining media (give preference to Contentful)
-
-      if (pageVariant?.heroImages?.length) {
-        pageVariant.heroImages.forEach(item => {
-          if (item?.fields?.file?.url && item.fields.file.url !== images[0]) {
-            images.push(item.fields.file.url)
-          }
-        })
-      } else if (this.product?.media?.length > 1) {
-        this.product.media.forEach(media => {
-          if (media.src !== images[0]) {
-            images.push(media.src)
-          }
-        })
-      }
-
-      let price = productVariant.price
-      if (this?.product?.metafields?.length) {
-        this.product.metafields.forEach(item => {
-          if (item.namespace === 'subscriptions' && item.key === 'discount_percentage') {
-            price =
-              Number(productVariant.price) -
-              (Number(productVariant.price) * Number(item.value)) / 100
-            price = price.toFixed(2)
-          }
-        })
-      }
-
-      let url = `https://blendjet.com${this.$route.path}`
-      if (this.product.variants.length > 1) {
-        url += `?variant=${this.formatVariantId(productVariant.id)}`
-      }
-      structuredData = {
-        '@context': 'http://www.schema.org',
-        '@type': 'Product',
-        brand: {
-          '@type': 'Brand',
-          name: 'BlendJet',
-          logo:
-            'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844'
-        },
-        description: this.product.description,
-        image: images,
-        id: productVariant.sku,
-        sku: productVariant.sku,
-        name:
-          this.product.variants.length === 1
-            ? this.product.title
-            : this.product.title + ' - ' + productVariant.title,
-        category: this.product.productType,
-        model: productVariant.title,
-        offers: {
-          '@type': 'Offer',
-          availability: productVariant.availableForSale
-            ? 'https://schema.org/InStock'
-            : 'https://schema.org/OutOfStock',
-          price: price.toString(),
-          priceCurrency: productVariant.priceCurrency,
-          url: url
-        },
-        shippingDetails: {
-          '@type': 'OfferShippingDetails',
-          shippingRate: {
-            '@type': 'MonetaryAmount',
-            value: '0',
-            currency: productVariant.priceCurrency
-          }
-        },
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: '4.9',
-          worstRating: '0',
-          bestRating: '5',
-          ratingCount: '2134'
+        if (this?.page?.fields?.variants?.length) {
+          this.page.fields.variants.forEach(contentfulVariant => {
+            if (
+              contentfulVariant.fields.title.toLowerCase() ===
+              productVariant?.title?.toLowerCase()?.replace(/\s/g, '')
+            ) {
+              pageVariant = contentfulVariant.fields
+            }
+          })
         }
-      }
 
-      // "review": {
-      //     "@type": "Review",
-      //     "reviewRating": {
-      //       "@type": "Rating",
-      //       "ratingValue": "4",
-      //       "bestRating": "5"
-      //     },
-      //     "author": {
-      //       "@type": "Person",
-      //       "name": "Fred Benson"
-      //     }
-      //   },
+        // fetch main image (give preference to Contentful)
 
-      if (this.product.variants.length > 1) {
-        structuredData.inProductGroupWithID = this.product.handle
-      }
-      structuredDataList.push(structuredData)
-    })
+        if (pageVariant?.productImage?.fields?.file?.url) {
+          images.push(pageVariant.productImage.fields.file.url)
+        } else if (productVariant.featuredMedia?.src) {
+          images.push(this.product.featuredMedia.src)
+        }
+
+        // fetch remaining media (give preference to Contentful)
+
+        if (pageVariant?.heroImages?.length) {
+          pageVariant.heroImages.forEach(item => {
+            if (item?.fields?.file?.url && item.fields.file.url !== images[0]) {
+              images.push(item.fields.file.url)
+            }
+          })
+        } else if (this.product?.media?.length > 1) {
+          this.product.media.forEach(media => {
+            if (media.src !== images[0]) {
+              images.push(media.src)
+            }
+          })
+        }
+
+        let price = productVariant.price
+        if (this?.product?.metafields?.length) {
+          this.product.metafields.forEach(item => {
+            if (item.namespace === 'subscriptions' && item.key === 'discount_percentage') {
+              price =
+                Number(productVariant.price) -
+                (Number(productVariant.price) * Number(item.value)) / 100
+              price = price.toFixed(2)
+            }
+          })
+        }
+
+        let url = `https://blendjet.com${this.$route.path}`
+        if (this.product?.variants?.length > 1) {
+          url += `?variant=${this.formatVariantId(productVariant.id)}`
+        }
+        structuredData = {
+          '@context': 'http://www.schema.org',
+          '@type': 'Product',
+          brand: {
+            '@type': 'Brand',
+            name: 'BlendJet',
+            logo:
+              'https://cdn.shopify.com/s/files/1/0066/4433/4658/files/BlendJet-2-logo.png?v=1616611844'
+          },
+          description: this.product.description,
+          image: images,
+          id: productVariant.sku,
+          sku: productVariant.sku,
+          name:
+            this.product?.variants?.length === 1
+              ? this.product.title
+              : this.product.title + ' - ' + productVariant.title,
+          category: this.product.productType,
+          model: productVariant.title,
+          offers: {
+            '@type': 'Offer',
+            availability: productVariant.availableForSale
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+            price: price.toString(),
+            priceCurrency: productVariant.priceCurrency,
+            url: url
+          },
+          shippingDetails: {
+            '@type': 'OfferShippingDetails',
+            shippingRate: {
+              '@type': 'MonetaryAmount',
+              value: '0',
+              currency: productVariant.priceCurrency
+            }
+          },
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.9',
+            worstRating: '0',
+            bestRating: '5',
+            ratingCount: '2134'
+          }
+        }
+
+        // "review": {
+        //     "@type": "Review",
+        //     "reviewRating": {
+        //       "@type": "Rating",
+        //       "ratingValue": "4",
+        //       "bestRating": "5"
+        //     },
+        //     "author": {
+        //       "@type": "Person",
+        //       "name": "Fred Benson"
+        //     }
+        //   },
+
+        if (this.product?.variants?.length > 1) {
+          structuredData.inProductGroupWithID = this.product.handle
+        }
+        structuredDataList.push(structuredData)
+      })
     if (structuredDataList.length === 1) {
       return structuredDataList[0]
     }
