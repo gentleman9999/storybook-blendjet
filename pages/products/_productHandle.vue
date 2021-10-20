@@ -281,7 +281,6 @@ export default {
     }
   },
   head() {
-    debugger
     if (this.product) {
       let image = ''
       let pageVariant = {}
@@ -319,6 +318,8 @@ export default {
 
       if (pageVariant?.productImage?.fields?.file?.url) {
         image = pageVariant.productImage.fields.file.url
+      } else if (this.page?.fields?.metaImage) {
+        image = this.page.fields.metaImage
       } else if (productVariant.featuredMedia?.src) {
         image = this.product.featuredMedia.src
       } else if (this.product?.featuredMedia?.src) {
