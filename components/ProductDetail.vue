@@ -842,7 +842,7 @@ export default {
       return this.currentVariant.selectedOptions?.[0]?.value || ''
     },
     isJetpack() {
-      return this.product.productType.toLowerCase().includes('jetpack')
+      return this?.product?.productType?.toLowerCase().includes('jetpack')
     }
   },
   methods: {
