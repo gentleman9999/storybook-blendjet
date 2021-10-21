@@ -37,15 +37,31 @@
 
         <!-- MOBILE PRODUCT INFO - Title, Variant Title, Rating -->
         <div class="product-select__controls__mobile-title-container">
-          <div class="product-select__controls__title">
-            <h1>{{ product.title }}</h1>
-          </div>
-          <div
-            v-if="currentVariant.title !== 'Default Title'"
-            class="product-select__controls__category"
-          >
-            {{ currentVariant.title }}
-          </div>
+          <nuxt-link :to="crossSell.url" v-if="crossSell.url && crossSell.text && isJetpack">
+            <div
+              class="inner-text"
+              style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
+            >
+              {{ crossSell.text }}
+            </div>
+          </nuxt-link>
+          <template v-if="isJetpack">
+            <div class="product-select__controls__title">{{ currentVariant.title }}</div>
+            <div class="product-select__controls__category">
+              <h1>{{ product.productType }}</h1>
+            </div>
+          </template>
+          <template v-else>
+            <div class="product-select__controls__title">
+              <h1>{{ product.title }}</h1>
+            </div>
+            <div
+              v-if="currentVariant.title !== 'Default Title'"
+              class="product-select__controls__category"
+            >
+              {{ currentVariant.title }}
+            </div>
+          </template>
           <div
             v-if="!product.title.includes('Replacement')"
             class="product-select__controls__rating"
@@ -59,31 +75,44 @@
         </div>
 
         <!-- GALLERY -->
-        <div class="product-select__image-carousel">
+        <div :class="['product-select__image-carousel', { jetpack: isJetpack }]">
           <transition name="fade" mode="out-in">
             <img
-              :class="[
-                'product-select__image-carousel__img',
-                { cover: product.productType.toLowerCase().includes('jetpack') }
-              ]"
+              :class="['product-select__image-carousel__img', { cover: isJetpack }]"
               :src="optimizeSource({ url: productImage, height: 700 })"
             />
           </transition>
         </div>
 
-        <div class="product-select__controls">
+        <div :class="['product-select__controls', { jetpack: isJetpack }]">
           <div class="product-select__controls__container">
             <!-- DESKTOP PRODUCT INFO - Title, Variant Title, Ratings -->
             <div class="product-select__controls__title-container">
-              <div class="product-select__controls__title">
-                {{ product.title }}
-              </div>
-              <div
-                v-if="product.variants.length > 1 && currentVariant.title !== 'default title'"
-                class="product-select__controls__category"
-              >
-                {{ currentVariant.title }}
-              </div>
+              <nuxt-link :to="crossSell.url" v-if="crossSell.url && crossSell.text && isJetpack">
+                <div
+                  class="inner-text"
+                  style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
+                >
+                  {{ crossSell.text }}
+                </div>
+              </nuxt-link>
+              <template v-if="isJetpack">
+                <div class="product-select__controls__title">{{ currentVariant.title }}</div>
+                <div class="product-select__controls__category">
+                  <h1>{{ product.productType }}</h1>
+                </div>
+              </template>
+              <template v-else>
+                <div class="product-select__controls__title">
+                  <h1>{{ product.title }}</h1>
+                </div>
+                <div
+                  v-if="currentVariant.title !== 'Default Title'"
+                  class="product-select__controls__category"
+                >
+                  {{ currentVariant.title }}
+                </div>
+              </template>
               <div
                 v-if="!product.title.includes('Replacement')"
                 class="product-select__controls__rating"
@@ -206,6 +235,9 @@
               TODO: Shipping estimate for normal products should go here
             </div>
             -->
+            <div v-if="isJetpack" class="product-select__controls__shipping-notification">
+              <ShippingTime :product="'jetpack'" :country="country" />
+            </div>
             <hr class="product-select__controls__divider" />
 
             <!-- VALUE PROPS - TODO: Abstract into component -->
@@ -256,7 +288,7 @@
                 </a>
               </div>
             </div>
-            <template v-if="product.productType.toLowerCase().includes('jetpack')">
+            <template v-if="isJetpack">
               <hr class="product-select__controls__divider" />
               <div class="product-select__controls__made-in-ca">
                 <svg
@@ -667,12 +699,12 @@ import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToC
 import ProductVariantsDropdown from '~/components/ProductVariantsDropdown'
 import ProductStickyAddToCart from '~/components/ProductStickyAddToCart'
 import ProductMediaTile from '~/components/ProductMediaTile'
+import ShippingTime from '~/components/shippingTime'
 import imageOptimize from '~/mixins/imageOptimize'
 import rechargeProperties from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
-
 import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
 
@@ -710,7 +742,8 @@ export default {
         'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
       applePay: false,
       metaTitle: null,
-      metaDescription: null
+      metaDescription: null,
+      crossSell: {}
     }
   },
   components: {
@@ -727,7 +760,8 @@ export default {
     RichTextRenderer,
     ProductStickyAddToCart,
     ProductMediaTile,
-    CustomProductOptions
+    CustomProductOptions,
+    ShippingTime
   },
   mixins: [
     imageOptimize,
@@ -744,6 +778,10 @@ export default {
     page: {
       type: Object,
       default: () => ({})
+    },
+    country: {
+      type: Object,
+      default: () => {}
     }
   },
   head() {
@@ -802,6 +840,9 @@ export default {
     },
     currentOption() {
       return this.currentVariant.selectedOptions?.[0]?.value || ''
+    },
+    isJetpack() {
+      return this.product.productType.toLowerCase().includes('jetpack')
     }
   },
   methods: {
@@ -1002,6 +1043,16 @@ export default {
     // Once nacelle-nuxt-module is upgrade to 5.5.7, replace the contentful API with a call to the SDK!
     this.client = createClient()
 
+    const isProteinJetPack = this.product.handle.includes('protein')
+
+    // Assemble cross sell link data
+    this.crossSell = {
+      url: isProteinJetPack ? '/products/jetpack-smoothies' : '/products/jetpack-protein-smoothie',
+      text: isProteinJetPack
+        ? 'Try Our Original JetPack Smoothies'
+        : 'Try our NEW Protein Smoothies'
+    }
+
     // Check to see if Contentful data is present in page
     if (!this?.page?.fields) {
       // If page data doesn't exist, fail
@@ -1124,7 +1175,10 @@ export default {
 
 <style lang="scss" scoped>
 .product-select__image-carousel {
-  max-height: 850px;
+  max-height: 848px;
+  &.jetpack {
+    max-height: 930px;
+  }
 }
 .media-content__main__features {
   background: var(--features-background) !important;
@@ -1174,6 +1228,9 @@ export default {
     background-color: $primary-purple-tint;
     text-align: center;
     height: 848px;
+    &.jetpack {
+      height: 930px;
+    }
     @include respond-to('small') {
       width: 100%;
       padding: 0;
