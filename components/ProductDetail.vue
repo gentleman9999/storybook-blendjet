@@ -40,10 +40,17 @@
           <div class="product-select__controls__title">
             <h1>{{ product.title }}</h1>
           </div>
-          <div v-if="currentVariant.title !== 'Default Title'" class="product-select__controls__category">
+          <div
+            v-if="currentVariant.title !== 'Default Title'"
+            class="product-select__controls__category"
+          >
             {{ currentVariant.title }}
           </div>
-          <div v-if="!product.title.includes('Replacement')" class="product-select__controls__rating" style="zoom:1.25">
+          <div
+            v-if="!product.title.includes('Replacement')"
+            class="product-select__controls__rating"
+            style="zoom:1.25"
+          >
             <n-link :to="{ path: `/products/${product.handle}`, hash: '#reviews' }">
               <!-- TODO: Change to be variant based -->
               <loox-product-rating :product="product" />
@@ -55,7 +62,10 @@
         <div class="product-select__image-carousel">
           <transition name="fade" mode="out-in">
             <img
-              class="product-select__image-carousel__img"
+              :class="[
+                'product-select__image-carousel__img',
+                { cover: product.productType.toLowerCase().includes('jetpack') }
+              ]"
               :src="optimizeSource({ url: productImage, height: 700 })"
             />
           </transition>
@@ -74,7 +84,10 @@
               >
                 {{ currentVariant.title }}
               </div>
-              <div v-if="!product.title.includes('Replacement')" class="product-select__controls__rating">
+              <div
+                v-if="!product.title.includes('Replacement')"
+                class="product-select__controls__rating"
+              >
                 <n-link
                   :to="{
                     path: `/products/${product.handle}`,
@@ -550,6 +563,10 @@
         <JetpackCrossSell :product="product" heading="You may also like these" />
       </div>
       -->
+      <div class="jetpacks">
+        <!-- TODO: Make this dynamic using contentful -->
+        <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
+      </div>
     </div>
   </transition>
 </template>
@@ -568,7 +585,7 @@ import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToC
 import ProductVariantsDropdown from '~/components/ProductVariantsDropdown'
 import ProductStickyAddToCart from '~/components/ProductStickyAddToCart'
 import ProductMediaTile from '~/components/ProductMediaTile'
-
+import JetpackCrossSell from '~/components/JetpackCrossSellVariants'
 import imageOptimize from '~/mixins/imageOptimize'
 import rechargeProperties from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
@@ -579,7 +596,6 @@ import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
 
 import { createClient } from '~/plugins/contentful.js'
-const VideoContainer = () => import('~/components/VideoContainer')
 
 export default {
   data() {
@@ -617,8 +633,8 @@ export default {
     }
   },
   components: {
+    JetpackCrossSell,
     ProductPrice,
-    VideoContainer,
     QuantitySelector,
     SubscriptionAddToCartButton,
     SubscriptionToggle,
@@ -710,7 +726,7 @@ export default {
   methods: {
     ...mapMutations('cart', ['showCart']),
     camelize(str) {
-      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
         if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
         return index === 0 ? match.toLowerCase() : match.toUpperCase()
       })
@@ -722,8 +738,8 @@ export default {
       this.currentVariant = selectedVariant
       this.addHashToLocation()
     },
-    //Set the currentVaraint using the options selected
-    //If there is only one option selected, it will take the first varaint with that option
+    // Set the currentVaraint using the options selected
+    // If there is only one option selected, it will take the first varaint with that option
     setSelectedOption(opt) {
       let variant = null
 
@@ -788,9 +804,9 @@ export default {
       const urlVariantId = this.$route.query.variant
       const variantsWithIds = Array.isArray(this.product.variants)
         ? this.product.variants.map(variant => ({
-            ...variant,
-            formattedId: this.formatVariantId(variant.id)
-          }))
+          ...variant,
+          formattedId: this.formatVariantId(variant.id)
+        }))
         : []
 
       const matchingVariant = variantsWithIds.find(v => v && v.formattedId === urlVariantId)
@@ -822,45 +838,47 @@ export default {
       }
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarProductView() {
       window.dataLayer = window.dataLayer || []
       var uuid = this.createUUID()
       var variant = this.currentVariant
-      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       window.dataLayer.push({
-        "event": "dl_view_item",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "detail": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": productId,
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer, 
-            }]
+        event: 'dl_view_item',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          detail: {
+            actionField: { list: referrer },
+            products: [
+              {
+                name: this.product.title.replace("'", ''),
+                id: (variant && variant.sku) || '',
+                product_id: productId,
+                variant_id: (variant && variantId) || '',
+                image: this.product.featuredMedia.src,
+                price: variant.price,
+                brand: this.product.vendor.replace("'", ''),
+                variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                category: this.product.productType,
+                inventory: this.quantity,
+                list: referrer
+              }
+            ]
           }
         }
       })
@@ -909,7 +927,7 @@ export default {
       // TODO - Figure out failure logic?
       console.warn(`No content model found for product with handle "${this.product.handle}"`)
 
-      //Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
+      // Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
       this.productImage = this.product.media[0].src
 
       this.product.variants.forEach(variant => {
@@ -930,7 +948,7 @@ export default {
       return
     }
 
-    //Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
+    // Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
     this.productImage = this.product.media[0].src
 
     // Set component data based on the matching Contentful entry
@@ -943,7 +961,6 @@ export default {
     if (fields.metaDescription) {
       this.metaDescription = this.page.fields.metaDescription
     }
-
     // Get 'Header' (product description beneath the product form)
     this.headerText = fields.headerText
     this.headerBackground =
@@ -951,7 +968,6 @@ export default {
 
     // 'Media' tiles
     this.productDescription = fields.productDescription
-
     // 'Features' array
     const featureFields = fields.features?.fields || {}
     if (featureFields) {
@@ -1006,26 +1022,28 @@ export default {
     // various media is available for the `currentVariant` watcher.
     this.setInitialVariant()
 
-       this.variants = this.product.variants
+    this.variants = this.product.variants
       .filter(v => v.availableForSale)
       .map(v => {
         const variantId = atob(v.id)
           .split('/')
           .pop()
-      
+
         return {
           ...v,
           discountPercentage: this.discountPercentage,
-          plainId: variantId,
+          plainId: variantId
         }
       })
+    console.log('products', this.product)
+    console.log('page', this.page)
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.product-select__image-carousel{
-  max-height: 800px;
+.product-select__image-carousel {
+  max-height: 850px;
 }
 .media-content__main__features {
   background: var(--features-background) !important;
@@ -1055,7 +1073,11 @@ export default {
       height: 100%;
       object-position: center;
       object-fit: contain; // this was changed from cover -> contain at Ryan's request (BLEN-139)
+      &.cover {
+        object-fit: cover;
+      }
       @include respond-to('small') {
+        object-fit: contain;
         position: absolute;
         top: 0;
         left: 0;
@@ -1417,7 +1439,7 @@ export default {
   align-items: center;
   padding-top: 5%;
   padding-bottom: 5%;
-  
+
   &__content-block {
     width: 681px;
     color: $grayscale-white;

@@ -19,10 +19,10 @@
       </div>
     -->
     <!-- START BFCM - TEMP SALE HARDCODED -->
-    
-<!-- START BFCM -->
 
-<!-- <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+    <!-- START BFCM -->
+
+    <!-- <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
 <div class="canvas-bfcm">
 <div class="col-bfcm">
 <span class="entry-title-bfcm">Labor Day Sale!</span>
@@ -33,19 +33,18 @@
 </div>
 </div>
 </div> -->
-    
+
     <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
         <div class="canvas-bfcm">
           <div class="col-bfcm">
             <span class="entry-title-bfcm">Back to School Sale</span>
             <span class="content-split-element-bfcm">Free JetPack Protein Smoothies</span>
-            
-            
+
             <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
           </div>
         </div>
       </div> -->
-  
+
     <!-- END BFCM - TEMP SALE HARDCODED -->
 
     <!-- PDP Conditional -->
@@ -57,14 +56,14 @@
       :product="product"
       :page="page"
     />
-    <JetpackVariantPDP
+    <!-- <JetpackVariantPDP
       v-cloak
       v-else-if="
         ['jetpack smoothies'].includes(product.productType && product.productType.toLowerCase())
       "
       :product="product"
       :page="page"
-    />
+    /> -->
     <ProductDetail v-cloak v-else :product="product" :page="page" />
   </div>
 </template>
@@ -80,14 +79,14 @@ import productShippingEligibility from '~/mixins/productShippingEligibility'
 // Components
 import ProductDetail from '~/components/ProductDetail'
 import BlendjetPDP from '~/components/blendJetPDP'
-import JetpackVariantPDP from '~/components/jetpackVariantPDP'
+// import JetpackVariantPDP from '~/components/jetpackVariantPDP'
 import ShippingIneligibilityWarning from '~/components/ProductShippingIneligibilityWarning'
 
 export default {
   components: {
     ProductDetail,
     BlendjetPDP,
-    JetpackVariantPDP,
+    // JetpackVariantPDP,
     ShippingIneligibilityWarning
   },
   mixins: [getProduct(), productMetafields, viewEvent('product'), productShippingEligibility],
@@ -114,7 +113,7 @@ export default {
       //     "ecommerce": {
       //       "currencyCode": this.product.priceRange.currencyCode,
       //       "detail": {
-      //         "actionField": {'list': 'location.pathname'}, 
+      //         "actionField": {'list': 'location.pathname'},
       //         "products": [{
       //           "name": this.product.title.replace("'", ''),
       //           "id": ((variant && variant.sku) || ""),
@@ -126,7 +125,7 @@ export default {
       //           "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
       //           "category": this.product.productType,
       //           "inventory": "NA",
-      //           "list": 'location.pathname', 
+      //           "list": 'location.pathname',
       //         }]
       //       }
       //     }
