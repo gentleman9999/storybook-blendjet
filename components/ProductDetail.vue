@@ -667,7 +667,6 @@ import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToC
 import ProductVariantsDropdown from '~/components/ProductVariantsDropdown'
 import ProductStickyAddToCart from '~/components/ProductStickyAddToCart'
 import ProductMediaTile from '~/components/ProductMediaTile'
-import JetpackCrossSell from '~/components/JetpackCrossSellVariants'
 import imageOptimize from '~/mixins/imageOptimize'
 import rechargeProperties from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
@@ -678,7 +677,7 @@ import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
 
 import { createClient } from '~/plugins/contentful.js'
-
+const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
 export default {
   data() {
     return {
