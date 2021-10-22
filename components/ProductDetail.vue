@@ -37,7 +37,11 @@
 
         <!-- MOBILE PRODUCT INFO - Title, Variant Title, Rating -->
         <div class="product-select__controls__mobile-title-container">
-          <nuxt-link :to="crossSell.url" v-if="crossSell.url && crossSell.text && isJetpack">
+          <nuxt-link
+            :to="crossSell.url"
+            v-if="crossSell.url && crossSell.text && isJetpack"
+            class="cross-sell__mobile"
+          >
             <div
               class="inner-text"
               style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
@@ -78,7 +82,7 @@
         <div :class="['product-select__image-carousel', { jetpack: isJetpack }]">
           <transition name="fade" mode="out-in">
             <img
-              :class="['product-select__image-carousel__img', { cover: isJetpack }]"
+              :class="['product-select__image-carousel__img', { jetpack: isJetpack }]"
               :src="optimizeSource({ url: productImage, height: 700 })"
             />
           </transition>
@@ -678,7 +682,6 @@
       </div>
       -->
       <div class="jetpacks">
-        <!-- TODO: Make this dynamic using contentful -->
         <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
       </div>
     </div>
@@ -1177,7 +1180,11 @@ export default {
 .product-select__image-carousel {
   max-height: 848px;
   &.jetpack {
-    max-height: 930px;
+    max-height: 900px;
+    @include respond-to('small') {
+      max-height: 300px;
+      height: 300px;
+    }
   }
 }
 .media-content__main__features {
@@ -1199,7 +1206,6 @@ export default {
     @include respond-to('small') {
       height: auto;
       width: 100%;
-      padding-top: 100%;
       position: relative;
     }
 
@@ -1208,8 +1214,11 @@ export default {
       height: 100%;
       object-position: center;
       object-fit: contain; // this was changed from cover -> contain at Ryan's request (BLEN-139)
-      &.cover {
+      &.jetpack {
         object-fit: cover;
+        @include respond-to('small') {
+          height: 300px;
+        }
       }
       @include respond-to('small') {
         object-fit: contain;
@@ -1229,7 +1238,10 @@ export default {
     text-align: center;
     height: 848px;
     &.jetpack {
-      height: 930px;
+      height: 900px;
+      @include respond-to('small') {
+        height: auto;
+      }
     }
     @include respond-to('small') {
       width: 100%;
@@ -1508,6 +1520,13 @@ export default {
         }
       }
     }
+  }
+  .cross-sell__mobile {
+    display: block;
+    height: 75px;
+    width: 95%;
+    margin: auto;
+    max-width: 360px;
   }
 }
 
