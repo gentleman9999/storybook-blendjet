@@ -201,6 +201,41 @@
       "permanent": true
     },
     {
+      "source": "/2",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/two",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/Two",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/TWO",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/bj2",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/BJ2",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
+      "source": "/Bj2",
+      "destination": "/products/blendjet-2",
+      "permanent": true
+    },
+    {
       "source": "/collection/all",
       "destination": "/products/blendjet-2",
       "permanent": true
@@ -360,6 +395,26 @@
     {
       "source": "/AFEWTHINGS",
       "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=afewthings&discount=afewthings",
+      "permanent": true
+    },
+    {
+      "source": "/CleanEating",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=CleanEating&discount=CleanEating",
+      "permanent": true
+    },
+    {
+      "source": "/CleanEating",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=CleanEating&discount=CleanEating",
+      "permanent": true
+    },
+    {
+      "source": "/rollingstone",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=RollingStone&discount=RollingStone",
+      "permanent": true
+    },
+    {
+      "source": "/RollingStone",
+      "destination": "/products/blendjet-2/?utm_medium=referral&utm_campaign=magazine&utm_source=magazine&utm_content=RollingStone&discount=RollingStone",
       "permanent": true
     },
     {
