@@ -70,7 +70,7 @@ export default {
   justify-content: center;
   color: $grayscale-white;
 }
-.features-wrapper{
+.features-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -132,6 +132,8 @@ export default {
   align-items: center;
   margin: 16px 30px;
   width: 90px;
+  flex: 1;
+  min-height: 120px;
 
   @include respond-to('small') {
     flex-flow: column nowrap;
