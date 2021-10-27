@@ -22,7 +22,7 @@
     
 <!-- START BFCM -->
 
-<div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
+<div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: 15px;">
 <div class="canvas-bfcm">
 <div class="col-bfcm">
 <span class="entry-title-bfcm">Spooky Sale!</span>
