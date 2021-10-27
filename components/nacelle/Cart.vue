@@ -20,7 +20,8 @@
           />
         </div>
         <div class="cart-message">{{ cartMessage }}</div>
-        <div class="free-shipping" v-if="country === 'US'">
+        <!-- <div class="free-shipping" v-if="country === 'US'"> -->
+        <div class="free-shipping">          
           <div class="free-shipping__svg">
             <svg
               width="356px"
@@ -56,7 +57,7 @@
                           letter-spacing="1.45833333"
                           fill="#373795"
                         >
-                          <tspan x="39.5" y="10">FREE 2-DAY SHIPPING</tspan>
+                          <tspan x="39.5" y="10">FREE EXPRESS SHIPPING</tspan>
                         </text>
                         <g>
                           <path
