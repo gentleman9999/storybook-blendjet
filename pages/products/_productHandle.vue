@@ -103,7 +103,7 @@ export default {
 
   mounted() {
     if (this.product) {
-      //  console.log('product:', this.product)
+      console.log('product:', this.product)
       //  window.dataLayer = window.dataLayer || []
       //   var uuid = '!QAZxsw22143edfRf'
       //   var variant = this.product.variants[0]

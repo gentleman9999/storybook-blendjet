@@ -1373,6 +1373,7 @@ export default {
       position: absolute;
       top: 50%;
       left: 20px;
+      cursor: pointer;
       @include respond-to('small') {
         left: 10px;
       }
@@ -1382,6 +1383,7 @@ export default {
       position: absolute;
       top: 50%;
       right: 20px;
+      cursor: pointer;
       @include respond-to('small') {
         right: 10px;
       }

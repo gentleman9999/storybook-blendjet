@@ -52,7 +52,7 @@
           <template v-if="isJetpack">
             <div class="product-select__controls__title">{{ currentVariant.title }}</div>
             <div class="product-select__controls__category">
-              <h1>{{ product.productType }}</h1>
+              <h1>JetPack Smoothie</h1>
             </div>
           </template>
           <template v-else>
@@ -80,6 +80,20 @@
 
         <!-- GALLERY -->
         <div :class="['product-select__image-carousel', { jetpack: isJetpack }]">
+          <div
+            v-if="variants.length > 1 && isJetpack"
+            class="product-select__image-carousel__prev-variant"
+            @click="decrementVariant"
+          >
+            <PrevSlide />
+          </div>
+          <div
+            v-if="variants.length > 1 && isJetpack"
+            class="product-select__image-carousel__next-variant"
+            @click="incrementVariant"
+          >
+            <NextSlide />
+          </div>
           <transition name="fade" mode="out-in">
             <img
               :class="['product-select__image-carousel__img', { jetpack: isJetpack }]"
@@ -103,7 +117,7 @@
               <template v-if="isJetpack">
                 <div class="product-select__controls__title">{{ currentVariant.title }}</div>
                 <div class="product-select__controls__category">
-                  <h1>{{ product.productType }}</h1>
+                  <h1>JetPack Smoothie</h1>
                 </div>
               </template>
               <template v-else>
@@ -120,6 +134,7 @@
               <div
                 v-if="!product.title.includes('Replacement')"
                 class="product-select__controls__rating"
+                style="zoom:1.25"
               >
                 <n-link
                   :to="{
@@ -207,7 +222,20 @@
                   </div>
                 </div>
               </div>
-
+              <div
+                v-if="quantityOption.quantity.length"
+                class="product-select__controls__quantity-set"
+              >
+                <div class="product-select__controls__quantity-set--label">
+                  {{ quantityOption.title }}
+                </div>
+                <Tabs
+                  :tabItems="quantityOption.quantity"
+                  :selected="quantity"
+                  :no-select-start="true"
+                  @activeTab="updateQuantity"
+                />
+              </div>
               <div class="product-select__controls__add-to-cart__quantity-add-button">
                 <!-- QUANTITY ADJUSTER -->
                 <div class="product-select__controls__add-to-cart__quantity-add-button__quantity">
@@ -672,7 +700,12 @@
       </div>
 
       <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
-      <div v-if="!product.title.includes('Replacement')" class="reviews" id="reviews">
+      <div
+        v-if="!product.title.includes('Replacement')"
+        class="reviews"
+        style="zoom:1.25"
+        id="reviews"
+      >
         <loox-product-reviews :product="product" />
       </div>
 
@@ -710,6 +743,9 @@ import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
 import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
+import Tabs from '~/components/tabs'
+import NextSlide from '~/components/svg/NextSlide'
+import PrevSlide from '~/components/svg/PrevSlide'
 
 import { createClient } from '~/plugins/contentful.js'
 const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
@@ -717,6 +753,7 @@ export default {
   data() {
     return {
       currentVariant: {},
+      variantIndex: 0,
       productImage: null,
       heroImages: [],
       imgWidth: 0,
@@ -746,7 +783,11 @@ export default {
       applePay: false,
       metaTitle: null,
       metaDescription: null,
-      crossSell: {}
+      crossSell: {},
+      quantityOption: {
+        quantity: [],
+        title: ''
+      }
     }
   },
   components: {
@@ -764,7 +805,10 @@ export default {
     ProductStickyAddToCart,
     ProductMediaTile,
     CustomProductOptions,
-    ShippingTime
+    ShippingTime,
+    Tabs,
+    PrevSlide,
+    NextSlide
   },
   mixins: [
     imageOptimize,
@@ -850,6 +894,24 @@ export default {
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
+    incrementVariant() {
+      if (this.variantIndex === this.variants.length - 1) {
+        this.variantIndex = 0
+      } else {
+        this.variantIndex++
+      }
+      const newVar = this.variants[this.variantIndex]
+      this.setSelectedVariant(newVar)
+    },
+    decrementVariant() {
+      if (this.variantIndex === 0) {
+        this.variantIndex = this.variants.length - 1
+      } else {
+        this.variantIndex--
+      }
+      const newVar = this.variants[this.variantIndex]
+      this.setSelectedVariant(newVar)
+    },
     camelize(str) {
       return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
         if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
@@ -861,6 +923,9 @@ export default {
      */
     setSelectedVariant(selectedVariant) {
       this.currentVariant = selectedVariant
+      this.variants.forEach((item, i) => {
+        if (item.id === selectedVariant.id) this.variantIndex = i
+      })
       this.addHashToLocation()
     },
     // Set the currentVaraint using the options selected
@@ -902,6 +967,9 @@ export default {
     setCurrency(data) {
       this.currency = data
     },
+    updateQuantity(qty) {
+      this.quantity = qty
+    },
     /**
      * Adds the variant hash to the URL.
      * TODO: This should be done using the vue-router...
@@ -935,11 +1003,15 @@ export default {
         : []
 
       const matchingVariant = variantsWithIds.find(v => v && v.formattedId === urlVariantId)
+      matchingVariant &&
+        this.product.variants.forEach((item, i) => {
+          if (item.id === matchingVariant.id) this.variantIndex = i
+        })
 
       // Set current variant equal to the variant indicated by the param, or the product's first variant.
       this.currentVariant = matchingVariant || this.product.variants[0]
     },
-    async setProductDescription() {
+    async setProductDetails() {
       this.productDescription = this.page.fields.productDescription
       // load variant specific product details if available
       const variantTitle = this.currentVariant?.title?.toLowerCase()?.replace(/\s/g, '')
@@ -960,6 +1032,18 @@ export default {
       }
       if (this.media[variantTitle]?.headerText) {
         this.headerText = this.media[variantTitle]?.headerText
+      }
+      if (this.media[variantTitle]?.quantityOption) {
+        this.quantityOption.quantity = this.media[variantTitle]?.quantityOption?.quantity?.split(
+          ','
+        )
+        this.quantityOption.quantity = this.quantityOption.quantity.map(item => Number(item))
+        this.quantityOption.title = this.media[variantTitle]?.quantityOption?.title
+      } else {
+        this.quantityOption = {
+          quantity: [],
+          title: ''
+        }
       }
     },
     createUUID() {
@@ -1024,7 +1108,7 @@ export default {
       } else {
         this.productImage = newVariant.featuredMedia.src
       }
-      this.setProductDescription()
+      this.setProductDetails()
       // console.log('newVariant:', newVariant);
       this.elevarProductView() // needs flag to only fire once
     },
@@ -1132,6 +1216,11 @@ export default {
           nutritionFactsTile: node?.fields?.nutritionFactsTile
         }
 
+        // set Quantity Set if available
+        if (node?.fields?.quantityOption?.fields) {
+          variantData.quantityOption = node.fields.quantityOption.fields
+        }
+
         // Add variant data to component's `media` object
         vm.media[variantTitle] = variantData
       })
@@ -1178,9 +1267,10 @@ export default {
 
 <style lang="scss" scoped>
 .product-select__image-carousel {
+  position: relative;
   max-height: 848px;
   &.jetpack {
-    max-height: 900px;
+    max-height: 950px;
     @include respond-to('small') {
       max-height: 300px;
       height: 300px;
@@ -1201,12 +1291,34 @@ export default {
   &__image-carousel {
     background-image: linear-gradient(to bottom, #ededf5 1%, #ffffff 49%);
     width: 65%;
-    height: 900px;
+    height: 950px;
 
     @include respond-to('small') {
       height: auto;
       width: 100%;
       position: relative;
+    }
+
+    &__prev-variant {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      cursor: pointer;
+      z-index: 2;
+      @include respond-to('small') {
+        left: 10px;
+      }
+    }
+
+    &__next-variant {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      cursor: pointer;
+      z-index: 2;
+      @include respond-to('small') {
+        right: 10px;
+      }
     }
 
     &__img {
@@ -1238,7 +1350,7 @@ export default {
     text-align: center;
     height: 848px;
     &.jetpack {
-      height: 900px;
+      height: 950px;
       @include respond-to('small') {
         height: auto;
       }
@@ -1350,6 +1462,15 @@ export default {
           margin-top: 4px;
           margin-left: 7px;
         }
+      }
+    }
+
+    &__quantity-set {
+      &--label {
+        color: $primary-purple;
+        font-size: 14px;
+        margin-bottom: 5px;
+        font-weight: bold;
       }
     }
 
