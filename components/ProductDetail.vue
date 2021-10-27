@@ -1270,7 +1270,7 @@ export default {
   position: relative;
   max-height: 848px;
   &.jetpack {
-    max-height: 950px;
+    max-height: 980px;
     @include respond-to('small') {
       max-height: 300px;
       height: 300px;
@@ -1291,7 +1291,7 @@ export default {
   &__image-carousel {
     background-image: linear-gradient(to bottom, #ededf5 1%, #ffffff 49%);
     width: 65%;
-    height: 950px;
+    height: 980px;
 
     @include respond-to('small') {
       height: auto;
@@ -1350,7 +1350,7 @@ export default {
     text-align: center;
     height: 848px;
     &.jetpack {
-      height: 950px;
+      height: 980px;
       @include respond-to('small') {
         height: auto;
       }
@@ -1420,7 +1420,7 @@ export default {
       font-size: 13px;
       color: $primary-purple;
       margin-top: 14px;
-      margin-bottom: 42px;
+      margin-bottom: 25px;
       @include respond-to('small') {
         margin-bottom: 30px;
       }
