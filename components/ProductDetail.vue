@@ -1259,8 +1259,6 @@ export default {
           plainId: variantId
         }
       })
-    console.log('products', this.product)
-    console.log('page', this.page)
   }
 }
 </script>
