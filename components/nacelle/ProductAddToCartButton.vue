@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div :class="{ 'has-bundle': bundles.length }">
     <button
       v-if="isProductVariantSelectChild"
       :disabled="disableAtcButton"
       :style="styleObj"
-      @click="addToCart"
+      @click="addToCart('nacelle')"
       class="add-to-cart-button button nacelle"
     >
       <span v-if="!variantInLineItems && !allOptionsSelected && product.availableForSale"
@@ -29,7 +29,7 @@
     <button
       class="add-to-cart-button"
       :style="styleObj"
-      @click="addToCart"
+      @click="addToCart('cart btn')"
       v-else
       :disabled="disableAtcButton"
       :class="buttonClass"
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import rechargeMixin from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
@@ -99,7 +99,11 @@ export default {
     quantity: { type: Number, default: 1 },
     allOptionsSelected: { type: Boolean, default: true },
     confirmedSelection: { type: Boolean, default: true },
-    onlyOneOption: { type: Boolean, default: true }
+    onlyOneOption: { type: Boolean, default: true },
+    bundles: {
+      type: Array,
+      default: () => []
+    }
   },
 
   data() {
@@ -108,7 +112,8 @@ export default {
       displayPrice: 0,
       defaultText: `Add to Cart - ${this.displayPrice}`,
       buttonText: `Add to Cart - ${this.displayPrice}`,
-      buttonClass: ''
+      buttonClass: '',
+      bundleVariants: []
     }
   },
   computed: {
@@ -161,7 +166,7 @@ export default {
     }
   },
   mounted() {
-    this.getDisplayPrice()
+    this.getDisplayBundlePrice()
   },
   watch: {
     confirmedSelection() {
@@ -170,14 +175,14 @@ export default {
 
     variant() {
       this.$emit('cartVariant', this.variant)
-      this.getDisplayPrice()
+      this.getDisplayBundlePrice()
     },
 
     quantity() {
-      this.getDisplayPrice()
+      this.getDisplayBundlePrice()
     },
     isSubscriptionOn() {
-      this.getDisplayPrice()
+      this.getDisplayBundlePrice()
     }
   },
 
@@ -197,8 +202,8 @@ export default {
         return undefined
       }
 
-      let _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
-  
+      const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
+
       const decodedId = atob(this.variant.id)
         .split('/')
         .pop()
@@ -211,14 +216,14 @@ export default {
         ])
       )
 
-      //START OF RYAN MOD to override currency
+      // START OF RYAN MOD to override currency
 
-      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
       if (document.cookie.includes('_rchcur')) {
         var config = {
           method: 'get',
           url:
-            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
             document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
             `&MerchantPrices=${price}`
         }
@@ -228,14 +233,14 @@ export default {
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
         }
       }
-      //END OF RYAN MOD
+      // END OF RYAN MOD
 
       const localPrice = await Axios(config)
         .then(res => {
           if (!res.data.ConsumerPrices[0]) {
             this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
           } else {
-            //Ryan's fix with Michael's help for UAE and some currency symbols
+            // Ryan's fix with Michael's help for UAE and some currency symbols
             if (res.data.Symbol == null) {
               this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(
                 2
@@ -247,14 +252,137 @@ export default {
             }
           }
           ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
-            (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+          (this.buttonText = `Add to Cart - ${this.displayPrice}`)
         })
         .catch(res => {
           console.error('Currency Request Failed', res)
           this.displayPrice = `$${Number(this.variant.price * this.quantity).toFixed(2)}`
           ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
-            (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+          (this.buttonText = `Add to Cart - ${this.displayPrice}`)
         })
+    },
+    async getDisplayBundlePrice() {
+      if (!this.variant || !this.variant.id) {
+        return undefined
+      }
+
+      const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
+
+      const decodedId = atob(this.variant.id)
+        .split('/')
+        .pop()
+      const price = encodeURIComponent(
+        JSON.stringify([
+          {
+            Price: _price,
+            Tag: decodedId
+          }
+        ])
+      )
+
+      let config = this.getConfigURL(price)
+      let totalPrice = 0
+      let symbol = null
+      let currency = null
+      const bundlePricePromise = []
+      let bundleVariantCount = 0
+      await Axios(config)
+        .then(res => {
+          if (res.data.Symbol) {
+            symbol = res.data.Symbol
+          }
+          if (res.data.currency) {
+            currency = res.data.currency
+          }
+          if (!res.data.ConsumerPrices[0]) {
+            totalPrice = Number(_price) * this.quantity
+          } else {
+            totalPrice = Number(res.data.ConsumerPrices[0] * this.quantity)
+          }
+        })
+        .catch(res => {
+          console.error('Currency Request Failed', res)
+          symbol = '$'
+          totalPrice = Number(this.variant.price * this.quantity)
+        })
+      if (this.bundles && this.bundles.length) {
+        this.bundles.forEach(bundle => {
+          bundleVariantCount++
+          let price = null
+          if (bundle?.variant?.price) {
+            price = bundle.variant.price
+          } else {
+            price = bundle.product.price
+          }
+          const priceEncoded = encodeURIComponent(
+            JSON.stringify([
+              {
+                Price: price,
+                Tag: decodedId
+              }
+            ])
+          )
+          config = this.getConfigURL(priceEncoded)
+          bundlePricePromise.push(Axios(config))
+        })
+
+        await Promise.all(bundlePricePromise)
+          .then(res => {
+            if (res && res.length) {
+              res.forEach((resItem, i) => {
+                if (!resItem.data.ConsumerPrices[0]) {
+                  let price = null
+                  if (this.bundles[i]?.variant?.price) {
+                    price = this.bundles[i].variant.price
+                  } else {
+                    price = this.bundles[i].product.price
+                  }
+                  totalPrice += Number(price * this.quantity)
+                } else {
+                  totalPrice += Number(resItem.data.ConsumerPrices[0] * this.quantity)
+                }
+              })
+            }
+          })
+          .catch(res => {
+            console.error('Currency Request Failed', res)
+            this.bundleVariants.forEach(item => {
+              totalPrice += Number(item.price * this.quantity)
+            })
+          })
+      }
+      if (symbol) {
+        this.displayPrice = `${symbol}${totalPrice.toFixed(2)}`
+      } else {
+        this.displayPrice = `${totalPrice.toFixed(2)} ${currency}`
+      }
+
+      if (bundleVariantCount) {
+        this.defaultText = `Add Bundle - ${this.displayPrice}`
+        this.buttonText = `Add Bundle - ${this.displayPrice}`
+      } else {
+        this.defaultText = `Add to Cart - ${this.displayPrice}`
+        this.buttonText = `Add to Cart - ${this.displayPrice}`
+      }
+    },
+
+    getConfigURL(price) {
+      let config = null
+      if (document.cookie.includes('_rchcur')) {
+        config = {
+          method: 'get',
+          url:
+            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
+            document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
+            `&MerchantPrices=${price}`
+        }
+      } else {
+        config = {
+          method: 'get',
+          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+        }
+      }
+      return config
     },
 
     setButtonText() {
@@ -269,9 +397,10 @@ export default {
         }, 2000)
       }
     },
-    addToCart() {
+    addToCart(calledfrom = '') {
+      console.log('called', calledfrom)
       if (this.discount) {
-        let _dvar = JSON.parse(JSON.stringify(this.variant))
+        const _dvar = JSON.parse(JSON.stringify(this.variant))
         _dvar.price = 0.0
       } else {
       }
@@ -309,10 +438,28 @@ export default {
           this.addLineItem(warrantyItem)
         }
         this.addLineItem(lineItem)
+        if (this.bundles.length) {
+          this.bundles.forEach(bundle => {
+            const variant = bundle?.variant
+            const product = bundle?.product
+            const lineItem = {
+              image: product?.featuredMedia,
+              title: product?.title,
+              variant: variant,
+              quantity: this.quantity || 1,
+              productId: product?.id,
+              handle: product?.handle,
+              vendor: product?.vendor,
+              tags: product?.tags,
+              metafields: []
+            }
+            this.addLineItem(lineItem)
+          })
+        }
         this.setButtonText()
         this.showCart()
         this.$emit('addedToCart')
-        
+
         this.elevarAddToCart()
       }
     },
@@ -320,7 +467,7 @@ export default {
       // This is wrapped in a try/catch because in some instances it's attempted to be run during
       // the nuxt build (somehow in advance of the browser), therefore the `window.atob` method
       // doesn't exist yet.
-      let decodedId = undefined
+      let decodedId
       try {
         decodedId = atob(encodedId).split('gid://shopify/ProductVariant/')[1]
       } catch (e) {
@@ -328,24 +475,23 @@ export default {
       }
       return decodedId
     },
-    getSource(){
-      var location = window.location;
-      
-      if(location.pathname.includes('products')){
+    getSource() {
+      var location = window.location
+
+      if (location.pathname.includes('products')) {
         return 'productpage'
-      }else if( location.pathname.includes('marketplace') ){
+      } else if (location.pathname.includes('marketplace')) {
         return 'marketplace'
-      }else{
+      } else {
         return location.pathname
       }
-      
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarAddToCart() {
       window.dataLayer = window.dataLayer || []
@@ -354,34 +500,62 @@ export default {
       var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var source = this.getSource()
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
+      const productList = [
+        {
+          name: this.product.title.replace("'", ''),
+          id: (variant && variant.sku) || '',
+          product_id: productId,
+          variant_id: (variant && variantId) || '',
+          image: this.product.featuredMedia.src,
+          price: variant.price,
+          brand: this.product.vendor.replace("'", ''),
+          variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+          category: this.product.productType,
+          inventory: this.quantity,
+          list: referrer,
+          source: source
+        }
+      ]
+
+      if (this.bundles && this.bundles.length) {
+        this.bundles.forEach(bundle => {
+          const variant = bundle?.variant
+          const product = bundle?.product
+          const item = {
+            name: product?.title?.replace("'", ''),
+            id: (variant && variant.sku) || '',
+            product_id: Buffer.from(product?.pimSyncSourceProductId, 'base64'),
+            variant_id: Buffer.from(variant?.id, 'base64')
+              .toString('binary')
+              .split('/')
+              .pop(),
+            image: product?.featuredMedia?.src,
+            price: variant.price,
+            brand: product?.vendor.replace("'", ''),
+            variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+            category: product?.productType,
+            inventory: this.quantity || 1,
+            list: referrer,
+            source: source
+          }
+          productList.push(item)
+        })
+      }
       window.dataLayer.push({
-        "event": "dl_add_to_cart",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "add": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": productId,
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer,
-              "source": source,
-            }]
+        event: 'dl_add_to_cart',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          add: {
+            actionField: { list: referrer },
+            products: productList
           }
         }
       })
@@ -404,6 +578,12 @@ export default {
 
   @include respond-to('small') {
     width: auto;
+  }
+}
+
+.has-bundle {
+  .add-to-cart-button {
+    width: 375px;
   }
 }
 

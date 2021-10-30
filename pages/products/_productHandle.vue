@@ -19,33 +19,39 @@
       </div>
     -->
     <!-- START BFCM - TEMP SALE HARDCODED -->
-    
-<!-- START BFCM -->
 
-<div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: 15px;">
-<div class="canvas-bfcm">
-<div class="col-bfcm">
-<span class="entry-title-bfcm">Spooky Sale!</span>
-<span class="content-split-element-bfcm">10% Off 1</span>
-<span class="content-split-element-bfcm">12% Off 2</span>
-<span class="content-split-element-bfcm">15% Off 3+</span>
-<span class="simple-text-bfcm">BlendJet - Sleeve - Tote - Book <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
-</div>
-</div>
-</div>
-    
+    <!-- START BFCM -->
+
+    <div
+      v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'"
+      class="outer-canvas-bfcm"
+      style="margin-bottom: 15px;"
+    >
+      <div class="canvas-bfcm">
+        <div class="col-bfcm">
+          <span class="entry-title-bfcm">Spooky Sale!</span>
+          <span class="content-split-element-bfcm">10% Off 1</span>
+          <span class="content-split-element-bfcm">12% Off 2</span>
+          <span class="content-split-element-bfcm">15% Off 3+</span>
+          <span class="simple-text-bfcm"
+            >BlendJet - Sleeve - Tote - Book <b class="b-hide-bfcm">|</b>
+            <span>Automatically Applied at Checkout</span></span
+          >
+        </div>
+      </div>
+    </div>
+
     <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
         <div class="canvas-bfcm">
           <div class="col-bfcm">
             <span class="entry-title-bfcm">Back to School Sale</span>
             <span class="content-split-element-bfcm">Free JetPack Protein Smoothies</span>
-            
-            
+
             <span class="simple-text-bfcm">With Each BlendJet <b class="b-hide-bfcm">|</b> <span>Discount Applied at Checkout</span></span>
           </div>
         </div>
       </div> -->
-  
+
     <!-- END BFCM - TEMP SALE HARDCODED -->
 
     <!-- PDP Conditional -->
@@ -56,6 +62,8 @@
       v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'"
       :product="product"
       :page="page"
+      :bundles="bundles"
+      :variant-specific-bundles="variantSpecificBundles"
     />
     <JetpackVariantPDP
       v-cloak
@@ -114,7 +122,7 @@ export default {
       //     "ecommerce": {
       //       "currencyCode": this.product.priceRange.currencyCode,
       //       "detail": {
-      //         "actionField": {'list': 'location.pathname'}, 
+      //         "actionField": {'list': 'location.pathname'},
       //         "products": [{
       //           "name": this.product.title.replace("'", ''),
       //           "id": ((variant && variant.sku) || ""),
@@ -126,13 +134,14 @@ export default {
       //           "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
       //           "category": this.product.productType,
       //           "inventory": "NA",
-      //           "list": 'location.pathname', 
+      //           "list": 'location.pathname',
       //         }]
       //       }
       //     }
       //   })
       //   console.log('wdl:', window.dataLayer)
       this.productView(this.product)
+      console.log('Page', this.page)
     }
   },
   head() {
