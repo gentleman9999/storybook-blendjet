@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'has-bundle': bundles.length }">
+  <div :class="{ 'has-bundle-add': bundles.length }">
     <button
       v-if="isProductVariantSelectChild"
       :disabled="disableAtcButton"
@@ -581,7 +581,7 @@ export default {
   }
 }
 
-.has-bundle {
+.has-bundle-add {
   .add-to-cart-button {
     width: 375px;
   }
