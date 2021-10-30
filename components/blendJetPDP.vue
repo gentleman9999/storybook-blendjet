@@ -1468,6 +1468,9 @@ export default {
   min-height: 900px;
   &.has-bundle {
     min-height: 950px;
+    @include respond-to('small') {
+      min-height: auto;
+    }
   }
   @include respond-to('small') {
     height: auto;
@@ -1491,7 +1494,10 @@ export default {
                                   supported by Chrome, Edge, Opera and Firefox */
 
     &.has-bundle {
-      min-height: 950px;
+      height: 950px;
+      @include respond-to('small') {
+        height: 400px;
+      }
     }
     @include respond-to('small') {
       width: 100%;
@@ -1530,7 +1536,10 @@ export default {
       object-position: center;
       width: 100%;
       &.has-bundle {
-        min-height: 950px;
+        height: 950px;
+        @include respond-to('small') {
+          height: 400px;
+        }
       }
       @include respond-to('small') {
         height: auto;
@@ -1549,7 +1558,10 @@ export default {
     padding: 0 75px 30px 75px;
     height: 900px;
     &.has-bundle {
-      min-height: 950px;
+      height: 950px;
+      @include respond-to('small') {
+        height: auto;
+      }
     }
 
     @include respond-to('small') {
