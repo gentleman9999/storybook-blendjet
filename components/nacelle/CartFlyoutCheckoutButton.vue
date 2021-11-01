@@ -1,5 +1,6 @@
 <template>
   <div class="checkout-button" role="button" :class="{ 'is-loading': loading }" @click="checkout">
+    <div v-if="loading" class="loader"></div>
     {{ checkoutText }}
     <span class="subtotal" v-if="cartSubtotal > 0 && showPrice && displayPrice">
       &nbsp;—&nbsp;{{ displayPrice }}
@@ -138,6 +139,13 @@ export default {
 .checkout-button {
   @include button-primary('purple');
   height: 50px;
+  position: relative;
+  .loader {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 40px;
+  }
 }
 
 .subtotal {
