@@ -47,7 +47,7 @@
                         rx="6"
                       ></rect>
                       <g id="Group-4" transform="translate(110.000000, 8.000000)"></g>
-                      <g id="Group" transform="translate(92.000000, 5.000000)">
+                      <g id="Group" transform="translate(80.000000, 5.000000)">
                         <text
                           id="FREE-2-DAY-SHIPPING"
                           font-family="Helvetica"

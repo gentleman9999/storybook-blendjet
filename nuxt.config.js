@@ -96,6 +96,11 @@ export default {
       {
         rel: 'preconnect',
         href: 'fast.a.klaviyo.com'
+      },
+      {
+        rel: 'preload',
+        href: 'https://use.typekit.net/rtu8fed.css',
+        as: 'style'
       }
       // {
       //   rel: 'stylesheet',
