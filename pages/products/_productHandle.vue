@@ -21,7 +21,7 @@
     <!-- START BFCM - TEMP SALE HARDCODED -->
     
 <!-- START BFCM -->
-
+<!-- 
 <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: 15px;">
 <div class="canvas-bfcm">
 <div class="col-bfcm">
@@ -33,6 +33,7 @@
 </div>
 </div>
 </div>
+-->
     
     <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
         <div class="canvas-bfcm">
