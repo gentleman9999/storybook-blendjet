@@ -521,3 +521,33 @@ button.button.is-primary {
 .fb-customerchat iframe {
   bottom: 145px !important;
 }
+
+.carousel-arrow {
+  .icon.has-icons-left {
+    @include respond-to('small') {
+      left: 0.5rem;
+    }
+  }
+  .icon.has-icons-right {
+    @include respond-to('small') {
+      right: 0.5rem;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $primary-purple;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: lighten($primary-purple, 10)
+}
+
+::-webkit-scrollbar-track {
+  background: $secondary-purple-4;
+}

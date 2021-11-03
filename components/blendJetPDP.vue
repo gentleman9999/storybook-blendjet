@@ -533,7 +533,7 @@
 
       <!-- STICKY TOP BANNER WITH PRODUCT INFORMATION  -->
       <transition name="fade">
-        <div class="header-product-select" v-if="showDesktopHeader">
+        <div class="header-product-select" v-show="showDesktopHeader">
           <div class="header-product-select__info-container">
             <div class="header-product-select__thumbnail">
               <img
@@ -645,6 +645,7 @@
           <b-carousel
             class="media-content__carousel"
             :arrow="true"
+            :arrow-hover="false"
             :repeat="true"
             :indicator="true"
             :has-drag="true"

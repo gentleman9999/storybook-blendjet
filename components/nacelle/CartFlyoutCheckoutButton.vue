@@ -1,7 +1,7 @@
 <template>
   <div class="checkout-button" role="button" :class="{ 'is-loading': loading }" @click="checkout">
     <div v-if="loading" class="loader"></div>
-    {{ checkoutText }}
+    <span class="checkout-text" :class="{hidden: loading && isMobile}">{{ checkoutText }}</span>
     <span class="subtotal" v-if="cartSubtotal > 0 && showPrice && displayPrice">
       &nbsp;—&nbsp;{{ displayPrice }}
     </span>
@@ -43,15 +43,18 @@ export default {
   },
   computed: {
     ...mapGetters('cart', ['cartSubtotal']),
-    ...mapState('cart', ['lineItems'])
+    ...mapState('cart', ['lineItems']),
+    isMobile() {
+      return typeof window && window.innerWidth <= 768
+    }
   },
   methods: {
     ...mapMutations('cart', ['setCartError']),
     ...mapActions('checkout', ['processCheckout']),
     async getDisplayPrice() {
-      let _price = this.cartSubtotal
+      const _price = this.cartSubtotal
 
-      let priceData = []
+      const priceData = []
       this.lineItems.forEach(item => {
         priceData.push({
           Price: parseFloat(item.variant.price),
@@ -63,14 +66,14 @@ export default {
 
       const price = encodeURIComponent(JSON.stringify(priceData))
 
-      //START OF RYAN MOD to override currency
+      // START OF RYAN MOD to override currency
 
-      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
       if (document.cookie.includes('_rchcur')) {
         var config = {
           method: 'get',
           url:
-            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
             document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
             `&MerchantPrices=${price}`
         }
@@ -80,7 +83,7 @@ export default {
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
         }
       }
-      //END OF RYAN MOD
+      // END OF RYAN MOD
 
       await Axios(config)
         .then(res => {
@@ -91,8 +94,8 @@ export default {
             // the value isn't null.
             this.displayPrice = `${res.data.Symbol}${_price.toFixed(2)}`
           } else {
-            let localSubtotal = res.data.ConsumerPrices.reduce((acc, item, i) => {
-              let quantTotal = Number(item * this.lineItems[i].quantity)
+            const localSubtotal = res.data.ConsumerPrices.reduce((acc, item, i) => {
+              const quantTotal = Number(item * this.lineItems[i].quantity)
               return acc + quantTotal
             }, 0)
             if (res.data.Symbol == null) {
@@ -140,15 +143,26 @@ export default {
   @include button-primary('purple');
   height: 50px;
   position: relative;
+  min-width: 260px;
   .loader {
     width: 20px;
     height: 20px;
     position: absolute;
     right: 40px;
+    @include respond-to('small') {
+      right: calc(50% - 10px);
+    }
+  }
+  .checkout-text {
+    visibility: visible;
+    transition: all 0.5s ease;
+    &.hidden {
+      visibility: hidden;
+    }
   }
 }
 
-.subtotal {
-  // margin-left: 7px;
-}
+// .subtotal {
+//   // margin-left: 7px;
+// }
 </style>

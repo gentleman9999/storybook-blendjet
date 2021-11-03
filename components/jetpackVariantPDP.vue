@@ -516,6 +516,7 @@
           <b-carousel
             class="media-content__carousel"
             :arrow="true"
+            :arrow-hover="false"
             :repeat="true"
             :indicator="true"
             :autoplay="false"
