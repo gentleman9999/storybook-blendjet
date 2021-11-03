@@ -234,6 +234,7 @@
                   :selected="quantity"
                   :no-select-start="true"
                   @activeTab="updateQuantity"
+                  id="custom-tabs"
                 />
               </div>
               <div class="product-select__controls__add-to-cart__quantity-add-button">
@@ -1464,11 +1465,15 @@ export default {
     }
 
     &__quantity-set {
+      width: 100%;
       &--label {
+        font-family: Bold;
+        letter-spacing: 1.75px;
+        text-align: center;
+        line-height: 1.33;
+        font-size: 12px;
+        text-transform: uppercase;
         color: $primary-purple;
-        font-size: 14px;
-        margin-bottom: 5px;
-        font-weight: bold;
       }
     }
 
@@ -1835,5 +1840,47 @@ h1 {
   font-family: inherit;
   line-height: inherit;
   letter-spacing: inherit;
+}
+</style>
+<style lang="scss">
+#custom-tabs {
+  margin-top: 5px;
+  .tab-container {
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    border: 2px solid $secondary-purple-4;
+    background: #fff;
+    .tab-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      a {
+        height: 100%;
+        width: 100%;
+        color: $primary-purple;
+        font-family: Bold;
+        line-height: 1.17;
+        letter-spacing: 1.75px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-size: 12px;
+        &:hover {
+          background: #fff;
+        }
+      }
+      &.is-active {
+        a {
+          background: #e0e0ff;
+          border: 2px solid $primary-purple;
+          &:hover {
+            background: #e0e0ff;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

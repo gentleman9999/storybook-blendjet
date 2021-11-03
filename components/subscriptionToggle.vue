@@ -163,7 +163,7 @@ $checkbox-border-color: $grayscale-white;
   height: 50px;
   font-size: 12px;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     --width: 300px;
     font-size: 10px;
   }
@@ -196,7 +196,7 @@ $checkbox-border-color: $grayscale-white;
   width: var(--width);
   height: 100%;
   background: $background;
-  border: 1px solid $border-color;
+  border: 2px solid $secondary-purple-4;
   border-radius: 200px;
   transition: background 0.6s;
   position: relative;
