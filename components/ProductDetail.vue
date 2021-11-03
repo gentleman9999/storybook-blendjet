@@ -1868,7 +1868,7 @@ h1 {
         cursor: pointer;
         font-size: 12px;
         &:hover {
-          background: #fff;
+          background: none;
         }
       }
       &.is-active {
