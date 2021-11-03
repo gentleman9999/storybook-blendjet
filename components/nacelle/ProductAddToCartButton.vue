@@ -16,8 +16,8 @@
             (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
             !product.availableForSale
         "
-        >Out of Stock</span
-      >
+        >Out of Stock
+      </span>
       <span
         v-if="
           !variantInLineItems && allOptionsSelected && variant && variant.availableForSale == true
@@ -55,15 +55,11 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
-import ProductPrice from '~/components/nacelle/ProductPrice'
 import rechargeMixin from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
 import Axios from 'axios'
 
 export default {
-  components: {
-    ProductPrice
-  },
   mixins: [rechargeMixin, productMetafields],
 
   props: {
@@ -103,6 +99,14 @@ export default {
     bundles: {
       type: Array,
       default: () => []
+    },
+    bundleVarietyPack: {
+      type: Array,
+      default: () => []
+    },
+    selectedVarietyPack: {
+      type: Number,
+      default: 0
     }
   },
 
@@ -113,6 +117,7 @@ export default {
       defaultText: `Add to Cart - ${this.displayPrice}`,
       buttonText: `Add to Cart - ${this.displayPrice}`,
       buttonClass: '',
+      priceSaved: {},
       bundleVariants: []
     }
   },
@@ -197,70 +202,70 @@ export default {
     hasWarranty() {
       return !!Object.keys(this.warranty).length
     },
-    async getDisplayPrice() {
-      if (!this.variant || !this.variant.id) {
-        return undefined
-      }
+    // async getDisplayPrice() {
+    //   if (!this.variant || !this.variant.id) {
+    //     return undefined
+    //   }
 
-      const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
+    //   const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
 
-      const decodedId = atob(this.variant.id)
-        .split('/')
-        .pop()
-      const price = encodeURIComponent(
-        JSON.stringify([
-          {
-            Price: _price,
-            Tag: decodedId
-          }
-        ])
-      )
+    //   const decodedId = atob(this.variant.id)
+    //     .split('/')
+    //     .pop()
+    //   const price = encodeURIComponent(
+    //     JSON.stringify([
+    //       {
+    //         Price: _price,
+    //         Tag: decodedId
+    //       }
+    //     ])
+    //   )
 
-      // START OF RYAN MOD to override currency
+    //   // START OF RYAN MOD to override currency
 
-      // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
-      if (document.cookie.includes('_rchcur')) {
-        var config = {
-          method: 'get',
-          url:
-            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
-            document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
-            `&MerchantPrices=${price}`
-        }
-      } else {
-        var config = {
-          method: 'get',
-          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
-        }
-      }
-      // END OF RYAN MOD
+    //   // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+    //   if (document.cookie.includes('_rchcur')) {
+    //     var config = {
+    //       method: 'get',
+    //       url:
+    //         'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
+    //         document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
+    //         `&MerchantPrices=${price}`
+    //     }
+    //   } else {
+    //     var config = {
+    //       method: 'get',
+    //       url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+    //     }
+    //   }
+    //   // END OF RYAN MOD
 
-      const localPrice = await Axios(config)
-        .then(res => {
-          if (!res.data.ConsumerPrices[0]) {
-            this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
-          } else {
-            // Ryan's fix with Michael's help for UAE and some currency symbols
-            if (res.data.Symbol == null) {
-              this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(
-                2
-              )} ${res.data.Currency}`
-            } else {
-              this.displayPrice = `${res.data.Symbol}${(
-                Number(res.data.ConsumerPrices[0]) * this.quantity
-              ).toFixed(2)}`
-            }
-          }
-          ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
-          (this.buttonText = `Add to Cart - ${this.displayPrice}`)
-        })
-        .catch(res => {
-          console.error('Currency Request Failed', res)
-          this.displayPrice = `$${Number(this.variant.price * this.quantity).toFixed(2)}`
-          ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
-          (this.buttonText = `Add to Cart - ${this.displayPrice}`)
-        })
-    },
+    //   const localPrice = await Axios(config)
+    //     .then(res => {
+    //       if (!res.data.ConsumerPrices[0]) {
+    //         this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
+    //       } else {
+    //         // Ryan's fix with Michael's help for UAE and some currency symbols
+    //         if (res.data.Symbol == null) {
+    //           this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(
+    //             2
+    //           )} ${res.data.Currency}`
+    //         } else {
+    //           this.displayPrice = `${res.data.Symbol}${(
+    //             Number(res.data.ConsumerPrices[0]) * this.quantity
+    //           ).toFixed(2)}`
+    //         }
+    //       }
+    //       ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
+    //       (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+    //     })
+    //     .catch(res => {
+    //       console.error('Currency Request Failed', res)
+    //       this.displayPrice = `$${Number(this.variant.price * this.quantity).toFixed(2)}`
+    //       ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
+    //       (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+    //     })
+    // },
     async getDisplayBundlePrice() {
       if (!this.variant || !this.variant.id) {
         return undefined
@@ -284,72 +289,119 @@ export default {
       let totalPrice = 0
       let symbol = null
       let currency = null
-      const bundlePricePromise = []
       let bundleVariantCount = 0
-      await Axios(config)
-        .then(res => {
-          if (res.data.Symbol) {
-            symbol = res.data.Symbol
-          }
-          if (res.data.currency) {
-            currency = res.data.currency
-          }
-          if (!res.data.ConsumerPrices[0]) {
-            totalPrice = Number(_price) * this.quantity
-          } else {
-            totalPrice = Number(res.data.ConsumerPrices[0] * this.quantity)
-          }
-        })
-        .catch(res => {
-          console.error('Currency Request Failed', res)
+      let response = {}
+      let foundPrice = false
+      if (this.priceSaved[_price]) {
+        foundPrice = true
+        response = this.priceSaved[_price]
+      } else {
+        try {
+          response = await Axios(config)
+          this.priceSaved[_price] = response
+          foundPrice = true
+        } catch (err) {
           symbol = '$'
           totalPrice = Number(this.variant.price * this.quantity)
-        })
+        }
+      }
+
+      if (foundPrice) {
+        if (response.data.Symbol) {
+          symbol = response.data.Symbol
+        }
+        if (response.data.currency) {
+          currency = response.data.currency
+        }
+        if (!response.data.ConsumerPrices[0]) {
+          totalPrice = Number(_price) * this.quantity
+        } else {
+          totalPrice = Number(response.data.ConsumerPrices[0] * this.quantity)
+        }
+      }
       if (this.bundles && this.bundles.length) {
-        this.bundles.forEach(bundle => {
+        for (let i = 0; i < this.bundles.length; i++) {
+          // Using forloop isntead of forEach since we have to wait for the prices of each product in bundle before displaying
+          const bundle = this.bundles[i]
           bundleVariantCount++
-          let price = null
+          let variantPrice = null
+          let foundPriceVariant = false
+          let response = {}
           if (bundle?.variant?.price) {
-            price = bundle.variant.price
+            variantPrice = bundle.variant.price
           } else {
-            price = bundle.product.price
+            variantPrice = bundle.product.price
           }
           const priceEncoded = encodeURIComponent(
             JSON.stringify([
               {
-                Price: price,
+                Price: variantPrice,
                 Tag: decodedId
               }
             ])
           )
           config = this.getConfigURL(priceEncoded)
-          bundlePricePromise.push(Axios(config))
-        })
-
-        await Promise.all(bundlePricePromise)
-          .then(res => {
-            if (res && res.length) {
-              res.forEach((resItem, i) => {
-                if (!resItem.data.ConsumerPrices[0]) {
-                  let price = null
-                  if (this.bundles[i]?.variant?.price) {
-                    price = this.bundles[i].variant.price
-                  } else {
-                    price = this.bundles[i].product.price
-                  }
-                  totalPrice += Number(price * this.quantity)
-                } else {
-                  totalPrice += Number(resItem.data.ConsumerPrices[0] * this.quantity)
-                }
-              })
+          if (!this.priceSaved[variantPrice]) {
+            try {
+              this.priceSaved[variantPrice] = await Axios(config)
+              response = this.priceSaved[variantPrice]
+              foundPriceVariant = true
+            } catch (err) {
+              totalPrice += Number(variantPrice * this.quantity)
             }
-          })
-          .catch(res => {
-            console.error('Currency Request Failed', res)
-            this.bundleVariants.forEach(item => {
-              totalPrice += Number(item.price * this.quantity)
-            })
-          })
+          } else {
+            foundPriceVariant = true
+            response = this.priceSaved[variantPrice]
+          }
+          if (foundPriceVariant) {
+            if (!response.data.ConsumerPrices[0]) {
+              totalPrice += Number(variantPrice * this.quantity)
+            } else {
+              totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
+            }
+          }
+        }
+      }
+
+      if (this.bundleVarietyPack?.[this.selectedVarietyPack]) {
+        const varietyPack = this.bundleVarietyPack?.[this.selectedVarietyPack]
+        if (varietyPack?.variants?.length) {
+          for (let i = 0; i < varietyPack?.variants?.length; i++) {
+            const variant = varietyPack.variants[i]
+            bundleVariantCount++
+            const variantPrice = variant.price
+            let foundPriceVariant = false
+            let response = {}
+            const priceEncoded = encodeURIComponent(
+              JSON.stringify([
+                {
+                  Price: variantPrice,
+                  Tag: decodedId
+                }
+              ])
+            )
+            config = this.getConfigURL(priceEncoded)
+            if (!this.priceSaved[variantPrice]) {
+              try {
+                this.priceSaved[variantPrice] = await Axios(config)
+                response = this.priceSaved[variantPrice]
+                foundPriceVariant = true
+              } catch (err) {
+                totalPrice += Number(variantPrice * this.quantity)
+              }
+            } else {
+              foundPriceVariant = true
+              response = this.priceSaved[variantPrice]
+            }
+            if (foundPriceVariant) {
+              if (!response.data.ConsumerPrices[0]) {
+                totalPrice += Number(variantPrice * this.quantity)
+              } else {
+                totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
+              }
+            }
+          }
+        }
       }
       if (symbol) {
         this.displayPrice = `${symbol}${totalPrice.toFixed(2)}`
@@ -358,8 +410,8 @@ export default {
       }
 
       if (bundleVariantCount) {
-        this.defaultText = `Add Bundle - ${this.displayPrice}`
-        this.buttonText = `Add Bundle - ${this.displayPrice}`
+        this.defaultText = `Add Bundle to Cart - ${this.displayPrice}`
+        this.buttonText = `Add Bundle to Cart - ${this.displayPrice}`
       } else {
         this.defaultText = `Add to Cart - ${this.displayPrice}`
         this.buttonText = `Add to Cart - ${this.displayPrice}`
@@ -386,7 +438,11 @@ export default {
     },
 
     setButtonText() {
-      if (this.onlyOneOption && !this.variantInLineItems && this.variant.availableForSale == true) {
+      if (
+        this.onlyOneOption &&
+        !this.variantInLineItems &&
+        this.variant.availableForSale === true
+      ) {
         this.butttonText = this.defaultText
       } else if (this.onlyOneOption && this.variantInLineItems) {
         this.buttonText = 'Added!'
@@ -455,6 +511,25 @@ export default {
             }
             this.addLineItem(lineItem)
           })
+        }
+        if (this.bundleVarietyPack?.[this.selectedVarietyPack]) {
+          const varietyPack = this.bundleVarietyPack?.[this.selectedVarietyPack]
+          varietyPack?.variants?.length &&
+            varietyPack.variants.forEach(variant => {
+              const product = varietyPack?.product
+              const lineItem = {
+                image: product?.featuredMedia,
+                title: product?.title,
+                variant: variant,
+                quantity: this.quantity || 1,
+                productId: product?.id,
+                handle: product?.handle,
+                vendor: product?.vendor,
+                tags: product?.tags,
+                metafields: []
+              }
+              this.addLineItem(lineItem)
+            })
         }
         this.setButtonText()
         this.showCart()
@@ -548,6 +623,33 @@ export default {
           productList.push(item)
         })
       }
+
+      if (this.bundleVarietyPack?.[this.selectedVarietyPack]) {
+        const varietyPack = this.bundleVarietyPack?.[this.selectedVarietyPack]
+        varietyPack?.variants?.length &&
+          varietyPack.variants.forEach(variant => {
+            const product = varietyPack?.product
+            const item = {
+              name: product?.title?.replace("'", ''),
+              id: (variant && variant.sku) || '',
+              product_id: Buffer.from(product?.pimSyncSourceProductId, 'base64'),
+              variant_id: Buffer.from(variant?.id, 'base64')
+                .toString('binary')
+                .split('/')
+                .pop(),
+              image: product?.featuredMedia?.src,
+              price: variant.price,
+              brand: product?.vendor.replace("'", ''),
+              variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+              category: product?.productType,
+              inventory: this.quantity || 1,
+              list: referrer,
+              source: source
+            }
+            productList.push(item)
+          })
+      }
+
       window.dataLayer.push({
         event: 'dl_add_to_cart',
         event_id: uuid,

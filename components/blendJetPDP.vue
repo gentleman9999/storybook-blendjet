@@ -14,9 +14,9 @@
           >
             {{ product.title }}
             <br />
-            <span style="font-size: 12px;line-height: 1.25;letter-spacing: 1.75px;"
-              >Portable Blender</span
-            >
+            <span style="font-size: 12px;line-height: 1.25;letter-spacing: 1.75px;">
+              Portable Blender
+            </span>
           </div>
           <div v-else class="product-select__controls__title">
             <h1>{{ product.title }}</h1>
@@ -255,7 +255,7 @@
           <div v-if="selectedBundle.length" class="product-select__controls__bundles">
             <div
               v-if="page && page.fields.bundles"
-              class="product-select__controls__bundles__title"
+              class="product-select__controls__bundles__title normal-size"
             >
               {{ bundleTitle }}
             </div>
@@ -265,6 +265,7 @@
                   :src="currentVariant.featuredMedia.src"
                   :alt="currentVariant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
+                  @click="bundleItemClicked(currentVariant, true)"
                 />
               </div>
               <div
@@ -277,12 +278,31 @@
                   :src="bundle.variant.featuredMedia.src"
                   :alt="bundle.variant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
+                  @click="bundleItemClicked(bundle, false)"
                 />
                 <img
                   v-else
                   :src="bundle.product.featuredMedia.src"
                   :alt="bundle.product.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
+                  @click="bundleItemClicked(bundle, false)"
+                />
+              </div>
+              <div
+                v-if="
+                  selectedBundleVarietyPack &&
+                    selectedBundleVarietyPack[selectedVarieryPackIndex] &&
+                    selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length
+                "
+                class="product-select__controls__bundles__bundle-product-container"
+              >
+                <img
+                  :src="varietyPackImage"
+                  alt="variety pack"
+                  class="product-select__controls__bundles__bundle-product-image"
+                  @click="
+                    bundleItemClicked(selectedBundleVarietyPack[selectedVarieryPackIndex], false)
+                  "
                 />
               </div>
             </div>
@@ -296,6 +316,8 @@
                 :warranty="warrantySelected"
                 @addedToCart="quantity = 1"
                 :bundles="selectedBundle"
+                :bundle-variety-pack="selectedBundleVarietyPack"
+                :selected-variery-pack="selectedVarieryPackIndex"
               />
             </div>
           </div>
@@ -924,7 +946,11 @@ export default {
       metaTitle: null,
       metaDescription: null,
       selectedBundle: cloneDeep(this.bundles),
-      bundleTitle: this?.page?.fields?.bundles?.fields?.title
+      selectedBundleVarietyPack: cloneDeep(this.bundleVarietyPack),
+      bundleTitle: this?.page?.fields?.bundles?.fields?.title,
+      selectedVarieryPackIndex: 0,
+      varietyPackImage: '',
+      imageInterval: null
     }
   },
   components: {
@@ -964,6 +990,14 @@ export default {
       default: () => []
     },
     variantSpecificBundles: {
+      type: Object,
+      default: () => {}
+    },
+    bundleVarietyPack: {
+      type: Array,
+      default: () => []
+    },
+    variantBundleVarietyPack: {
       type: Object,
       default: () => {}
     }
@@ -1042,6 +1076,30 @@ export default {
     formatVariantId(value) {
       const url = atob(value)
       return url.replace('gid://shopify/ProductVariant/', '')
+    },
+    bundleItemClicked(bundle, isCurrentProduct) {
+      if (!isCurrentProduct) {
+        if (this.$mq === 'md' || this.$mq === 'sm') {
+          console.log('mobile')
+        } else {
+          const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
+          this.$router.push({
+            name: 'products-productHandle',
+            params: {
+              productHandle: bundle.product.handle
+            },
+            query: {
+              variant: this.formatVariantId(variant.id)
+            }
+          })
+        }
+      } else {
+        window &&
+          window.scroll({
+            top: 0,
+            behavior: 'smooth'
+          })
+      }
     },
     setDefaultVariant() {
       if (this.currentVariant) {
@@ -1125,12 +1183,35 @@ export default {
     },
     updateBundle() {
       const title = this.currentVariant.title.toLowerCase()
-      if (this?.variantSpecificBundles?.[title]) {
+      if (this?.variantSpecificBundles?.[title]?.length) {
         this.selectedBundle = cloneDeep(this?.variantSpecificBundles[title])
-        this.bundleTitle = this?.variantSpecificBundles[title][0].title
+        this.bundleTitle = this?.variantSpecificBundles?.[title]?.[0].title
       } else if (this.bundles.length) {
         this.selectedBundle = cloneDeep(this.bundles)
         this.bundleTitle = this.bundles[0].title
+      }
+      if (this?.variantBundleVarietyPack?.[title]?.length) {
+        this.selectedBundleVarietyPack = cloneDeep(this?.variantBundleVarietyPack?.[title])
+      } else if (this.bundleVarietyPack.length) {
+        this.selectedBundleVarietyPack = cloneDeep(this.bundleVarietyPack)
+      } else {
+        this.selectedBundleVarietyPack = []
+      }
+      if (this.selectedBundleVarietyPack?.length) {
+        if (this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex]) {
+          const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
+          let imageIndex = 0
+          if (variants?.length) {
+            this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.src
+            this.imageInterval = setInterval(() => {
+              this.varietyPackImage =
+                variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.src
+              imageIndex++
+            }, 1000)
+          }
+        }
+      } else {
+        clearInterval(this.imageInterval)
       }
     },
     updateVariant(variant) {
@@ -1756,11 +1837,17 @@ export default {
 
     &__bundles {
       padding: 10px;
-      margin-top: 10px;
+      margin-top: 20px;
       &__title {
         font-weight: bold;
         color: $primary-purple;
         margin-bottom: 10px;
+        font-size: 12px;
+        font-family: Bold;
+        letter-spacing: 1.75px;
+        text-align: center;
+        line-height: 1.33;
+        text-transform: uppercase;
       }
       &__bundle-products {
         display: flex;
@@ -1783,6 +1870,7 @@ export default {
       &__bundle-product-image {
         height: 100%;
         width: auto;
+        cursor: pointer;
       }
       &__add-to-cart-bundle {
         display: flex;

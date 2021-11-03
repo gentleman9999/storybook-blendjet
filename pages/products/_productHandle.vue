@@ -64,6 +64,8 @@
       :page="page"
       :bundles="bundles"
       :variant-specific-bundles="variantSpecificBundles"
+      :bundle-variety-pack="bundleVarietyPack"
+      :variant-bundle-variety-pack="variantBundleVarietyPack"
     />
     <JetpackVariantPDP
       v-cloak
