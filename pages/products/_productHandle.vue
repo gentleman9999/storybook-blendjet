@@ -158,6 +158,16 @@ export default {
         if (description.length > 160) {
           description = description.slice(0, 160)
         }
+
+        let ratingValue = this?.getMetafield('loox', 'avg_rating')
+        if (!ratingValue) {
+          ratingValue = '5'
+        }
+        let ratingCount = this?.getMetafield('loox', 'num_reviews')
+        if (!ratingCount) {
+          ratingCount = (Math.floor(Math.random() * 10) + 1) * 1000
+        }
+
         structuredData = {
           '@context': 'http://www.schema.org',
           '@type': 'Product',
@@ -196,10 +206,10 @@ export default {
           },
           aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: '4.9',
+            ratingValue: ratingValue,
             worstRating: '0',
             bestRating: '5',
-            ratingCount: '2134'
+            ratingCount: ratingCount
           }
         }
 
