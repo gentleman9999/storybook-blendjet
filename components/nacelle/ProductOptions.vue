@@ -100,6 +100,7 @@ export default {
   },
   methods: {
     setSelectedOptions(selectedOption) {
+      this.$emit('selectedOption', selectedOption)
       this.update(selectedOption)
 
       const vm = this

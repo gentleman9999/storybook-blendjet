@@ -101,12 +101,8 @@ export default {
       default: () => []
     },
     bundleVarietyPack: {
-      type: Array,
-      default: () => []
-    },
-    selectedVarietyPack: {
-      type: Number,
-      default: 0
+      type: Object,
+      default: () => {}
     }
   },
 
@@ -188,6 +184,18 @@ export default {
     },
     isSubscriptionOn() {
       this.getDisplayBundlePrice()
+    },
+    bundles: {
+      handler() {
+        this.getDisplayBundlePrice()
+      },
+      deep: true
+    },
+     bundleVarietyPack: {
+      handler() {
+        this.getDisplayBundlePrice()
+      },
+      deep: true
     }
   },
 
@@ -363,8 +371,8 @@ export default {
         }
       }
 
-      if (this.bundleVarietyPack?.[this.selectedVarietyPack]) {
-        const varietyPack = this.bundleVarietyPack?.[this.selectedVarietyPack]
+      if (this.bundleVarietyPack?.variants) {
+        const varietyPack = this.bundleVarietyPack
         if (varietyPack?.variants?.length) {
           for (let i = 0; i < varietyPack?.variants?.length; i++) {
             const variant = varietyPack.variants[i]
@@ -512,8 +520,8 @@ export default {
             this.addLineItem(lineItem)
           })
         }
-        if (this.bundleVarietyPack?.[this.selectedVarietyPack]) {
-          const varietyPack = this.bundleVarietyPack?.[this.selectedVarietyPack]
+        if (this.bundleVarietyPack?.variants) {
+          const varietyPack = this.bundleVarietyPack
           varietyPack?.variants?.length &&
             varietyPack.variants.forEach(variant => {
               const product = varietyPack?.product
@@ -624,8 +632,8 @@ export default {
         })
       }
 
-      if (this.bundleVarietyPack?.[this.selectedVarietyPack]) {
-        const varietyPack = this.bundleVarietyPack?.[this.selectedVarietyPack]
+      if (this.bundleVarietyPack?.variants) {
+        const varietyPack = this.bundleVarietyPack
         varietyPack?.variants?.length &&
           varietyPack.variants.forEach(variant => {
             const product = varietyPack?.product

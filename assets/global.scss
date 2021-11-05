@@ -522,3 +522,15 @@ button.button.is-primary {
 .fb-customerchat iframe {
   bottom: 145px !important;
 }
+
+// buefy tooltip styles
+.b-tooltip.is-top.is-white .tooltip-content::before {
+  filter: drop-shadow(1px 3px 2px rgba(130,130,130,0.6));
+}
+.b-tooltip.no-padding .tooltip-content {
+  padding: 1px;
+}
+
+.b-tooltip .tooltip-content {
+  width: auto !important;
+}

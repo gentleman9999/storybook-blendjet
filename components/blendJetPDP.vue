@@ -269,24 +269,81 @@
                 />
               </div>
               <div
-                v-for="bundle in selectedBundle"
+                v-for="(bundle, index) in selectedBundle"
                 :key="bundle.product.id"
                 class="product-select__controls__bundles__bundle-product-container"
               >
-                <img
-                  v-if="bundle.variant && bundle.variant.featuredMedia"
-                  :src="bundle.variant.featuredMedia.src"
-                  :alt="bundle.variant.featuredMedia.altText"
-                  class="product-select__controls__bundles__bundle-product-image"
-                  @click="bundleItemClicked(bundle, false)"
-                />
-                <img
-                  v-else
-                  :src="bundle.product.featuredMedia.src"
-                  :alt="bundle.product.featuredMedia.altText"
-                  class="product-select__controls__bundles__bundle-product-image"
-                  @click="bundleItemClicked(bundle, false)"
-                />
+                <b-dropdown
+                  v-if="bundle.allowVariantSelection"
+                  position="is-bottom-left"
+                  append-to-body
+                  aria-role="menu"
+                  trap-focus
+                  class="variant-dropdown"
+                  :class="{ 'has-padding': true }"
+                  paddingless
+                >
+                  <template #trigger>
+                    <img
+                      :src="bundle.variant.featuredMedia.src"
+                      :alt="bundle.variant.featuredMedia.altText"
+                      class="product-select__controls__bundles__bundle-product-image"
+                    />
+                  </template>
+
+                  <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
+                    <product-options
+                      :options="allOptions"
+                      :variant="bundle.variant"
+                      :variants="bundle.product.variants"
+                      :currentOption="bundle.variant.selectedOptions[0].value"
+                      :key="5"
+                      @selectedOption="setBundleVariant($event, index)"
+                    />
+                  </b-dropdown-item>
+                </b-dropdown>
+                <!-- <b-tooltip
+                  v-if="bundle.allowVariantSelection"
+                  :triggers="['click']"
+                  :auto-close="['outside', 'escape', 'inside']"
+                  type="is-white"
+                  :active="bundleOptionsSelectorActive[index]"
+                  :delay="0"
+                  multilined
+                >
+                  <template v-slot:content>
+                    <product-options
+                      :options="allOptions"
+                      :variant="bundle.variant"
+                      :variants="bundle.product.variants"
+                      :currentOption="bundle.variant.selectedOptions[0].value"
+                      :key="5"
+                      @selectedOption="setBundleVariant($event, index)"
+                    />
+                  </template>
+                  <img
+                    :src="bundle.variant.featuredMedia.src"
+                    :alt="bundle.variant.featuredMedia.altText"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    @click="activateBundleVariantSelect(index)"
+                  />
+                </b-tooltip> -->
+                <template v-else>
+                  <img
+                    v-if="bundle.variant && bundle.variant.featuredMedia"
+                    :src="bundle.variant.featuredMedia.src"
+                    :alt="bundle.variant.featuredMedia.altText"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    @click="bundleItemClicked(bundle, false)"
+                  />
+                  <img
+                    v-else
+                    :src="bundle.product.featuredMedia.src"
+                    :alt="bundle.product.featuredMedia.altText"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    @click="bundleItemClicked(bundle, false)"
+                  />
+                </template>
               </div>
               <div
                 v-if="
@@ -297,6 +354,7 @@
                 class="product-select__controls__bundles__bundle-product-container"
               >
                 <img
+                  v-if="selectedBundleVarietyPack.length === 1"
                   :src="varietyPackImage"
                   alt="variety pack"
                   class="product-select__controls__bundles__bundle-product-image"
@@ -304,6 +362,56 @@
                     bundleItemClicked(selectedBundleVarietyPack[selectedVarieryPackIndex], false)
                   "
                 />
+                <b-dropdown
+                  position="is-bottom-left"
+                  append-to-body
+                  aria-role="menu"
+                  trap-focus
+                  paddingless
+                  class="variant-dropdown"
+                >
+                  <template #trigger>
+                    <img
+                      :src="varietyPackImage"
+                      alt="variety pack"
+                      class="product-select__controls__bundles__bundle-product-image"
+                    />
+                  </template>
+
+                  <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
+                    <VarietySelect
+                      :options="selectedBundleVarietyPack"
+                      @updateOptions="updateSelectedVarietyPack"
+                    />
+                  </b-dropdown-item>
+                </b-dropdown>
+
+                <!-- <div v-else>
+                  <b-tooltip
+                    v-once
+                    :triggers="['click']"
+                    :auto-close="['outside', 'escape', 'inside']"
+                    type="is-white"
+                    class="no-padding"
+                    :delay="0"
+                    size="is-large"
+                    multilined
+                  >
+                    <template v-slot:content>
+                      <VarietySelect
+                        :options="selectedBundleVarietyPack"
+                        @updateOptions="updateSelectedVarietyPack"
+                      />
+                    </template>
+
+                    <div class="product-image-dummy"></div>
+                  </b-tooltip>
+                  <img
+                    :src="varietyPackImage"
+                    alt="variety pack"
+                    class="product-select__controls__bundles__bundle-product-image variety-pack"
+                  />
+                </div> -->
               </div>
             </div>
             <div class="product-select__controls__bundles__add-to-cart-bundle">
@@ -316,8 +424,7 @@
                 :warranty="warrantySelected"
                 @addedToCart="quantity = 1"
                 :bundles="selectedBundle"
-                :bundle-variety-pack="selectedBundleVarietyPack"
-                :selected-variery-pack="selectedVarieryPackIndex"
+                :bundle-variety-pack="selectedBundleVarietyPack[selectedVarieryPackIndex]"
               />
             </div>
           </div>
@@ -881,6 +988,7 @@ import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 
 import ModelIcon from '~/components/ModelIcon'
+import VarietySelect from '~/components/VarietySelect'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import ProductOptionSwatch from '~/components/nacelle/ProductOptionSwatch'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
@@ -948,12 +1056,15 @@ export default {
       selectedBundle: cloneDeep(this.bundles),
       selectedBundleVarietyPack: cloneDeep(this.bundleVarietyPack),
       bundleTitle: this?.page?.fields?.bundles?.fields?.title,
+      bundleVarietyOptions: [],
       selectedVarieryPackIndex: 0,
       varietyPackImage: '',
-      imageInterval: null
+      imageInterval: null,
+      bundleOptionsSelectorActive: []
     }
   },
   components: {
+    VarietySelect,
     ProductPrice,
     JetpackCrossSell,
     Guarantee,
@@ -1101,6 +1212,25 @@ export default {
           })
       }
     },
+    activateBundleVariantSelect(index) {
+      this.bundleOptionsSelectorActive[index] = true
+    },
+    setBundleVariant(option, index) {
+      const bundleToUpdate = this.selectedBundle[index]
+      const newVariant = bundleToUpdate.product.variants.filter(variant => {
+        if (variant.selectedOptions[0].value === option.value) {
+          return variant
+        }
+      })
+      if (newVariant.length) {
+        this.selectedBundle[index].variant = cloneDeep(...newVariant)
+        this.bundleOptionsSelectorActive[index] = false
+      }
+    },
+    updateSelectedVarietyPack(index) {
+      this.selectedVarieryPackIndex = index
+      this.updateBundle()
+    },
     setDefaultVariant() {
       if (this.currentVariant) {
         return this.currentVariant
@@ -1203,6 +1333,7 @@ export default {
           let imageIndex = 0
           if (variants?.length) {
             this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.src
+            clearInterval(this.imageInterval)
             this.imageInterval = setInterval(() => {
               this.varietyPackImage =
                 variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.src
@@ -1854,6 +1985,13 @@ export default {
         margin-bottom: 15px;
         justify-content: center;
       }
+      .product-image-dummy {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        cursor: pointer;
+        z-index: 9;
+      }
       &__bundle-product-container {
         height: 60px;
         width: 90px;
@@ -1869,8 +2007,13 @@ export default {
       }
       &__bundle-product-image {
         height: 100%;
+        max-height: 60px;
         width: auto;
         cursor: pointer;
+        &.variety-pack {
+          position: absolute;
+          left: 13px;
+        }
       }
       &__add-to-cart-bundle {
         display: flex;
@@ -2575,7 +2718,7 @@ export default {
 }
 
 /* The container <div> - needed to position the dropdown content */
-.dropdown {
+.dropdown:not(.variant-dropdown) {
   position: relative;
   color: $primary-purple;
   display: flex;
@@ -2757,5 +2900,12 @@ h1 {
   font-family: inherit;
   line-height: inherit;
   letter-spacing: inherit;
+}
+</style>
+<style lang="scss">
+.variant-dropdown {
+  .dropdown-content {
+    padding: 0 !important;
+  }
 }
 </style>
