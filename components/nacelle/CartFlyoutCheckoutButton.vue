@@ -1,7 +1,7 @@
 <template>
   <div class="checkout-button" role="button" :class="{ 'is-loading': loading }" @click="checkout">
     <div v-if="loading" class="loader"></div>
-    <span class="checkout-text" :class="{hidden: loading && isMobile}">{{ checkoutText }}</span>
+    <span class="checkout-text" :class="{ hidden: loading && isMobile }">{{ checkoutText }}</span>
     <span class="subtotal" v-if="cartSubtotal > 0 && showPrice && displayPrice">
       &nbsp;—&nbsp;{{ displayPrice }}
     </span>
@@ -131,6 +131,9 @@ export default {
       } catch (err) {
         console.log(err)
         this.setCartError(err)
+        this.loading = false
+      }
+      finally {
         this.loading = false
       }
     }

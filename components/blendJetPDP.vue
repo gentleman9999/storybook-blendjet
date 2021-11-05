@@ -135,7 +135,7 @@
                 :variants="product.variants"
                 @clear="selectedOptions = []"
                 :currentOption="currentVariant.selectedOptions[0].value"
-                :key="1"
+                :key="showHeaderVariants"
                 v-if="!showMobileVariants"
               />
             </div>

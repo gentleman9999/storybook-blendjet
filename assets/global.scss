@@ -535,19 +535,19 @@ button.button.is-primary {
   }
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-}
+// ::-webkit-scrollbar {
+//   width: 8px;
+// }
 
-::-webkit-scrollbar-thumb {
-  background: $primary-purple;
-  border-radius: 10px;
-}
+// ::-webkit-scrollbar-thumb {
+//   background: $primary-purple;
+//   border-radius: 10px;
+// }
 
-::-webkit-scrollbar-thumb:hover {
-  background: lighten($primary-purple, 10)
-}
+// ::-webkit-scrollbar-thumb:hover {
+//   background: lighten($primary-purple, 10)
+// }
 
-::-webkit-scrollbar-track {
-  background: $secondary-purple-4;
-}
+// ::-webkit-scrollbar-track {
+//   background: $secondary-purple-4;
+// }
