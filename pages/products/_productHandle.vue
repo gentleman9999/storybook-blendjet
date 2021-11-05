@@ -34,7 +34,6 @@
 </div>
 </div>
 
-
     <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
         <div class="canvas-bfcm">
           <div class="col-bfcm">
@@ -230,7 +229,9 @@ export default {
         if (this.product?.variants?.length > 1) {
           structuredData.inProductGroupWithID = this.product.handle
         }
-        structuredDataList.push(structuredData)
+        if (productVariant?.availableForSale) {
+          structuredDataList.push(structuredData)
+        }
       })
     if (structuredDataList.length === 1) {
       return structuredDataList[0]
