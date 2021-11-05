@@ -134,7 +134,9 @@ export default {
         this.loading = false
       }
       finally {
-        this.loading = false
+        setTimeout(() => {
+          this.loading = false
+        },5000)
       }
     }
   }
