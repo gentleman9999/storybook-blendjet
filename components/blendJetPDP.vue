@@ -870,53 +870,6 @@ export default {
       type: String
     }
   },
-
-  head() {
-    const productCurrency = this.currency
-    const productPrice = this.displayPrice
-    const image = this.productImage
-    const properties = {}
-    const meta = []
-    const script = [
-      {
-        type: 'application/ld+json',
-        json: {
-          '@context': 'http://schema.org',
-          '@type': 'Product',
-          name: 'BlendJet 2',
-          image: [`${image}`],
-          offers: {
-            '@type': 'Offer',
-            url: 'https://blendjet.com/products/blendjet-2',
-            itemCondition: 'http://schema.org/NewCondition',
-            availability: 'http://schema.org/InStock',
-            price: `${productPrice}`,
-            priceCurrency: `${productCurrency}`
-          }
-        }
-      }
-    ]
-
-    if (this.metaTitle) {
-      properties.title = this.metaTitle
-    }
-
-    if (this.metaDescription) {
-      meta.push({
-        hid: 'description',
-        name: 'description',
-        content: this.metaDescription
-      })
-    }
-
-    if (image && productCurrency && productPrice) {
-      return {
-        ...properties,
-        meta,
-        script
-      }
-    }
-  },
   computed: {
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['cartBalance'])
