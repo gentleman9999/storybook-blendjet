@@ -161,7 +161,7 @@
                 currentVariant.title
               }}</span>
             </div>
-            <div class="product-select__controls__variant-color__swatches">
+            <div class="product-select__controls__variant-color__swatches" ref="swatch">
               <product-options
                 :options="allOptions"
                 :variant="selectedVariant"
@@ -1205,11 +1205,21 @@ export default {
           })
         }
       } else {
-        window &&
-          window.scroll({
-            top: 0,
-            behavior: 'smooth'
-          })
+        if (this.$mq === 'sm' || this.$mq === 'md') {
+          const element = this.$refs.swatch
+          const top = element.offsetTop
+          window &&
+            window.scroll({
+              top: Number(top) - 130,
+              behavior: 'smooth'
+            })
+        } else {
+          window &&
+            window.scroll({
+              top: 0,
+              behavior: 'smooth'
+            })
+        }
       }
     },
     activateBundleVariantSelect(index) {
