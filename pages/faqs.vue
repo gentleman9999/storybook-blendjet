@@ -104,7 +104,7 @@
           </template>
           <template v-slot:expanded>
             <div class="faq-expand">
-              Your BlendJet can be stored in a cupboard, as you would any other cup or protein shaker. We recommend keeping the lid loose rather than tightly closed, to allow any excess water to evaporate.
+              Your BlendJet can be stored in a cupboard or left out on your countertop. We recommend keeping the lid loose rather than tightly closed, to allow any excess water to evaporate.
             </div>
           </template>
         </Collapse>
@@ -117,7 +117,7 @@
           </template>
           <template v-slot:expanded>
             <div class="faq-expand">
-              We recommend blending water with a drop of soap to clean your BlendJet. Rinse with plain water, and you're ready for your next blended creation.
+              We recommend blending water with a drop of soap to clean your BlendJet. Rinse with plain water, and you're ready for your next blended creation. Periodically deep clean your BlendJet as needed (see our online User Guide for detailed instructions).
             </div>
           </template>
         </Collapse>
@@ -178,11 +178,24 @@
       <div class="faq-section">
         <Collapse>
           <template v-slot:collapsed>
+            <div class="c-heading">Can I stack discount codes?</div>
+          </template>
+          <template v-slot:expanded>
+            <div class="faq-expand">
+              Discount codes – unless otherwise indicated – cannot be stacked or combined, and apply to BlendJet products only. They cannot be applied to previous orders. Discount codes cannot be redeemed after the promotional period has ended and cannot be applied to out of stock merchandise. Discount offers and deals have no cash value and are subject to change.
+            </div>
+          </template>
+        </Collapse>
+      </div>
+
+      <div class="faq-section">
+        <Collapse>
+          <template v-slot:collapsed>
             <div class="c-heading">Did you invent the portable blender?</div>
           </template>
           <template v-slot:expanded>
             <div class="faq-expand">
-              Yes, we have 4 granted patents on our game-changing technology. We designed the original portable blender in California and worked hard to turn our concept into reality.
+              Yes, we have 25 granted patents on our game-changing technology. We designed the original portable blender in California and worked hard to turn our concept into reality.
             </div>
           </template>
         </Collapse>
