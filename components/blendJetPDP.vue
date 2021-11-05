@@ -67,7 +67,7 @@
             <NextSlide />
           </div>
           <transition name="fade" mode="out-in">
-            <picture v-if="productImage">
+            <picture v-if="productImage" :class="['product-select__image-carousel__img-container', {'auto-width': productType !== 'BlendJet'}]" >
               <source :srcset="optimizeSource({ url: heroUrl })" />
               <img
                 class="product-select__image-carousel__img"
@@ -1384,6 +1384,13 @@ export default {
       right: 20px;
       @include respond-to('small') {
         right: 10px;
+      }
+    }
+
+    &__img-container {
+      width: 100%;
+      &.auto-width {
+        width: auto;
       }
     }
 
