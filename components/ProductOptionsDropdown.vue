@@ -6,7 +6,7 @@
         dropdown: !upsellStyle
       }"
       tabindex="0"
-      @focusout="isOpen = false"
+      @focusout="focusOut"
       :style="styleObj"
     >
       <!-- MENU TRIGGER -->
@@ -110,6 +110,10 @@ export default {
       validator(value) {
         return ['up', 'down'].indexOf(value) !== -1
       }
+    },
+    alwaysOpen: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -123,27 +127,30 @@ export default {
     }
   },
   mounted() {
-    if (this.option.name == 'Flavor') this.setOptionValue(this.option.values[0].value)
+    if (this.option.name === 'Flavor') this.setOptionValue(this.option.values[0].value)
+    if (this.alwaysOpen) {
+      this.isOpen = this.alwaysOpen
+    }
   },
   computed: {
     getAvailableOptions() {
-      let selectedOptionValue = this.upsellStyle
+      const selectedOptionValue = this.upsellStyle
         ? this.selectedOptionValue
         : this.selectedOptionValue.value
-      let values = []
+      const values = []
       if (
         this.variantsWithOptionValue(selectedOptionValue) &&
         this.variantsWithOptionValue(selectedOptionValue).length >= 1
       ) {
         // let selectedOption =
         this.variantsWithOptionValue(selectedOptionValue).map(variant => {
-          let option = variant.selectedOptions.filter(option => {
-            return option.name == 'Size'
+          const option = variant.selectedOptions.filter(option => {
+            return option.name === 'Size'
           })
 
           if (values.length >= 1) {
             for (var i = 0; i < values.length; i++) {
-              if (values[i].value != option[0].value) {
+              if (values[i].value !== option[0].value) {
                 values.push({ value: option[0].value })
                 break
               }
@@ -159,13 +166,21 @@ export default {
     }
   },
   methods: {
+    focusOut() {
+      if (!this.alwaysOpen) {
+        this.isOpen = false
+      }
+    },
     toggleOpen() {
-      this.isOpen = !this.isOpen
+      if (!this.alwaysOpen) {
+        this.isOpen = !this.isOpen
+      }
     },
     setOptionValue(optionItem) {
       this.selectedOptionValue = optionItem
-
-      this.isOpen = false
+      if (!this.alwaysOpen) {
+        this.isOpen = false
+      }
       if (this.option.name !== 'Size') this.$emit('updateOptions', this.getAvailableOptions)
     },
 
@@ -176,7 +191,7 @@ export default {
           return (
             variant.selectedOptions.filter(option => {
               if (option.name !== 'Size') {
-                return option.value == currentOption
+                return option.value === currentOption
               }
             }).length > 0
           )
@@ -195,7 +210,7 @@ export default {
       }
     },
     clearOptionValue(newVal) {
-      if (newVal == true) {
+      if (newVal === true) {
         this.selectedOptionValue = null
         this.$emit('clearedOptionValue')
       }

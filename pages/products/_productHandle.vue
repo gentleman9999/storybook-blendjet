@@ -22,19 +22,26 @@
 
     <!-- START BFCM -->
 
-    <!-- <div v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'" class="outer-canvas-bfcm" style="margin-bottom: unset;">
-<div class="canvas-bfcm">
-<div class="col-bfcm">
-<span class="entry-title-bfcm">Black Friday Sale!</span>
-<span class="content-split-element-bfcm">15% Off 1</span>
-<span class="content-split-element-bfcm">20% Off 2</span>
-<span class="content-split-element-bfcm">25% Off 3+</span>
-<span class="simple-text-bfcm">BlendJet - Sleeve - Tote - Book <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
-</div>
-</div>
-</div>
+    <div
+      v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'"
+      class="outer-canvas-bfcm"
+      style="margin-bottom: unset;"
+    >
+      <div class="canvas-bfcm">
+        <div class="col-bfcm">
+          <span class="entry-title-bfcm">Black Friday Sale!</span>
+          <span class="content-split-element-bfcm">15% Off 1</span>
+          <span class="content-split-element-bfcm">20% Off 2</span>
+          <span class="content-split-element-bfcm">25% Off 3+</span>
+          <span class="simple-text-bfcm"
+            >BlendJet - Sleeve - Tote - Book <b class="b-hide-bfcm">|</b>
+            <span>Automatically Applied at Checkout</span></span
+          >
+        </div>
+      </div>
+    </div>
 
-    <!-- <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+    <!--<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
         <div class="canvas-bfcm">
           <div class="col-bfcm">
             <span class="entry-title-bfcm">Back to School Sale</span>
@@ -55,6 +62,10 @@
       v-if="product.productType === 'BlendJet' || product.productType === 'Jetsetter'"
       :product="product"
       :page="page"
+      :bundles="bundles"
+      :variant-specific-bundles="variantSpecificBundles"
+      :bundle-variety-pack="bundleVarietyPack"
+      :variant-bundle-variety-pack="variantBundleVarietyPack"
     />
     <JetpackVariantPDP
       v-cloak
@@ -290,6 +301,7 @@ export default {
       //   })
       //   console.log('wdl:', window.dataLayer)
       this.productView(this.product)
+      console.log('Page', this.page)
     }
   },
   head() {
