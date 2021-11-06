@@ -21,7 +21,7 @@
         </div>
         <div class="cart-message">{{ cartMessage }}</div>
         <!-- <div class="free-shipping" v-if="country === 'US'"> -->
-        <div class="free-shipping">          
+        <div class="free-shipping">
           <div class="free-shipping__svg">
             <svg
               width="356px"
@@ -47,7 +47,7 @@
                         rx="6"
                       ></rect>
                       <g id="Group-4" transform="translate(110.000000, 8.000000)"></g>
-                      <g id="Group" transform="translate(92.000000, 5.000000)">
+                      <g id="Group" transform="translate(80.000000, 5.000000)">
                         <text
                           id="FREE-2-DAY-SHIPPING"
                           font-family="Helvetica"
@@ -217,62 +217,61 @@ export default {
     },
     async getProduct(handle) {
       var product = await this.$nacelle.data.product({
-          handle: handle
-        })
+        handle: handle
+      })
 
-        return product
+      return product
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     async elevarViewCart() {
       window.dataLayer = window.dataLayer || []
       var uuid = this.createUUID()
-      var self = this      
+      var self = this
       var cartItems = []
-      
-      await this.lineItems.map(function(item, idx) {
-        self.$nacelle.data.product({
-          handle: item.handle
-        }).then(
-          function(p) {
-             var productId = Buffer.from(p.pimSyncSourceProductId, 'base64')
-                .toString('binary')
-                .split('/')
-                .pop()
-              var variantId = Buffer.from(item.variant.id, 'base64')
-                .toString('binary')
-                .split('/')
-                .pop()
-              var object = {
-                position: idx,
-                id: item.variant.sku,
-                product_id: productId,
-                variant_id: variantId,
-                name: item.title.replace("'", ''),
-                category: "NA",
-                quantity: item.quantity,
-                price: item.variant.price,
-                brand: item.vendor.replace("'", ''),
-                variant: item.variant.title
-              }
-              cartItems.push(object) 
-          }
-        )
-       
+
+      await this.lineItems.map(function (item, idx) {
+        self.$nacelle.data
+          .product({
+            handle: item.handle
+          })
+          .then(function (p) {
+            var productId = Buffer.from(p.pimSyncSourceProductId, 'base64')
+              .toString('binary')
+              .split('/')
+              .pop()
+            var variantId = Buffer.from(item.variant.id, 'base64')
+              .toString('binary')
+              .split('/')
+              .pop()
+            var object = {
+              position: idx,
+              id: item.variant.sku,
+              product_id: productId,
+              variant_id: variantId,
+              name: item.title.replace("'", ''),
+              category: 'NA',
+              quantity: item.quantity,
+              price: item.variant.price,
+              brand: item.vendor.replace("'", ''),
+              variant: item.variant.title
+            }
+            cartItems.push(object)
+          })
       })
       window.dataLayer.push({
-        "event": "dl_view_cart",
-        "event_id": uuid,
-        "cart_total": this.cartSubtotal,
-        "ecommerce": {
-          "currencyCode": 'USD',
-          "actionField": { "list": "Shopping Cart" },
-          "impressions": cartItems, 
+        event: 'dl_view_cart',
+        event_id: uuid,
+        cart_total: this.cartSubtotal,
+        ecommerce: {
+          currencyCode: 'USD',
+          actionField: { list: 'Shopping Cart' },
+          impressions: cartItems
         }
       })
       // console.log('wdl_vc:', window.dataLayer)
@@ -292,11 +291,9 @@ export default {
       }
     },
     cartVisible(newValue) {
-      if(this.cartVisible) {
+      if (this.cartVisible) {
         this.elevarViewCart()
       }
-      
-      
 
       this.toggleCustomerChat('cart')
     },
@@ -390,7 +387,7 @@ export default {
 
   .cart-items {
     flex-grow: 5;
-    overflow: scroll;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 0 20px;
   }
