@@ -47,7 +47,7 @@ function getBundledProductsFromFile(bundles, productObj, fs, title, isVarietyPac
                 product: bundledProduct,
                 variant: bundledVariant.length ? bundledVariant[0] : {},
                 title: title,
-                allowVariantSelection: bundle?.fields?.allowVariantSelection
+                clickAction: bundle?.fields?.clickAction
               })
             } else {
               // push all varients available for sale
@@ -113,7 +113,7 @@ function getbundledProductsFromNacelle(
           product: bundledProduct,
           variant: bundledVariant.length ? bundledVariant[0] : {},
           title: title,
-          allowVariantSelection: bundle?.fields?.allowVariantSelection
+          clickAction: bundle?.fields?.clickAction
         })
       } else {
         // push all varients available for sale
