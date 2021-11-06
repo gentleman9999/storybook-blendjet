@@ -129,14 +129,17 @@ export default {
     position: relative;
 
     @include respond-to('small') {
-      width: 375px;
-      height: 375px;
+      width: 100%;
+      height: auto;
       border-radius: 0;
     }
 
     video,
     img {
       object-fit: cover;
+      @include respond-to('small') {
+        width: 100%;
+      }
     }
 
     &__video {
