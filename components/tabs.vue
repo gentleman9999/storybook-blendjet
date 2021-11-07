@@ -107,8 +107,7 @@ export default {
   border: none;
   color: $grayscale-white;
   border-radius: $border-radius;
-  z-index: 1;
   height: 100%;
-  z-index: 4;
+  z-index: 1;
 }
 </style>
