@@ -97,7 +97,7 @@
           <transition name="fade" mode="out-in">
             <img
               :class="['product-select__image-carousel__img', { jetpack: isJetpack }]"
-              :src="optimizeSource({ url: productImage, height: 700 })"
+              :src="optimizeSource({ url: productImage, height: 1200 })"
             />
           </transition>
         </div>
@@ -292,7 +292,11 @@
                   :href="mcafeeLink"
                 >
                   <img
-                    :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                    :src="
+                      optimizeSource({
+                        url: '/images/blendjetPDP/TrustedSite.svg'
+                      })
+                    "
                     alt="TrustedSite Seal"
                     style="border: 1px solid #ccc;border-radius: 3px;"
                   />
@@ -670,7 +674,7 @@
             <b-carousel-item v-for="(image, i) in heroImages" :key="i">
               <img
                 class="media-content__carousel__img"
-                :src="optimizeSource({ url: image, height: 800 })"
+                :src="optimizeSource({ url: image, height: 1200, width: 2000 })"
               />
             </b-carousel-item>
           </b-carousel>
