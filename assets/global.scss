@@ -8,7 +8,6 @@
 /* secondary background color is F8F7F5 */
 
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif+SC&display=swap');
-@import url('https://use.typekit.net/jcb5tgv.css');
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap');
 @import url('https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css');
 // @import url('https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css');
@@ -522,3 +521,45 @@ button.button.is-primary {
 .fb-customerchat iframe {
   bottom: 145px !important;
 }
+
+.carousel-arrow {
+  .icon.has-icons-left {
+    @include respond-to('small') {
+      left: 0.5rem;
+    }
+  }
+  .icon.has-icons-right {
+    @include respond-to('small') {
+      right: 0.5rem;
+    }
+  }
+}
+
+// buefy tooltip styles
+.b-tooltip.is-top.is-white .tooltip-content::before {
+  filter: drop-shadow(1px 3px 2px rgba(130,130,130,0.6));
+}
+.b-tooltip.no-padding .tooltip-content {
+  padding: 1px;
+}
+
+.b-tooltip .tooltip-content {
+  width: auto !important;
+}
+
+// ::-webkit-scrollbar {
+//   width: 8px;
+// }
+
+// ::-webkit-scrollbar-thumb {
+//   background: $primary-purple;
+//   border-radius: 10px;
+// }
+
+// ::-webkit-scrollbar-thumb:hover {
+//   background: lighten($primary-purple, 10)
+// }
+
+// ::-webkit-scrollbar-track {
+//   background: $secondary-purple-4;
+// }

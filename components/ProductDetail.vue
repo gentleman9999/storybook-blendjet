@@ -667,6 +667,7 @@
             class="media-content__carousel"
             :arrow="heroImages.length > 1"
             :repeat="true"
+            :arrow-hover="false"
             :indicator="heroImages.length > 1"
             :autoplay="false"
             :has-drag="true"

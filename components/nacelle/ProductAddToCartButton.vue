@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div :class="{ 'has-bundle-add': bundles.length }">
     <button
       v-if="isProductVariantSelectChild"
       :disabled="disableAtcButton"
       :style="styleObj"
-      @click="addToCart"
+      @click="addToCart('nacelle')"
       class="add-to-cart-button button nacelle"
     >
       <span v-if="!variantInLineItems && !allOptionsSelected && product.availableForSale"
@@ -16,8 +16,8 @@
             (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
             !product.availableForSale
         "
-        >Out of Stock</span
-      >
+        >Out of Stock
+      </span>
       <span
         v-if="
           !variantInLineItems && allOptionsSelected && variant && variant.availableForSale == true
@@ -29,7 +29,7 @@
     <button
       class="add-to-cart-button"
       :style="styleObj"
-      @click="addToCart"
+      @click="addToCart('cart btn')"
       v-else
       :disabled="disableAtcButton"
       :class="buttonClass"
@@ -54,16 +54,12 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
-import ProductPrice from '~/components/nacelle/ProductPrice'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import rechargeMixin from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
 import Axios from 'axios'
 
 export default {
-  components: {
-    ProductPrice
-  },
   mixins: [rechargeMixin, productMetafields],
 
   props: {
@@ -99,7 +95,15 @@ export default {
     quantity: { type: Number, default: 1 },
     allOptionsSelected: { type: Boolean, default: true },
     confirmedSelection: { type: Boolean, default: true },
-    onlyOneOption: { type: Boolean, default: true }
+    onlyOneOption: { type: Boolean, default: true },
+    bundles: {
+      type: Array,
+      default: () => []
+    },
+    bundleVarietyPack: {
+      type: Object,
+      default: () => {}
+    }
   },
 
   data() {
@@ -108,7 +112,9 @@ export default {
       displayPrice: 0,
       defaultText: `Add to Cart - ${this.displayPrice}`,
       buttonText: `Add to Cart - ${this.displayPrice}`,
-      buttonClass: ''
+      buttonClass: '',
+      priceSaved: {},
+      bundleVariants: []
     }
   },
   computed: {
@@ -161,7 +167,7 @@ export default {
     }
   },
   mounted() {
-    this.getDisplayPrice()
+    this.getDisplayBundlePrice()
   },
   watch: {
     confirmedSelection() {
@@ -170,14 +176,26 @@ export default {
 
     variant() {
       this.$emit('cartVariant', this.variant)
-      this.getDisplayPrice()
+      this.getDisplayBundlePrice()
     },
 
     quantity() {
-      this.getDisplayPrice()
+      this.getDisplayBundlePrice()
     },
     isSubscriptionOn() {
-      this.getDisplayPrice()
+      this.getDisplayBundlePrice()
+    },
+    bundles: {
+      handler() {
+        this.getDisplayBundlePrice()
+      },
+      deep: true
+    },
+     bundleVarietyPack: {
+      handler() {
+        this.getDisplayBundlePrice()
+      },
+      deep: true
     }
   },
 
@@ -192,13 +210,77 @@ export default {
     hasWarranty() {
       return !!Object.keys(this.warranty).length
     },
-    async getDisplayPrice() {
+    // async getDisplayPrice() {
+    //   if (!this.variant || !this.variant.id) {
+    //     return undefined
+    //   }
+
+    //   const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
+
+    //   const decodedId = atob(this.variant.id)
+    //     .split('/')
+    //     .pop()
+    //   const price = encodeURIComponent(
+    //     JSON.stringify([
+    //       {
+    //         Price: _price,
+    //         Tag: decodedId
+    //       }
+    //     ])
+    //   )
+
+    //   // START OF RYAN MOD to override currency
+
+    //   // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+    //   if (document.cookie.includes('_rchcur')) {
+    //     var config = {
+    //       method: 'get',
+    //       url:
+    //         'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
+    //         document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
+    //         `&MerchantPrices=${price}`
+    //     }
+    //   } else {
+    //     var config = {
+    //       method: 'get',
+    //       url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+    //     }
+    //   }
+    //   // END OF RYAN MOD
+
+    //   const localPrice = await Axios(config)
+    //     .then(res => {
+    //       if (!res.data.ConsumerPrices[0]) {
+    //         this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
+    //       } else {
+    //         // Ryan's fix with Michael's help for UAE and some currency symbols
+    //         if (res.data.Symbol == null) {
+    //           this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(
+    //             2
+    //           )} ${res.data.Currency}`
+    //         } else {
+    //           this.displayPrice = `${res.data.Symbol}${(
+    //             Number(res.data.ConsumerPrices[0]) * this.quantity
+    //           ).toFixed(2)}`
+    //         }
+    //       }
+    //       ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
+    //       (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+    //     })
+    //     .catch(res => {
+    //       console.error('Currency Request Failed', res)
+    //       this.displayPrice = `$${Number(this.variant.price * this.quantity).toFixed(2)}`
+    //       ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
+    //       (this.buttonText = `Add to Cart - ${this.displayPrice}`)
+    //     })
+    // },
+    async getDisplayBundlePrice() {
       if (!this.variant || !this.variant.id) {
         return undefined
       }
 
-      let _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
-  
+      const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
+
       const decodedId = atob(this.variant.id)
         .split('/')
         .pop()
@@ -211,54 +293,164 @@ export default {
         ])
       )
 
-      //START OF RYAN MOD to override currency
+      let config = this.getConfigURL(price)
+      let totalPrice = 0
+      let symbol = null
+      let currency = null
+      let bundleVariantCount = 0
+      let response = {}
+      let foundPrice = false
+      if (this.priceSaved[_price]) {
+        foundPrice = true
+        response = this.priceSaved[_price]
+      } else {
+        try {
+          response = await Axios(config)
+          this.priceSaved[_price] = response
+          foundPrice = true
+        } catch (err) {
+          symbol = '$'
+          totalPrice = Number(this.variant.price * this.quantity)
+        }
+      }
 
-      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      if (foundPrice) {
+        if (response.data.Symbol) {
+          symbol = response.data.Symbol
+        }
+        if (response.data.currency) {
+          currency = response.data.currency
+        }
+        if (!response.data.ConsumerPrices[0]) {
+          totalPrice = Number(_price) * this.quantity
+        } else {
+          totalPrice = Number(response.data.ConsumerPrices[0] * this.quantity)
+        }
+      }
+      if (this.bundles && this.bundles.length) {
+        for (let i = 0; i < this.bundles.length; i++) {
+          // Using forloop isntead of forEach since we have to wait for the prices of each product in bundle before displaying
+          const bundle = this.bundles[i]
+          bundleVariantCount++
+          let variantPrice = null
+          let foundPriceVariant = false
+          let response = {}
+          if (bundle?.variant?.price) {
+            variantPrice = bundle.variant.price
+          } else {
+            variantPrice = bundle.product.price
+          }
+          const priceEncoded = encodeURIComponent(
+            JSON.stringify([
+              {
+                Price: variantPrice,
+                Tag: decodedId
+              }
+            ])
+          )
+          config = this.getConfigURL(priceEncoded)
+          if (!this.priceSaved[variantPrice]) {
+            try {
+              this.priceSaved[variantPrice] = await Axios(config)
+              response = this.priceSaved[variantPrice]
+              foundPriceVariant = true
+            } catch (err) {
+              totalPrice += Number(variantPrice * this.quantity)
+            }
+          } else {
+            foundPriceVariant = true
+            response = this.priceSaved[variantPrice]
+          }
+          if (foundPriceVariant) {
+            if (!response.data.ConsumerPrices[0]) {
+              totalPrice += Number(variantPrice * this.quantity)
+            } else {
+              totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
+            }
+          }
+        }
+      }
+
+      if (this.bundleVarietyPack?.variants) {
+        const varietyPack = this.bundleVarietyPack
+        if (varietyPack?.variants?.length) {
+          for (let i = 0; i < varietyPack?.variants?.length; i++) {
+            const variant = varietyPack.variants[i]
+            bundleVariantCount++
+            const variantPrice = variant.price
+            let foundPriceVariant = false
+            let response = {}
+            const priceEncoded = encodeURIComponent(
+              JSON.stringify([
+                {
+                  Price: variantPrice,
+                  Tag: decodedId
+                }
+              ])
+            )
+            config = this.getConfigURL(priceEncoded)
+            if (!this.priceSaved[variantPrice]) {
+              try {
+                this.priceSaved[variantPrice] = await Axios(config)
+                response = this.priceSaved[variantPrice]
+                foundPriceVariant = true
+              } catch (err) {
+                totalPrice += Number(variantPrice * this.quantity)
+              }
+            } else {
+              foundPriceVariant = true
+              response = this.priceSaved[variantPrice]
+            }
+            if (foundPriceVariant) {
+              if (!response.data.ConsumerPrices[0]) {
+                totalPrice += Number(variantPrice * this.quantity)
+              } else {
+                totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
+              }
+            }
+          }
+        }
+      }
+      if (symbol) {
+        this.displayPrice = `${symbol}${totalPrice.toFixed(2)}`
+      } else {
+        this.displayPrice = `${totalPrice.toFixed(2)} ${currency}`
+      }
+
+      if (bundleVariantCount) {
+        this.defaultText = `Add Bundle to Cart - ${this.displayPrice}`
+        this.buttonText = `Add Bundle to Cart - ${this.displayPrice}`
+      } else {
+        this.defaultText = `Add to Cart - ${this.displayPrice}`
+        this.buttonText = `Add to Cart - ${this.displayPrice}`
+      }
+    },
+
+    getConfigURL(price) {
+      let config = null
       if (document.cookie.includes('_rchcur')) {
-        var config = {
+        config = {
           method: 'get',
           url:
-            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
             document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
             `&MerchantPrices=${price}`
         }
       } else {
-        var config = {
+        config = {
           method: 'get',
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
         }
       }
-      //END OF RYAN MOD
-
-      const localPrice = await Axios(config)
-        .then(res => {
-          if (!res.data.ConsumerPrices[0]) {
-            this.displayPrice = `${res.data.Symbol}${(Number(_price) * this.quantity).toFixed(2)}`
-          } else {
-            //Ryan's fix with Michael's help for UAE and some currency symbols
-            if (res.data.Symbol == null) {
-              this.displayPrice = `${(Number(res.data.ConsumerPrices[0]) * this.quantity).toFixed(
-                2
-              )} ${res.data.Currency}`
-            } else {
-              this.displayPrice = `${res.data.Symbol}${(
-                Number(res.data.ConsumerPrices[0]) * this.quantity
-              ).toFixed(2)}`
-            }
-          }
-          ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
-            (this.buttonText = `Add to Cart - ${this.displayPrice}`)
-        })
-        .catch(res => {
-          console.error('Currency Request Failed', res)
-          this.displayPrice = `$${Number(this.variant.price * this.quantity).toFixed(2)}`
-          ;(this.defaultText = `Add to Cart - ${this.displayPrice}`),
-            (this.buttonText = `Add to Cart - ${this.displayPrice}`)
-        })
+      return config
     },
 
     setButtonText() {
-      if (this.onlyOneOption && !this.variantInLineItems && this.variant.availableForSale == true) {
+      if (
+        this.onlyOneOption &&
+        !this.variantInLineItems &&
+        this.variant.availableForSale === true
+      ) {
         this.butttonText = this.defaultText
       } else if (this.onlyOneOption && this.variantInLineItems) {
         this.buttonText = 'Added!'
@@ -269,9 +461,10 @@ export default {
         }, 2000)
       }
     },
-    addToCart() {
+    addToCart(calledfrom = '') {
+      console.log('called', calledfrom)
       if (this.discount) {
-        let _dvar = JSON.parse(JSON.stringify(this.variant))
+        const _dvar = JSON.parse(JSON.stringify(this.variant))
         _dvar.price = 0.0
       } else {
       }
@@ -309,10 +502,47 @@ export default {
           this.addLineItem(warrantyItem)
         }
         this.addLineItem(lineItem)
+        if (this.bundles.length) {
+          this.bundles.forEach(bundle => {
+            const variant = bundle?.variant
+            const product = bundle?.product
+            const lineItem = {
+              image: product?.featuredMedia,
+              title: product?.title,
+              variant: variant,
+              quantity: this.quantity || 1,
+              productId: product?.id,
+              handle: product?.handle,
+              vendor: product?.vendor,
+              tags: product?.tags,
+              metafields: []
+            }
+            this.addLineItem(lineItem)
+          })
+        }
+        if (this.bundleVarietyPack?.variants) {
+          const varietyPack = this.bundleVarietyPack
+          varietyPack?.variants?.length &&
+            varietyPack.variants.forEach(variant => {
+              const product = varietyPack?.product
+              const lineItem = {
+                image: product?.featuredMedia,
+                title: product?.title,
+                variant: variant,
+                quantity: this.quantity || 1,
+                productId: product?.id,
+                handle: product?.handle,
+                vendor: product?.vendor,
+                tags: product?.tags,
+                metafields: []
+              }
+              this.addLineItem(lineItem)
+            })
+        }
         this.setButtonText()
         this.showCart()
         this.$emit('addedToCart')
-        
+
         this.elevarAddToCart()
       }
     },
@@ -320,7 +550,7 @@ export default {
       // This is wrapped in a try/catch because in some instances it's attempted to be run during
       // the nuxt build (somehow in advance of the browser), therefore the `window.atob` method
       // doesn't exist yet.
-      let decodedId = undefined
+      let decodedId
       try {
         decodedId = atob(encodedId).split('gid://shopify/ProductVariant/')[1]
       } catch (e) {
@@ -328,24 +558,23 @@ export default {
       }
       return decodedId
     },
-    getSource(){
-      var location = window.location;
-      
-      if(location.pathname.includes('products')){
+    getSource() {
+      var location = window.location
+
+      if (location.pathname.includes('products')) {
         return 'productpage'
-      }else if( location.pathname.includes('marketplace') ){
+      } else if (location.pathname.includes('marketplace')) {
         return 'marketplace'
-      }else{
+      } else {
         return location.pathname
       }
-      
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarAddToCart() {
       window.dataLayer = window.dataLayer || []
@@ -354,34 +583,89 @@ export default {
       var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var source = this.getSource()
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
+      const productList = [
+        {
+          name: this.product.title.replace("'", ''),
+          id: (variant && variant.sku) || '',
+          product_id: productId,
+          variant_id: (variant && variantId) || '',
+          image: this.product.featuredMedia.src,
+          price: variant.price,
+          brand: this.product.vendor.replace("'", ''),
+          variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+          category: this.product.productType,
+          inventory: this.quantity,
+          list: referrer,
+          source: source
+        }
+      ]
+
+      if (this.bundles && this.bundles.length) {
+        this.bundles.forEach(bundle => {
+          const variant = bundle?.variant
+          const product = bundle?.product
+          const item = {
+            name: product?.title?.replace("'", ''),
+            id: (variant && variant.sku) || '',
+            product_id: Buffer.from(product?.pimSyncSourceProductId, 'base64'),
+            variant_id: Buffer.from(variant?.id, 'base64')
+              .toString('binary')
+              .split('/')
+              .pop(),
+            image: product?.featuredMedia?.src,
+            price: variant.price,
+            brand: product?.vendor.replace("'", ''),
+            variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+            category: product?.productType,
+            inventory: this.quantity || 1,
+            list: referrer,
+            source: source
+          }
+          productList.push(item)
+        })
+      }
+
+      if (this.bundleVarietyPack?.variants) {
+        const varietyPack = this.bundleVarietyPack
+        varietyPack?.variants?.length &&
+          varietyPack.variants.forEach(variant => {
+            const product = varietyPack?.product
+            const item = {
+              name: product?.title?.replace("'", ''),
+              id: (variant && variant.sku) || '',
+              product_id: Buffer.from(product?.pimSyncSourceProductId, 'base64'),
+              variant_id: Buffer.from(variant?.id, 'base64')
+                .toString('binary')
+                .split('/')
+                .pop(),
+              image: product?.featuredMedia?.src,
+              price: variant.price,
+              brand: product?.vendor.replace("'", ''),
+              variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+              category: product?.productType,
+              inventory: this.quantity || 1,
+              list: referrer,
+              source: source
+            }
+            productList.push(item)
+          })
+      }
+
       window.dataLayer.push({
-        "event": "dl_add_to_cart",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "add": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": productId,
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer,
-              "source": source,
-            }]
+        event: 'dl_add_to_cart',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          add: {
+            actionField: { list: referrer },
+            products: productList
           }
         }
       })
@@ -404,6 +688,12 @@ export default {
 
   @include respond-to('small') {
     width: auto;
+  }
+}
+
+.has-bundle-add {
+  .add-to-cart-button {
+    width: 375px;
   }
 }
 

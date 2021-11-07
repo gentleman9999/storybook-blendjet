@@ -6,12 +6,17 @@
       :style="[!currentVariant ? 'height:100vh' : 'auto']"
     >
       <!-- PRODUCT OPTIONS -->
-      <div class="product-select">
+      <div class="product-select" :class="{ 'has-bundle': hasBundle }">
         <div class="product-select__controls__mobile-title-container">
-          <div v-if="['blendjet-2'].includes(product.handle)" class="product-select__controls__title">
+          <div
+            v-if="['blendjet-2'].includes(product.handle)"
+            class="product-select__controls__title"
+          >
             {{ product.title }}
-            <br/>
-            <span style="font-size: 12px;line-height: 1.25;letter-spacing: 1.75px;">Portable Blender</span></h1>
+            <br />
+            <span style="font-size: 12px;line-height: 1.25;letter-spacing: 1.75px;">
+              Portable Blender
+            </span>
           </div>
           <div v-else class="product-select__controls__title">
             <h1>{{ product.title }}</h1>
@@ -39,7 +44,10 @@
               :strikethrough="true"
               :variantId="currentVariant.id"
             />
-            <div class="product-select__controls__price__installments" v-if="productType == 'BlendJet' && showAfterPay">
+            <div
+              class="product-select__controls__price__installments"
+              v-if="productType == 'BlendJet' && showAfterPay"
+            >
               <afterpay-placement
                 data-locale="en_US"
                 :data-currency="currency"
@@ -51,7 +59,7 @@
             </div>
           </div>
         </div>
-        <div class="product-select__image-carousel">
+        <div class="product-select__image-carousel" :class="{ 'has-bundle': hasBundle }">
           <div
             v-if="variants.length > 1"
             class="product-select__image-carousel__prev-variant"
@@ -67,23 +75,46 @@
             <NextSlide />
           </div>
           <transition name="fade" mode="out-in">
-            <picture v-if="productImage" class="product-select__image-carousel__img-container">
+            <picture
+              v-if="productImage"
+              :class="[
+                'product-select__image-carousel__img-container',
+                { 'auto-width': productType !== 'BlendJet' }
+              ]"
+            >
               <source :srcset="optimizeSource({ url: heroUrl })" />
               <img
                 class="product-select__image-carousel__img"
+                :class="{ 'has-bundle': hasBundle }"
                 currentVariant.featuredMedia.thumbnailSrc
-                :src="optimizeSource({ url: productType == 'BlendJet' ? productImage : currentVariant.featuredMedia.thumbnailSrc, width: 2100 })"
+                :src="
+                  optimizeSource({
+                    url:
+                      productType == 'BlendJet'
+                        ? productImage
+                        : currentVariant.featuredMedia.thumbnailSrc,
+                    width: 2100
+                  })
+                "
               />
             </picture>
           </transition>
         </div>
 
-        <div class="product-select__controls">
+        <div class="product-select__controls" :class="{ 'has-bundle': hasBundle }">
           <div class="product-select__controls__title-container">
-            <div v-if="['blendjet-2'].includes(product.handle)" class="product-select__controls__title">
-              <h1>{{ product.title }}
-              <br/>
-              <span style="font-family: Bold;font-size: 18px;line-height: 0.83;letter-spacing: 3.5px;">Portable Blender</span></h1>
+            <div
+              v-if="['blendjet-2'].includes(product.handle)"
+              class="product-select__controls__title"
+            >
+              <h1>
+                {{ product.title }}
+                <br />
+                <span
+                  style="font-family: Bold;font-size: 18px;line-height: 0.83;letter-spacing: 3.5px;"
+                  >Portable Blender</span
+                >
+              </h1>
             </div>
             <div v-else class="product-select__controls__title">
               <h1>{{ product.title }}</h1>
@@ -107,7 +138,10 @@
                 :strikethrough="true"
                 :variantId="currentVariant.id"
               />
-              <div class="product-select__controls__price__installments" v-if="showAfterPay && productType == 'BlendJet'">
+              <div
+                class="product-select__controls__price__installments"
+                v-if="showAfterPay && productType == 'BlendJet'"
+              >
                 <afterpay-placement
                   data-locale="en_US"
                   :data-currency="currency"
@@ -127,7 +161,7 @@
                 currentVariant.title
               }}</span>
             </div>
-            <div class="product-select__controls__variant-color__swatches">
+            <div class="product-select__controls__variant-color__swatches" ref="swatch">
               <product-options
                 :options="allOptions"
                 :variant="selectedVariant"
@@ -135,8 +169,8 @@
                 :variants="product.variants"
                 @clear="selectedOptions = []"
                 :currentOption="currentVariant.selectedOptions[0].value"
-                :key="1"
-                v-if="!showMobileVariants && !showDesktopHeader"
+                :key="showHeaderVariants"
+                v-if="!showMobileVariants"
               />
             </div>
           </div>
@@ -218,6 +252,143 @@
               </div>
             </div>
           </div>
+          <div
+            v-if="selectedBundle.length || selectedBundleVarietyPack.length"
+            class="product-select__controls__bundles"
+          >
+            <div
+              v-if="page && page.fields.bundles"
+              class="product-select__controls__bundles__title normal-size"
+            >
+              {{ bundleTitle }}
+            </div>
+            <div class="product-select__controls__bundles__bundle-products">
+              <div class="product-select__controls__bundles__bundle-product-container">
+                <img
+                  :src="currentVariant.featuredMedia.src"
+                  :alt="currentVariant.featuredMedia.altText"
+                  class="product-select__controls__bundles__bundle-product-image"
+                  @click="bundleItemClicked(currentVariant, true)"
+                />
+              </div>
+              <div
+                v-for="(bundle, index) in selectedBundle"
+                :key="bundle.product.id"
+                class="product-select__controls__bundles__bundle-product-container"
+              >
+                <!-- <b-dropdown
+                  v-if="bundle.clickAction"
+                  position="is-bottom-left"
+                  append-to-body
+                  aria-role="menu"
+                  trap-focus
+                  class="variant-dropdown"
+                  :class="{ 'has-padding': true }"
+                  paddingless
+                >
+                  <template #trigger>
+
+                  </template>
+
+                  <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
+                    <product-options
+                      :options="allOptions"
+                      :variant="bundle.variant"
+                      :variants="bundle.product.variants"
+                      :currentOption="bundle.variant.selectedOptions[0].value"
+                      :key="5"
+                      @selectedOption="setBundleVariant($event, index)"
+                    />
+                  </b-dropdown-item>
+                </b-dropdown> -->
+                <img
+                  v-if="bundle.variant && bundle.variant.featuredMedia"
+                  :src="bundle.variant.featuredMedia.src"
+                  :alt="bundle.variant.featuredMedia.altText"
+                  class="product-select__controls__bundles__bundle-product-image"
+                  :class="{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }"
+                  @click="bundleItemClicked(bundle, false, index)"
+                />
+                <img
+                  v-else
+                  :src="bundle.product.featuredMedia.src"
+                  :alt="bundle.product.featuredMedia.altText"
+                  class="product-select__controls__bundles__bundle-product-image"
+                  :class="{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }"
+                  @click="bundleItemClicked(bundle, false, index)"
+                />
+              </div>
+              <div
+                v-if="
+                  selectedBundleVarietyPack &&
+                    selectedBundleVarietyPack[selectedVarieryPackIndex] &&
+                    selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length
+                "
+                class="product-select__controls__bundles__bundle-product-container"
+              >
+                <img
+                  :src="varietyPackImage"
+                  alt="variety pack"
+                  class="product-select__controls__bundles__bundle-product-image"
+                  @click="
+                    bundleVarietyPackClicked(selectedBundleVarietyPack[selectedVarieryPackIndex])
+                  "
+                />
+                <!-- <img
+                  v-else
+                  :src="varietyPackImage"
+                  alt="variety pack"
+                  @click="varietyBundleSelectorActive = !varietyBundleSelectorActive"
+                  class="product-select__controls__bundles__bundle-product-image"
+                /> -->
+              </div>
+            </div>
+            <div class="product-select__controls__bundles__add-to-cart-bundle">
+              <product-add-to-cart-button
+                :quantity="quantity"
+                :product="product"
+                :variant="currentVariant"
+                :allOptionsSelected="true"
+                :onlyOneOption="true"
+                :warranty="warrantySelected"
+                @addedToCart="quantity = 1"
+                :bundles="selectedBundle"
+                :bundle-variety-pack="selectedBundleVarietyPack[selectedVarieryPackIndex]"
+              />
+            </div>
+
+            <!-- <div class="variant-select-container" @click.stop>
+              <div
+                v-for="(bundle, index) in selectedBundle"
+                :key="bundle.product.id"
+                class="variant-select"
+                v-show="bundleOptionsSelectorActive[index]"
+              >
+                <product-options
+                  :options="allOptions"
+                  :variant="bundle.variant"
+                  :variants="bundle.product.variants"
+                  :currentOption="bundle.variant.selectedOptions[0].value"
+                  :key="5"
+                  @selectedOption="setBundleVariant($event, index)"
+                />
+              </div>
+              <div
+                v-if="
+                  selectedBundleVarietyPack &&
+                    selectedBundleVarietyPack[selectedVarieryPackIndex] &&
+                    selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length &&
+                    varietyBundleSelectorActive
+                "
+                class="variant-select"
+              >
+                <VarietySelect
+                  :options="selectedBundleVarietyPack"
+                  @updateOptions="updateSelectedVarietyPack"
+                />
+              </div>
+            </div> -->
+          </div>
 
           <div
             v-if="['baileys-blendjet-2'].includes(product.handle)"
@@ -261,13 +432,13 @@
                 alt="Paypal Logo"
               />
             </div>
-            <div
+            <!-- <div
               role="button"
               class="product-select__controls__payments__more-options"
               @click="$modal.show('pay-with-modal')"
             >
               More payment options
-            </div>
+            </div> -->
           </div>
           <div class="product-select__controls__value-props">
             <div
@@ -286,10 +457,11 @@
                 class="product-select__controls__value-props__badges__img"
                 :href="mcafeeLink"
               >
-                  <img
-                    :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
-                    alt="TrustedSite Seal" style="border: 1px solid #ccc;border-radius: 3px;"
-                  />
+                <img
+                  :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                  alt="TrustedSite Seal"
+                  style="border: 1px solid #ccc;border-radius: 3px;"
+                />
               </a>
               <a
                 target="_blank"
@@ -298,9 +470,7 @@
                 :href="nortonLink"
               >
                 <img
-                  :src="
-                    optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })
-                  "
+                  :src="optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })"
                   alt="Norton Secured Logo"
                 />
               </a>
@@ -533,7 +703,7 @@
 
       <!-- STICKY TOP BANNER WITH PRODUCT INFORMATION  -->
       <transition name="fade">
-        <div class="header-product-select" v-if="showDesktopHeader">
+        <div class="header-product-select" v-show="showDesktopHeader">
           <div class="header-product-select__info-container">
             <div class="header-product-select__thumbnail">
               <img
@@ -645,13 +815,14 @@
           <b-carousel
             class="media-content__carousel"
             :arrow="true"
+            :arrow-hover="false"
             :repeat="true"
             :indicator="true"
             :has-drag="true"
             :autoplay="false"
             v-model="heroIndex"
           >
-            <b-carousel-item  v-for="(image, i) in heroImages" :key="i">
+            <b-carousel-item v-for="(image, i) in heroImages" :key="i">
               <section class="`hero is-large`">
                 <span class="image">
                   <img class="media-content__carousel__img" :src="optimizeSource({ url: image })" />
@@ -668,23 +839,25 @@
                 <div class="features-heading">
                   {{ page.fields.features.fields.title }}
                 </div>
-                <div
-                  v-if="page.fields.features.fields.features"
-                  v-for="feature in page.fields.features.fields.features"
-                  class="features-row"
-                >
-                  <div class="features-icon">
-                    <ModelIcon :type="feature.fields.icon" />
-                  </div>
-                  <div class="features-text-block">
-                    <div class="features-text-block__title">
-                      {{ feature.fields.title }}
+                <template v-if="page.fields.features.fields.features">
+                  <div
+                    v-for="(feature, i) in page.fields.features.fields.features"
+                    :key="i"
+                    class="features-row"
+                  >
+                    <div class="features-icon">
+                      <ModelIcon :type="feature.fields.icon" />
                     </div>
-                    <div class="features-text-block__text">
-                      <RichTextRenderer :document="feature.fields.description" />
+                    <div class="features-text-block">
+                      <div class="features-text-block__title">
+                        {{ feature.fields.title }}
+                      </div>
+                      <div class="features-text-block__text">
+                        <RichTextRenderer :document="feature.fields.description" />
+                      </div>
                     </div>
                   </div>
-                </div>
+                </template>
               </div>
             </div>
           </div>
@@ -699,26 +872,35 @@
               :external-media-url="section.fields.externalVideoUrl"
             />
 
-            <div v-if="product.title.includes('BlendJet')" class="media-content__main__details__content-block">
+            <div
+              v-if="product.title.includes('BlendJet')"
+              class="media-content__main__details__content-block"
+            >
               <div class="media-content__main__details__specs__heading">
                 DETAILS & SPECS
               </div>
               <div class="media-content__main__details__specs__text">
-                Blend your favorite smoothies, shakes, margaritas, and more
-                without the limitations of a regular blender - whenever,
-                wherever you want!
+                Blend your favorite smoothies, shakes, margaritas, and more without the limitations
+                of a regular blender - whenever, wherever you want!
               </div>
 
-              <div v-if="['blendjet-2'].includes(product.handle)"
-              class="media-content__main__details__content-block__image"
+              <div
+                v-if="['blendjet-2'].includes(product.handle)"
+                class="media-content__main__details__content-block__image"
               >
                 <img
-                  class="media-content__main__details__content-block__img" style="margin-bottom:35px"
-                  :src="optimizeSource({ url: '/images/blendjetPDP/Red-Dot-Design-Award-2021.png' })"
+                  class="media-content__main__details__content-block__img"
+                  style="margin-bottom:35px"
+                  :src="
+                    optimizeSource({ url: '/images/blendjetPDP/Red-Dot-Design-Award-2021.png' })
+                  "
                 />
               </div>
 
-              <div v-if="['blendjet-one'].includes(product.handle)" class="media-content__main__details__specs__list">
+              <div
+                v-if="['blendjet-one'].includes(product.handle)"
+                class="media-content__main__details__specs__list"
+              >
                 <ul>
                   <li>Compact Size: 9” x 3” (230mm x 76mm)</li>
                   <li>Product Weight: 1 lb (.45 kg)</li>
@@ -766,10 +948,9 @@
 <script>
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 import ProductPrice from '~/components/nacelle/ProductPrice'
-const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
-const VideoContainer = () => import('~/components/VideoContainer')
 
 import ModelIcon from '~/components/ModelIcon'
+import VarietySelect from '~/components/VarietySelect'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import ProductOptionSwatch from '~/components/nacelle/ProductOptionSwatch'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
@@ -784,7 +965,7 @@ import { createClient } from '~/plugins/contentful.js'
 
 import imageOptimize from '~/mixins/imageOptimize'
 import debounce from 'lodash.debounce'
-
+import { cloneDeep } from 'lodash'
 import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
 import Info from '~/components/svg/info'
@@ -792,6 +973,7 @@ import CaretDown from '~/components/svg/caretDown'
 import BlnExtend from '~/components/svg/blnExtend'
 import NextSlide from '~/components/svg/NextSlide'
 import PrevSlide from '~/components/svg/PrevSlide'
+const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
 
 export default {
   data() {
@@ -818,8 +1000,7 @@ export default {
       heroUrl: null,
       imgWidth: 0,
       mcafeeLink: 'https://www.trustedsite.com/verify?host=blendjet.com',
-      nortonLink:
-        'https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com',
+      nortonLink: 'https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com',
       bbbLink:
         'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
       description: [],
@@ -833,11 +1014,20 @@ export default {
       variantIndex: 0,
       showAfterPay: false,
       metaTitle: null,
-      metaDescription: null
+      metaDescription: null,
+      selectedBundle: cloneDeep(this.bundles),
+      selectedBundleVarietyPack: cloneDeep(this.bundleVarietyPack),
+      bundleTitle: this?.page?.fields?.bundles?.fields?.title,
+      bundleVarietyOptions: [],
+      selectedVarieryPackIndex: 0,
+      varietyPackImage: '',
+      imageInterval: null,
+      bundleOptionsSelectorActive: {},
+      varietyBundleSelectorActive: false
     }
   },
   components: {
-    VideoContainer,
+    VarietySelect,
     ProductPrice,
     JetpackCrossSell,
     Guarantee,
@@ -866,60 +1056,32 @@ export default {
       type: Object,
       default: () => {}
     },
-    productType:{
+    productType: {
       type: String
-    }
-  },
-
-  head() {
-    const productCurrency = this.currency
-    const productPrice = this.displayPrice
-    const image = this.productImage
-    const properties = {}
-    const meta = []
-    const script = [
-      {
-        type: 'application/ld+json',
-        json: {
-          '@context': 'http://schema.org',
-          '@type': 'Product',
-          name: 'BlendJet 2',
-          image: [`${image}`],
-          offers: {
-            '@type': 'Offer',
-            url: 'https://blendjet.com/products/blendjet-2',
-            itemCondition: 'http://schema.org/NewCondition',
-            availability: 'http://schema.org/InStock',
-            price: `${productPrice}`,
-            priceCurrency: `${productCurrency}`
-          }
-        }
-      }
-    ]
-
-    if (this.metaTitle) {
-      properties.title = this.metaTitle
-    }
-
-    if (this.metaDescription) {
-      meta.push({
-        hid: 'description',
-        name: 'description',
-        content: this.metaDescription
-      })
-    }
-
-    if (image && productCurrency && productPrice) {
-      return {
-        ...properties,
-        meta,
-        script
-      }
+    },
+    bundles: {
+      type: Array,
+      default: () => []
+    },
+    variantSpecificBundles: {
+      type: Object,
+      default: () => {}
+    },
+    bundleVarietyPack: {
+      type: Array,
+      default: () => []
+    },
+    variantBundleVarietyPack: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
     ...mapState('user', ['locale']),
-    ...mapGetters('cart', ['cartBalance'])
+    ...mapGetters('cart', ['cartBalance']),
+    hasBundle() {
+      return !!this.bundles.length
+    }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
@@ -931,12 +1093,86 @@ export default {
       'decrementLineItem'
     ]),
     ...mapActions('checkout', ['processCheckout']),
+    addHashToLocation() {
+      window.history.pushState(
+        {},
+        null,
+        this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
+      )
+    },
+    formatVariantId(value) {
+      const url = atob(value)
+      return url.replace('gid://shopify/ProductVariant/', '')
+    },
+    bundleVarietyPackClicked(bundle) {
+      const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
+      this.$router.push({
+        name: 'products-productHandle',
+        params: {
+          productHandle: bundle.product.handle
+        },
+        query: {
+          variant: this.formatVariantId(variant.id)
+        }
+      })
+    },
+    bundleItemClicked(bundle, isCurrentProduct, index = 0) {
+      if (!isCurrentProduct) {
+        if (bundle?.clickAction === 'variant') {
+          console.log('show variant')
+          this.$set(this.bundleOptionsSelectorActive, index, true)
+        } else if (bundle.clickAction === 'link') {
+          const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
+          this.$router.push({
+            name: 'products-productHandle',
+            params: {
+              productHandle: bundle.product.handle
+            },
+            query: {
+              variant: this.formatVariantId(variant.id)
+            }
+          })
+        }
+      } else {
+        if (this.$mq === 'sm' || this.$mq === 'md') {
+          const element = this.$refs.swatch
+          const top = element.offsetTop
+          window &&
+            window.scroll({
+              top: Number(top) - 130,
+              behavior: 'smooth'
+            })
+        } else {
+          window &&
+            window.scroll({
+              top: 0,
+              behavior: 'smooth'
+            })
+        }
+      }
+    },
+    setBundleVariant(option, index) {
+      const bundleToUpdate = this.selectedBundle[index]
+      const newVariant = bundleToUpdate.product.variants.filter(variant => {
+        if (variant.selectedOptions[0].value === option.value) {
+          return variant
+        }
+      })
+      if (newVariant.length) {
+        this.selectedBundle[index].variant = cloneDeep(...newVariant)
+        this.$set(this.bundleOptionsSelectorActive, index, false)
+      }
+    },
+    updateSelectedVarietyPack(index) {
+      this.selectedVarieryPackIndex = index
+      this.updateBundle()
+    },
     setDefaultVariant() {
       if (this.currentVariant) {
         return this.currentVariant
       } else if (this.product && this.product.variants && this.product.variants.length) {
         if (this.$route.query && this.$route.query.variant) {
-          let variantId = btoa(`gid://shopify/ProductVariant/${this.$route.query.variant}`)
+          const variantId = btoa(`gid://shopify/ProductVariant/${this.$route.query.variant}`)
           return this.product.variants.filter(variant => {
             return variant.id === variantId
           })[0]
@@ -1006,10 +1242,44 @@ export default {
       }
     },
     camelize(str) {
-      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
         if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
         return index === 0 ? match.toLowerCase() : match.toUpperCase()
       })
+    },
+    updateBundle() {
+      const title = this.currentVariant.title.toLowerCase()
+      if (this?.variantSpecificBundles?.[title]?.length) {
+        this.selectedBundle = cloneDeep(this?.variantSpecificBundles[title])
+        this.bundleTitle = this?.variantSpecificBundles?.[title]?.[0].title
+      } else if (this.bundles.length) {
+        this.selectedBundle = cloneDeep(this.bundles)
+        this.bundleTitle = this.bundles[0].title
+      }
+      if (this?.variantBundleVarietyPack?.[title]?.length) {
+        this.selectedBundleVarietyPack = cloneDeep(this?.variantBundleVarietyPack?.[title])
+      } else if (this.bundleVarietyPack.length) {
+        this.selectedBundleVarietyPack = cloneDeep(this.bundleVarietyPack)
+      } else {
+        this.selectedBundleVarietyPack = []
+      }
+      if (this.selectedBundleVarietyPack?.length) {
+        if (this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex]) {
+          const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
+          let imageIndex = 0
+          if (variants?.length) {
+            this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.src
+            clearInterval(this.imageInterval)
+            this.imageInterval = setInterval(() => {
+              this.varietyPackImage =
+                variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.src
+              imageIndex++
+            }, 1000)
+          }
+        }
+      } else {
+        clearInterval(this.imageInterval)
+      }
     },
     updateVariant(variant) {
       this.currentVariant = variant
@@ -1127,44 +1397,46 @@ export default {
         }
       }
     },
-    
+
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
-        
+
     elevarProductView() {
       window.dataLayer = window.dataLayer || []
       var uuid = this.createUUID()
       var variant = this.currentVariant
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
-      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+        .toString('binary')
+        .split('/')
+        .pop()
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       window.dataLayer.push({
-        "event": "dl_view_item",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "detail": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": this.productId(),
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer, 
-            }]
+        event: 'dl_view_item',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          detail: {
+            actionField: { list: referrer },
+            products: [
+              {
+                name: this.product.title.replace("'", ''),
+                id: (variant && variant.sku) || '',
+                product_id: this.productId(),
+                variant_id: (variant && variantId) || '',
+                image: this.product.featuredMedia.src,
+                price: variant.price,
+                brand: this.product.vendor.replace("'", ''),
+                variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                category: this.product.productType,
+                inventory: this.quantity,
+                list: referrer
+              }
+            ]
           }
         }
       })
@@ -1179,7 +1451,8 @@ export default {
     // Local Variant
     currentVariant() {
       if (this.variantMedia[this.camelize(this.currentVariant.title)]) {
-        let variantImage = this.variantMedia[this.camelize(this.currentVariant.title)].productImage
+        const variantImage = this.variantMedia[this.camelize(this.currentVariant.title)]
+          .productImage
           ? this.variantMedia[this.camelize(this.currentVariant.title)].productImage
           : this.currentVariant.featuredMedia.src
         this.productImage = variantImage
@@ -1191,14 +1464,15 @@ export default {
       }
       this.heroIndex = 0
 
-      let variantId = atob(this.currentVariant.id)
-        .split('/')
-        .pop()
-      let path = `${this.$route.path}?variant=${variantId}`
+      // const variantId = atob(this.currentVariant.id)
+      //   .split('/')
+      //   .pop()
+      // const path = `${this.$route.path}?variant=${variantId}`
 
-      this.$router.push(path)
-      
+      // this.$router.push(path)
+      this.addHashToLocation()
       this.elevarProductView()
+      this.updateBundle()
     },
     quantity() {
       this.elevarProductView()
@@ -1243,22 +1517,20 @@ export default {
             const item = data.items[0]
 
             // For each variant content model...
-            if(item.fields.variants){
-    item.fields.variants.forEach(node => {
-              let productImage = node.fields.productImage
-                ? `https:${node.fields.productImage.fields.file.url}?w=2100`
-                : null
-              vm.variantMedia[node.fields.title] = {
-                productImage: productImage,
-                heroImages: node.fields.heroImages.map(image => {
-                  return `${image.fields.file.url}?w=2100`
-                })
-              }
-            })
+            if (item.fields.variants) {
+              item.fields.variants.forEach(node => {
+                const productImage = node.fields.productImage
+                  ? `https:${node.fields.productImage.fields.file.url}?w=2100`
+                  : null
+                vm.variantMedia[node.fields.title] = {
+                  productImage: productImage,
+                  heroImages: node.fields.heroImages.map(image => {
+                    return `${image.fields.file.url}?w=2100`
+                  })
+                }
+              })
             }
-        
-
-            let sections = item.fields.productDescription
+            const sections = item.fields.productDescription
             vm.specs = sections.pop()
 
             vm.description = sections
@@ -1323,7 +1595,7 @@ export default {
       window.addEventListener('scroll', this.handleDebouncedScroll, {
         passive: true
       })
-    } 
+    }
   },
   beforeDestroy() {
     if (process.client) {
@@ -1342,6 +1614,12 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   min-height: 900px;
+  &.has-bundle {
+    min-height: 950px;
+    @include respond-to('small') {
+      min-height: auto;
+    }
+  }
   @include respond-to('small') {
     height: auto;
     min-height: none;
@@ -1363,6 +1641,12 @@ export default {
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 
+    &.has-bundle {
+      height: 950px;
+      @include respond-to('small') {
+        height: 400px;
+      }
+    }
     @include respond-to('small') {
       width: 100%;
       padding-top: 0px;
@@ -1391,6 +1675,9 @@ export default {
 
     &__img-container {
       width: 100%;
+      &.auto-width {
+        width: auto;
+      }
     }
 
     &__img {
@@ -1398,7 +1685,12 @@ export default {
       object-fit: cover;
       object-position: center;
       width: 100%;
-
+      &.has-bundle {
+        height: 950px;
+        @include respond-to('small') {
+          height: 400px;
+        }
+      }
       @include respond-to('small') {
         height: auto;
         height: 400px;
@@ -1415,6 +1707,12 @@ export default {
     text-align: center;
     padding: 0 75px 30px 75px;
     height: 900px;
+    &.has-bundle {
+      height: 950px;
+      @include respond-to('small') {
+        height: auto;
+      }
+    }
 
     @include respond-to('small') {
       padding: 0;
@@ -1606,6 +1904,64 @@ export default {
       }
     }
 
+    &__bundles {
+      padding: 10px;
+      position: relative;
+      width: 375px;
+      margin: 20px auto auto auto;
+      &__title {
+        font-weight: bold;
+        color: $primary-purple;
+        margin-bottom: 10px;
+        font-size: 12px;
+        font-family: Bold;
+        letter-spacing: 1.75px;
+        text-align: center;
+        line-height: 1.33;
+        text-transform: uppercase;
+      }
+      &__bundle-products {
+        display: flex;
+        margin: auto auto 15px auto;
+        justify-content: center;
+        max-width: 375px;
+        position: relative;
+      }
+      .product-image-dummy {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        cursor: pointer;
+        z-index: 9;
+      }
+      &__bundle-product-container {
+        height: 60px;
+        width: 90px;
+        position: relative;
+        &:not(:last-child)::after {
+          content: '+';
+          font-size: 30px;
+          color: $primary-purple;
+          position: absolute;
+          right: calc(0% - 7px);
+          top: 10px;
+        }
+      }
+      &__bundle-product-image {
+        height: 100%;
+        max-height: 60px;
+        width: auto;
+        cursor: pointer;
+        &.no-pointer {
+          cursor: default;
+        }
+      }
+      &__add-to-cart-bundle {
+        display: flex;
+        justify-content: center;
+      }
+    }
+
     &__shipping-notification {
       font-family: Bold;
       letter-spacing: 1.75px;
@@ -1691,7 +2047,7 @@ export default {
       display: flex;
       align-items: center;
       flex-direction: column;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
 
       &__paypal {
         @include button-primary('purple-ghost');
@@ -1701,7 +2057,7 @@ export default {
         justify-content: center;
         align-items: center;
         height: 50px;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
         margin-top: 20px; //hack to fix shipping counter on BJ2 page
         border: none;
 
@@ -2303,7 +2659,7 @@ export default {
 }
 
 /* The container <div> - needed to position the dropdown content */
-.dropdown {
+.dropdown:not(.variant-dropdown) {
   position: relative;
   color: $primary-purple;
   display: flex;
@@ -2485,5 +2841,19 @@ h1 {
   font-family: inherit;
   line-height: inherit;
   letter-spacing: inherit;
+}
+.variant-select-container {
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  width: 375px;
+  background: white;
+}
+</style>
+<style lang="scss">
+.variant-dropdown {
+  .dropdown-content {
+    padding: 0 !important;
+  }
 }
 </style>
