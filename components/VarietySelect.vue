@@ -29,7 +29,7 @@ export default {
 <style lang="scss" scoped>
 /* Dropdown Content (Hidden by Default) */
 .variety-dropdown-content {
-  border-radius: 5px;
+  border-radius: 25px;
   background-color: $primary-purple-tint;
   width: 100%;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -45,6 +45,10 @@ export default {
   cursor: pointer;
   z-index: 3;
   min-width: 340px;
+  font-size: 12px;
+  color: $primary-purple;
+  border: 2px solid $secondary-purple-4;
+  overflow: hidden;
 
   &__up {
     top: unset;

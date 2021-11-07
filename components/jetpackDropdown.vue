@@ -1,25 +1,30 @@
 <template>
-  <div >
-    <div class="dropdown" tabindex="0"  @focusout="visible = false">
+  <div>
+    <div class="dropdown" tabindex="0" @focusout="visible = false">
       <div class="dropbtn" role="button" @click.prevent="toggleVisible" v-show="!visible">
         <span class="dropdown-thumb">
-          <img class="dropdown-thumb-image" :src="optimizeSource({url:product.media[0].thumbnailSrc})"/>
+          <img
+            class="dropdown-thumb-image"
+            :src="optimizeSource({ url: product.media[0].thumbnailSrc })"
+          />
         </span>
-        <span>{{formatTitle(product.title)}}</span>
-        <CaretDown :styleObj="{marginLeft: '30px'}"/>
+        <span>{{ formatTitle(product.title) }}</span>
+        <CaretDown :styleObj="{ marginLeft: '30px' }" />
       </div>
       <transition name="fade">
         <ul v-if="visible" class="dropdown-content">
           <li v-for="(jetpack, i) in items" :key="i" @click.prevent="updateJetpack(jetpack)">
             <span class="dropdown-thumb">
-              <img class="dropdown-thumb-image" :src="optimizeSource({url:jetpack.media[0].thumbnailSrc})"/>
+              <img
+                class="dropdown-thumb-image"
+                :src="optimizeSource({ url: jetpack.media[0].thumbnailSrc })"
+              />
             </span>
-            {{formatTitle(jetpack.title)}}
+            {{ formatTitle(jetpack.title) }}
           </li>
         </ul>
       </transition>
     </div>
-
   </div>
 </template>
 
@@ -49,14 +54,14 @@ export default {
   },
   methods: {
     toggleVisible() {
-      this.visible = !this.visible;
+      this.visible = !this.visible
     },
     formatTitle(title) {
       return title.split('-')[0].trim()
     },
     updateJetpack(jetpack) {
       this.$emit('update', jetpack)
-      this.visible = false;
+      this.visible = false
     }
   }
 }
@@ -85,7 +90,7 @@ export default {
   width: 360px;
   font-family: Bold;
   letter-spacing: 1.75px;
-  text-transform:uppercase;
+  text-transform: uppercase;
   font-size: $text-small;
   background-color: $grayscale-white;
   cursor: pointer;
@@ -94,9 +99,8 @@ export default {
   }
 
   @media screen and (max-width: 360px) {
-    width: 300px;   
+    width: 300px;
   }
-  
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -107,7 +111,7 @@ export default {
   border-radius: 25px;
   width: 360px;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: flex-start;
   flex-flow: column nowrap;
@@ -122,7 +126,7 @@ export default {
   z-index: 3;
 
   @media screen and (max-width: 360px) {
-    width: 300px;   
+    width: 300px;
   }
 
   & > li {
@@ -136,14 +140,12 @@ export default {
     &:last-child {
       border-bottom-left-radius: 25px;
       border-bottom-right-radius: 25px;
-
     }
     &:hover {
       @include hover-transition;
     }
   }
 }
-
 
 .dropdown-thumb {
   margin-right: 20px;
@@ -163,7 +165,6 @@ export default {
 .menu-item {
   color: $primary-purple;
   border-radius: 25px;
-
 }
 
 /* Change color of dropdown links on hover */
@@ -172,9 +173,8 @@ export default {
 }
 
 .fade-enter-active {
-  animation: fadeIn;  
+  animation: fadeIn;
   animation-duration: 0.6s;
-
 }
 .fade-leave-active {
   animation: fadeOut;

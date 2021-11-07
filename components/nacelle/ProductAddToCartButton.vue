@@ -191,7 +191,7 @@ export default {
       },
       deep: true
     },
-     bundleVarietyPack: {
+    bundleVarietyPack: {
       handler() {
         this.getDisplayBundlePrice()
       },
@@ -693,7 +693,7 @@ export default {
 
 .has-bundle-add {
   .add-to-cart-button {
-    width: 375px;
+    width: 370px;
   }
 }
 

@@ -263,7 +263,12 @@
               {{ bundleTitle }}
             </div>
             <div class="product-select__controls__bundles__bundle-products">
-              <div class="product-select__controls__bundles__bundle-product-container">
+              <div
+                class="product-select__controls__bundles__bundle-product-container"
+                :class="{
+                  blur: varietyBundleSelectorActive || bundleSelectorVisible
+                }"
+              >
                 <img
                   :src="currentVariant.featuredMedia.src"
                   :alt="currentVariant.featuredMedia.altText"
@@ -275,6 +280,11 @@
                 v-for="(bundle, index) in selectedBundle"
                 :key="bundle.product.id"
                 class="product-select__controls__bundles__bundle-product-container"
+                :class="{
+                  blur:
+                    (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                    !bundleOptionsSelectorActive[index]
+                }"
               >
                 <!-- <b-dropdown
                   v-if="bundle.clickAction"
@@ -306,7 +316,7 @@
                   :src="bundle.variant.featuredMedia.src"
                   :alt="bundle.variant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
-                  :class="{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }"
+                  :class="[{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }]"
                   @click="bundleItemClicked(bundle, false, index)"
                 />
                 <img
@@ -314,7 +324,7 @@
                   :src="bundle.product.featuredMedia.src"
                   :alt="bundle.product.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
-                  :class="{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }"
+                  :class="[{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }]"
                   @click="bundleItemClicked(bundle, false, index)"
                 />
               </div>
@@ -325,8 +335,12 @@
                     selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length
                 "
                 class="product-select__controls__bundles__bundle-product-container"
+                :class="{
+                  blur: bundleSelectorVisible && !varietyBundleSelectorActive
+                }"
               >
                 <img
+                  v-if="selectedBundleVarietyPack.length === 1"
                   :src="varietyPackImage"
                   alt="variety pack"
                   class="product-select__controls__bundles__bundle-product-image"
@@ -334,13 +348,13 @@
                     bundleVarietyPackClicked(selectedBundleVarietyPack[selectedVarieryPackIndex])
                   "
                 />
-                <!-- <img
+                <img
                   v-else
                   :src="varietyPackImage"
                   alt="variety pack"
                   @click="varietyBundleSelectorActive = !varietyBundleSelectorActive"
                   class="product-select__controls__bundles__bundle-product-image"
-                /> -->
+                />
               </div>
             </div>
             <div class="product-select__controls__bundles__add-to-cart-bundle">
@@ -357,12 +371,13 @@
               />
             </div>
 
-            <!-- <div class="variant-select-container" @click.stop>
+            <div class="variant-select-container" @click.stop>
               <div
                 v-for="(bundle, index) in selectedBundle"
                 :key="bundle.product.id"
-                class="variant-select"
+                class="variant-select bundle-item"
                 v-show="bundleOptionsSelectorActive[index]"
+                v-click-outside="hideVariantSelector"
               >
                 <product-options
                   :options="allOptions"
@@ -381,13 +396,18 @@
                     varietyBundleSelectorActive
                 "
                 class="variant-select"
+                tabindex="2"
+                @focusout="focusOutCalled"
+                v-click-outside="focusOutCalled"
               >
                 <VarietySelect
+                  tabindex="0"
+                  @focusout="focusOutCalled"
                   :options="selectedBundleVarietyPack"
                   @updateOptions="updateSelectedVarietyPack"
                 />
               </div>
-            </div> -->
+            </div>
           </div>
 
           <div
@@ -948,7 +968,7 @@
 <script>
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 import ProductPrice from '~/components/nacelle/ProductPrice'
-
+import vClickOutside from 'v-click-outside'
 import ModelIcon from '~/components/ModelIcon'
 import VarietySelect from '~/components/VarietySelect'
 import ProductOptions from '~/components/nacelle/ProductOptions'
@@ -1023,7 +1043,8 @@ export default {
       varietyPackImage: '',
       imageInterval: null,
       bundleOptionsSelectorActive: {},
-      varietyBundleSelectorActive: false
+      varietyBundleSelectorActive: false,
+      bundleSelectorVisible: false
     }
   },
   components: {
@@ -1047,6 +1068,9 @@ export default {
     ProductMediaTile
   },
   mixins: [imageOptimize, availableOptions, allOptionsSelected],
+  directives: {
+    clickOutside: vClickOutside.directive
+  },
   props: {
     product: {
       type: Object,
@@ -1100,6 +1124,20 @@ export default {
         this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
       )
     },
+    hideVariantSelector() {
+      console.log('outside click called')
+      this.bundleSelectorVisible = false
+      for (let i = 0; i < 10; i++) {
+        if (this.bundleOptionsSelectorActive[i]) {
+          this.$set(this.bundleOptionsSelectorActive, i, false)
+        }
+      }
+      // this.$set(this.bundleOptionsSelectorActive, index, false)
+    },
+    focusOutCalled() {
+      console.log('called')
+      this.varietyBundleSelectorActive = false
+    },
     formatVariantId(value) {
       const url = atob(value)
       return url.replace('gid://shopify/ProductVariant/', '')
@@ -1117,10 +1155,29 @@ export default {
       })
     },
     bundleItemClicked(bundle, isCurrentProduct, index = 0) {
+      this.bundleSelectorVisible = false
       if (!isCurrentProduct) {
         if (bundle?.clickAction === 'variant') {
           console.log('show variant')
-          this.$set(this.bundleOptionsSelectorActive, index, true)
+          for (let i = 0; i < 10; i++) {
+            this.$set(this.bundleOptionsSelectorActive, i, false)
+          }
+          this.varietyBundleSelectorActive = false
+          let variantCount = 0
+          bundle.product.variants.forEach(variant => {
+            if (variant.availableForSale) {
+              variantCount++
+            }
+          })
+          if (variantCount > 1) {
+            this.bundleSelectorVisible = true
+            this.$set(this.bundleOptionsSelectorActive, index, true)
+            setTimeout(() => {
+              this.$set(this.bundleOptionsSelectorActive, index, true)
+              this.bundleSelectorVisible = true
+              console.log('visible set')
+            }, 100)
+          }
         } else if (bundle.clickAction === 'link') {
           const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
           this.$router.push({
@@ -1161,11 +1218,13 @@ export default {
       if (newVariant.length) {
         this.selectedBundle[index].variant = cloneDeep(...newVariant)
         this.$set(this.bundleOptionsSelectorActive, index, false)
+        this.bundleSelectorVisible = false
       }
     },
     updateSelectedVarietyPack(index) {
       this.selectedVarieryPackIndex = index
       this.updateBundle()
+      this.varietyBundleSelectorActive = false
     },
     setDefaultVariant() {
       if (this.currentVariant) {
@@ -1448,6 +1507,16 @@ export default {
     selectedVariant() {
       this.updateVariant(this.selectedVariant)
     },
+    varietyBundleSelectorActive(newVal) {
+      if (newVal) {
+        // lighten other bundle items
+        for (let i = 0; i < 10; i++) {
+          if (this.bundleOptionsSelectorActive[i] === true) {
+            this.$set(this.bundleOptionsSelectorActive, i, false)
+          }
+        }
+      }
+    },
     // Local Variant
     currentVariant() {
       if (this.variantMedia[this.camelize(this.currentVariant.title)]) {
@@ -1615,7 +1684,7 @@ export default {
   flex-flow: row nowrap;
   min-height: 900px;
   &.has-bundle {
-    min-height: 950px;
+    min-height: 980px;
     @include respond-to('small') {
       min-height: auto;
     }
@@ -1642,7 +1711,7 @@ export default {
                                   supported by Chrome, Edge, Opera and Firefox */
 
     &.has-bundle {
-      height: 950px;
+      height: 980px;
       @include respond-to('small') {
         height: 400px;
       }
@@ -1684,7 +1753,7 @@ export default {
       object-position: center;
       width: 100%;
       &.has-bundle {
-        height: 950px;
+        height: 980px;
         @include respond-to('small') {
           height: 400px;
         }
@@ -1706,7 +1775,7 @@ export default {
     padding: 0 75px 30px 75px;
     height: 900px;
     &.has-bundle {
-      height: 950px;
+      height: 980px;
       @include respond-to('small') {
         height: auto;
       }
@@ -1905,7 +1974,7 @@ export default {
     &__bundles {
       padding: 10px;
       position: relative;
-      width: 375px;
+      width: 370px;
       margin: 20px auto auto auto;
       &__title {
         font-weight: bold;
@@ -1922,7 +1991,7 @@ export default {
         display: flex;
         margin: auto auto 15px auto;
         justify-content: center;
-        max-width: 375px;
+        max-width: 370px;
         position: relative;
       }
       .product-image-dummy {
@@ -1943,6 +2012,9 @@ export default {
           position: absolute;
           right: calc(0% - 7px);
           top: 10px;
+        }
+        &.blur {
+          opacity: 0.25;
         }
       }
       &__bundle-product-image {
@@ -2842,16 +2914,33 @@ h1 {
 }
 .variant-select-container {
   position: absolute;
-  bottom: -40px;
+  top: 108px;
   left: 0;
-  width: 375px;
-  background: white;
+  width: 370px;
+  .variant-select {
+    &.bundle-item {
+      background: white;
+      width: 370px;
+      border: 2px solid black;
+      border-radius: 25px;
+    }
+    .option {
+      margin-bottom: 0;
+    }
+  }
 }
 </style>
 <style lang="scss">
 .variant-dropdown {
   .dropdown-content {
     padding: 0 !important;
+  }
+}
+.variant-select-container {
+  .variant-select {
+    .option {
+      margin-bottom: 0;
+    }
   }
 }
 </style>
