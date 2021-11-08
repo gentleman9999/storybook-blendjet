@@ -277,6 +277,13 @@ export default (config = {}) => {
               productHandles.push(bundle?.fields?.product?.fields?.handle)
             }
           })
+          bundleCollection.forEach(product => {
+            // Get productIds of the main product bundle variety pack
+            const handle = product?.fields?.handle
+            if (handle && productHandles.indexOf(handle) === -1) {
+              productHandles.push(handle)
+            }
+          })
           // get productIds of variant specific bundles
           if (page?.fields?.variants?.length) {
             page.fields.variants.forEach(variant => {
