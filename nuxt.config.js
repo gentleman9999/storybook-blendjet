@@ -150,6 +150,7 @@ export default {
   },
 
   modules: [
+    '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
     '@nacelle/nacelle-nuxt-module',
     // '@nacelle/nacelle-recharge-nuxt-module',
