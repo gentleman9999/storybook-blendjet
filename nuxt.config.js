@@ -22,6 +22,15 @@ function getContentfulRoutes() {
 
 export default {
   mode: process.env.BUILD_MODE,
+  pwa: {
+    manifest: {
+      name: 'BlendJet',
+      short_name: 'BlendJet',
+      display: 'standalone',
+      theme_color: '#373975',
+      description: 'Meet BlendJet® - The Next-Gen Blender'
+    }
+  },
   /*
    ** Headers of the page
    */
