@@ -22,6 +22,7 @@ function getContentfulRoutes() {
 
 export default {
   mode: process.env.BUILD_MODE,
+  target: 'static',
   /*
    ** Headers of the page
    */
@@ -150,7 +151,6 @@ export default {
   },
 
   modules: [
-    '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
     '@nacelle/nacelle-nuxt-module',
     // '@nacelle/nacelle-recharge-nuxt-module',
