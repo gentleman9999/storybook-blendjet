@@ -22,7 +22,6 @@ function getContentfulRoutes() {
 
 export default {
   mode: process.env.BUILD_MODE,
-  target: 'static',
   /*
    ** Headers of the page
    */
