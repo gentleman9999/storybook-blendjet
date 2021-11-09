@@ -98,6 +98,8 @@
             <img
               :class="['product-select__image-carousel__img', { jetpack: isJetpack }]"
               :src="optimizeSource({ url: productImage, height: 1200 })"
+              v-touch:swipe.right="decrementVariant"
+              v-touch:swipe.left="incrementVariant"
             />
           </transition>
         </div>

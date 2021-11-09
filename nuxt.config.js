@@ -191,7 +191,8 @@ export default {
     '~/plugins/pinterest-pixel.client.js',
     '~/plugins/snap-pixel.client.js',
     '~/plugins/vue-mq.js',
-    '~/plugins/nuxt-jsonld'
+    '~/plugins/nuxt-jsonld',
+    '~/plugins/vueTouchEvents'
   ],
 
   router: {

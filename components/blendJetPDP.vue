@@ -96,6 +96,8 @@
                     width: 2100
                   })
                 "
+                 v-touch:swipe.right="decrementVariant"
+                 v-touch:swipe.left="incrementVariant"
               />
             </picture>
           </transition>
@@ -1297,6 +1299,7 @@ export default {
       this.updateVariant(newVar)
     },
     decrementVariant() {
+      debugger
       if (this.variantIndex === 0) {
         this.variantIndex = this.variants.length - 1
       } else {
