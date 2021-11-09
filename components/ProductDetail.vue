@@ -37,13 +37,40 @@
 
         <!-- MOBILE PRODUCT INFO - Title, Variant Title, Rating -->
         <div class="product-select__controls__mobile-title-container">
-          <div class="product-select__controls__title">
-            <h1>{{ product.title }}</h1>
-          </div>
-          <div v-if="currentVariant.title !== 'Default Title'" class="product-select__controls__category">
-            {{ currentVariant.title }}
-          </div>
-          <div v-if="!product.title.includes('Replacement')" class="product-select__controls__rating" style="zoom:1.25">
+          <nuxt-link
+            :to="crossSell.url"
+            v-if="crossSell.url && crossSell.text && isJetpack"
+            class="cross-sell__mobile"
+          >
+            <div
+              class="inner-text"
+              style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
+            >
+              {{ crossSell.text }}
+            </div>
+          </nuxt-link>
+          <template v-if="isJetpack">
+            <div class="product-select__controls__title">{{ currentVariant.title }}</div>
+            <div class="product-select__controls__category">
+              <h1>JetPack Smoothie</h1>
+            </div>
+          </template>
+          <template v-else>
+            <div class="product-select__controls__title">
+              <h1>{{ product.title }}</h1>
+            </div>
+            <div
+              v-if="currentVariant.title !== 'Default Title'"
+              class="product-select__controls__category"
+            >
+              {{ currentVariant.title }}
+            </div>
+          </template>
+          <div
+            v-if="!product.title.includes('Replacement')"
+            class="product-select__controls__rating"
+            style="zoom:1.25"
+          >
             <n-link :to="{ path: `/products/${product.handle}`, hash: '#reviews' }">
               <!-- TODO: Change to be variant based -->
               <loox-product-rating :product="product" />
@@ -52,29 +79,63 @@
         </div>
 
         <!-- GALLERY -->
-        <div class="product-select__image-carousel">
+        <div :class="['product-select__image-carousel', { jetpack: isJetpack }]">
+          <div
+            v-if="variants.length > 1 && isJetpack"
+            class="product-select__image-carousel__prev-variant"
+            @click="decrementVariant"
+          >
+            <PrevSlide />
+          </div>
+          <div
+            v-if="variants.length > 1 && isJetpack"
+            class="product-select__image-carousel__next-variant"
+            @click="incrementVariant"
+          >
+            <NextSlide />
+          </div>
           <transition name="fade" mode="out-in">
             <img
-              class="product-select__image-carousel__img"
-              :src="optimizeSource({ url: productImage, height: 700 })"
+              :class="['product-select__image-carousel__img', { jetpack: isJetpack }]"
+              :src="optimizeSource({ url: productImage, height: 1200 })"
             />
           </transition>
         </div>
 
-        <div class="product-select__controls">
+        <div :class="['product-select__controls', { jetpack: isJetpack }]">
           <div class="product-select__controls__container">
             <!-- DESKTOP PRODUCT INFO - Title, Variant Title, Ratings -->
             <div class="product-select__controls__title-container">
-              <div class="product-select__controls__title">
-                {{ product.title }}
-              </div>
+              <nuxt-link :to="crossSell.url" v-if="crossSell.url && crossSell.text && isJetpack">
+                <div
+                  class="inner-text"
+                  style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
+                >
+                  {{ crossSell.text }}
+                </div>
+              </nuxt-link>
+              <template v-if="isJetpack">
+                <div class="product-select__controls__title">{{ currentVariant.title }}</div>
+                <div class="product-select__controls__category">
+                  <h1>JetPack Smoothie</h1>
+                </div>
+              </template>
+              <template v-else>
+                <div class="product-select__controls__title">
+                  <h1>{{ product.title }}</h1>
+                </div>
+                <div
+                  v-if="currentVariant.title !== 'Default Title'"
+                  class="product-select__controls__category"
+                >
+                  {{ currentVariant.title }}
+                </div>
+              </template>
               <div
-                v-if="product.variants.length > 1 && currentVariant.title !== 'default title'"
-                class="product-select__controls__category"
+                v-if="!product.title.includes('Replacement')"
+                class="product-select__controls__rating"
+                style="zoom:1.25"
               >
-                {{ currentVariant.title }}
-              </div>
-              <div v-if="!product.title.includes('Replacement')" class="product-select__controls__rating">
                 <n-link
                   :to="{
                     path: `/products/${product.handle}`,
@@ -161,7 +222,21 @@
                   </div>
                 </div>
               </div>
-
+              <div
+                v-if="quantityOption.quantity.length"
+                class="product-select__controls__quantity-set"
+              >
+                <div class="product-select__controls__quantity-set--label">
+                  {{ quantityOption.title }}
+                </div>
+                <Tabs
+                  :tabItems="quantityOption.quantity"
+                  :selected="quantity"
+                  :no-select-start="true"
+                  @activeTab="updateQuantity"
+                  id="custom-tabs"
+                />
+              </div>
               <div class="product-select__controls__add-to-cart__quantity-add-button">
                 <!-- QUANTITY ADJUSTER -->
                 <div class="product-select__controls__add-to-cart__quantity-add-button__quantity">
@@ -193,6 +268,9 @@
               TODO: Shipping estimate for normal products should go here
             </div>
             -->
+            <div v-if="isJetpack" class="product-select__controls__shipping-notification">
+              <ShippingTime :product="'jetpack'" :country="country" />
+            </div>
             <hr class="product-select__controls__divider" />
 
             <!-- VALUE PROPS - TODO: Abstract into component -->
@@ -214,7 +292,11 @@
                   :href="mcafeeLink"
                 >
                   <img
-                    :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                    :src="
+                      optimizeSource({
+                        url: '/images/blendjetPDP/TrustedSite.svg'
+                      })
+                    "
                     alt="TrustedSite Seal"
                     style="border: 1px solid #ccc;border-radius: 3px;"
                   />
@@ -243,6 +325,88 @@
                 </a>
               </div>
             </div>
+            <template v-if="isJetpack">
+              <hr class="product-select__controls__divider" />
+              <div class="product-select__controls__made-in-ca">
+                <svg
+                  width="314px"
+                  height="67px"
+                  viewBox="0 0 314 67"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <title>made in california</title>
+                  <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="D-BlendJet-PDP-JetPack" transform="translate(-1031.000000, -826.000000)">
+                      <g id="BUY" transform="translate(0.000000, 109.000000)">
+                        <g id="made-in-california" transform="translate(1031.000000, 717.000000)">
+                          <path
+                            d="M295,15.5 C299.280207,15.5 303.155207,17.2348966 305.960155,20.0398449 C308.765103,22.8447932 310.5,26.7197932 310.5,31 C310.5,35.2802068 308.765103,39.1552068 305.960155,41.9601551 C303.155207,44.7651034 299.280207,46.5 295,46.5 L295,46.5 L19,46.5 C14.7197932,46.5 10.8447932,44.7651034 8.03984489,41.9601551 C5.23489659,39.1552068 3.5,35.2802068 3.5,31 C3.5,26.7197932 5.23489659,22.8447932 8.03984489,20.0398449 C10.8447932,17.2348966 14.7197932,15.5 19,15.5 L19,15.5 L295,15.5 Z"
+                            id="Rectangle"
+                            stroke-opacity="0.5"
+                            stroke="#8291ED"
+                          ></path>
+                          <path
+                            d="M295,12.5 C300.108634,12.5 304.733634,14.570683 308.081475,17.9185245 C311.429317,21.2663661 313.5,25.8913661 313.5,31 C313.5,36.1086339 311.429317,40.7336339 308.081475,44.0814755 C304.733634,47.429317 300.108634,49.5 295,49.5 L295,49.5 L19,49.5 C13.8913661,49.5 9.26636606,47.429317 5.91852455,44.0814755 C2.57068303,40.7336339 0.5,36.1086339 0.5,31 C0.5,25.8913661 2.57068303,21.2663661 5.91852455,17.9185245 C9.26636606,14.570683 13.8913661,12.5 19,12.5 L19,12.5 Z"
+                            id="Rectangle"
+                            stroke="#373795"
+                          ></path>
+                          <polygon
+                            id="Rectangle"
+                            fill="#F6F5FD"
+                            points="110 11 145 11 145 18 114 18"
+                          ></polygon>
+                          <polygon
+                            id="Rectangle"
+                            fill="#F6F5FD"
+                            points="127 43 171 43 178 50 132 50"
+                          ></polygon>
+                          <polygon
+                            id="Fill-1"
+                            fill-opacity="0.5"
+                            fill="#8291ED"
+                            points="139.358007 0 138.5783 1.4160597 138.056089 0 116.18821 0 116.187007 1.4160597 116.970323 5.11231227 116.187007 8.50320734 115 11.056795 115.521609 13.1520611 118.71263 18.0434886 119.234239 22.7950795 122.833162 26.206522 124.221112 29.1704874 126.720866 30.0369036 129.559936 33.4991439 126.116232 31.5505635 127.777921 36.0099244 130.044846 36.7210935 129.559936 39.2507092 130.044846 41.4275942 137.273976 49.2858409 137.795585 53.3005784 145.076456 54.2845715 146.095007 55.9198037 150.268483 56.9197782 150.790092 58.6286386 152.24422 58.6286386 157.155288 62.7541039 158.156995 67 171.984752 65.2860027 174.029677 64.4310017 172.763857 62.7541039 172.506361 60.7632872 173.508068 59.8580592 173.508068 57.1652057 176 54.9643487 174.290782 54.0402856 172.764459 50.0147035 141.011875 22.171237 140.173811 21.5576682 141.011875 20.3550734 141.011875 0"
+                          ></polygon>
+                          <g
+                            id="Group-5"
+                            transform="translate(23.000000, 21.000000)"
+                            fill="#373795"
+                          >
+                            <text
+                              id="made-with"
+                              font-family="Helvetica"
+                              font-size="14"
+                              font-weight="normal"
+                              line-spacing="15"
+                              letter-spacing="1.75"
+                            >
+                              <tspan x="34.2421875" y="7.2978516">MADE</tspan>
+                              <tspan x="38.9248047" y="22.2978516">WITH</tspan>
+                            </text>
+                            <text
+                              id="in-california"
+                              font-family="Helvetica"
+                              font-size="14"
+                              font-weight="normal"
+                              line-spacing="15"
+                              letter-spacing="1.75"
+                            >
+                              <tspan x="188.506836" y="7">IN</tspan>
+                              <tspan x="146.5" y="22">CALIFORNIA</tspan>
+                            </text>
+                            <path
+                              d="M132.465684,0.484007284 C128.152422,-1.51502146 125.100145,3.3525853 125.100145,3.3525853 C125.100145,3.3525853 122.047838,-1.51502146 117.734607,0.4801781 C114.361054,2.04439976 113.118003,6.40892314 114.935949,9.776658 C116.361252,12.423403 119.318167,15.7748476 124.914368,19.9353533 C125.024285,20.0215489 125.176478,20.0215489 125.286386,19.9353533 C130.882588,15.7751721 133.839316,12.4236626 135.264805,9.78185012 C137.082658,6.41249271 135.836144,2.04819649 132.466147,0.484072185 L132.465684,0.484007284 Z"
+                              id="Fill-1"
+                            ></path>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+              </div>
+            </template>
           </div>
 
           <!-- MODAL (Purchase Guarantee) - TODO: Abstract into a component -->
@@ -511,7 +675,7 @@
             <b-carousel-item v-for="(image, i) in heroImages" :key="i">
               <img
                 class="media-content__carousel__img"
-                :src="optimizeSource({ url: image, height: 800 })"
+                :src="optimizeSource({ url: image, height: 1200, width: 2000 })"
               />
             </b-carousel-item>
           </b-carousel>
@@ -542,7 +706,12 @@
       </div>
 
       <!-- TODO: THIS COMPONENT SHOULD BE VARIANT BASED -->
-      <div v-if="!product.title.includes('Replacement')" class="reviews" id="reviews">
+      <div
+        v-if="!product.title.includes('Replacement')"
+        class="reviews"
+        style="zoom:1.25"
+        id="reviews"
+      >
         <loox-product-reviews :product="product" />
       </div>
 
@@ -551,6 +720,9 @@
         <JetpackCrossSell :product="product" heading="You may also like these" />
       </div>
       -->
+      <div class="jetpacks">
+        <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
+      </div>
     </div>
   </transition>
 </template>
@@ -569,23 +741,25 @@ import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToC
 import ProductVariantsDropdown from '~/components/ProductVariantsDropdown'
 import ProductStickyAddToCart from '~/components/ProductStickyAddToCart'
 import ProductMediaTile from '~/components/ProductMediaTile'
-
+import ShippingTime from '~/components/shippingTime'
 import imageOptimize from '~/mixins/imageOptimize'
 import rechargeProperties from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
-
 import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
+import Tabs from '~/components/tabs'
+import NextSlide from '~/components/svg/NextSlide'
+import PrevSlide from '~/components/svg/PrevSlide'
 
 import { createClient } from '~/plugins/contentful.js'
-const VideoContainer = () => import('~/components/VideoContainer')
-
+const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
 export default {
   data() {
     return {
       currentVariant: {},
+      variantIndex: 0,
       productImage: null,
       heroImages: [],
       imgWidth: 0,
@@ -614,12 +788,17 @@ export default {
         'https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick',
       applePay: false,
       metaTitle: null,
-      metaDescription: null
+      metaDescription: null,
+      crossSell: {},
+      quantityOption: {
+        quantity: [],
+        title: ''
+      }
     }
   },
   components: {
+    JetpackCrossSell,
     ProductPrice,
-    VideoContainer,
     QuantitySelector,
     SubscriptionAddToCartButton,
     SubscriptionToggle,
@@ -631,7 +810,11 @@ export default {
     RichTextRenderer,
     ProductStickyAddToCart,
     ProductMediaTile,
-    CustomProductOptions
+    CustomProductOptions,
+    ShippingTime,
+    Tabs,
+    PrevSlide,
+    NextSlide
   },
   mixins: [
     imageOptimize,
@@ -648,6 +831,10 @@ export default {
     page: {
       type: Object,
       default: () => ({})
+    },
+    country: {
+      type: Object,
+      default: () => {}
     }
   },
   head() {
@@ -706,12 +893,33 @@ export default {
     },
     currentOption() {
       return this.currentVariant.selectedOptions?.[0]?.value || ''
+    },
+    isJetpack() {
+      return this?.product?.productType?.toLowerCase().includes('jetpack')
     }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
+    incrementVariant() {
+      if (this.variantIndex === this.variants.length - 1) {
+        this.variantIndex = 0
+      } else {
+        this.variantIndex++
+      }
+      const newVar = this.variants[this.variantIndex]
+      this.setSelectedVariant(newVar)
+    },
+    decrementVariant() {
+      if (this.variantIndex === 0) {
+        this.variantIndex = this.variants.length - 1
+      } else {
+        this.variantIndex--
+      }
+      const newVar = this.variants[this.variantIndex]
+      this.setSelectedVariant(newVar)
+    },
     camelize(str) {
-      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
         if (+match === 0) return '' // or if (/\s+/.test(match)) for white spaces
         return index === 0 ? match.toLowerCase() : match.toUpperCase()
       })
@@ -721,10 +929,13 @@ export default {
      */
     setSelectedVariant(selectedVariant) {
       this.currentVariant = selectedVariant
+      this.variants.forEach((item, i) => {
+        if (item.id === selectedVariant.id) this.variantIndex = i
+      })
       this.addHashToLocation()
     },
-    //Set the currentVaraint using the options selected
-    //If there is only one option selected, it will take the first varaint with that option
+    // Set the currentVaraint using the options selected
+    // If there is only one option selected, it will take the first varaint with that option
     setSelectedOption(opt) {
       let variant = null
 
@@ -762,6 +973,9 @@ export default {
     setCurrency(data) {
       this.currency = data
     },
+    updateQuantity(qty) {
+      this.quantity = qty
+    },
     /**
      * Adds the variant hash to the URL.
      * TODO: This should be done using the vue-router...
@@ -789,17 +1003,21 @@ export default {
       const urlVariantId = this.$route.query.variant
       const variantsWithIds = Array.isArray(this.product.variants)
         ? this.product.variants.map(variant => ({
-            ...variant,
-            formattedId: this.formatVariantId(variant.id)
-          }))
+          ...variant,
+          formattedId: this.formatVariantId(variant.id)
+        }))
         : []
 
       const matchingVariant = variantsWithIds.find(v => v && v.formattedId === urlVariantId)
+      matchingVariant &&
+        this.product.variants.forEach((item, i) => {
+          if (item.id === matchingVariant.id) this.variantIndex = i
+        })
 
       // Set current variant equal to the variant indicated by the param, or the product's first variant.
       this.currentVariant = matchingVariant || this.product.variants[0]
     },
-    async setProductDescription() {
+    async setProductDetails() {
       this.productDescription = this.page.fields.productDescription
       // load variant specific product details if available
       const variantTitle = this.currentVariant?.title?.toLowerCase()?.replace(/\s/g, '')
@@ -821,47 +1039,61 @@ export default {
       if (this.media[variantTitle]?.headerText) {
         this.headerText = this.media[variantTitle]?.headerText
       }
+      if (this.media[variantTitle]?.quantityOption) {
+        this.quantityOption.quantity = this.media[variantTitle]?.quantityOption?.quantity?.split(
+          ','
+        )
+        this.quantityOption.quantity = this.quantityOption.quantity.map(item => Number(item))
+        this.quantityOption.title = this.media[variantTitle]?.quantityOption?.title
+      } else {
+        this.quantityOption = {
+          quantity: [],
+          title: ''
+        }
+      }
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarProductView() {
       window.dataLayer = window.dataLayer || []
       var uuid = this.createUUID()
       var variant = this.currentVariant
-      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       window.dataLayer.push({
-        "event": "dl_view_item",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "detail": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": productId,
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer, 
-            }]
+        event: 'dl_view_item',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          detail: {
+            actionField: { list: referrer },
+            products: [
+              {
+                name: this.product.title.replace("'", ''),
+                id: (variant && variant.sku) || '',
+                product_id: productId,
+                variant_id: (variant && variantId) || '',
+                image: this.product.featuredMedia.src,
+                price: variant.price,
+                brand: this.product.vendor.replace("'", ''),
+                variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                category: this.product.productType,
+                inventory: this.quantity,
+                list: referrer
+              }
+            ]
           }
         }
       })
@@ -882,7 +1114,7 @@ export default {
       } else {
         this.productImage = newVariant.featuredMedia.src
       }
-      this.setProductDescription()
+      this.setProductDetails()
       // console.log('newVariant:', newVariant);
       this.elevarProductView() // needs flag to only fire once
     },
@@ -904,13 +1136,23 @@ export default {
     // Once nacelle-nuxt-module is upgrade to 5.5.7, replace the contentful API with a call to the SDK!
     this.client = createClient()
 
+    const isProteinJetPack = this.product.handle.includes('protein')
+
+    // Assemble cross sell link data
+    this.crossSell = {
+      url: isProteinJetPack ? '/products/jetpack-smoothies' : '/products/jetpack-protein-smoothie',
+      text: isProteinJetPack
+        ? 'Try Our Original JetPack Smoothies'
+        : 'Try our NEW Protein Smoothies'
+    }
+
     // Check to see if Contentful data is present in page
     if (!this?.page?.fields) {
       // If page data doesn't exist, fail
       // TODO - Figure out failure logic?
       console.warn(`No content model found for product with handle "${this.product.handle}"`)
 
-      //Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
+      // Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
       this.productImage = this.product.media[0].src
 
       this.product.variants.forEach(variant => {
@@ -931,7 +1173,7 @@ export default {
       return
     }
 
-    //Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
+    // Set the product image from shopify, later if the product is found on contentful the image will be changed with the one in contentful.
     this.productImage = this.product.media[0].src
 
     // Set component data based on the matching Contentful entry
@@ -944,7 +1186,6 @@ export default {
     if (fields.metaDescription) {
       this.metaDescription = this.page.fields.metaDescription
     }
-
     // Get 'Header' (product description beneath the product form)
     this.headerText = fields.headerText
     this.headerBackground =
@@ -952,7 +1193,6 @@ export default {
 
     // 'Media' tiles
     this.productDescription = fields.productDescription
-
     // 'Features' array
     const featureFields = fields.features?.fields || {}
     if (featureFields) {
@@ -982,6 +1222,11 @@ export default {
           nutritionFactsTile: node?.fields?.nutritionFactsTile
         }
 
+        // set Quantity Set if available
+        if (node?.fields?.quantityOption?.fields) {
+          variantData.quantityOption = node.fields.quantityOption.fields
+        }
+
         // Add variant data to component's `media` object
         vm.media[variantTitle] = variantData
       })
@@ -1007,17 +1252,17 @@ export default {
     // various media is available for the `currentVariant` watcher.
     this.setInitialVariant()
 
-       this.variants = this.product.variants
+    this.variants = this.product.variants
       .filter(v => v.availableForSale)
       .map(v => {
         const variantId = atob(v.id)
           .split('/')
           .pop()
-      
+
         return {
           ...v,
           discountPercentage: this.discountPercentage,
-          plainId: variantId,
+          plainId: variantId
         }
       })
   }
@@ -1025,8 +1270,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.product-select__image-carousel{
-  max-height: 800px;
+.product-select__image-carousel {
+  position: relative;
+  max-height: 848px;
+  &.jetpack {
+    max-height: 980px;
+    @include respond-to('small') {
+      max-height: 300px;
+      height: 300px;
+    }
+  }
 }
 .media-content__main__features {
   background: var(--features-background) !important;
@@ -1042,13 +1295,34 @@ export default {
   &__image-carousel {
     background-image: linear-gradient(to bottom, #ededf5 1%, #ffffff 49%);
     width: 65%;
-    height: 900px;
+    height: 980px;
 
     @include respond-to('small') {
       height: auto;
       width: 100%;
-      padding-top: 100%;
       position: relative;
+    }
+
+    &__prev-variant {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      cursor: pointer;
+      z-index: 2;
+      @include respond-to('small') {
+        left: 10px;
+      }
+    }
+
+    &__next-variant {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      cursor: pointer;
+      z-index: 2;
+      @include respond-to('small') {
+        right: 10px;
+      }
     }
 
     &__img {
@@ -1056,7 +1330,14 @@ export default {
       height: 100%;
       object-position: center;
       object-fit: contain; // this was changed from cover -> contain at Ryan's request (BLEN-139)
+      &.jetpack {
+        object-fit: cover;
+        @include respond-to('small') {
+          height: 300px;
+        }
+      }
       @include respond-to('small') {
+        object-fit: contain;
         position: absolute;
         top: 0;
         left: 0;
@@ -1072,6 +1353,12 @@ export default {
     background-color: $primary-purple-tint;
     text-align: center;
     height: 848px;
+    &.jetpack {
+      height: 980px;
+      @include respond-to('small') {
+        height: auto;
+      }
+    }
     @include respond-to('small') {
       width: 100%;
       padding: 0;
@@ -1137,7 +1424,7 @@ export default {
       font-size: 13px;
       color: $primary-purple;
       margin-top: 14px;
-      margin-bottom: 42px;
+      margin-bottom: 25px;
       @include respond-to('small') {
         margin-bottom: 30px;
       }
@@ -1179,6 +1466,19 @@ export default {
           margin-top: 4px;
           margin-left: 7px;
         }
+      }
+    }
+
+    &__quantity-set {
+      width: 100%;
+      &--label {
+        font-family: Bold;
+        letter-spacing: 1.75px;
+        text-align: center;
+        line-height: 1.33;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: $primary-purple;
       }
     }
 
@@ -1350,6 +1650,13 @@ export default {
       }
     }
   }
+  .cross-sell__mobile {
+    display: block;
+    height: 75px;
+    width: 95%;
+    margin: auto;
+    max-width: 360px;
+  }
 }
 
 .guarantee-modal {
@@ -1418,7 +1725,7 @@ export default {
   align-items: center;
   padding-top: 5%;
   padding-bottom: 5%;
-  
+
   &__content-block {
     width: 681px;
     color: $grayscale-white;
@@ -1538,5 +1845,47 @@ h1 {
   font-family: inherit;
   line-height: inherit;
   letter-spacing: inherit;
+}
+</style>
+<style lang="scss">
+#custom-tabs {
+  margin-top: 5px;
+  .tab-container {
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    border: 2px solid $secondary-purple-4;
+    background: #fff;
+    .tab-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      a {
+        height: 100%;
+        width: 100%;
+        color: $primary-purple;
+        font-family: Bold;
+        line-height: 1.17;
+        letter-spacing: 1.75px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-size: 12px;
+        &:hover {
+          background: none;
+        }
+      }
+      &.is-active {
+        a {
+          background: #e0e0ff;
+          border: 2px solid $primary-purple;
+          &:hover {
+            background: #e0e0ff;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

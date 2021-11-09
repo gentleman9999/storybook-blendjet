@@ -226,10 +226,12 @@ export default {
 
 .decrement {
   padding-left: 10px;
+  margin-right: 0;
 }
 
 .increment {
   padding-right: 10px;
+  margin-right: 1px;
 }
 
 .switch {

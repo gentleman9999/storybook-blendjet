@@ -67,14 +67,14 @@
       :bundle-variety-pack="bundleVarietyPack"
       :variant-bundle-variety-pack="variantBundleVarietyPack"
     />
-    <JetpackVariantPDP
+    <!-- <JetpackVariantPDP
       v-cloak
       v-else-if="
         ['jetpack smoothies'].includes(product.productType && product.productType.toLowerCase())
       "
       :product="product"
       :page="page"
-    />
+    /> -->
     <ProductDetail v-cloak v-else :product="product" :page="page" />
   </div>
 </template>
@@ -91,14 +91,14 @@ import productShippingEligibility from '~/mixins/productShippingEligibility'
 // Components
 import ProductDetail from '~/components/ProductDetail'
 import BlendjetPDP from '~/components/blendJetPDP'
-import JetpackVariantPDP from '~/components/jetpackVariantPDP'
+// import JetpackVariantPDP from '~/components/jetpackVariantPDP'
 import ShippingIneligibilityWarning from '~/components/ProductShippingIneligibilityWarning'
 
 export default {
   components: {
     ProductDetail,
     BlendjetPDP,
-    JetpackVariantPDP,
+    // JetpackVariantPDP,
     ShippingIneligibilityWarning
   },
   jsonld() {
@@ -272,7 +272,7 @@ export default {
 
   mounted() {
     if (this.product) {
-      //  console.log('product:', this.product)
+      console.log('product:', this.product)
       //  window.dataLayer = window.dataLayer || []
       //   var uuid = '!QAZxsw22143edfRf'
       //   var variant = this.product.variants[0]
