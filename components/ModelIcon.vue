@@ -39,6 +39,8 @@ import SoyFree from '~/components/svg/SoyFree'
 import SustainablePackaging from '~/components/svg/SustainablePackaging'
 import Vegan from '~/components/svg/Vegan'
 import Vegetarian from '~/components/svg/Vegetarian'
+import CheckMark from '~/components/svg/CheckMark'
+import NoArtificialSugar from '~/components/svg/NoArtificialSugar'
 
 export default {
   props: {
@@ -49,155 +51,163 @@ export default {
   computed: {
     modeComponent() {
       let mode = 'BlendMode'
-      switch(this.type) {
-         case "Blue": {
-            mode = 'BlendMode'
-            break;
-         }
-         case "Blue Flashing": {
-            mode = 'PulseMode'
-            break;
-         }
-         case "Purple": {
-            mode = 'LockMode'
-            break;
-         }
-         case "Red Flashing": {
-            mode = 'FlashingRed'
-            break;
-         }
-         case "Red": {
-            mode = 'SolidRedLights'
-            break;
-         }
-         case "Globe": {
-            mode = 'Globe'
-            break;
-         }
-         case "Lightning": {
-            mode = 'Lightning'
-            break;
-         }
-         case "Charge": {
-            mode = 'Charge'
-            break;
-         }
-         case "Drop": {
-            mode = 'Drop'
-            break;
-         }
-         case "Leaf": {
-            mode = 'Leaf'
-            break;
-         }
-         case "Diamond": {
-            mode = 'Diamond'
-            break;
-         }
-         case "Mountain": {
-            mode = 'Mountain'
-            break;
-         }
-         case "Pocket": {
-            mode = 'Pocket'
-            break;
-         }
-        case "Snowflake": {
-            mode = 'Snowflake'
-            break;
-         }
-        case "Fabric": {
-            mode = 'Fabric'
-            break;
-         }
-        case "Dressing": {
-            mode = 'Dressing'
-            break;
-         }         
-        case "Cafe": {
-            mode = 'Cafe'
-            break;
-         }
-        case "Milkshake": {
-            mode = 'Milkshake'
-            break;
-         }
-        case "Protein": {
-            mode = 'Protein'
-            break;
-         }
-        case "HappyHour": {
-            mode = 'HappyHour'
-            break;
-         }
-        case "Fruit": {
-            mode = 'Fruit'
-            break;
-         }         
-        case "DairyFree": {
+      switch (this.type) {
+        case 'Blue': {
+          mode = 'BlendMode'
+          break
+        }
+        case 'Blue Flashing': {
+          mode = 'PulseMode'
+          break
+        }
+        case 'Purple': {
+          mode = 'LockMode'
+          break
+        }
+        case 'Red Flashing': {
+          mode = 'FlashingRed'
+          break
+        }
+        case 'Red': {
+          mode = 'SolidRedLights'
+          break
+        }
+        case 'Globe': {
+          mode = 'Globe'
+          break
+        }
+        case 'Lightning': {
+          mode = 'Lightning'
+          break
+        }
+        case 'Charge': {
+          mode = 'Charge'
+          break
+        }
+        case 'Drop': {
+          mode = 'Drop'
+          break
+        }
+        case 'Leaf': {
+          mode = 'Leaf'
+          break
+        }
+        case 'Diamond': {
+          mode = 'Diamond'
+          break
+        }
+        case 'Mountain': {
+          mode = 'Mountain'
+          break
+        }
+        case 'Pocket': {
+          mode = 'Pocket'
+          break
+        }
+        case 'Snowflake': {
+          mode = 'Snowflake'
+          break
+        }
+        case 'Fabric': {
+          mode = 'Fabric'
+          break
+        }
+        case 'Dressing': {
+          mode = 'Dressing'
+          break
+        }
+        case 'Cafe': {
+          mode = 'Cafe'
+          break
+        }
+        case 'Milkshake': {
+          mode = 'Milkshake'
+          break
+        }
+        case 'Protein': {
+          mode = 'Protein'
+          break
+        }
+        case 'HappyHour': {
+          mode = 'HappyHour'
+          break
+        }
+        case 'Fruit': {
+          mode = 'Fruit'
+          break
+        }
+        case 'DairyFree': {
           mode = 'DairyFree'
-          break;
-          }             
-        case "EssentialOils": {
+          break
+        }
+        case 'EssentialOils': {
           mode = 'EssentialOils'
-          break;
-          }     
-        case "GlutenFree": {
+          break
+        }
+        case 'GlutenFree': {
           mode = 'GlutenFree'
-          break;
-          }     
-        case "NoArtificialIngredients": {
+          break
+        }
+        case 'NoArtificialIngredients': {
           mode = 'NoArtificialIngredients'
-          break;
-          }     
-        case "NonGMO": {
+          break
+        }
+        case 'NonGMO': {
           mode = 'NonGMO'
-          break;
-          }     
-        case "NoPreservatives": {
+          break
+        }
+        case 'NoPreservatives': {
           mode = 'NoPreservatives'
-          break;
-          }     
-        case "NoTransFats": {
+          break
+        }
+        case 'NoTransFats': {
           mode = 'NoTransFats'
-          break;
-          }     
-        case "NutFree": {
+          break
+        }
+        case 'NutFree': {
           mode = 'NutFree'
-          break;
-          }     
-        case "Organic": {
+          break
+        }
+        case 'Organic': {
           mode = 'Organic'
-          break;
-          }     
-        case "Paleo": {
+          break
+        }
+        case 'Paleo': {
           mode = 'Paleo'
-          break;
-          }     
-        case "Raw": {
+          break
+        }
+        case 'Raw': {
           mode = 'Raw'
-          break;
-          }     
-        case "RealFood": {
+          break
+        }
+        case 'RealFood': {
           mode = 'RealFood'
-          break;
-          }     
-        case "SoyFree": {
+          break
+        }
+        case 'SoyFree': {
           mode = 'SoyFree'
-          break;
-          }     
-        case "SustainablePackaging": {
+          break
+        }
+        case 'SustainablePackaging': {
           mode = 'SustainablePackaging'
-          break;
-          }     
-        case "Vegan": {
+          break
+        }
+        case 'Vegan': {
           mode = 'Vegan'
-          break;
-          }     
-        case "Vegetarian": {
+          break
+        }
+        case 'Vegetarian': {
           mode = 'Vegetarian'
-          break;
-          }     
+          break
+        }
+        case 'NoArtificialSugar': {
+          mode = 'NoArtificialSugar'
+          break
+        }
+        case 'CheckMark': {
+          mode = 'CheckMark'
+          break
+        }
       }
 
       return mode
@@ -240,7 +250,9 @@ export default {
     SoyFree,
     SustainablePackaging,
     Vegan,
-    Vegetarian    
+    Vegetarian,
+    NoArtificialSugar,
+    CheckMark
   }
 }
 </script>
