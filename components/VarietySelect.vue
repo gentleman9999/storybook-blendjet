@@ -4,7 +4,7 @@
       <span v-if="optionItem.product.featuredMedia.src" class="dropdown-thumb">
         <img class="dropdown-thumb-image" :src="optionItem.product.featuredMedia.src" />
       </span>
-      {{ optionItem.product.title }}
+      {{ getOptionTitle(optionItem.product.title) }}
     </li>
   </ul>
 </template>
@@ -21,6 +21,15 @@ export default {
   methods: {
     setOptionValue(index) {
       this.$emit('updateOptions', index)
+    },
+    getOptionTitle(title) {
+      if(title?.toLowerCase()?.includes('protein')) {
+        return '6 JETPACK PROTEIN SMOOTHIES'
+      } else if(title?.toLowerCase()?.includes('jetpack')) {
+        return '6 JETPACK SMOOTHIES'
+      } else {
+        return title
+      }
     }
   }
 }
@@ -29,6 +38,7 @@ export default {
 <style lang="scss" scoped>
 /* Dropdown Content (Hidden by Default) */
 .variety-dropdown-content {
+  position: relative;
   border-radius: 25px;
   background-color: $primary-purple-tint;
   width: 100%;

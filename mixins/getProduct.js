@@ -2,9 +2,10 @@ import { mapMutations } from 'vuex'
 import { createClient } from '~/plugins/contentful.js'
 const client = createClient()
 
-function getBundledProductsFromFile(bundles, productObj, fs, title, isVarietyPack = false) {
+function getBundledProductsFromFile(bundles, productObj, fs, title, isVarietyPack = false, 
+  bundleCollectionMedia = []) {
   const bundlesPromise = []
-  bundles.forEach(bundle => {
+  bundles.forEach((bundle, index) => {
     let productHandle = bundle?.fields?.product?.fields?.handle
     if (isVarietyPack) {
       productHandle = bundle?.fields?.handle
@@ -47,14 +48,16 @@ function getBundledProductsFromFile(bundles, productObj, fs, title, isVarietyPac
                 product: bundledProduct,
                 variant: bundledVariant.length ? bundledVariant[0] : {},
                 title: title,
-                clickAction: bundle?.fields?.clickAction
+                clickAction: bundle?.fields?.clickAction,
+                media: bundle?.fields?.media
               })
             } else {
               // push all varients available for sale
               return resolve({
                 product: bundledProduct,
                 variants: bundledVariant,
-                title: title
+                title: title,
+                media: bundleCollectionMedia?.[index]
               })
             }
           }
@@ -71,10 +74,11 @@ function getbundledProductsFromNacelle(
   bundles,
   allBundledProductList,
   title,
-  isVarietyPack = false
+  isVarietyPack = false,
+  bundleCollectionMedia = []
 ) {
   const bundledProducts = []
-  bundles.forEach(async bundle => {
+  bundles.forEach(async (bundle, index) => {
     let productHandle = bundle?.fields?.product?.fields?.handle
     if (isVarietyPack) {
       productHandle = bundle?.fields?.handle
@@ -113,14 +117,16 @@ function getbundledProductsFromNacelle(
           product: bundledProduct,
           variant: bundledVariant.length ? bundledVariant[0] : {},
           title: title,
-          clickAction: bundle?.fields?.clickAction
+          clickAction: bundle?.fields?.clickAction,
+          media: bundle?.fields?.media
         })
       } else {
         // push all varients available for sale
         bundledProducts.push({
           product: bundledProduct,
           variants: bundledVariant,
-          title: title
+          title: title,
+          media: bundleCollectionMedia?.[index]
         })
       }
     }
@@ -209,6 +215,7 @@ export default (config = {}) => {
         if (page?.fields?.bundles?.fields?.bundleCollection?.length) {
           // get product data for bundled products
           const bundles = page?.fields?.bundles?.fields?.bundleCollection
+          const bundleCollectionMedia = page?.fields?.bundles?.fields?.bundleCollectionMedia
           try {
             const resolvedBundles = await Promise.all(
               getBundledProductsFromFile(
@@ -216,7 +223,8 @@ export default (config = {}) => {
                 productObj,
                 fs,
                 page?.fields?.bundles?.fields?.title,
-                true
+                true,
+                bundleCollectionMedia
               )
             )
             productObj.bundleVarietyPack = resolvedBundles
@@ -230,6 +238,7 @@ export default (config = {}) => {
           page.fields.variants.forEach(async variant => {
             const bundles = variant?.fields?.bundles?.fields?.bundleGroup
             const bundleCollection = variant?.fields?.bundles?.fields?.bundleCollection
+          const bundleCollectionMedia = page?.fields?.bundles?.fields?.bundleCollectionMedia
             if (bundles?.length) {
               await Promise.all(
                 getBundledProductsFromFile(
@@ -249,7 +258,8 @@ export default (config = {}) => {
                   productObj,
                   fs,
                   variant?.fields?.bundles?.fields?.title,
-                  true
+                  true,
+                  bundleCollectionMedia
                 )
               ).then(res => {
                 productObj.variantBundleVarietyPack[variant.fields.title.toLowerCase()] = res
@@ -271,6 +281,7 @@ export default (config = {}) => {
           const productHandles = []
           const bundles = page?.fields?.bundles?.fields?.bundleGroup
           const bundleCollection = page?.fields?.bundles?.fields?.bundleCollection
+          const bundleCollectionMedia = page?.fields?.bundles?.fields?.bundleCollectionMedia
           bundles.forEach(bundle => {
             // Get productIds of the main product bundle
             if (bundle?.fields?.product?.fields?.handle) {
@@ -330,7 +341,8 @@ export default (config = {}) => {
             bundleCollection,
             productObj.allBundledProductList,
             page?.fields?.bundles?.fields?.title,
-            true
+            true,
+            bundleCollectionMedia
           )
 
           if (page?.fields?.variants?.length) {
@@ -338,6 +350,7 @@ export default (config = {}) => {
             page.fields.variants.forEach(variant => {
               const bundles = variant?.fields?.bundles?.fields?.bundleGroup
               const bundleCollection = variant?.fields?.bundles?.fields?.bundleCollection
+              const bundleCollectionMedia = variant?.fields?.bundles?.fields?.bundleCollectionMedia
 
               if (bundles?.length) {
                 productObj.variantSpecificBundles[
@@ -356,7 +369,8 @@ export default (config = {}) => {
                   bundleCollection,
                   productObj.allBundledProductList,
                   variant?.fields?.bundles?.fields?.title,
-                  true
+                  true,
+                  bundleCollectionMedia
                 )
               }
             })

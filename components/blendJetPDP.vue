@@ -379,6 +379,14 @@
                 v-show="bundleOptionsSelectorActive[index]"
                 v-click-outside="hideVariantSelector"
               >
+              <div v-if="bundle.media" class="media-tile__media">
+                <!-- MEDIA - VIDEO -->
+                <VideoContainer
+                  v-if="bundle.media.fields.file"
+                  :source="bundle.media.fields.file.url"
+                  class="media-tile__media__video"
+                />
+              </div>
                 <product-options
                   :options="allOptions"
                   :variant="bundle.variant"
@@ -386,7 +394,9 @@
                   :currentOption="bundle.variant.selectedOptions[0].value"
                   :key="5"
                   @selectedOption="setBundleVariant($event, index)"
+                  class="bundle-variant-select-color"
                 />
+                <div class="bundle-overlay" @click.prevent="$set(bundleOptionsSelectorActive, index,false)"></div>
               </div>
               <div
                 v-if="
@@ -400,12 +410,22 @@
                 @focusout="focusOutCalled"
                 v-click-outside="focusOutCalled"
               >
+              
+              <div v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media" class="media-tile__media">
+                <!-- MEDIA - VIDEO -->
+                <VideoContainer
+                  v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file"
+                  :source="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file.url"
+                  class="media-tile__media__video"
+                />
+              </div>
                 <VarietySelect
                   tabindex="0"
                   @focusout="focusOutCalled"
                   :options="selectedBundleVarietyPack"
                   @updateOptions="updateSelectedVarietyPack"
                 />
+                <div class="bundle-overlay" @click.prevent="focusOutCalled"></div>
               </div>
             </div>
           </div>
@@ -993,6 +1013,7 @@ import CaretDown from '~/components/svg/caretDown'
 import BlnExtend from '~/components/svg/blnExtend'
 import NextSlide from '~/components/svg/NextSlide'
 import PrevSlide from '~/components/svg/PrevSlide'
+const VideoContainer = () => import('~/components/VideoContainer')
 const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
 
 export default {
@@ -1065,7 +1086,8 @@ export default {
     BlnExtend,
     NextSlide,
     PrevSlide,
-    ProductMediaTile
+    ProductMediaTile,
+    VideoContainer
   },
   mixins: [imageOptimize, availableOptions, allOptionsSelected],
   directives: {
@@ -2022,6 +2044,8 @@ export default {
         max-height: 60px;
         width: auto;
         cursor: pointer;
+        position: relative;
+        z-index: 10;
         &.no-pointer {
           cursor: default;
         }
@@ -2923,10 +2947,16 @@ h1 {
       width: 370px;
       border: 2px solid black;
       border-radius: 25px;
+      overflow: hidden;
     }
     .option {
       margin-bottom: 0;
     }
+  }
+  .bundle-variant-select-color {
+    z-index: 10;
+    position: relative;
+    background: white;
   }
 }
 </style>
@@ -2941,6 +2971,22 @@ h1 {
     .option {
       margin-bottom: 0;
     }
+  }
+  .bundle-overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0, 0.4);
+    z-index: 1;
+  }
+  .media-tile__media {
+    position: absolute;
+    z-index: 10;
+    bottom: 220px;
+    border-radius: 5px;
+    overflow: hidden;
   }
 }
 </style>
