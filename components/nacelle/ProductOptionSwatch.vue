@@ -348,6 +348,26 @@ export default {
     background-color: #006845
   }
   
+  &__slate {
+    background-color: #5b646b
+  }
+  
+  &__glacier {
+    background-color: #729195
+  }
+  
+  &__merlot {
+    background-color: #6b2337
+  }
+  
+  &__honey {
+    background-color: #d69a0a
+  }
+  
+  &__emerald {
+    background-color: #166457
+  }
+  
   &__cinnamon {
     background-color: #862633
   }
