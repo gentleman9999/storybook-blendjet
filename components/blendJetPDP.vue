@@ -1193,7 +1193,6 @@ export default {
       }
     },
     bundleItemClicked(bundle, isCurrentProduct, index = 0) {
-      debugger
       this.bundleSelectorVisible = false
       if (!isCurrentProduct) {
         if (bundle?.clickAction === 'variant') {
