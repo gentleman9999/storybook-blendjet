@@ -3052,6 +3052,12 @@ h1 {
     overflow: hidden;
     &.variety-bundle-item-video {
       height: 360px;
+      width: 380px;
+      left: -6px;
+      @include respond-to('small') {
+        width: auto;
+        left: 0;
+      }
     }
   }
 }
