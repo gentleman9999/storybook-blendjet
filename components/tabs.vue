@@ -1,12 +1,17 @@
 <template>
   <div class="tabs is-toggle is-toggle-rounded">
     <ul class="tab-container">
-      <li v-for="item in tabItems" @click="handleChangeTab(item)" :key="item" class="tab-item" :class="item === active  ? 'is-active' : null">
+      <li
+        v-for="item in tabItems"
+        @click="handleChangeTab(item)"
+        :key="item"
+        class="tab-item"
+        :class="item === active ? 'is-active' : null"
+      >
         <a>
-          <span :style="tabItemStyle">{{item}}</span>
+          <span :style="tabItemStyle">{{ item }}</span>
         </a>
       </li>
-
     </ul>
   </div>
 </template>
@@ -29,24 +34,43 @@ export default {
   props: {
     tabItems: {
       type: Array,
-      default: []
+      default: () => []
+    },
+    selected: {
+      type: [String, Number],
+      default: () => ''
+    },
+    noSelectStart: {
+      type: Boolean,
+      default: false
     }
-  }, 
+  },
+  watch: {
+    selected(newVal) {
+      if (this.tabItems.indexOf(newVal) !== -1) {
+        this.active = newVal
+      } else {
+        this.active = ''
+      }
+    }
+  },
   methods: {
     handleChangeTab(tabItem) {
-      this.active = tabItem;
+      this.active = tabItem
       this.$emit('activeTab', tabItem)
     }
   },
   mounted() {
-    this.active = this.tabItems[0]
-  },
+    if (!this.noSelectStart) {
+      this.active = this.tabItems[0]
+    } else if (this.tabItems.indexOf(this.selected) !== -1) {
+      this.active = this.selected
+    }
+  }
 }
-
 </script>
 
 <style scoped lang="scss">
-
 .tabs.is-toggle.is-toggle-rounded li:first-child a {
   padding-left: 1.25em;
 }
@@ -83,9 +107,7 @@ export default {
   border: none;
   color: $grayscale-white;
   border-radius: $border-radius;
-  z-index: 1;
   height: 100%;
-  z-index: 4;
+  z-index: 1;
 }
-
 </style>
