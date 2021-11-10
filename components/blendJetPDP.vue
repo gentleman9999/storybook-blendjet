@@ -270,7 +270,7 @@
                 }"
               >
                 <img
-                  :src="currentVariant.featuredMedia.src"
+                  :src="currentVariant.featuredMedia.thumbnailSrc"
                   :alt="currentVariant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
                   @click="bundleItemClicked(currentVariant, true)"
@@ -313,7 +313,7 @@
                 </b-dropdown> -->
                 <img
                   v-if="bundle.variant && bundle.variant.featuredMedia"
-                  :src="bundle.variant.featuredMedia.src"
+                  :src="bundle.variant.featuredMedia.thumbnailSrc"
                   :alt="bundle.variant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
                   :class="[{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }]"
@@ -321,7 +321,7 @@
                 />
                 <img
                   v-else
-                  :src="bundle.product.featuredMedia.src"
+                  :src="bundle.product.featuredMedia.thumbnailSrc"
                   :alt="bundle.product.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
                   :class="[{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }]"
@@ -1349,11 +1349,12 @@ export default {
           const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
           let imageIndex = 0
           if (variants?.length) {
-            this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.src
+            debugger
+            this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.thumbnailSrc
             clearInterval(this.imageInterval)
             this.imageInterval = setInterval(() => {
               this.varietyPackImage =
-                variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.src
+                variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.thumbnailSrc
               imageIndex++
             }, 1000)
           }
