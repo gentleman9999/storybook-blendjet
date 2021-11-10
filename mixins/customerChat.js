@@ -5,7 +5,7 @@ function canChangeState(newSource, show) {
     return (source === null || source === newSource) && shown !== show
 }
 
-function updateState (newSource, show) {
+function updateState(newSource, show) {
     if (source === null) {
         source = newSource
         shown = show
@@ -21,7 +21,35 @@ function updateState (newSource, show) {
     }
 }
 
-export default  {
+export default {
+    beforeMount() {
+        let count = 0
+        const intervalId = setInterval(() => {
+            try {
+                // Facebook SDK can be prohibited by AdBlockers, we don't want to run this check in every second.
+                if ((count++) >= 10) {
+                    window.console.log(`window.FB is prohibited, cannot handle its events.`)
+                    clearInterval(intervalId)
+                    return
+                }
+
+                if (window?.FB) {
+                    window.FB.Event.subscribe('customerchat.load', () => {
+                        if (!shown) {
+                            window.FB.CustomerChat.hide()
+                        }
+                    })
+
+                    clearInterval(intervalId)
+                } else {
+                    window.console.log(`window.FB is not rendered.`)
+                }
+            } catch (error) {
+                window.console.error('Error happend while dealing with Customer Chat', error)
+            }
+        }, 1000)
+        
+    },
     methods: {
         showCustomerChat(source) {
             this.toggleCustomerChat(source, true)
@@ -36,7 +64,7 @@ export default  {
                 } else {
                     window?.FB?.CustomerChat?.hide()
                 }
-                
+
                 updateState(source, !shown)
             }
         }
