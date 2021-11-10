@@ -1,10 +1,10 @@
 <template>
   <ul class="variety-dropdown-content">
-    <li v-for="(optionItem, i) in options" :key="i" @click.prevent="setOptionValue(i)">
-      <span v-if="optionItem.product.featuredMedia.src" class="dropdown-thumb">
-        <img class="dropdown-thumb-image" :src="optionItem.product.featuredMedia.src" />
+    <li v-for="(item, i) in options" :key="i" @click.prevent="setOptionValue(i)">
+      <span v-if="item.image" class="dropdown-thumb">
+        <img class="dropdown-thumb-image" :src="item.image" />
       </span>
-      {{ getOptionTitle(optionItem.product.title) }}
+      {{ item.title }}
     </li>
   </ul>
 </template>
@@ -21,15 +21,6 @@ export default {
   methods: {
     setOptionValue(index) {
       this.$emit('updateOptions', index)
-    },
-    getOptionTitle(title) {
-      if(title?.toLowerCase()?.includes('protein')) {
-        return '6 JETPACK PROTEIN SMOOTHIES'
-      } else if(title?.toLowerCase()?.includes('jetpack')) {
-        return '6 JETPACK SMOOTHIES'
-      } else {
-        return title
-      }
     }
   }
 }

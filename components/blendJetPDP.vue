@@ -340,20 +340,15 @@
                 }"
               >
                 <img
-                  v-if="selectedBundleVarietyPack.length === 1"
-                  :src="varietyPackImage"
+                  :src="varietyPackImage[selectedVarieryPackIndex]"
                   alt="variety pack"
                   class="product-select__controls__bundles__bundle-product-image"
                   @click="
-                    bundleVarietyPackClicked(selectedBundleVarietyPack[selectedVarieryPackIndex])
+                    bundleVarietyPackClicked(
+                      selectedBundleVarietyPack[selectedVarieryPackIndex],
+                      selectedBundleVarietyPack.length > 1
+                    )
                   "
-                />
-                <img
-                  v-else
-                  :src="varietyPackImage"
-                  alt="variety pack"
-                  @click="varietyBundleSelectorActive = !varietyBundleSelectorActive"
-                  class="product-select__controls__bundles__bundle-product-image"
                 />
               </div>
             </div>
@@ -379,14 +374,18 @@
                 v-show="bundleOptionsSelectorActive[index]"
                 v-click-outside="hideVariantSelector"
               >
-              <div v-if="bundle.media" class="media-tile__media">
-                <!-- MEDIA - VIDEO -->
-                <VideoContainer
-                  v-if="bundle.media.fields.file"
-                  :source="bundle.media.fields.file.url"
-                  class="media-tile__media__video"
-                />
-              </div>
+                <div
+                  v-if="bundle.media"
+                  class="media-tile__media"
+                  :class="{ 'variety-bundle-item-video': bundleOptionsSelectorActive[index] }"
+                >
+                  <!-- MEDIA - VIDEO -->
+                  <VideoContainer
+                    v-if="bundle.media.fields.file"
+                    :source="bundle.media.fields.file.url"
+                    class="media-tile__media__video bundle-item-video"
+                  />
+                </div>
                 <product-options
                   :options="allOptions"
                   :variant="bundle.variant"
@@ -396,7 +395,7 @@
                   @selectedOption="setBundleVariant($event, index)"
                   class="bundle-variant-select-color"
                 />
-                <div class="bundle-overlay" @click.prevent="$set(bundleOptionsSelectorActive, index,false)"></div>
+                <div class="bundle-overlay" @click.prevent="hideVariantSelector"></div>
               </div>
               <div
                 v-if="
@@ -410,19 +409,23 @@
                 @focusout="focusOutCalled"
                 v-click-outside="focusOutCalled"
               >
-              
-              <div v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media" class="media-tile__media">
-                <!-- MEDIA - VIDEO -->
-                <VideoContainer
-                  v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file"
-                  :source="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file.url"
-                  class="media-tile__media__video"
-                />
-              </div>
+                <div
+                  v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media"
+                  class="media-tile__media tt variety-bundle-item-video"
+                >
+                  <!-- MEDIA - VIDEO -->
+                  <VideoContainer
+                    v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file"
+                    :source="
+                      selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file.url
+                    "
+                    class="media-tile__media__video"
+                  />
+                </div>
                 <VarietySelect
                   tabindex="0"
                   @focusout="focusOutCalled"
-                  :options="selectedBundleVarietyPack"
+                  :options="varietyPackSelectorOptions"
                   @updateOptions="updateSelectedVarietyPack"
                 />
                 <div class="bundle-overlay" @click.prevent="focusOutCalled"></div>
@@ -1061,11 +1064,12 @@ export default {
       bundleTitle: this?.page?.fields?.bundles?.fields?.title,
       bundleVarietyOptions: [],
       selectedVarieryPackIndex: 0,
-      varietyPackImage: '',
+      varietyPackImage: [],
       imageInterval: null,
       bundleOptionsSelectorActive: {},
       varietyBundleSelectorActive: false,
-      bundleSelectorVisible: false
+      bundleSelectorVisible: false,
+      varietyPackSelectorOptions: []
     }
   },
   components: {
@@ -1164,19 +1168,32 @@ export default {
       const url = atob(value)
       return url.replace('gid://shopify/ProductVariant/', '')
     },
-    bundleVarietyPackClicked(bundle) {
-      const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
-      this.$router.push({
-        name: 'products-productHandle',
-        params: {
-          productHandle: bundle.product.handle
-        },
-        query: {
-          variant: this.formatVariantId(variant.id)
-        }
-      })
+    bundleVarietyPackClicked(bundle, hasMultipleProducts) {
+      if (hasMultipleProducts) {
+        this.varietyBundleSelectorActive = !this.varietyBundleSelectorActive
+        this.$nextTick(() => {
+          const media = document.querySelector('.variety-bundle-item-video')
+          const mediaOffset = media?.getBoundingClientRect()?.top || 0
+          window.scroll({
+            top: window.scrollY + mediaOffset - 140,
+            behavior: 'smooth'
+          })
+        })
+      } else {
+        const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
+        this.$router.push({
+          name: 'products-productHandle',
+          params: {
+            productHandle: bundle.product.handle
+          },
+          query: {
+            variant: this.formatVariantId(variant.id)
+          }
+        })
+      }
     },
     bundleItemClicked(bundle, isCurrentProduct, index = 0) {
+      debugger
       this.bundleSelectorVisible = false
       if (!isCurrentProduct) {
         if (bundle?.clickAction === 'variant') {
@@ -1185,21 +1202,27 @@ export default {
             this.$set(this.bundleOptionsSelectorActive, i, false)
           }
           this.varietyBundleSelectorActive = false
-          let variantCount = 0
-          bundle.product.variants.forEach(variant => {
-            if (variant.availableForSale) {
-              variantCount++
-            }
-          })
-          if (variantCount > 1) {
-            this.bundleSelectorVisible = true
+          // let variantCount = 0
+          // bundle.product.variants.forEach(variant => {
+          //   if (variant.availableForSale) {
+          //     variantCount++
+          //   }
+          // })
+          this.bundleSelectorVisible = true
+          this.$set(this.bundleOptionsSelectorActive, index, true)
+          setTimeout(() => {
             this.$set(this.bundleOptionsSelectorActive, index, true)
-            setTimeout(() => {
-              this.$set(this.bundleOptionsSelectorActive, index, true)
-              this.bundleSelectorVisible = true
-              console.log('visible set')
-            }, 100)
-          }
+            this.bundleSelectorVisible = true
+            console.log('visible set')
+            this.$nextTick(() => {
+              const media = document.querySelector('.variety-bundle-item-video')
+              const mediaOffset = media?.getBoundingClientRect()?.top || 0
+              window.scroll({
+                top: window.scrollY + mediaOffset - 140,
+                behavior: 'smooth'
+              })
+            })
+          }, 100)
         } else if (bundle.clickAction === 'link') {
           const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
           this.$router.push({
@@ -1347,21 +1370,56 @@ export default {
       if (this.selectedBundleVarietyPack?.length) {
         if (this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex]) {
           const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
-          let imageIndex = 0
+          const imageIndex = []
+          for (let i = 0; i < this.selectedBundleVarietyPack?.length; i++) {
+            imageIndex[i] = 0
+          }
+          this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
+            this.$set(
+              this.varietyPackImage,
+              index,
+              variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
+            )
+            imageIndex[index]++
+          })
           if (variants?.length) {
-            debugger
-            this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.thumbnailSrc
             clearInterval(this.imageInterval)
             this.imageInterval = setInterval(() => {
-              this.varietyPackImage =
-                variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.thumbnailSrc
-              imageIndex++
+              this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
+                this.$set(
+                  this.varietyPackImage,
+                  index,
+                  variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
+                )
+                imageIndex[index]++
+              })
+              this.updateVarietyPackOptions()
+              // this.varietyPackImage =
+              //   variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.thumbnailSrc
+              // imageIndex++
             }, 1000)
           }
         }
+        this.updateVarietyPackOptions()
       } else {
+        this.varietyPackSelectorOptions = []
         clearInterval(this.imageInterval)
       }
+    },
+    updateVarietyPackOptions() {
+      this.varietyPackSelectorOptions = []
+      this.selectedBundleVarietyPack.forEach(({ product }, index) => {
+        let title = product?.title
+        if (title?.toLowerCase()?.includes('protein')) {
+          title = '6 JETPACK PROTEIN SMOOTHIES'
+        } else if (title?.toLowerCase()?.includes('jetpack')) {
+          title = '6 JETPACK SMOOTHIES'
+        }
+        this.varietyPackSelectorOptions.push({
+          title: title,
+          image: this.varietyPackImage[index]
+        })
+      })
     },
     updateVariant(variant) {
       this.currentVariant = variant
@@ -2049,6 +2107,7 @@ export default {
         cursor: pointer;
         position: relative;
         z-index: 10;
+        filter: drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.3));
         &.no-pointer {
           cursor: default;
         }
@@ -2960,6 +3019,7 @@ h1 {
     z-index: 10;
     position: relative;
     background: white;
+    padding: 10px;
   }
 }
 </style>
@@ -2981,15 +3041,18 @@ h1 {
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(0,0,0, 0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     z-index: 1;
   }
   .media-tile__media {
     position: absolute;
     z-index: 10;
-    bottom: 220px;
+    top: -485px;
     border-radius: 5px;
     overflow: hidden;
+    &.variety-bundle-item-video {
+      height: 360px;
+    }
   }
 }
 </style>
