@@ -1192,6 +1192,9 @@ export default {
       this.bundleSelectorVisible = false
       if (!isCurrentProduct) {
         if (bundle?.clickAction === 'variant') {
+          if (this.bundleOptionsSelectorActive[index]) {
+            return
+          }
           console.log('show variant')
           for (let i = 0; i < 10; i++) {
             this.$set(this.bundleOptionsSelectorActive, i, false)
