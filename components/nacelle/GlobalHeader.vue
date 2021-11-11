@@ -366,6 +366,7 @@ import Cart from '~/components/nacelle/Cart'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 
 import customerChat from '~/mixins/customerChat'
+import optimonk from '~/mixins/optimonk'
 
 export default {
   data() {
@@ -409,7 +410,7 @@ export default {
       default: true
     }
   },
-  mixins: [customerChat],
+  mixins: [customerChat, optimonk],
   watch: {
     '$nuxt.$route.name'(value) {
       this.routeName = value
@@ -491,10 +492,12 @@ export default {
     handleCloseMenu() {
       this.closeMenu()
       this.showCustomerChat('navbar')
+      this.showOptimonkPopup('navbar')
     },
     handleToggleShowMenu() {
       this.toggleShowMenu()
       this.showCustomerChat('navbar')
+      this.showOptimonkPopup('navbar')
     },
     removeScrollWatch() {
       window.removeEventListener('scroll', this.handleDebouncedScroll)
