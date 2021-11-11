@@ -356,10 +356,13 @@
                   :class="{ 'variety-bundle-item-video': bundleOptionsSelectorActive[index] }"
                 >
                   <!-- MEDIA - VIDEO -->
+                  <Close :on-click="hideVariantSelector" color="white" />
                   <VideoContainer
                     v-if="bundle.media.fields.file"
                     :source="bundle.media.fields.file.url"
                     class="media-tile__media__video bundle-item-video"
+                    :show-loader="true"
+                    :loader-height="360"
                   />
                 </div>
                 <product-options
@@ -388,14 +391,17 @@
               >
                 <div
                   v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media"
-                  class="media-tile__media tt variety-bundle-item-video"
+                  class="media-tile__media variety-bundle-item-video"
                 >
                   <!-- MEDIA - VIDEO -->
+                  <Close :on-click="focusOutCalled" color="white" />
                   <VideoContainer
                     v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file"
                     :source="
                       selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file.url
                     "
+                    :show-loader="true"
+                    :loader-height="360"
                     class="media-tile__media__video"
                   />
                 </div>
@@ -1151,10 +1157,23 @@ export default {
         this.$nextTick(() => {
           const media = document.querySelector('.variety-bundle-item-video')
           const mediaOffset = media?.getBoundingClientRect()?.top || 0
-          window.scroll({
-            top: window.scrollY + mediaOffset - 140,
-            behavior: 'smooth'
-          })
+          if (this.$mq === 'sm' || this.$mq === 'md') {
+            window.scroll({
+              top: window.scrollY + mediaOffset - 140,
+              behavior: 'smooth'
+            })
+          } else {
+            const bundleElement = document.querySelector(
+              '.product-select__controls__bundles__bundle-products'
+            )
+            const bundleOffset = bundleElement?.getBoundingClientRect()?.top
+            if (bundleOffset - 380 - 140 < 0) {
+              window.scroll({
+                top: window.scrollY + mediaOffset - 140,
+                behavior: 'smooth'
+              })
+            }
+          }
         })
       } else {
         const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
@@ -1178,12 +1197,6 @@ export default {
             this.$set(this.bundleOptionsSelectorActive, i, false)
           }
           this.varietyBundleSelectorActive = false
-          // let variantCount = 0
-          // bundle.product.variants.forEach(variant => {
-          //   if (variant.availableForSale) {
-          //     variantCount++
-          //   }
-          // })
           this.bundleSelectorVisible = true
           this.$set(this.bundleOptionsSelectorActive, index, true)
           setTimeout(() => {
@@ -1193,10 +1206,23 @@ export default {
             this.$nextTick(() => {
               const media = document.querySelector('.variety-bundle-item-video')
               const mediaOffset = media?.getBoundingClientRect()?.top || 0
-              window.scroll({
-                top: window.scrollY + mediaOffset - 140,
-                behavior: 'smooth'
-              })
+              if (this.$mq === 'sm' || this.$mq === 'md') {
+                window.scroll({
+                  top: window.scrollY + mediaOffset - 140,
+                  behavior: 'smooth'
+                })
+              } else {
+                const bundleElement = document.querySelector(
+                  '.product-select__controls__bundles__bundle-products'
+                )
+                const bundleOffset = bundleElement?.getBoundingClientRect()?.top
+                if (bundleOffset - 380 - 140 < 0) {
+                  window.scroll({
+                    top: window.scrollY + mediaOffset - 140,
+                    behavior: 'smooth'
+                  })
+                }
+              }
             })
           }, 100)
         } else if (bundle.clickAction === 'link') {
@@ -3036,6 +3062,12 @@ h1 {
       @include respond-to('small') {
         width: auto;
         left: 0;
+      }
+      video {
+        min-height: 360px;
+        @include respond-to('small') {
+          width: auto;
+        }
       }
     }
   }
