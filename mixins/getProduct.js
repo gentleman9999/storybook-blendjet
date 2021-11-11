@@ -2,8 +2,14 @@ import { mapMutations } from 'vuex'
 import { createClient } from '~/plugins/contentful.js'
 const client = createClient()
 
-function getBundledProductsFromFile(bundles, productObj, fs, title, isVarietyPack = false, 
-  bundleCollectionMedia = []) {
+function getBundledProductsFromFile(
+  bundles,
+  productObj,
+  fs,
+  title,
+  isVarietyPack = false,
+  bundleCollectionMedia = []
+) {
   const bundlesPromise = []
   bundles.forEach((bundle, index) => {
     let productHandle = bundle?.fields?.product?.fields?.handle
@@ -19,6 +25,13 @@ function getBundledProductsFromFile(bundles, productObj, fs, title, isVarietyPac
             'utf-8'
           )
           const bundledProduct = JSON.parse(file)
+          let variantsAvailableForSale = 0
+          bundledProduct?.variants?.length &&
+            bundledProduct.variants.forEach(variant => {
+              if (variant.availableForSale) {
+                variantsAvailableForSale++
+              }
+            })
           let bundledVariant = bundledProduct?.variants?.filter(variant => {
             if (
               variant &&
@@ -49,7 +62,8 @@ function getBundledProductsFromFile(bundles, productObj, fs, title, isVarietyPac
                 variant: bundledVariant.length ? bundledVariant[0] : {},
                 title: title,
                 clickAction: bundle?.fields?.clickAction,
-                media: bundle?.fields?.media
+                media: bundle?.fields?.media,
+                variantsAvailableForSale: variantsAvailableForSale
               })
             } else {
               // push all varients available for sale
@@ -88,6 +102,13 @@ function getbundledProductsFromNacelle(
       return productHandle === item.handle
     })
     bundledProduct = bundledProduct.length ? bundledProduct[0] : {}
+    let variantsAvailableForSale = 0
+    bundledProduct?.variants?.length &&
+      bundledProduct.variants.forEach(variant => {
+        if (variant.availableForSale) {
+          variantsAvailableForSale++
+        }
+      })
     let bundledVariant = bundledProduct?.variants?.filter(variant => {
       if (
         variant &&
@@ -118,7 +139,8 @@ function getbundledProductsFromNacelle(
           variant: bundledVariant.length ? bundledVariant[0] : {},
           title: title,
           clickAction: bundle?.fields?.clickAction,
-          media: bundle?.fields?.media
+          media: bundle?.fields?.media,
+          variantsAvailableForSale: variantsAvailableForSale
         })
       } else {
         // push all varients available for sale
@@ -238,7 +260,7 @@ export default (config = {}) => {
           page.fields.variants.forEach(async variant => {
             const bundles = variant?.fields?.bundles?.fields?.bundleGroup
             const bundleCollection = variant?.fields?.bundles?.fields?.bundleCollection
-          const bundleCollectionMedia = page?.fields?.bundles?.fields?.bundleCollectionMedia
+            const bundleCollectionMedia = page?.fields?.bundles?.fields?.bundleCollectionMedia
             if (bundles?.length) {
               await Promise.all(
                 getBundledProductsFromFile(

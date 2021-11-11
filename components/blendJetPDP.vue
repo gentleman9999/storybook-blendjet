@@ -286,31 +286,6 @@
                     !bundleOptionsSelectorActive[index]
                 }"
               >
-                <!-- <b-dropdown
-                  v-if="bundle.clickAction"
-                  position="is-bottom-left"
-                  append-to-body
-                  aria-role="menu"
-                  trap-focus
-                  class="variant-dropdown"
-                  :class="{ 'has-padding': true }"
-                  paddingless
-                >
-                  <template #trigger>
-
-                  </template>
-
-                  <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
-                    <product-options
-                      :options="allOptions"
-                      :variant="bundle.variant"
-                      :variants="bundle.product.variants"
-                      :currentOption="bundle.variant.selectedOptions[0].value"
-                      :key="5"
-                      @selectedOption="setBundleVariant($event, index)"
-                    />
-                  </b-dropdown-item>
-                </b-dropdown> -->
                 <img
                   v-if="bundle.variant && bundle.variant.featuredMedia"
                   :src="bundle.variant.featuredMedia.thumbnailSrc"
@@ -371,6 +346,7 @@
                 v-for="(bundle, index) in selectedBundle"
                 :key="bundle.product.id"
                 class="variant-select bundle-item"
+                :class="{ 'single-variant': bundle.variantsAvailableForSale <= 1 }"
                 v-show="bundleOptionsSelectorActive[index]"
                 v-click-outside="hideVariantSelector"
               >
@@ -387,6 +363,7 @@
                   />
                 </div>
                 <product-options
+                  v-if="bundle.variantsAvailableForSale > 1"
                   :options="allOptions"
                   :variant="bundle.variant"
                   :variants="bundle.product.variants"
@@ -1407,12 +1384,12 @@ export default {
     },
     updateVarietyPackOptions() {
       this.varietyPackSelectorOptions = []
-      this.selectedBundleVarietyPack.forEach(({ product }, index) => {
+      this.selectedBundleVarietyPack.forEach(({ product, variants }, index) => {
         let title = product?.title
         if (title?.toLowerCase()?.includes('protein')) {
-          title = '6 JETPACK PROTEIN SMOOTHIES'
+          title = variants.length + ' JETPACK PROTEIN SMOOTHIES'
         } else if (title?.toLowerCase()?.includes('jetpack')) {
-          title = '6 JETPACK SMOOTHIES'
+          title = variants.length + ' JETPACK SMOOTHIES'
         }
         this.varietyPackSelectorOptions.push({
           title: title,
@@ -3009,6 +2986,9 @@ h1 {
       border: 2px solid black;
       border-radius: 25px;
       overflow: hidden;
+      &.single-variant {
+        border: 0;
+      }
     }
     .option {
       margin-bottom: 0;
