@@ -273,34 +273,71 @@
                   :src="currentVariant.featuredMedia.thumbnailSrc"
                   :alt="currentVariant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
-                  @click="bundleItemClicked(currentVariant, true)"
+                  :class="{
+                    'item-blurred': varietyBundleSelectorActive || bundleSelectorVisible
+                  }"
+                  @click.self="bundleItemClicked(currentVariant, true)"
                 />
               </div>
               <div
                 v-for="(bundle, index) in selectedBundle"
                 :key="bundle.product.id"
                 class="product-select__controls__bundles__bundle-product-container"
-                :class="{
-                  blur:
-                    (varietyBundleSelectorActive || bundleSelectorVisible) &&
-                    !bundleOptionsSelectorActive[index]
-                }"
+                :class="[
+                  {
+                    blur:
+                      (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                      !bundleOptionsSelectorActive[index]
+                  },
+                  {
+                    'no-blur': !(
+                      (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                      !bundleOptionsSelectorActive[index]
+                    )
+                  }
+                ]"
               >
                 <img
                   v-if="bundle.variant && bundle.variant.featuredMedia"
                   :src="bundle.variant.featuredMedia.thumbnailSrc"
                   :alt="bundle.variant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
-                  :class="[{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }]"
-                  @click="bundleItemClicked(bundle, false, index)"
+                  :class="[
+                    { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
+                    {
+                      'item-blurred':
+                        (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                        !bundleOptionsSelectorActive[index]
+                    },
+                    {
+                      'item-not-blurred': !(
+                        (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                        !bundleOptionsSelectorActive[index]
+                      )
+                    }
+                  ]"
+                  @click.self="bundleItemClicked(bundle, false, index)"
                 />
                 <img
                   v-else
                   :src="bundle.product.featuredMedia.thumbnailSrc"
                   :alt="bundle.product.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
-                  :class="[{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }]"
-                  @click="bundleItemClicked(bundle, false, index)"
+                  :class="[
+                    { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
+                    {
+                      'item-blurred':
+                        (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                        !bundleOptionsSelectorActive[index]
+                    },
+                    {
+                      'item-not-blurred': !(
+                        (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                        !bundleOptionsSelectorActive[index]
+                      )
+                    }
+                  ]"
+                  @click.self="bundleItemClicked(bundle, false, index)"
                 />
               </div>
               <div
@@ -311,14 +348,19 @@
                 "
                 class="product-select__controls__bundles__bundle-product-container"
                 :class="{
-                  blur: bundleSelectorVisible && !varietyBundleSelectorActive
+                  blur: bundleSelectorVisible && !varietyBundleSelectorActive,
+                  'no-blur': !(bundleSelectorVisible && !varietyBundleSelectorActive)
                 }"
               >
                 <img
                   :src="varietyPackImage[selectedVarieryPackIndex]"
                   alt="variety pack"
                   class="product-select__controls__bundles__bundle-product-image"
-                  @click="
+                  :class="{
+                    'item-blurred': bundleSelectorVisible && !varietyBundleSelectorActive,
+                    'item-not-blurred': !(bundleSelectorVisible && !varietyBundleSelectorActive)
+                  }"
+                  @click.self="
                     bundleVarietyPackClicked(
                       selectedBundleVarietyPack[selectedVarieryPackIndex],
                       selectedBundleVarietyPack.length > 1
@@ -348,34 +390,38 @@
                 class="variant-select bundle-item"
                 :class="{ 'single-variant': bundle.variantsAvailableForSale <= 1 }"
                 v-show="bundleOptionsSelectorActive[index]"
-                v-click-outside="hideVariantSelector"
               >
                 <div
-                  v-if="bundle.media"
-                  class="media-tile__media"
-                  :class="{ 'variety-bundle-item-video': bundleOptionsSelectorActive[index] }"
+                  v-if="bundleOptionsSelectorActive[index]"
+                  v-click-outside="hideVariantSelector"
                 >
-                  <!-- MEDIA - VIDEO -->
-                  <Close :on-click="hideVariantSelector" color="white" />
-                  <VideoContainer
-                    v-if="bundle.media.fields.file"
-                    :source="bundle.media.fields.file.url"
-                    class="media-tile__media__video bundle-item-video"
-                    :show-loader="true"
-                    :loader-height="360"
+                  <div
+                    v-if="bundle.media"
+                    class="media-tile__media"
+                    :class="{ 'variety-bundle-item-video': bundleOptionsSelectorActive[index] }"
+                  >
+                    <!-- MEDIA - VIDEO -->
+                    <Close :on-click="hideVariantSelector" color="white" />
+                    <VideoContainer
+                      v-if="bundle.media.fields.file"
+                      :source="bundle.media.fields.file.url"
+                      class="media-tile__media__video bundle-item-video"
+                      :show-loader="true"
+                      :loader-height="360"
+                    />
+                  </div>
+                  <product-options
+                    v-if="bundle.variantsAvailableForSale > 1"
+                    :options="allOptions"
+                    :variant="bundle.variant"
+                    :variants="bundle.product.variants"
+                    :currentOption="bundle.variant.selectedOptions[0].value"
+                    :key="5"
+                    @selectedOption="setBundleVariant($event, index)"
+                    class="bundle-variant-select-color"
                   />
+                  <div class="bundle-overlay" @click.prevent.stop="hideVariantSelector"></div>
                 </div>
-                <product-options
-                  v-if="bundle.variantsAvailableForSale > 1"
-                  :options="allOptions"
-                  :variant="bundle.variant"
-                  :variants="bundle.product.variants"
-                  :currentOption="bundle.variant.selectedOptions[0].value"
-                  :key="5"
-                  @selectedOption="setBundleVariant($event, index)"
-                  class="bundle-variant-select-color"
-                />
-                <div class="bundle-overlay" @click.prevent="hideVariantSelector"></div>
               </div>
               <div
                 v-if="
@@ -386,15 +432,14 @@
                 "
                 class="variant-select"
                 tabindex="2"
-                @focusout="focusOutCalled"
-                v-click-outside="focusOutCalled"
+                v-click-outside="hideVariantSelector"
               >
                 <div
                   v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media"
                   class="media-tile__media variety-bundle-item-video"
                 >
                   <!-- MEDIA - VIDEO -->
-                  <Close :on-click="focusOutCalled" color="white" />
+                  <Close :on-click="hideVariantSelector" color="white" />
                   <VideoContainer
                     v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file"
                     :source="
@@ -407,11 +452,10 @@
                 </div>
                 <VarietySelect
                   tabindex="0"
-                  @focusout="focusOutCalled"
                   :options="varietyPackSelectorOptions"
                   @updateOptions="updateSelectedVarietyPack"
                 />
-                <div class="bundle-overlay" @click.prevent="focusOutCalled"></div>
+                <div class="bundle-overlay" @click.prevent.stop="hideVariantSelector"></div>
               </div>
             </div>
           </div>
@@ -1133,18 +1177,32 @@ export default {
         this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
       )
     },
-    hideVariantSelector() {
-      console.log('outside click called')
+    hideVariantSelector(event = {}) {
+      if (
+        event &&
+        event?.target?.className?.includes &&
+        event?.target?.className?.includes('item-not-blurred')
+      ) {
+        return
+      }
       this.bundleSelectorVisible = false
+      this.varietyBundleSelectorActive = false
+      console.log('outside click called')
       for (let i = 0; i < 10; i++) {
         if (this.bundleOptionsSelectorActive[i]) {
           this.$set(this.bundleOptionsSelectorActive, i, false)
         }
       }
-      // this.$set(this.bundleOptionsSelectorActive, index, false)
     },
-    focusOutCalled() {
-      console.log('called')
+    focusOutCalled(event = {}) {
+      console.log('focus out called')
+      if (
+        event &&
+        event?.target?.className?.includes &&
+        event?.target?.className?.includes('item-not-blurred')
+      ) {
+        return
+      }
       this.varietyBundleSelectorActive = false
     },
     formatVariantId(value) {
@@ -1152,29 +1210,31 @@ export default {
       return url.replace('gid://shopify/ProductVariant/', '')
     },
     bundleVarietyPackClicked(bundle, hasMultipleProducts) {
+      console.log('Bundle variety pack clicked')
       if (hasMultipleProducts) {
         this.varietyBundleSelectorActive = !this.varietyBundleSelectorActive
-        this.$nextTick(() => {
-          const media = document.querySelector('.variety-bundle-item-video')
-          const mediaOffset = media?.getBoundingClientRect()?.top || 0
-          if (this.$mq === 'sm' || this.$mq === 'md') {
-            window.scroll({
-              top: window.scrollY + mediaOffset - 140,
-              behavior: 'smooth'
-            })
-          } else {
-            const bundleElement = document.querySelector(
-              '.product-select__controls__bundles__bundle-products'
-            )
-            const bundleOffset = bundleElement?.getBoundingClientRect()?.top
-            if (bundleOffset - 380 - 140 < 0) {
+        this.varietyBundleSelectorActive &&
+          this.$nextTick(() => {
+            const media = document.querySelector('.variety-bundle-item-video')
+            const mediaOffset = media?.getBoundingClientRect()?.top || 0
+            if (this.$mq === 'sm' || this.$mq === 'md') {
               window.scroll({
                 top: window.scrollY + mediaOffset - 140,
                 behavior: 'smooth'
               })
+            } else {
+              const bundleElement = document.querySelector(
+                '.product-select__controls__bundles__bundle-products'
+              )
+              const bundleOffset = bundleElement?.getBoundingClientRect()?.top
+              if (bundleOffset - 380 - 140 < 0) {
+                window.scroll({
+                  top: window.scrollY + mediaOffset - 140,
+                  behavior: 'smooth'
+                })
+              }
             }
-          }
-        })
+          })
       } else {
         const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
         this.$router.push({
@@ -1189,10 +1249,11 @@ export default {
       }
     },
     bundleItemClicked(bundle, isCurrentProduct, index = 0) {
-      this.bundleSelectorVisible = false
+      console.log('Bundle item clicked')
       if (!isCurrentProduct) {
         if (bundle?.clickAction === 'variant') {
           if (this.bundleOptionsSelectorActive[index]) {
+            this.hideVariantSelector()
             return
           }
           console.log('show variant')
@@ -1241,6 +1302,7 @@ export default {
           })
         }
       } else {
+        this.bundleSelectorVisible = false
         if (this.$mq === 'sm' || this.$mq === 'md') {
           const element = this.$refs.swatch
           const top = element.offsetTop
@@ -2093,6 +2155,9 @@ export default {
         height: 60px;
         width: 90px;
         position: relative;
+        &.blur {
+          opacity: 0.25;
+        }
         &:not(:last-child)::after {
           content: '+';
           font-size: 30px;
@@ -2100,8 +2165,11 @@ export default {
           position: absolute;
           right: calc(0% - 7px);
           top: 10px;
+          opacity: 1;
         }
-        &.blur {
+      }
+      .blur + .no-blur {
+        &::after {
           opacity: 0.25;
         }
       }
@@ -3063,7 +3131,7 @@ h1 {
       width: 380px;
       left: -6px;
       @include respond-to('small') {
-        width: auto;
+        width: 100%;
         left: 0;
       }
       video {
