@@ -23,6 +23,7 @@ function updateState(newSource, show) {
 
 export default {
     beforeMount() {
+        window.console.log('optimonk - delaying code is initializing')
         let count = 0
         const intervalId = setInterval(() => {
             try {
