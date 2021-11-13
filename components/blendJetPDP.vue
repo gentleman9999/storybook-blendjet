@@ -391,10 +391,7 @@
                 :class="{ 'single-variant': bundle.variantsAvailableForSale <= 1 }"
                 v-show="bundleOptionsSelectorActive[index]"
               >
-                <div
-                  v-if="bundleOptionsSelectorActive[index]"
-                  v-click-outside="hideVariantSelector"
-                >
+                <div v-click-outside="hideVariantSelector">
                   <div
                     v-if="bundle.media"
                     class="media-tile__media"
@@ -427,9 +424,9 @@
                 v-if="
                   selectedBundleVarietyPack &&
                     selectedBundleVarietyPack[selectedVarieryPackIndex] &&
-                    selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length &&
-                    varietyBundleSelectorActive
+                    selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length
                 "
+                v-show="varietyBundleSelectorActive"
                 class="variant-select"
                 tabindex="2"
                 v-click-outside="hideVariantSelector"
@@ -1655,16 +1652,16 @@ export default {
     selectedVariant() {
       this.updateVariant(this.selectedVariant)
     },
-    varietyBundleSelectorActive(newVal) {
-      if (newVal) {
-        // lighten other bundle items
-        for (let i = 0; i < 10; i++) {
-          if (this.bundleOptionsSelectorActive[i] === true) {
-            this.$set(this.bundleOptionsSelectorActive, i, false)
-          }
-        }
-      }
-    },
+    // varietyBundleSelectorActive(newVal) {
+    //   if (newVal) {
+    //     // lighten other bundle items
+    //     for (let i = 0; i < 10; i++) {
+    //       if (this.bundleOptionsSelectorActive[i] === true) {
+    //         this.$set(this.bundleOptionsSelectorActive, i, false)
+    //       }
+    //     }
+    //   }
+    // },
     // Local Variant
     currentVariant() {
       if (this.variantMedia[this.camelize(this.currentVariant.title)]) {
