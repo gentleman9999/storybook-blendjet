@@ -391,7 +391,10 @@
                 :class="{ 'single-variant': bundle.variantsAvailableForSale <= 1 }"
                 v-show="bundleOptionsSelectorActive[index]"
               >
-                <div v-click-outside="hideVariantSelector">
+                <div
+                  v-click-outside="hideVariantSelector"
+                  v-if="bundleOptionsSelectorActive[index]"
+                >
                   <div
                     v-if="bundle.media"
                     class="media-tile__media"
@@ -424,9 +427,9 @@
                 v-if="
                   selectedBundleVarietyPack &&
                     selectedBundleVarietyPack[selectedVarieryPackIndex] &&
-                    selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length
+                    selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length &&
+                    varietyBundleSelectorActive
                 "
-                v-show="varietyBundleSelectorActive"
                 class="variant-select"
                 tabindex="2"
                 v-click-outside="hideVariantSelector"
