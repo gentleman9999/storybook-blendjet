@@ -478,35 +478,6 @@
           <div v-else class="product-select__controls__shipping-notification">
             <ShippingTime :country="country" />
           </div>
-          <div class="product-select__controls__payments">
-            <div
-              v-if="applePay"
-              class="pay-with-modal__container__apple apple-pay-with"
-              @click="expressCheckout"
-            >
-              <img :src="optimizeSource({ url: '/images/blendjetPDP/applepay.png' })" />
-            </div>
-            <div
-              v-if="!applePay"
-              role="button"
-              class="product-select__controls__payments__paypal"
-              @click="expressCheckout"
-            >
-              Pay with
-              <img
-                class="product-select__controls__payments__paypal__logo"
-                :src="optimizeSource({ url: '/images/blendjetPDP/paypal.png' })"
-                alt="Paypal Logo"
-              />
-            </div>
-            <!-- <div
-              role="button"
-              class="product-select__controls__payments__more-options"
-              @click="$modal.show('pay-with-modal')"
-            >
-              More payment options
-            </div> -->
-          </div>
           <div class="product-select__controls__value-props">
             <div
               class="product-select__controls__value-props__guarantee"

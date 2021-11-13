@@ -26,6 +26,8 @@ import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutBut
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import customerChat from '~/mixins/customerChat'
+import optimonk from '~/mixins/optimonk'
+
 export default {
   components: {
     CartFlyoutHeader,
@@ -35,7 +37,7 @@ export default {
     CartFlyoutSubtotal,
     CartFlyoutCheckoutButton
   },
-  mixins: [customerChat],
+  mixins: [customerChat, optimonk],
   computed: {
     ...mapState('cart', ['lineItems', 'cartVisible'])
   },
@@ -48,6 +50,7 @@ export default {
     handleClose() {
       this.hideCart()
       this.showCustomerChat('cartflyout')
+      this.showOptimonkPopup('cartflyout')
     }
   },
   watch: {
@@ -55,6 +58,7 @@ export default {
       if (newValue.length == 0) {
         this.hideCart()
         this.showCustomerChat('cartflyout')
+        this.showOptimonkPopup('cartflyout')
       }
     }
   }
