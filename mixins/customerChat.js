@@ -23,13 +23,12 @@ function updateState(newSource, show) {
 
 export default {
     beforeMount() {
-        window.console.log('facebook customer chat - delaying code is initializing')
         let count = 0
         const intervalId = setInterval(() => {
             try {
                 // Facebook SDK can be prohibited by AdBlockers, we don't want to run this check in every second.
                 if ((count++) >= 10) {
-                    window.console.log(`window.FB is prohibited, cannot handle its events.`)
+                    window.console.warn('window.FB is prohibited, cannot handle its events.')
                     clearInterval(intervalId)
                     return
                 }
@@ -43,13 +42,12 @@ export default {
 
                     clearInterval(intervalId)
                 } else {
-                    window.console.log(`window.FB is not rendered.`)
+                    window.console.warn('window.FB is not rendered.')
                 }
             } catch (error) {
                 window.console.error('Error happend while dealing with Customer Chat', error)
             }
         }, 1000)
-        
     },
     methods: {
         showCustomerChat(source) {
