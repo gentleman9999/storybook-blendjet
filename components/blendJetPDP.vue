@@ -3067,7 +3067,7 @@ h1 {
     position: relative;
     background: white;
     padding: 10px;
-    border-radius: 25px;
+    border-radius: 22px;
   }
 }
 </style>
