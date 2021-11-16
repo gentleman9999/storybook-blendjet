@@ -1,6 +1,6 @@
 <template>
   <ul class="variety-dropdown-content">
-    <li v-for="(item, i) in options" :key="i" @click.stop="setOptionValue(i)">
+    <li v-for="(item, i) in options" :key="i" @click.stop.prevent="setOptionValue(i)">
       <span v-if="item.image" class="dropdown-thumb">
         <img class="dropdown-thumb-image" :src="item.image" />
       </span>
