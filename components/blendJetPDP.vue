@@ -418,6 +418,7 @@
                     :currentOption="bundle.variant.selectedOptions[0].value"
                     :key="5"
                     @selectedOption="setBundleVariant($event, index)"
+                    @click.stop
                     class="bundle-variant-select-color"
                   />
                   <div class="bundle-overlay" @click.prevent.stop="hideVariantSelector"></div>
