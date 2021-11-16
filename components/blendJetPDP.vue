@@ -96,8 +96,12 @@
                     width: 2100
                   })
                 "
-                 v-touch:swipe.right="decrementVariant"
-                 v-touch:swipe.left="incrementVariant"
+                @mousedown.prevent="dragStart"
+                @mousemove.prevent="dragProgress"
+                @mouseleave.prevent="dragExit"
+                @mouseup.prevent="dragEnd(incrementVariant, decrementVariant)"
+                v-touch:swipe.right="decrementVariant"
+                v-touch:swipe.left="incrementVariant"
               />
             </picture>
           </transition>
@@ -930,6 +934,7 @@ import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
+import carouselDragEvents from '~/mixins/carouselDragEvents'
 import ShippingTime from '~/components/shippingTime'
 import ProductMediaTile from '~/components/ProductMediaTile'
 
@@ -1019,7 +1024,7 @@ export default {
     PrevSlide,
     ProductMediaTile
   },
-  mixins: [imageOptimize, availableOptions, allOptionsSelected],
+  mixins: [imageOptimize, availableOptions, allOptionsSelected, carouselDragEvents],
   props: {
     product: {
       type: Object,
@@ -1241,7 +1246,6 @@ export default {
           const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
           let imageIndex = 0
           if (variants?.length) {
-            debugger
             this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.thumbnailSrc
             clearInterval(this.imageInterval)
             this.imageInterval = setInterval(() => {
@@ -1271,7 +1275,6 @@ export default {
       this.updateVariant(newVar)
     },
     decrementVariant() {
-      debugger
       if (this.variantIndex === 0) {
         this.variantIndex = this.variants.length - 1
       } else {
