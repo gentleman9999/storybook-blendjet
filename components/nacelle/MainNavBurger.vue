@@ -19,6 +19,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 import customerChat from '~/mixins/customerChat'
+import optimonk from '~/mixins/optimonk'
 
 export default {
   props: {
@@ -33,7 +34,7 @@ export default {
       default: 'black'
     }
   },
-  mixins: [customerChat],
+  mixins: [customerChat, optimonk],
   computed: {
     ...mapState('menu', ['menuVisible'])
   },
@@ -43,6 +44,7 @@ export default {
     handleToggleShowMenu() {
       this.toggleShowMenu()
       this.hideCustomerChat('navbar')
+      this.hideOptimonkPopup('navbar')
     }
   }
 }

@@ -65,7 +65,7 @@
 <span class="content-split-element-bfcm">15% Off 1</span>
 <span class="content-split-element-bfcm">20% Off 2</span>
 <span class="content-split-element-bfcm">25% Off 3+</span>
-<span class="simple-text-bfcm">BlendJet - Sleeve - Tote - Book <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
+<span class="simple-text-bfcm">BlendJet - JetPack - Sleeve - Book <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
 </div>
 </div>
 </div>

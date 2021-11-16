@@ -267,7 +267,7 @@
             <div class="product-select__controls__bundles__bundle-products">
               <div class="product-select__controls__bundles__bundle-product-container">
                 <img
-                  :src="currentVariant.featuredMedia.src"
+                  :src="currentVariant.featuredMedia.thumbnailSrc"
                   :alt="currentVariant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
                   @click="bundleItemClicked(currentVariant, true)"
@@ -305,7 +305,7 @@
                 </b-dropdown> -->
                 <img
                   v-if="bundle.variant && bundle.variant.featuredMedia"
-                  :src="bundle.variant.featuredMedia.src"
+                  :src="bundle.variant.featuredMedia.thumbnailSrc"
                   :alt="bundle.variant.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
                   :class="{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }"
@@ -313,7 +313,7 @@
                 />
                 <img
                   v-else
-                  :src="bundle.product.featuredMedia.src"
+                  :src="bundle.product.featuredMedia.thumbnailSrc"
                   :alt="bundle.product.featuredMedia.altText"
                   class="product-select__controls__bundles__bundle-product-image"
                   :class="{ 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' }"
@@ -412,35 +412,6 @@
 
           <div v-else class="product-select__controls__shipping-notification">
             <ShippingTime :country="country" />
-          </div>
-          <div class="product-select__controls__payments">
-            <div
-              v-if="applePay"
-              class="pay-with-modal__container__apple apple-pay-with"
-              @click="expressCheckout"
-            >
-              <img :src="optimizeSource({ url: '/images/blendjetPDP/applepay.png' })" />
-            </div>
-            <div
-              v-if="!applePay"
-              role="button"
-              class="product-select__controls__payments__paypal"
-              @click="expressCheckout"
-            >
-              Pay with
-              <img
-                class="product-select__controls__payments__paypal__logo"
-                :src="optimizeSource({ url: '/images/blendjetPDP/paypal.png' })"
-                alt="Paypal Logo"
-              />
-            </div>
-            <!-- <div
-              role="button"
-              class="product-select__controls__payments__more-options"
-              @click="$modal.show('pay-with-modal')"
-            >
-              More payment options
-            </div> -->
           </div>
           <div class="product-select__controls__value-props">
             <div
@@ -1270,11 +1241,12 @@ export default {
           const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
           let imageIndex = 0
           if (variants?.length) {
-            this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.src
+            debugger
+            this.varietyPackImage = variants?.[imageIndex]?.featuredMedia.thumbnailSrc
             clearInterval(this.imageInterval)
             this.imageInterval = setInterval(() => {
               this.varietyPackImage =
-                variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.src
+                variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.thumbnailSrc
               imageIndex++
             }, 1000)
           }

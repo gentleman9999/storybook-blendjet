@@ -166,6 +166,7 @@ import CartUpsells from '~/components/CartUpsells'
 
 import imageOptimize from '~/mixins/imageOptimize'
 import customerChat from '~/mixins/customerChat'
+import optimonk from '~/mixins/optimonk'
 
 export default {
   components: {
@@ -174,7 +175,7 @@ export default {
     CartFlyoutCheckoutButton,
     CartItem
   },
-  mixins: [imageOptimize, customerChat],
+  mixins: [imageOptimize, customerChat, optimonk],
   data() {
     return {
       showUpsell: false,
@@ -296,6 +297,7 @@ export default {
       }
 
       this.toggleCustomerChat('cart')
+      this.toggleOptimonkPopup('cart')
     },
     cartSubtotal() {
       // console.log('cart balance getter', this.cartBalance)
