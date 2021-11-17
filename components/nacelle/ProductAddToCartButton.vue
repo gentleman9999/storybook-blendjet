@@ -688,6 +688,9 @@ export default {
 
   @include respond-to('small') {
     width: auto;
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
