@@ -8,7 +8,7 @@
       :key="value.value"
       :optionName="option.name"
       :swatchStyle="swatchStyle"
-      :class="{selected: value.value == selectedOptionValue}"
+      :class="{ selected: value.value == currentOption }"
       :variants="variants"
       :selectedOptions="selectedOptions"
     />
@@ -58,7 +58,7 @@ export default {
       }
     }
   },
- 
+
   watch: {
     selectedOptionValue(newVal) {
       if (newVal != null) {
@@ -81,12 +81,11 @@ export default {
   methods: {
     setOptionValue(value) {
       this.selectedOptionValue = value
-    },
-  },
-  mounted() {
-      this.setOptionValue(this.currentOption)
-
+    }
   }
+  // mounted() {
+  //   this.setOptionValue(this.currentOption)
+  // }
 }
 </script>
 
