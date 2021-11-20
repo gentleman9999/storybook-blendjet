@@ -87,7 +87,8 @@ export default {
     }
   },
   async mounted() {
-    const handle = this.getNacelleMetafield('cart_upsells', 'queue_handle')
+    const handle = this.getNacelleMetafield('cart_upsells', 'queue_handle_bundle')
+    debugger
     if (handle) {
       const queue = await this.$nacelle.data
         .content({
@@ -121,12 +122,12 @@ export default {
             this.checkProductShippingEligibility(product) // product is available for the user's locale
           return hasValidProduct
             ? [
-                ...acc,
-                {
-                  ...curr.fields,
-                  product: products[index]
-                }
-              ]
+              ...acc,
+              {
+                ...curr.fields,
+                product: products[index]
+              }
+            ]
             : acc
         }, [])
       }

@@ -2,7 +2,7 @@ import { mapMutations } from 'vuex'
 import { createClient } from '~/plugins/contentful.js'
 const client = createClient()
 
-function getBundledProductsFromFile(
+export function getBundledProductsFromFile(
   bundles,
   productObj,
   fs,
@@ -84,7 +84,7 @@ function getBundledProductsFromFile(
   return bundlesPromise
 }
 
-function getbundledProductsFromNacelle(
+export function getbundledProductsFromNacelle(
   bundles,
   allBundledProductList,
   title,
