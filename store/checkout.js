@@ -64,11 +64,16 @@ export const actions = {
       throw new Error('Cannot checkout with an empty cart')
     }
 
+    //fix for uBlock breaking checkout recommended by CJ from Nacelle
+    const recartMetafields = this.$recart.getMetafieldsForCheckout() || []
+
+    // __capi__.metafields are provided by Outsmartly for first-party tracking
+    const outsmartlyMetafields = (typeof window !== "undefined" && window.__capi__ && Array.isArray(__capi__.metafields)) ? __capi__.metafields : []
+
     let checkout = await this.$nacelle.checkout.process({
       cartItems,
       checkoutId,
-      //fix for uBlock breaking checkout recommended by CJ from Nacelle
-      metafields: this.$recart.getMetafieldsForCheckout() || []
+      metafields: [...recartMetafields, ...outsmartlyMetafields]
     })
     if (checkout && checkout.completed) {
       checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
