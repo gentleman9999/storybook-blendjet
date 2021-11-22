@@ -1391,7 +1391,7 @@ export default {
       })
     },
     updateBundle() {
-      const title = this.currentVariant.title.toLowerCase()
+      const title = this.currentVariant.title.toLowerCase()?.replace(/\s/g, '')
       if (this?.variantSpecificBundles?.[title]?.length) {
         this.selectedBundle = cloneDeep(this?.variantSpecificBundles[title])
         this.bundleTitle = this?.variantSpecificBundles?.[title]?.[0].title
