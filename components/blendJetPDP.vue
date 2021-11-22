@@ -2097,7 +2097,7 @@ export default {
       padding: 10px;
       position: relative;
       width: 370px;
-      margin: 20px auto auto auto;
+      margin: 20px auto 5px auto;
       &__title {
         font-weight: bold;
         color: $primary-purple;
