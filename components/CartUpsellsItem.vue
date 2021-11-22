@@ -6,7 +6,10 @@
         <p v-if="subtitle">{{ subtitle }}</p>
       </div>
       <div class="image" v-if="productImage">
-        <img :src="optimizeSource({ url: productImage, width: 800 })" :alt="selectedVariant.title" />
+        <img
+          :src="optimizeSource({ url: productImage, width: 800 })"
+          :alt="selectedVariant.title"
+        />
       </div>
       <div class="add-to-cart">
         <CartDropdown
@@ -19,6 +22,15 @@
         />
         <CartDropdownMultiOptions
           v-else-if="variants.length > 1 && allOptions.length > 1"
+          :options="allOptions"
+          :variant="selectedVariant"
+          :update="setSelectedOption"
+          :variants="variants"
+          @clear="selectedOptions = []"
+          :currentOption="currentOption"
+        />
+        <CartDropdownBundle
+          v-else-if="withBundle"
           :options="allOptions"
           :variant="selectedVariant"
           :update="setSelectedOption"
@@ -57,6 +69,7 @@ import CartDropdown from '~/components/cartDropdown'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
+import CartDropdownBundle from '~/components/CartDropdownBundle'
 
 // Mixins
 import rechargeProperties from '~/mixins/rechargeMixin'
@@ -65,7 +78,13 @@ import imageOptimize from '~/mixins/imageOptimize'
 import availableOptions from '~/mixins/availableOptions'
 
 export default {
-  components: { CartDropdown, QuantityDropdown, Checkbox, CartDropdownMultiOptions },
+  components: {
+    CartDropdown,
+    QuantityDropdown,
+    Checkbox,
+    CartDropdownMultiOptions,
+    CartDropdownBundle
+  },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
     return {
@@ -91,11 +110,15 @@ export default {
     withVarietyPack: {
       type: Boolean,
       default: false
+    },
+    withBundle: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     subscribeLabel() {
-      return this.discountPercentage > 0 ? `& Save ${this.discountPercentage}%` : ""
+      return this.discountPercentage > 0 ? `& Save ${this.discountPercentage}%` : ''
     },
     currentOption() {
       return this.selectedVariant?.selectedOptions?.[0]?.value || ''
@@ -232,8 +255,8 @@ export default {
     handleSubscriptionCheck(check) {
       this.subscriptionChecked = check
     },
-    //Set the currentVaraint using the options selected
-    //If there is only one option selected, it will take the first varaint with that option
+    // Set the currentVaraint using the options selected
+    // If there is only one option selected, it will take the first varaint with that option
     setSelectedOption(opt) {
       let variant = null
 
@@ -351,45 +374,47 @@ export default {
       }
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarAddToCart(variant) {
       window.dataLayer = window.dataLayer || []
       var uuid = this.createUUID()
-      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       window.dataLayer.push({
-        "event": "dl_add_to_cart",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "add": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": productId,
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer, 
-              "source": "minicart", 
-            }]
+        event: 'dl_add_to_cart',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          add: {
+            actionField: { list: referrer },
+            products: [
+              {
+                name: this.product.title.replace("'", ''),
+                id: (variant && variant.sku) || '',
+                product_id: productId,
+                variant_id: (variant && variantId) || '',
+                image: this.product.featuredMedia.src,
+                price: variant.price,
+                brand: this.product.vendor.replace("'", ''),
+                variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                category: this.product.productType,
+                inventory: this.quantity,
+                list: referrer,
+                source: 'minicart'
+              }
+            ]
           }
         }
       })

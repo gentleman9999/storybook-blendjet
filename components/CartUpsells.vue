@@ -21,6 +21,7 @@
           :subtitle="upsell.subtitle"
           :product="upsell.product"
           :with-variety-pack="upsell.withVarietyPack"
+          :with-bundle="upsell.withBundle"
         />
       </div>
 
@@ -57,6 +58,7 @@ import Close from '~/components/svg/modalClose'
 // Mixins
 import productShippingEligibility from '~/mixins/productShippingEligibility'
 
+import { getbundledProductsFromNacelle } from '~/mixins/getProduct'
 export default {
   components: { UpsellItem, BiChevron, Close, CartFlyoutCheckoutButton },
   data() {
@@ -64,7 +66,9 @@ export default {
       observer: null,
       ready: false,
       title: '',
-      items: []
+      items: [],
+      bundleItems: [],
+      bundleItemsResolved: []
     }
   },
   mixins: [productShippingEligibility],
@@ -88,7 +92,6 @@ export default {
   },
   async mounted() {
     const handle = this.getNacelleMetafield('cart_upsells', 'queue_handle_bundle')
-    debugger
     if (handle) {
       const queue = await this.$nacelle.data
         .content({
@@ -100,11 +103,34 @@ export default {
         })
 
       if (queue) {
+        debugger
         this.title = queue.title
+
+        // get bundles
+        this.bundleItems = queue?.fields?.items?.map(item => {
+          if (item?.fields?.bundleCollection?.length || item?.fields?.bundleGroup?.length) {
+            return item
+          } else {
+            return null
+          }
+        })
+
+        this.bundleItems.forEach(async bundle => {
+          let resolvedBundle = null
+          if (bundle) {
+            resolvedBundle = await this.getBundleProducts(bundle)
+          }
+          this.bundleItemsResolved.push(resolvedBundle)
+        })
 
         // Get the queue's `items` array, filtering for just those with a shopifyProductHandle configured
         const items = Array.isArray(queue?.fields?.items) // if `items` is an array...
-          ? queue.fields.items.filter(p => p?.fields?.shopifyProductHandle) // filter for only the product references
+          ? queue.fields.items.filter(
+            p =>
+                p?.fields?.shopifyProductHandle ||
+                p?.fields?.bundleCollection?.length ||
+                p?.fields?.bundleGroup?.length
+          ) // filter for only the product references
           : [] // otherwise set it equal to an empty array
 
         // Fetch the products for those handles.
@@ -115,11 +141,15 @@ export default {
         // Assemble a complete `items` array, with product data attached.
         this.items = items.reduce((acc, curr, index) => {
           const product = products[index]
-          const hasValidProduct = // product is valid if...
+          let hasValidProduct = null
+          hasValidProduct = // product is valid if...
             product && // product exists
             product.id && // product id isn't null (aka empty nacelle object)
             product.availableForSale && // product isn't sold out
             this.checkProductShippingEligibility(product) // product is available for the user's locale
+          if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
+            hasValidProduct = true
+          }
           return hasValidProduct
             ? [
               ...acc,
@@ -153,6 +183,46 @@ export default {
   },
   methods: {
     // On scroll, determine if the last element is still below the fold
+    async getBundleProducts(bundleItem) {
+      const productHandles = []
+      const productObj = {
+        bundles: [],
+        bundleVarietyPack: [],
+        withBundle: true
+      }
+      const bundles = bundleItem?.fields?.bundleGroup
+      const bundleCollection = bundleItem?.fields?.bundleCollection
+      bundles.forEach(bundle => {
+        // Get productIds of the main product bundle
+        if (bundle?.fields?.product?.fields?.handle) {
+          productHandles.push(bundle?.fields?.product?.fields?.handle)
+        }
+      })
+      bundleCollection.forEach(product => {
+        // Get productIds of the main product bundle variety pack
+        const handle = product?.fields?.handle
+        if (handle && productHandles.indexOf(handle) === -1) {
+          productHandles.push(handle)
+        }
+      })
+
+      const allBundledProductList = await this.$nacelle.data.products({
+        handles: productHandles
+      })
+
+      productObj.bundles = getbundledProductsFromNacelle(
+        bundles,
+        allBundledProductList,
+        bundleItem?.fields?.title
+      )
+      productObj.bundleVarietyPack = getbundledProductsFromNacelle(
+        bundleCollection,
+        allBundledProductList,
+        bundleItem?.fields?.title,
+        true
+      )
+      return productObj
+    },
     observeScroll() {
       setTimeout(() => {
         this.observer = new IntersectionObserver(([entry]) => {
