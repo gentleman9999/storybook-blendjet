@@ -1122,7 +1122,9 @@ export default {
       // If show desktop header gets toggled to false, hide the variant selector menu too
     },
     quantity() {
-      this.elevarProductView()
+      // Outsmartly discussed with John and both agreed it doesn't make sense to fire a "ViewContent"
+      // event just because quantity changed. Removing this as noise.
+      // this.elevarProductView()
     }
   },
   created() {

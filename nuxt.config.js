@@ -248,7 +248,11 @@ export default {
   },
 
   gtm: {
-    id: 'GTM-NLRSLWR'
+    id: 'GTM-NLRSLWR',
+
+    // uncomment these for debugging on localhost
+    // enabled: true,
+    // debug: true
   },
 
   // Replaces gtag plugin and makes gtag available to nuxt for additional methods
@@ -350,7 +354,8 @@ export default {
     gaID: process.env.NACELLE_GA_ID,
 
     // Facebook Pixel Tracking ID
-    fbID: process.env.NACELLE_FB_ID,
+    // we don't want Nacelle also loading this - it happens through gtag
+    // fbID: process.env.NACELLE_FB_ID,
 
     // Set the default internationalization locale string for Nacelle to use
     // locale: 'en-us',
