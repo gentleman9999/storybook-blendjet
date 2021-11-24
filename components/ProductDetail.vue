@@ -60,7 +60,7 @@
               <h1>{{ product.title }}</h1>
             </div>
             <div
-              v-if="currentVariant.title !== 'Default Title'"
+              v-if="currentVariant.title !== 'Default Title' && !hasColorVariants"
               class="product-select__controls__category"
             >
               {{ currentVariant.title }}
@@ -125,7 +125,7 @@
                   <h1>{{ product.title }}</h1>
                 </div>
                 <div
-                  v-if="currentVariant.title !== 'Default Title'"
+                  v-if="currentVariant.title !== 'Default Title' && !hasColorVariants"
                   class="product-select__controls__category"
                 >
                   {{ currentVariant.title }}
@@ -1112,6 +1112,12 @@ export default {
         this.heroImages = vMedia.heroImages
         this.bannerText = vMedia.bannerText
       } else {
+        this.productImage = newVariant.featuredMedia.src
+      }
+      if (vMedia && !this.bannerText) {
+        this.bannerText = this.product.description
+      }
+      if (vMedia && !this.productImage) {
         this.productImage = newVariant.featuredMedia.src
       }
       this.setProductDetails()
