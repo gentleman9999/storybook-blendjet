@@ -60,7 +60,7 @@
               <h1>{{ product.title }}</h1>
             </div>
             <div
-              v-if="currentVariant.title !== 'Default Title'"
+              v-if="currentVariant.title !== 'Default Title' && !hasColorVariants"
               class="product-select__controls__category"
             >
               {{ currentVariant.title }}
@@ -125,7 +125,7 @@
                   <h1>{{ product.title }}</h1>
                 </div>
                 <div
-                  v-if="currentVariant.title !== 'Default Title'"
+                  v-if="currentVariant.title !== 'Default Title' && !hasColorVariants"
                   class="product-select__controls__category"
                 >
                   {{ currentVariant.title }}
