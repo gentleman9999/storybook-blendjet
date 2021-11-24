@@ -1340,7 +1340,6 @@ export default {
       }
       @include respond-to('small') {
         object-fit: contain;
-        position: absolute;
         top: 0;
         left: 0;
       }
