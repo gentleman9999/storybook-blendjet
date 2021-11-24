@@ -1114,6 +1114,12 @@ export default {
       } else {
         this.productImage = newVariant.featuredMedia.src
       }
+      if (vMedia && !this.bannerText) {
+        this.bannerText = this.product.description
+      }
+      if (vMedia && !this.productImage) {
+        this.productImage = newVariant.featuredMedia.src
+      }
       this.setProductDetails()
       // console.log('newVariant:', newVariant);
       this.elevarProductView() // needs flag to only fire once
