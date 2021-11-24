@@ -569,7 +569,7 @@
       <div class="jetpacks">
         <JetpackCrossSell
           :jetpacks="jetpacks"
-          :heading="'You may also like these jetpack flavors'"
+          :heading="'You may also like these"
         />
       </div>
     </div>

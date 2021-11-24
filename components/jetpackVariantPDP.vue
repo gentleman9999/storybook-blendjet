@@ -556,7 +556,7 @@
 
       <div class="jetpacks">
         <!-- TODO: Make this dynamic using contentful -->
-        <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
+        <JetpackCrossSell :product="product" :heading="'You may also like these'" />
       </div>
     </div>
   </transition>

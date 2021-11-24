@@ -721,7 +721,7 @@
       </div>
       -->
       <div class="jetpacks">
-        <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
+        <JetpackCrossSell :product="product" :heading="'You may also like these'" />
       </div>
     </div>
   </transition>
