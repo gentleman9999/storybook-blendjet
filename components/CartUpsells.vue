@@ -150,7 +150,9 @@ export default {
 
         // Assemble a complete `items` array, with product data attached.
         this.items = items.reduce((acc, curr, index) => {
-          const product = products[index]
+          const product = products.find(
+            product => product.handle && product.handle === curr.fields.shopifyProductHandle
+          )
           let hasValidProduct = null
           hasValidProduct = // product is valid if...
             product && // product exists
