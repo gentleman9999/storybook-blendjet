@@ -123,10 +123,62 @@ export default {
       }
     },
     onlyOneOption() {
-      return (
-        this.allOptions.length === 1 &&
-        this.allOptions[0].values.length === 1
-      )
+      return this.allOptions.length === 1 && this.allOptions[0].values.length === 1
+    }
+  },
+  methods: {
+    getAllOptions(variants) {
+      if (variants) {
+        const nestedOptions = variants.map(variant => {
+          if (variant.selectedOptions) {
+            return variant.selectedOptions.map(option => {
+              if (option.name === 'Color') {
+                return {
+                  name: option.name,
+                  value: option.value,
+                  swatchSrc: variant.swatchSrc
+                }
+              }
+
+              return option
+            })
+          }
+
+          return []
+        })
+        const flattenedOptions = flattenDeep(nestedOptions)
+
+        const optionNames = uniq(
+          flattenedOptions.map(option => {
+            return option.name
+          })
+        )
+        const optionValuesByName = optionNames.map(name => {
+          const values = uniqWith(
+            flattenedOptions
+              .filter(option => {
+                if (option.name === name) {
+                  return option
+                }
+              })
+              .map(option => {
+                if (option.swatchSrc) {
+                  return { value: option.value, swatchSrc: option.swatchSrc }
+                } else {
+                  return { value: option.value }
+                }
+              }),
+            isEqual
+          )
+
+          return {
+            name,
+            values
+          }
+        })
+
+        return optionValuesByName
+      }
     }
   }
 }

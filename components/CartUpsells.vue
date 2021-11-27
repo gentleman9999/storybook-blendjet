@@ -14,15 +14,25 @@
 
       <!-- UPSELL CONTENT -->
       <div class="cart-upsells__products">
-        <UpsellItem
-          v-for="upsell in items"
-          :key="upsell.shopifyProductHandle"
-          :title="upsell.title"
-          :subtitle="upsell.subtitle"
-          :product="upsell.product"
-          :with-variety-pack="upsell.withVarietyPack"
-          :with-bundle="upsell.withBundle"
-        />
+        <template v-for="upsell in items">
+          <UpsellItem
+            v-if="!upsell.withBundle"
+            :key="upsell.shopifyProductHandle"
+            :title="upsell.title"
+            :subtitle="upsell.subtitle"
+            :product="upsell.product"
+            :with-variety-pack="upsell.withVarietyPack"
+          />
+          <UpsellBundle
+            v-if="upsell.withBundle"
+            :key="upsell.title"
+            :title="upsell.title"
+            :subtitle="upsell.subtitle"
+            :with-bundle="upsell.withBundle"
+            :bundles="upsell.bundles || []"
+            :bundle-variety-pack="upsell.bundleVarietyPack || []"
+          />
+        </template>
       </div>
 
       <!-- UPSELL FOOTER -->
@@ -51,6 +61,7 @@
 import { mapGetters } from 'vuex'
 
 import UpsellItem from '~/components/CartUpsellsItem'
+import UpsellBundle from '~/components/CartUpsellsBundle'
 import BiChevron from '~/components/svg/BiChevron'
 import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
 import Close from '~/components/svg/modalClose'
@@ -60,7 +71,7 @@ import productShippingEligibility from '~/mixins/productShippingEligibility'
 
 import { getbundledProductsFromNacelle } from '~/mixins/getProduct'
 export default {
-  components: { UpsellItem, BiChevron, Close, CartFlyoutCheckoutButton },
+  components: { UpsellItem, UpsellBundle, BiChevron, Close, CartFlyoutCheckoutButton },
   data() {
     return {
       observer: null,
@@ -99,11 +110,10 @@ export default {
           handle: handle
         })
         .catch(err => {
-          console.warn(`Error fetching upsells with handle: ${handle}`)
+          console.warn(`Error fetching upsells with handle: ${handle}`, err)
         })
 
       if (queue) {
-        debugger
         this.title = queue.title
 
         // get bundles
@@ -115,12 +125,12 @@ export default {
           }
         })
 
-        this.bundleItems.forEach(async bundle => {
-          let resolvedBundle = null
+        this.bundleItems.forEach(async (bundle, index) => {
+          let resolvedBundle = {}
           if (bundle) {
             resolvedBundle = await this.getBundleProducts(bundle)
           }
-          this.bundleItemsResolved.push(resolvedBundle)
+          this.$set(this.bundleItemsResolved, index, resolvedBundle)
         })
 
         // Get the queue's `items` array, filtering for just those with a shopifyProductHandle configured
@@ -147,18 +157,24 @@ export default {
             product.id && // product id isn't null (aka empty nacelle object)
             product.availableForSale && // product isn't sold out
             this.checkProductShippingEligibility(product) // product is available for the user's locale
-          if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
-            hasValidProduct = true
-          }
-          return hasValidProduct
-            ? [
+          if (hasValidProduct) {
+            return [
               ...acc,
               {
                 ...curr.fields,
                 product: products[index]
               }
             ]
-            : acc
+          } else if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
+            return [
+              ...acc,
+              {
+                ...this.bundleItemsResolved[index]
+              }
+            ]
+          } else {
+            return acc
+          }
         }, [])
       }
 
@@ -188,39 +204,47 @@ export default {
       const productObj = {
         bundles: [],
         bundleVarietyPack: [],
-        withBundle: true
+        withBundle: true,
+        title: bundleItem?.fields?.title,
+        subtitle: bundleItem?.fields?.subtitle
       }
       const bundles = bundleItem?.fields?.bundleGroup
       const bundleCollection = bundleItem?.fields?.bundleCollection
-      bundles.forEach(bundle => {
-        // Get productIds of the main product bundle
-        if (bundle?.fields?.product?.fields?.handle) {
-          productHandles.push(bundle?.fields?.product?.fields?.handle)
-        }
-      })
-      bundleCollection.forEach(product => {
-        // Get productIds of the main product bundle variety pack
-        const handle = product?.fields?.handle
-        if (handle && productHandles.indexOf(handle) === -1) {
-          productHandles.push(handle)
-        }
-      })
+      bundles &&
+        bundles.forEach(bundle => {
+          // Get productIds of the main product bundle
+          if (bundle?.fields?.product?.fields?.handle) {
+            productHandles.push(bundle?.fields?.product?.fields?.handle)
+          }
+        })
+      bundleCollection &&
+        bundleCollection.forEach(product => {
+          // Get productIds of the main product bundle variety pack
+          const handle = product?.fields?.handle
+          if (handle && productHandles.indexOf(handle) === -1) {
+            productHandles.push(handle)
+          }
+        })
 
       const allBundledProductList = await this.$nacelle.data.products({
         handles: productHandles
       })
 
-      productObj.bundles = getbundledProductsFromNacelle(
-        bundles,
-        allBundledProductList,
-        bundleItem?.fields?.title
-      )
-      productObj.bundleVarietyPack = getbundledProductsFromNacelle(
-        bundleCollection,
-        allBundledProductList,
-        bundleItem?.fields?.title,
-        true
-      )
+      if (bundles) {
+        productObj.bundles = getbundledProductsFromNacelle(
+          bundles,
+          allBundledProductList,
+          bundleItem?.fields?.title
+        )
+      }
+      if (bundleCollection) {
+        productObj.bundleVarietyPack = getbundledProductsFromNacelle(
+          bundleCollection,
+          allBundledProductList,
+          bundleItem?.fields?.title,
+          true
+        )
+      }
       return productObj
     },
     observeScroll() {

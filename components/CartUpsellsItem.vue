@@ -29,15 +29,6 @@
           @clear="selectedOptions = []"
           :currentOption="currentOption"
         />
-        <CartDropdownBundle
-          v-else-if="withBundle"
-          :options="allOptions"
-          :variant="selectedVariant"
-          :update="setSelectedOption"
-          :variants="variants"
-          @clear="selectedOptions = []"
-          :currentOption="currentOption"
-        />
         <div class="quantity">
           <p>Quantity:</p>
           <QuantityDropdown :quantity="quantity" @update:quantity="updateQuantity" />
@@ -69,7 +60,6 @@ import CartDropdown from '~/components/cartDropdown'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
-import CartDropdownBundle from '~/components/CartDropdownBundle'
 
 // Mixins
 import rechargeProperties from '~/mixins/rechargeMixin'
@@ -82,8 +72,7 @@ export default {
     CartDropdown,
     QuantityDropdown,
     Checkbox,
-    CartDropdownMultiOptions,
-    CartDropdownBundle
+    CartDropdownMultiOptions
   },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
@@ -108,10 +97,6 @@ export default {
       required: true
     },
     withVarietyPack: {
-      type: Boolean,
-      default: false
-    },
-    withBundle: {
       type: Boolean,
       default: false
     }
@@ -201,9 +186,9 @@ export default {
     }
   },
   mounted() {
-    this.variants = this.product.variants
-      .filter(v => v.availableForSale)
-      .map(v => {
+    this.variants = this.product?.variants
+      ?.filter(v => v.availableForSale)
+      ?.map(v => {
         const variantId = atob(v.id)
           .split('/')
           .pop()
@@ -228,7 +213,7 @@ export default {
       })
     }
 
-    this.selectedVariant = this.variants[0]
+    this.selectedVariant = this.variants?.[0]
 
     this.initLocalizedPrice()
     this.$emit('ready')

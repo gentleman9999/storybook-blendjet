@@ -1,5 +1,6 @@
 import { mapMutations } from 'vuex'
 import { createClient } from '~/plugins/contentful.js'
+import { checkProductShippingEligibility } from '~/mixins/productShippingEligibility'
 const client = createClient()
 
 export function getBundledProductsFromFile(
@@ -26,12 +27,14 @@ export function getBundledProductsFromFile(
           )
           const bundledProduct = JSON.parse(file)
           let variantsAvailableForSale = 0
-          bundledProduct?.variants?.length &&
-            bundledProduct.variants.forEach(variant => {
+          if (bundledProduct?.variants?.length) {
+            bundledProduct.variants = bundledProduct.variants.filter(variant => {
               if (variant.availableForSale) {
                 variantsAvailableForSale++
+                return variant
               }
             })
+          }
           let bundledVariant = bundledProduct?.variants?.filter(variant => {
             if (
               variant &&
@@ -53,7 +56,8 @@ export function getBundledProductsFromFile(
           if (
             bundledProduct?.availableForSale &&
             bundledVariant?.length &&
-            bundledVariant[0]?.availableForSale
+            bundledVariant[0]?.availableForSale &&
+            checkProductShippingEligibility(bundledProduct)
           ) {
             if (!isVarietyPack) {
               // push selected variant or first available variant for sale if no variant was selected from contentful
@@ -103,12 +107,14 @@ export function getbundledProductsFromNacelle(
     })
     bundledProduct = bundledProduct.length ? bundledProduct[0] : {}
     let variantsAvailableForSale = 0
-    bundledProduct?.variants?.length &&
-      bundledProduct.variants.forEach(variant => {
+    if (bundledProduct?.variants?.length) {
+      bundledProduct.variants = bundledProduct.variants.filter(variant => {
         if (variant.availableForSale) {
           variantsAvailableForSale++
+          return variant
         }
       })
+    }
     let bundledVariant = bundledProduct?.variants?.filter(variant => {
       if (
         variant &&
@@ -130,7 +136,8 @@ export function getbundledProductsFromNacelle(
     if (
       bundledProduct?.availableForSale &&
       bundledVariant?.length &&
-      bundledVariant[0]?.availableForSale
+      bundledVariant[0]?.availableForSale &&
+      checkProductShippingEligibility(bundledProduct)
     ) {
       if (!isVarietyPack) {
         // push selected variant or first available variant for sale if no variant was selected from contentful
