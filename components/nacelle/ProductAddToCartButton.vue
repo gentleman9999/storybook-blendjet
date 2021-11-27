@@ -27,6 +27,18 @@
       <span v-if="variantInLineItems">Added!</span>
     </button>
     <button
+      class="add-to-cart-button cart-upsell"
+      :style="styleObj"
+      @click="addToCart('cart btn')"
+      v-else-if="onlyBundle"
+      :class="buttonClass"
+    >
+      <slot>
+        <span class="inner-text" v-if="justAdded"> Added! </span>
+        <span class="inner-text" v-else-if="displayPrice">{{ buttonText }}</span>
+      </slot>
+    </button>
+    <button
       class="add-to-cart-button"
       :style="styleObj"
       @click="addToCart('cart btn')"
@@ -103,11 +115,16 @@ export default {
     bundleVarietyPack: {
       type: Object,
       default: () => {}
+    },
+    onlyBundle: {
+      type: Boolean,
+      default: false
     }
   },
 
   data() {
     return {
+      justAdded: false,
       warrantyPrice: 0,
       displayPrice: 0,
       defaultText: `Add to Cart - ${this.displayPrice}`,
@@ -275,56 +292,59 @@ export default {
     //     })
     // },
     async getDisplayBundlePrice() {
-      if (!this.variant || !this.variant.id) {
-        return undefined
-      }
-
-      const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
-
-      const decodedId = atob(this.variant.id)
-        .split('/')
-        .pop()
-      const price = encodeURIComponent(
-        JSON.stringify([
-          {
-            Price: _price,
-            Tag: decodedId
-          }
-        ])
-      )
-
-      let config = this.getConfigURL(price)
+      let config = ''
       let totalPrice = 0
       let symbol = null
       let currency = null
       let bundleVariantCount = 0
-      let response = {}
-      let foundPrice = false
-      if (this.priceSaved[_price]) {
-        foundPrice = true
-        response = this.priceSaved[_price]
-      } else {
-        try {
-          response = await Axios(config)
-          this.priceSaved[_price] = response
-          foundPrice = true
-        } catch (err) {
-          symbol = '$'
-          totalPrice = Number(this.variant.price * this.quantity)
+      if (!this.onlyBundle) {
+        if (!this.variant || !this.variant.id) {
+          return undefined
         }
-      }
 
-      if (foundPrice) {
-        if (response.data.Symbol) {
-          symbol = response.data.Symbol
-        }
-        if (response.data.currency) {
-          currency = response.data.currency
-        }
-        if (!response.data.ConsumerPrices[0]) {
-          totalPrice = Number(_price) * this.quantity
+        const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
+
+        const decodedId = atob(this.variant.id)
+          .split('/')
+          .pop()
+        const price = encodeURIComponent(
+          JSON.stringify([
+            {
+              Price: _price,
+              Tag: decodedId
+            }
+          ])
+        )
+
+        config = this.getConfigURL(price)
+        let response = {}
+        let foundPrice = false
+        if (this.priceSaved[_price]) {
+          foundPrice = true
+          response = this.priceSaved[_price]
         } else {
-          totalPrice = Number(response.data.ConsumerPrices[0] * this.quantity)
+          try {
+            response = await Axios(config)
+            this.priceSaved[_price] = response
+            foundPrice = true
+          } catch (err) {
+            symbol = '$'
+            totalPrice = Number(this.variant.price * this.quantity)
+          }
+        }
+
+        if (foundPrice) {
+          if (response.data.Symbol) {
+            symbol = response.data.Symbol
+          }
+          if (response.data.currency) {
+            currency = response.data.currency
+          }
+          if (!response.data.ConsumerPrices[0]) {
+            totalPrice = Number(_price) * this.quantity
+          } else {
+            totalPrice = Number(response.data.ConsumerPrices[0] * this.quantity)
+          }
         }
       }
       if (this.bundles && this.bundles.length) {
@@ -344,7 +364,9 @@ export default {
             JSON.stringify([
               {
                 Price: variantPrice,
-                Tag: decodedId
+                Tag: atob(bundle.variant.id)
+                  .split('/')
+                  .pop()
               }
             ])
           )
@@ -363,8 +385,10 @@ export default {
           }
           if (foundPriceVariant) {
             if (!response.data.ConsumerPrices[0]) {
+              symbol = '$'
               totalPrice += Number(variantPrice * this.quantity)
             } else {
+              symbol = response.data.Symbol
               totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
             }
           }
@@ -384,7 +408,9 @@ export default {
               JSON.stringify([
                 {
                   Price: variantPrice,
-                  Tag: decodedId
+                  Tag: atob(varietyPack.variants[i].id)
+                    .split('/')
+                    .pop()
                 }
               ])
             )
@@ -395,6 +421,7 @@ export default {
                 response = this.priceSaved[variantPrice]
                 foundPriceVariant = true
               } catch (err) {
+                symbol = '$'
                 totalPrice += Number(variantPrice * this.quantity)
               }
             } else {
@@ -403,8 +430,10 @@ export default {
             }
             if (foundPriceVariant) {
               if (!response.data.ConsumerPrices[0]) {
+                symbol = '$'
                 totalPrice += Number(variantPrice * this.quantity)
               } else {
+                symbol = response.data.Symbol
                 totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
               }
             }
@@ -449,7 +478,7 @@ export default {
       if (
         this.onlyOneOption &&
         !this.variantInLineItems &&
-        this.variant.availableForSale === true
+        this?.variant?.availableForSale === true
       ) {
         this.butttonText = this.defaultText
       } else if (this.onlyOneOption && this.variantInLineItems) {
@@ -468,7 +497,7 @@ export default {
         _dvar.price = 0.0
       } else {
       }
-      if (this.allOptionsSelected && this.product.availableForSale) {
+      if (this.allOptionsSelected && this?.product?.availableForSale) {
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,
@@ -544,7 +573,54 @@ export default {
         this.$emit('addedToCart')
 
         this.elevarAddToCart()
+      } else if (this.onlyBundle) {
+        if (this.bundles.length) {
+          this.bundles.forEach(bundle => {
+            const variant = bundle?.variant
+            const product = bundle?.product
+            const lineItem = {
+              image: product?.featuredMedia,
+              title: product?.title,
+              variant: variant,
+              quantity: this.quantity || 1,
+              productId: product?.id,
+              handle: product?.handle,
+              vendor: product?.vendor,
+              tags: product?.tags,
+              metafields: []
+            }
+            this.addLineItem(lineItem)
+          })
+        }
+        if (this.bundleVarietyPack?.variants) {
+          const varietyPack = this.bundleVarietyPack
+          varietyPack?.variants?.length &&
+            varietyPack.variants.forEach(variant => {
+              const product = varietyPack?.product
+              const lineItem = {
+                image: product?.featuredMedia,
+                title: product?.title,
+                variant: variant,
+                quantity: this.quantity || 1,
+                productId: product?.id,
+                handle: product?.handle,
+                vendor: product?.vendor,
+                tags: product?.tags,
+                metafields: []
+              }
+              this.addLineItem(lineItem)
+            })
+        }
+        this.setButtonText()
+        this.showCart()
+        this.$emit('addedToCart')
+
+        this.elevarAddToCart()
       }
+      this.justAdded = true
+      setTimeout(() => {
+        this.justAdded = false
+      }, 2000)
     },
     decodeBase64VariantId(encodedId) {
       // This is wrapped in a try/catch because in some instances it's attempted to be run during
@@ -578,39 +654,46 @@ export default {
     },
     elevarAddToCart() {
       window.dataLayer = window.dataLayer || []
+      let productList = []
+      let currencyCode = this?.product?.priceRange?.currencyCode
       var uuid = this.createUUID()
-      var variant = this.variant
       var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var source = this.getSource()
-      var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-        .toString('binary')
-        .split('/')
-        .pop()
-      var variantId = Buffer.from(variant.id, 'base64')
-        .toString('binary')
-        .split('/')
-        .pop()
-      const productList = [
-        {
-          name: this.product.title.replace("'", ''),
-          id: (variant && variant.sku) || '',
-          product_id: productId,
-          variant_id: (variant && variantId) || '',
-          image: this.product.featuredMedia.src,
-          price: variant.price,
-          brand: this.product.vendor.replace("'", ''),
-          variant: (variant && variant.title && variant.title.replace("'", '')) || '',
-          category: this.product.productType,
-          inventory: this.quantity,
-          list: referrer,
-          source: source
-        }
-      ]
+      if (!this.onlyBundle) {
+        var variant = this.variant
+        var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+        var variantId = Buffer.from(variant.id, 'base64')
+          .toString('binary')
+          .split('/')
+          .pop()
+        productList = [
+          {
+            name: this.product.title.replace("'", ''),
+            id: (variant && variant.sku) || '',
+            product_id: productId,
+            variant_id: (variant && variantId) || '',
+            image: this.product.featuredMedia.src,
+            price: variant.price,
+            brand: this.product.vendor.replace("'", ''),
+            variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+            category: this.product.productType,
+            inventory: this.quantity,
+            list: referrer,
+            source: source
+          }
+        ]
+      }
 
       if (this.bundles && this.bundles.length) {
         this.bundles.forEach(bundle => {
           const variant = bundle?.variant
           const product = bundle?.product
+          if (product?.priceRange?.currencyCode) {
+            currencyCode = product?.priceRange?.currencyCode
+          }
           const item = {
             name: product?.title?.replace("'", ''),
             id: (variant && variant.sku) || '',
@@ -637,6 +720,9 @@ export default {
         varietyPack?.variants?.length &&
           varietyPack.variants.forEach(variant => {
             const product = varietyPack?.product
+            if (product?.priceRange?.currencyCode) {
+              currencyCode = product?.priceRange?.currencyCode
+            }
             const item = {
               name: product?.title?.replace("'", ''),
               id: (variant && variant.sku) || '',
@@ -662,7 +748,7 @@ export default {
         event: 'dl_add_to_cart',
         event_id: uuid,
         ecommerce: {
-          currencyCode: this.product.priceRange.currencyCode,
+          currencyCode: currencyCode,
           add: {
             actionField: { list: referrer },
             products: productList
@@ -685,6 +771,23 @@ export default {
   &:disabled {
     opacity: 0.5;
   }
+  &.cart-upsell {
+    border-radius: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    letter-spacing: 1.75px;
+    line-height: 14px;
+    padding: 0 2rem;
+    font-family: 'Bold';
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: $primary-purple;
+    border: none;
+  }
 
   @include respond-to('small') {
     width: auto;
@@ -697,6 +800,12 @@ export default {
 .has-bundle-add {
   .add-to-cart-button {
     width: 370px;
+    &.cart-upsell {
+      margin: auto;
+      width: auto;
+      min-width: 305px;
+      max-width: 360px;
+    }
   }
 }
 

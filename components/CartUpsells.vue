@@ -14,14 +14,26 @@
 
       <!-- UPSELL CONTENT -->
       <div class="cart-upsells__products">
-        <UpsellItem
-          v-for="upsell in items"
-          :key="upsell.shopifyProductHandle"
-          :title="upsell.title"
-          :subtitle="upsell.subtitle"
-          :product="upsell.product"
-          :with-variety-pack="upsell.withVarietyPack"
-        />
+        <template v-for="upsell in items">
+          <UpsellItem
+            v-if="!upsell.withBundle"
+            :key="upsell.shopifyProductHandle"
+            :title="upsell.title"
+            :subtitle="upsell.subtitle"
+            :product="upsell.product"
+            :with-variety-pack="upsell.withVarietyPack"
+          />
+          <UpsellBundle
+            v-if="upsell.withBundle"
+            :key="upsell.title"
+            :title="upsell.title"
+            :subtitle="upsell.subtitle"
+            :with-bundle="upsell.withBundle"
+            :bundles="upsell.bundles || []"
+            :bundle-variety-pack="upsell.bundleVarietyPack || []"
+            :bundle-collection-click-action="upsell.bundleCollectionClickAction"
+          />
+        </template>
       </div>
 
       <!-- UPSELL FOOTER -->
@@ -50,6 +62,7 @@
 import { mapGetters } from 'vuex'
 
 import UpsellItem from '~/components/CartUpsellsItem'
+import UpsellBundle from '~/components/CartUpsellsBundle'
 import BiChevron from '~/components/svg/BiChevron'
 import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
 import Close from '~/components/svg/modalClose'
@@ -57,14 +70,17 @@ import Close from '~/components/svg/modalClose'
 // Mixins
 import productShippingEligibility from '~/mixins/productShippingEligibility'
 
+import { getbundledProductsFromNacelle } from '~/mixins/getProduct'
 export default {
-  components: { UpsellItem, BiChevron, Close, CartFlyoutCheckoutButton },
+  components: { UpsellItem, UpsellBundle, BiChevron, Close, CartFlyoutCheckoutButton },
   data() {
     return {
       observer: null,
       ready: false,
       title: '',
-      items: []
+      items: [],
+      bundleItems: [],
+      bundleItemsResolved: []
     }
   },
   mixins: [productShippingEligibility],
@@ -87,7 +103,7 @@ export default {
     }
   },
   async mounted() {
-    const handle = this.getNacelleMetafield('cart_upsells', 'queue_handle')
+    const handle = this.getNacelleMetafield('cart_upsells', 'queue_handle_bundle')
     if (handle) {
       const queue = await this.$nacelle.data
         .content({
@@ -95,15 +111,37 @@ export default {
           handle: handle
         })
         .catch(err => {
-          console.warn(`Error fetching upsells with handle: ${handle}`)
+          console.warn(`Error fetching upsells with handle: ${handle}`, err)
         })
 
       if (queue) {
         this.title = queue.title
 
+        // get bundles
+        this.bundleItems = queue?.fields?.items?.map(item => {
+          if (item?.fields?.bundleCollection?.length || item?.fields?.bundleGroup?.length) {
+            return item
+          } else {
+            return null
+          }
+        })
+
+        this.bundleItems.forEach(async (bundle, index) => {
+          let resolvedBundle = {}
+          if (bundle) {
+            resolvedBundle = await this.getBundleProducts(bundle)
+          }
+          this.$set(this.bundleItemsResolved, index, resolvedBundle)
+        })
+
         // Get the queue's `items` array, filtering for just those with a shopifyProductHandle configured
         const items = Array.isArray(queue?.fields?.items) // if `items` is an array...
-          ? queue.fields.items.filter(p => p?.fields?.shopifyProductHandle) // filter for only the product references
+          ? queue.fields.items.filter(
+            p =>
+                p?.fields?.shopifyProductHandle ||
+                p?.fields?.bundleCollection?.length ||
+                p?.fields?.bundleGroup?.length
+          ) // filter for only the product references
           : [] // otherwise set it equal to an empty array
 
         // Fetch the products for those handles.
@@ -113,21 +151,34 @@ export default {
 
         // Assemble a complete `items` array, with product data attached.
         this.items = items.reduce((acc, curr, index) => {
-          const product = products[index]
-          const hasValidProduct = // product is valid if...
+          const product = products.find(
+            product => product.handle && product.handle === curr.fields.shopifyProductHandle
+          )
+          let hasValidProduct = null
+          hasValidProduct = // product is valid if...
             product && // product exists
             product.id && // product id isn't null (aka empty nacelle object)
             product.availableForSale && // product isn't sold out
-            this.checkProductShippingEligibility(product) // product is available for the user's locale
-          return hasValidProduct
-            ? [
-                ...acc,
-                {
-                  ...curr.fields,
-                  product: products[index]
-                }
-              ]
-            : acc
+            this.checkProductShippingEligibility(product) && // product is available for the user's locale
+            !(curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) // Should not be a bundle
+          if (hasValidProduct) {
+            return [
+              ...acc,
+              {
+                ...curr.fields,
+                product: product
+              }
+            ]
+          } else if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
+            return [
+              ...acc,
+              {
+                ...this.bundleItemsResolved[index]
+              }
+            ]
+          } else {
+            return acc
+          }
         }, [])
       }
 
@@ -152,6 +203,55 @@ export default {
   },
   methods: {
     // On scroll, determine if the last element is still below the fold
+    async getBundleProducts(bundleItem) {
+      const productHandles = []
+      const productObj = {
+        bundles: [],
+        bundleVarietyPack: [],
+        withBundle: true,
+        bundleCollectionClickAction: bundleItem?.fields?.bundleCollectionClickAction,
+        title: bundleItem?.fields?.title,
+        subtitle: bundleItem?.fields?.subtitle
+      }
+      const bundles = bundleItem?.fields?.bundleGroup
+      const bundleCollection = bundleItem?.fields?.bundleCollection
+      bundles &&
+        bundles.forEach(bundle => {
+          // Get productIds of the main product bundle
+          if (bundle?.fields?.product?.fields?.handle) {
+            productHandles.push(bundle?.fields?.product?.fields?.handle)
+          }
+        })
+      bundleCollection &&
+        bundleCollection.forEach(product => {
+          // Get productIds of the main product bundle variety pack
+          const handle = product?.fields?.handle
+          if (handle && productHandles.indexOf(handle) === -1) {
+            productHandles.push(handle)
+          }
+        })
+
+      const allBundledProductList = await this.$nacelle.data.products({
+        handles: productHandles
+      })
+
+      if (bundles) {
+        productObj.bundles = getbundledProductsFromNacelle(
+          bundles,
+          allBundledProductList,
+          bundleItem?.fields?.title
+        )
+      }
+      if (bundleCollection) {
+        productObj.bundleVarietyPack = getbundledProductsFromNacelle(
+          bundleCollection,
+          allBundledProductList,
+          bundleItem?.fields?.title,
+          true
+        )
+      }
+      return productObj
+    },
     observeScroll() {
       setTimeout(() => {
         this.observer = new IntersectionObserver(([entry]) => {
