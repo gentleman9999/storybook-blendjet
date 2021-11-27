@@ -156,7 +156,8 @@ export default {
             product && // product exists
             product.id && // product id isn't null (aka empty nacelle object)
             product.availableForSale && // product isn't sold out
-            this.checkProductShippingEligibility(product) // product is available for the user's locale
+            this.checkProductShippingEligibility(product) && // product is available for the user's locale
+            !(curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) // Should not be a bundle
           if (hasValidProduct) {
             return [
               ...acc,
