@@ -34,7 +34,8 @@
       :class="buttonClass"
     >
       <slot>
-        <span class="inner-text" v-if="displayPrice">{{ buttonText }}</span>
+        <span class="inner-text" v-if="justAdded"> Added! </span>
+        <span class="inner-text" v-else-if="displayPrice">{{ buttonText }}</span>
       </slot>
     </button>
     <button
@@ -123,6 +124,7 @@ export default {
 
   data() {
     return {
+      justAdded: false,
       warrantyPrice: 0,
       displayPrice: 0,
       defaultText: `Add to Cart - ${this.displayPrice}`,
@@ -615,6 +617,10 @@ export default {
 
         this.elevarAddToCart()
       }
+      this.justAdded = true
+      setTimeout(() => {
+        this.justAdded = false
+      }, 2000)
     },
     decodeBase64VariantId(encodedId) {
       // This is wrapped in a try/catch because in some instances it's attempted to be run during
@@ -795,8 +801,9 @@ export default {
   .add-to-cart-button {
     width: 370px;
     &.cart-upsell {
+      margin: auto;
       width: auto;
-      min-width: 320px;
+      min-width: 305px;
       max-width: 360px;
     }
   }

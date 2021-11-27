@@ -31,6 +31,7 @@
             :with-bundle="upsell.withBundle"
             :bundles="upsell.bundles || []"
             :bundle-variety-pack="upsell.bundleVarietyPack || []"
+            :bundle-collection-click-action="upsell.bundleCollectionClickAction"
           />
         </template>
       </div>
@@ -208,6 +209,7 @@ export default {
         bundles: [],
         bundleVarietyPack: [],
         withBundle: true,
+        bundleCollectionClickAction: bundleItem?.fields?.bundleCollectionClickAction,
         title: bundleItem?.fields?.title,
         subtitle: bundleItem?.fields?.subtitle
       }

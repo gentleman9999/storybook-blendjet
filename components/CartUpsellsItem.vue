@@ -303,7 +303,7 @@ export default {
     },
     async initLocalizedPrice() {
       // Create array of all variant prices to get localized values
-      const pricesArray = this.variants.reduce(
+      const pricesArray = this.variants?.reduce(
         (arr, v) =>
           [
             ...arr,
@@ -415,7 +415,7 @@ export default {
   padding: 80px 52px 120px;
   min-width: 375px;
   @media (max-width: 1024px) {
-    padding: 15px 40px 40px;
+    padding: 15px 25px 40px;
     &:last-child {
       padding-bottom: 150px;
     }

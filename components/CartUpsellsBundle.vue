@@ -16,11 +16,19 @@
             width: 200
           })
         "
+        :class="{
+          pointer: bundle.clickAction === 'link'
+        }"
+        @click="bundleImageClicked(bundle)"
       />
       <img
         v-if="varietyPackImage[selectedVarieryPackIndex]"
         class="variety-pack"
+        :class="{
+          pointer: bundleCollectionClickAction === 'link'
+        }"
         :src="optimizeSource({ url: varietyPackImage[selectedVarieryPackIndex], width: 200 })"
+        @click="bundleImageClicked(selectedBundleVarietyPack[selectedVarieryPackIndex])"
       />
     </div>
     <div class="add-to-cart">
@@ -55,17 +63,18 @@
         <p>Quantity:</p>
         <QuantityDropdown :quantity="quantity" @update:quantity="updateQuantity" />
       </div>
-      <ProductAddToCartButton
-        :quantity="quantity"
-        :product="{}"
-        :allOptionsSelected="true"
-        :onlyOneOption="true"
-        @addedToCart="quantity = 1"
-        :bundles="selectedBundle"
-        :bundle-variety-pack="selectedBundleVarietyPack[selectedVarieryPackIndex]"
-        :only-bundle="true"
-      />
     </div>
+    <ProductAddToCartButton
+      class="bundle-cart-button"
+      :quantity="quantity"
+      :product="{}"
+      :allOptionsSelected="true"
+      :onlyOneOption="true"
+      @addedToCart="quantity = 1"
+      :bundles="selectedBundle"
+      :bundle-variety-pack="selectedBundleVarietyPack[selectedVarieryPackIndex]"
+      :only-bundle="true"
+    />
   </div>
 </template>
 
@@ -103,12 +112,15 @@ export default {
     bundleVarietyPack: {
       type: Array,
       default: () => []
+    },
+    bundleCollectionClickAction: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       quantity: 1,
-      justAdded: false,
       imageInterval: null,
       imageIndex: 0,
       varietyPackImage: [],
@@ -172,6 +184,24 @@ export default {
       }
       return productName + ' ' + optionName
     },
+    bundleImageClicked(bundle) {
+      if (bundle.clickAction === 'link' || this.bundleCollectionClickAction === 'link') {
+        const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
+        this.$router.push({
+          name: 'products-productHandle',
+          params: {
+            productHandle: bundle.product.handle
+          },
+          query: {
+            variant: this.formatVariantId(variant.id)
+          }
+        })
+      }
+    },
+    formatVariantId(value) {
+      const url = atob(value)
+      return url.replace('gid://shopify/ProductVariant/', '')
+    },
     updateVarietyPackOptions() {
       const imageIndex = []
       for (let i = 0; i < this.selectedBundleVarietyPack?.length; i++) {
@@ -221,7 +251,7 @@ export default {
   padding: 80px 52px 120px;
   min-width: 375px;
   @media (max-width: 1024px) {
-    padding: 15px 40px 40px;
+    padding: 15px 25px 40px;
     &:last-child {
       padding-bottom: 150px;
     }
@@ -270,12 +300,21 @@ export default {
   }
   &.two:after {
     top: calc(50% - 40px);
+    @media (max-width: 1024px) {
+      top: calc(50% - 30px);
+    }
   }
   &.three:after {
     top: 96px;
+    @media (max-width: 1024px) {
+      top: 80px;
+    }
   }
   &.four:after {
     top: 122px;
+    @media (max-width: 1024px) {
+      top: 120px;
+    }
   }
 
   img {
@@ -283,17 +322,24 @@ export default {
     width: 140px;
     margin-bottom: 30px;
     object-fit: contain;
+    &.pointer {
+      cursor: pointer;
+    }
+    @media (max-width: 1024px) {
+      margin-bottom: 15px;
+    }
   }
 
   @media (max-width: 1024px) {
-    margin-bottom: 15px;
+    margin-bottom: 0px;
   }
 }
 
 .add-to-cart {
   display: grid;
   place-content: center;
-  grid-gap: 18px;
+  grid-gap: 0.5rem;
+  margin-bottom: calc(1rem + 16px);
 }
 
 .quantity {
@@ -301,6 +347,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 20px;
+  margin-top: 16px;
 
   p {
     font-size: 12px;
