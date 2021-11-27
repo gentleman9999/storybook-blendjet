@@ -165,7 +165,7 @@ export default {
               ...acc,
               {
                 ...curr.fields,
-                product: products[index]
+                product: product
               }
             ]
           } else if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
