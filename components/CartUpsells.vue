@@ -146,7 +146,7 @@ export default {
 
         // Fetch the products for those handles.
         const products = await this.$nacelle.data.products({
-          handles: items.map(itm => itm.fields.shopifyProductHandle)
+          handles: items.map(itm => itm.fields.shopifyProductHandle).filter(item => item)
         })
 
         // Assemble a complete `items` array, with product data attached.
