@@ -29,7 +29,7 @@
     >
       <div class="canvas-bfcm">
         <div class="col-bfcm">
-          <span class="entry-title-bfcm">Black Friday Sale!</span>
+          <span class="entry-title-bfcm">Cyber Monday Sale!</span>
           <span class="content-split-element-bfcm">15% Off 1</span>
           <span class="content-split-element-bfcm">20% Off 2</span>
           <span class="content-split-element-bfcm">25% Off 3+</span>
