@@ -146,7 +146,6 @@ export default {
     }
 
     &__image {
-      position: absolute;
       height: 100%;
       width: 100%;
     }
