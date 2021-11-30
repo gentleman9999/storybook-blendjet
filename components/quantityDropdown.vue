@@ -1,6 +1,7 @@
 <template>
   <div class="quantity-container">
-    <div class="mobile-select-container" v-if="isMobile">
+    <div class="quantity-label">{{ label }}:</div>
+    <div class="mobile-select-container">
       <div class="select-cover" role="button">
         <span class="select-cover__selected">{{ quantity }}</span>
         <CaretDown :styleObj="{ marginLeft: '16px', marginBottom: '3px' }" :color="'#FFF'" />
@@ -12,75 +13,6 @@
       >
         <option v-for="(item, i) in items" :key="i" :value="item">{{ item }}</option>
       </select>
-    </div>
-
-    <div class="dropdown-cart" tabindex="0" @focusout="visible = false" v-if="!isMobile">
-      <transition name="fade">
-        <ul :is="type.main" v-if="visible" class="dropdown-content-cart">
-          <li
-            :is="type.item"
-            v-for="(item, i) in items"
-            :key="i"
-            @click.prevent="updateQuantity(item)"
-          >
-            <span class="check-selected-container">
-              <span class="check-selected" v-if="item === quantity">
-                <svg
-                  width="16px"
-                  height="11px"
-                  viewBox="0 0 16 11"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                >
-                  <title>Right</title>
-                  <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g
-                      id="D-BlendJet-PDP-BlendJet"
-                      transform="translate(-1083.000000, -6832.000000)"
-                      fill="#373795"
-                    >
-                      <g id="Smoothies" transform="translate(0.000000, 6247.000000)">
-                        <g id="3" transform="translate(1028.000000, 78.000000)">
-                          <g id="Checkbox" transform="translate(53.000000, 503.000000)">
-                            <g
-                              id="Right"
-                              transform="translate(10.000000, 9.500000) scale(-1, 1) rotate(-90.000000) translate(-10.000000, -9.500000) translate(4.500000, 2.000000)"
-                            >
-                              <polygon
-                                id="BG"
-                                transform="translate(5.500025, 5.499990) rotate(-45.000000) translate(-5.500025, -5.499990) "
-                                points="-0.999966138 4.79998971 12.0000249 4.79998971 12.0000249 6.19998971 -0.999966138 6.19998971"
-                              ></polygon>
-                              <polygon
-                                id="BG-Copy-2"
-                                transform="translate(3.500012, 11.449860) scale(1, -1) rotate(-45.000000) translate(-3.500012, -11.449860) "
-                                points="2.89919205e-05 10.7498605 6.99999503 10.7498605 6.99999503 12.1498605 2.89919205e-05 12.1498605"
-                              ></polygon>
-                            </g>
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </svg>
-              </span>
-            </span>
-            <span class="options-cart">{{ item }}</span>
-          </li>
-          <li :is="type.item" class="selected-option">
-            <span class="swatch-container"></span><span class="options-cart">{{ quantity }}</span>
-            <span class="caret-container"
-              ><CaretDown :styleObj="{ marginRight: '10px', marginLeft: '15px' }"
-            /></span>
-          </li>
-        </ul>
-      </transition>
-
-      <div class="dropbtn" role="button" @click.prevent="toggleVisible" v-show="!visible">
-        <span class="selected-option">{{ quantity }}</span>
-        <CaretDown :styleObj="{ marginLeft: '23px' }" :color="'#FFF'" />
-      </div>
     </div>
   </div>
 </template>
@@ -140,7 +72,9 @@ export default {
 
 <style lang="scss" scoped>
 .quantity-container {
-  width: 50px;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .dropbtn {
@@ -205,7 +139,6 @@ export default {
 .mobile-select-container {
   display: flex;
   align-items: center;
-  position: relative;
 }
 
 .select-cover {
@@ -232,6 +165,13 @@ export default {
   right: 0;
   position: absolute;
   font-size: 16px;
+  left: 0;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  option {
+    text-align: center;
+  }
 }
 
 .check-selected-container {
@@ -284,5 +224,12 @@ export default {
 .fade-leave-active {
   animation: fadeOut;
   animation-duration: 0.6s;
+}
+.quantity-label {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 1.17;
+  margin-right: 14px;
+  color: #fff;
 }
 </style>

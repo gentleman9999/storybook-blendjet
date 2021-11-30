@@ -15,7 +15,6 @@
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
         >
-          <title>BG Copy</title>
           <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="D-BlendJet-Cart" transform="translate(-1191.000000, -138.000000)" fill="#373795">
               <g id="Cart" transform="translate(1046.000000, 0.000000)">
@@ -139,14 +138,13 @@ export default {
      */
 
     decrement() {
-      let _minCount = this.isCheckout === true ? 0 : 1
+      const _minCount = this.isCheckout === true ? 0 : 1
       if (this.quantity > _minCount) {
         if (this.item) {
           this.decrementLineItem(this.item.id)
-          if(this.quantity == 1){
+          if (this.quantity == 1) {
             this.$emit('itemremoved')
           }
-          
         } else {
           this.update(this.quantity - 1)
         }

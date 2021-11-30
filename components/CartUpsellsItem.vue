@@ -30,8 +30,11 @@
           :currentOption="currentOption"
         />
         <div class="quantity">
-          <p>Quantity:</p>
-          <QuantityDropdown :quantity="quantity" @update:quantity="updateQuantity" />
+          <QuantityDropdown
+            :quantity="quantity"
+            @update:quantity="updateQuantity"
+            label="Quantity"
+          />
         </div>
 
         <div class="add-to-cart-button">
