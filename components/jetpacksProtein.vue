@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home-jetpack-protein">
     <div class="title-container">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -137,9 +137,8 @@
 </template>
 
 <script>
-import Tabs from './tabs'
 import imageOptimize from '~/mixins/imageOptimize'
-// import JetpackPDPModal from '~/components/jetpackPDPModal'
+import JetpackPDPModal from '~/components/jetpackPDPModal'
 export default {
   data() {
     return {
@@ -223,9 +222,9 @@ export default {
       }
     },
 
-    //Needs update for additional colors
+    // Needs update for additional colors
     getBGColor(item) {
-      let title = item.toLowerCase()
+      const title = item.toLowerCase()
       if (title.includes('strawberry banana')) {
         return 'linear-gradient(146deg, #e28761 0%, #cc493d 80%)'
       } else if (title.includes('peanut butter power breakfast')) {
@@ -243,10 +242,6 @@ export default {
       }
     },
     jetpackTabChange(value) {}
-  },
-
-  components: {
-    Tabs
   },
   mixins: [imageOptimize],
   async mounted() {
@@ -278,11 +273,11 @@ export default {
         return enhancedVariants
       })
       .catch(err => {
-        // No product found
+        console.log('No product found', err)
       })
 
     this.setWidthData()
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
       if (window.innerWidth < 1024) {
         vm.itemsToShow = 1
         vm.indicatorVisible = true
