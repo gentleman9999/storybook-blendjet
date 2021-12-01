@@ -12,14 +12,25 @@
         />
       </div>
       <div class="add-to-cart">
-        <CartDropdown
-          v-if="variants.length > 1 && allOptions.length <= 1"
-          productType="any"
-          :label="variantLabel"
-          :items="variants"
-          :product="selectedVariant"
-          @update:any="updateSelectedVariant"
-        />
+        <template v-if="variants.length > 1 && allOptions.length <= 1">
+          <product-options
+            v-if="variantLabel.toLowerCase().includes('color')"
+            :options="allOptions"
+            :variant="selectedVariant"
+            @selectedOption="updateSelectedVariant($event, 'color')"
+            :variants="variants"
+            @clear="selectedOptions = []"
+            :currentOption="selectedVariant.selectedOptions[0].value"
+          />
+          <CartDropdown
+            v-else
+            productType="any"
+            :label="variantLabel"
+            :items="variants"
+            :product="selectedVariant"
+            @update:any="updateSelectedVariant"
+          />
+        </template>
         <CartDropdownMultiOptions
           v-else-if="variants.length > 1 && allOptions.length > 1"
           :options="allOptions"
@@ -63,6 +74,7 @@ import CartDropdown from '~/components/cartDropdown'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
+import ProductOptions from '~/components/nacelle/ProductOptions'
 
 // Mixins
 import rechargeProperties from '~/mixins/rechargeMixin'
@@ -75,7 +87,8 @@ export default {
     CartDropdown,
     QuantityDropdown,
     Checkbox,
-    CartDropdownMultiOptions
+    CartDropdownMultiOptions,
+    ProductOptions
   },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
@@ -226,8 +239,15 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['addLineItem']),
-    updateSelectedVariant(newVariant) {
-      this.selectedVariant = newVariant
+    updateSelectedVariant(newVariant, optionType = '') {
+      if (optionType === 'color') {
+        const foundVariant = this.variants.find(
+          variant => variant.selectedOptions[0].value === newVariant.value
+        )
+        this.selectedVariant = foundVariant
+      } else {
+        this.selectedVariant = newVariant
+      }
     },
     /**
      * Formats a Storefront API encoded ID to a plain-language variant ID
