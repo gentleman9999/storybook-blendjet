@@ -91,7 +91,7 @@
         </transition>
       </div>
 
-      <div class="section section__jetpacks">
+      <div class="section section__jetsetter">
         <transition name="fade">
           <Jetsetter />
         </transition>
@@ -427,6 +427,14 @@ export default nmerge({
     height: 135px;
     background-color: $primary-purple;
     padding-top: 25px;
+  }
+
+  &__jetpacks {
+    background-color: $primary-purple-tint;
+    min-height: 730px;
+    @include respond-to('small') {
+      height: auto;
+    }
   }
 
   &__jetpacks {
