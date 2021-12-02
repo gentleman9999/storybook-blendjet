@@ -353,10 +353,7 @@
     </transition>
 
     <!-- Cart Flyout -->
-
-    <transition name="fade">
-      <cart />
-    </transition>
+    <cart />
   </div>
 </template>
 
