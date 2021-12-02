@@ -86,15 +86,11 @@
       </div>
 
       <div class="section section__jetpacks">
-        <transition name="fade">
-          <Jetpacks />
-        </transition>
+        <Jetpacks />
       </div>
 
       <div class="section section__jetsetter">
-        <transition name="fade">
-          <Jetsetter />
-        </transition>
+        <Jetsetter />
       </div>
 
       <div class="section section__recipes">
@@ -437,7 +433,7 @@ export default nmerge({
     }
   }
 
-  &__jetpacks {
+  &__jetsetter {
     background-color: $primary-purple-tint;
     min-height: 730px;
     @include respond-to('small') {
