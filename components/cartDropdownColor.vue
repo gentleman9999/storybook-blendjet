@@ -131,7 +131,6 @@ export default {
       .dropdown-content__swatches {
         .option {
           margin-bottom: 0;
-          padding: 0.8rem;
         }
       }
     }
