@@ -78,6 +78,18 @@ export default {
   methods: {
     toggleVisible() {
       this.showVariantSelector = !this.showVariantSelector
+      this.$nextTick(() => {
+        const media = document.querySelector('.cart-dropdown-color .dropdown-content__swatches')
+        const mediaOffset = media?.getBoundingClientRect()?.bottom || 0
+        const scrollContainer = document.querySelector('.cart-upsells__products')
+        const scrollContainerOffset = scrollContainer?.getBoundingClientRect()?.bottom || 0
+        if (mediaOffset + 120 > scrollContainerOffset) {
+          scrollContainer.scroll({
+            top: scrollContainer.scrollTop + (mediaOffset - scrollContainerOffset) + 120,
+            behavior: 'smooth'
+          })
+        }
+      })
     },
     updateSelectedVariant(variant) {
       this.toggleVisible()
