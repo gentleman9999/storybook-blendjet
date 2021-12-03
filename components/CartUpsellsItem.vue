@@ -70,7 +70,7 @@ import { stringify } from 'querystring'
 
 // Components
 import CartDropdown from '~/components/cartDropdown'
-import CartDropdownColor from '~/components/CartDropdownColor'
+import CartDropdownColor from '~/components/cartDropdownColor'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'

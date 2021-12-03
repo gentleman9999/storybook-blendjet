@@ -96,7 +96,7 @@
 // Components
 import QuantityDropdown from '~/components/quantityDropdown'
 import CartDropdown from '~/components/cartDropdown'
-import CartDropdownColor from '~/components/CartDropdownColor'
+import CartDropdownColor from '~/components/cartDropdownColor'
 import CartDropdownVarietyPack from '~/components/CartDropdownVarietyPack'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 
