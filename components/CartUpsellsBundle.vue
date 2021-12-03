@@ -33,8 +33,23 @@
     </div>
     <div class="add-to-cart">
       <template v-for="(bundle, index) in selectedBundle">
+        <CartDropdownColor
+          v-if="
+            bundle.product.variants.length > 1 &&
+              getBundleItemLabel(bundle)
+                .toLowerCase()
+                .includes('color')
+          "
+          :key="bundle.product.id"
+          productType="any"
+          :label="getBundleItemLabel(bundle)"
+          :items="bundle.product.variants"
+          :product="bundle.variant"
+          :options="getAllOptions(bundle.product.variants)"
+          @update="updateSelectedVariant($event, index, 'color')"
+        />
         <CartDropdown
-          v-if="bundle.product.variants.length > 1"
+          v-else-if="bundle.product.variants.length > 1"
           :key="bundle.product.id"
           productType="any"
           :label="getBundleItemLabel(bundle)"
@@ -81,6 +96,7 @@
 // Components
 import QuantityDropdown from '~/components/quantityDropdown'
 import CartDropdown from '~/components/cartDropdown'
+import CartDropdownColor from '~/components/CartDropdownColor'
 import CartDropdownVarietyPack from '~/components/CartDropdownVarietyPack'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 
@@ -93,6 +109,7 @@ export default {
   components: {
     QuantityDropdown,
     CartDropdown,
+    CartDropdownColor,
     ProductAddToCartButton,
     CartDropdownVarietyPack
   },
@@ -165,8 +182,21 @@ export default {
     updateQuantity(newQuantity) {
       this.quantity = newQuantity
     },
-    updateSelectedVariant(newVariant, index) {
-      this.$set(this.selectedBundle, index, { ...this.selectedBundle[index], variant: newVariant })
+    updateSelectedVariant(newVariant, index, type = '') {
+      if (type === 'color') {
+        const foundVariant = this.selectedBundle[index].product.variants.find(
+          variant => variant.selectedOptions[0].value === newVariant.value
+        )
+        this.$set(this.selectedBundle, index, {
+          ...this.selectedBundle[index],
+          variant: foundVariant
+        })
+      } else {
+        this.$set(this.selectedBundle, index, {
+          ...this.selectedBundle[index],
+          variant: newVariant
+        })
+      }
     },
     updateVarietyPack(index) {
       this.selectedVarieryPackIndex = index

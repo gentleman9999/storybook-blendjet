@@ -13,14 +13,13 @@
       </div>
       <div class="add-to-cart">
         <template v-if="variants.length > 1 && allOptions.length <= 1">
-          <product-options
+          <CartDropdownColor
             v-if="variantLabel.toLowerCase().includes('color')"
+            :label="variantLabel"
+            :items="variants"
+            :product="selectedVariant"
+            @update="updateSelectedVariant($event, 'color')"
             :options="allOptions"
-            :variant="selectedVariant"
-            @selectedOption="updateSelectedVariant($event, 'color')"
-            :variants="variants"
-            @clear="selectedOptions = []"
-            :currentOption="selectedVariant.selectedOptions[0].value"
           />
           <CartDropdown
             v-else
@@ -71,10 +70,10 @@ import { stringify } from 'querystring'
 
 // Components
 import CartDropdown from '~/components/cartDropdown'
+import CartDropdownColor from '~/components/CartDropdownColor'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
-import ProductOptions from '~/components/nacelle/ProductOptions'
 
 // Mixins
 import rechargeProperties from '~/mixins/rechargeMixin'
@@ -85,10 +84,10 @@ import availableOptions from '~/mixins/availableOptions'
 export default {
   components: {
     CartDropdown,
+    CartDropdownColor,
     QuantityDropdown,
     Checkbox,
-    CartDropdownMultiOptions,
-    ProductOptions
+    CartDropdownMultiOptions
   },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
