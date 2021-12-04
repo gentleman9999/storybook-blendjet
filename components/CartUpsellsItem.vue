@@ -84,6 +84,9 @@ import productMetafields from '~/mixins/productMetafields'
 import imageOptimize from '~/mixins/imageOptimize'
 import availableOptions from '~/mixins/availableOptions'
 
+import { createClient } from '~/plugins/contentful.js'
+const client = createClient()
+
 export default {
   components: {
     CartDropdown,
@@ -204,15 +207,18 @@ export default {
     }
   },
   watch: {
-    selectedVariant(newVal) {
-      if (this.hasQuantityOption) {
-        const title = newVal?.title?.toLowerCase()?.replace(/\s/g, '')
-        if (this.quantityOptionVariant[title]) {
-          this.quantityOptionSelected = cloneDeep(this.quantityOptionVariant[title])
-        } else {
-          this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+    selectedVariant: {
+      handler(newVal) {
+        if (this.hasQuantityOption) {
+          const title = newVal?.title?.toLowerCase()?.replace(/\s/g, '')
+          if (this.quantityOptionVariant[title]) {
+            this.quantityOptionSelected = cloneDeep(this.quantityOptionVariant[title])
+          } else {
+            this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+          }
         }
-      }
+      },
+      immediate: true
     },
     isBundleVariant(is) {
       if (is) {
@@ -227,7 +233,7 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     this.variants = this.product?.variants
       ?.filter(v => v.availableForSale)
       ?.map(v => {
@@ -265,19 +271,7 @@ export default {
       )
       this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
     }
-
-    if (this.productContentful?.variants?.length) {
-      this.productContentful.variants.forEach(variant => {
-        const title = variant?.fields?.title?.toLowerCase()
-        if (variant?.fields?.quantityOption?.fields?.quantity) {
-          const qtyOption = {
-            title: variant?.fields?.quantityOption?.fields?.title,
-            quantity: variant?.fields?.quantityOption?.fields?.quantity?.split(',')
-          }
-          this.$set(this.quantityOptionVariant, title, qtyOption)
-        }
-      })
-    }
+    await this.fetchQuantityOptions()
 
     this.selectedVariant = this.variants?.[0]
     this.initLocalizedPrice()
@@ -290,6 +284,36 @@ export default {
     ...mapActions('cart', ['addLineItem']),
     updateSelectedVariant(newVariant) {
       this.selectedVariant = newVariant
+    },
+    async fetchQuantityOptions() {
+      if (this.productContentful?.variants?.length) {
+        const variants = this.productContentful?.variants
+        for (let i = 0; i < variants.length; i++) {
+          const variant = variants[i]
+          const title = variant?.fields?.title?.toLowerCase()
+          if (variant?.fields?.quantityOption?.fields?.quantity) {
+            const qtyOption = {
+              title: variant?.fields?.quantityOption?.fields?.title,
+              quantity: variant?.fields?.quantityOption?.fields?.quantity
+                ?.split(',')
+                ?.map(item => Number(item))
+            }
+            this.$set(this.quantityOptionVariant, title, qtyOption)
+          } else if (variant?.fields?.quantityOption?.sys) {
+            let response = null
+            await client.getEntry(variant?.fields?.quantityOption?.sys.id).then(res => {
+              response = res
+            })
+            if (response) {
+              const qtyOption = {
+                title: response?.fields?.title,
+                quantity: response?.fields?.quantity?.split(',')?.map(item => Number(item))
+              }
+              this.$set(this.quantityOptionVariant, title, qtyOption)
+            }
+          }
+        }
+      }
     },
     /**
      * Formats a Storefront API encoded ID to a plain-language variant ID

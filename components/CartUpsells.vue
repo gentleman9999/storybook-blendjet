@@ -72,6 +72,7 @@ import Close from '~/components/svg/modalClose'
 import productShippingEligibility from '~/mixins/productShippingEligibility'
 
 import { getbundledProductsFromNacelle } from '~/mixins/getProduct'
+
 export default {
   components: { UpsellItem, UpsellBundle, BiChevron, Close, CartFlyoutCheckoutButton },
   data() {
