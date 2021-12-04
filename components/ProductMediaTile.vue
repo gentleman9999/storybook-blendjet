@@ -131,22 +131,21 @@ export default {
     @include respond-to('small') {
       width: 100%;
       height: auto;
+      min-height: 375px;
+      min-width: 375px;
+      max-width: 540px;
       border-radius: 0;
     }
 
     video,
     img {
       object-fit: cover;
-      @include respond-to('small') {
-        width: 100%;
-      }
     }
 
     &__video {
     }
 
     &__image {
-      position: absolute;
       height: 100%;
       width: 100%;
     }
