@@ -116,7 +116,14 @@ export default {
         item: 'li'
       },
       isMobile: false,
-      selectQuantity: {}
+      selectQuantity: 0
+    }
+  },
+  watch: {
+    quantity(newVal) {
+      if (newVal !== this.selectQuantity) {
+        this.selectQuantity = newVal
+      }
     }
   },
   methods: {

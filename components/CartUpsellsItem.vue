@@ -31,7 +31,13 @@
         />
         <div class="quantity">
           <p>Quantity:</p>
-          <QuantityDropdown :quantity="quantity" @update:quantity="updateQuantity" />
+          <QuantityDropdown
+            v-if="hasQuantityOption"
+            :items="quantityLength"
+            :quantity="quantity"
+            @update:quantity="updateQuantity"
+          />
+          <QuantityDropdown v-else :quantity="quantity" @update:quantity="updateQuantity" />
         </div>
         <div
           v-if="allOptions.length <= 1 && quantityOptionSelected.quantity.length"
@@ -117,7 +123,8 @@ export default {
       quantityOptionSelected: {
         quantity: [],
         title: ''
-      }
+      },
+      quantityLength: []
     }
   },
   props: {
@@ -234,6 +241,9 @@ export default {
     }
   },
   async mounted() {
+    for (let i = 30; i > 0; i--) {
+      this.quantityLength.push(i)
+    }
     this.variants = this.product?.variants
       ?.filter(v => v.availableForSale)
       ?.map(v => {
