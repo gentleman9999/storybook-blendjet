@@ -1127,6 +1127,13 @@ export default {
       // console.log('newVariant:', newVariant);
       this.elevarProductView() // needs flag to only fire once
     },
+    'currentVariant.featuredMedia.src'(newImage) {
+      const key = this.currentVariant.title.toLowerCase().replace(/\s/g, '')
+      const vMedia = this.media[key]
+      if (!vMedia.productImage) {
+        this.productImage = newImage
+      }
+    },
     showDesktopHeader(newValue, oldValue) {
       // If show desktop header gets toggled to false, hide the variant selector menu too
     },
@@ -1337,6 +1344,12 @@ export default {
     }
 
     this.setInitialVariant()
+  },
+  beforeDestroy() {
+    clearInterval(this.imageInterval)
+  },
+  beforeRouteLeave() {
+    clearInterval(this.imageInterval)
   }
 }
 </script>
