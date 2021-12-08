@@ -790,6 +790,8 @@ export default {
       applePay: false,
       metaTitle: null,
       metaDescription: null,
+      imageInterval: null,
+      imageIndex: 0,
       crossSell: {},
       quantityOption: {
         quantity: [],
@@ -1139,7 +1141,6 @@ export default {
     this.isSubscriptionActive = this.hasSubscription
   },
   mounted() {
-    debugger
     const vm = this
     // Create contentful client
     // TODO:
@@ -1292,9 +1293,47 @@ export default {
         varietyPackVariant.priceCurrency = v.priceCurrency
         varietyPackVariant.weight += Number(v.weight)
         varietyPackVariant.weightUnit = v.weightUnit
-        varietyPackVariant.featuredMedia = v.featuredMedia
+        varietyPackVariant.featuredMedia = {}
       })
+
       this.variants.push({ ...varietyPackVariant, price: varietyPackVariant.price.toString() })
+
+      if (this.variants?.length > 2) {
+        // update once before calling settimeout so its available at setInitialVariant()
+        clearInterval(this.imageInterval)
+        this.$set(
+          this.variants[this.variants.length - 1].featuredMedia,
+          'src',
+          this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia.src
+        )
+        this.$set(
+          this.variants[this.variants.length - 1].featuredMedia,
+          'thumbnailSrc',
+          this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia
+            .thumbnailSrc
+        )
+        this.imageIndex++
+        this.imageInterval = setInterval(() => {
+          console.log(
+            'interval',
+            this.variants,
+            this.variants[this.variants.length - 1],
+            this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia.src
+          )
+          this.$set(
+            this.variants[this.variants.length - 1].featuredMedia,
+            'src',
+            this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia.src
+          )
+          this.$set(
+            this.variants[this.variants.length - 1].featuredMedia,
+            'thumbnailSrc',
+            this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia
+              .thumbnailSrc
+          )
+          this.imageIndex++
+        }, 1000)
+      }
     }
 
     this.setInitialVariant()
