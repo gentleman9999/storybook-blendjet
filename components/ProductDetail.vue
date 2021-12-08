@@ -249,6 +249,7 @@
                   <SubscriptionAddToCartButton
                     :product="productData"
                     :variant="currentVariant"
+                    :variants="variants"
                     :metafields="productData.metafields"
                     :all-options-selected="true"
                     :only-one-option="true"
@@ -1001,8 +1002,8 @@ export default {
      */
     setInitialVariant() {
       const urlVariantId = this.$route.query.variant
-      const variantsWithIds = Array.isArray(this.product.variants)
-        ? this.product.variants.map(variant => ({
+      const variantsWithIds = Array.isArray(this.variants)
+        ? this.variants.map(variant => ({
           ...variant,
           formattedId: this.formatVariantId(variant.id)
         }))
@@ -1010,12 +1011,12 @@ export default {
 
       const matchingVariant = variantsWithIds.find(v => v && v.formattedId === urlVariantId)
       matchingVariant &&
-        this.product.variants.forEach((item, i) => {
+        this.variants.forEach((item, i) => {
           if (item.id === matchingVariant.id) this.variantIndex = i
         })
 
       // Set current variant equal to the variant indicated by the param, or the product's first variant.
-      this.currentVariant = matchingVariant || this.product.variants[0]
+      this.currentVariant = matchingVariant || this.variants[0]
     },
     async setProductDetails() {
       this.productDescription = this.page.fields.productDescription
@@ -1138,6 +1139,7 @@ export default {
     this.isSubscriptionActive = this.hasSubscription
   },
   mounted() {
+    debugger
     const vm = this
     // Create contentful client
     // TODO:
@@ -1258,7 +1260,6 @@ export default {
     // Set the product's forms initially selected variant
     // Note: this is run after the contentful data-fetch so that the
     // various media is available for the `currentVariant` watcher.
-    this.setInitialVariant()
 
     this.variants = this.product.variants
       .filter(v => v.availableForSale)
@@ -1273,6 +1274,30 @@ export default {
           plainId: variantId
         }
       })
+    if (vm.media.varietypack) {
+      // has variety pack, add a variety pack variant
+      const varietyPackVariant = {
+        availableForSale: true,
+        compareAtPrice: null,
+        compareAtPriceCurrency: null,
+        id: 'dmFyaWV0eXBhY2s=', // encoded string for 'varietypack'
+        sku: 'variety-pack',
+        title: 'Variety Pack',
+        plainId: 'varietypack',
+        price: 0,
+        weight: 0
+      }
+      this.variants.forEach(v => {
+        varietyPackVariant.price += Number(v.price)
+        varietyPackVariant.priceCurrency = v.priceCurrency
+        varietyPackVariant.weight += Number(v.weight)
+        varietyPackVariant.weightUnit = v.weightUnit
+        varietyPackVariant.featuredMedia = v.featuredMedia
+      })
+      this.variants.push({ ...varietyPackVariant, price: varietyPackVariant.price.toString() })
+    }
+
+    this.setInitialVariant()
   }
 }
 </script>

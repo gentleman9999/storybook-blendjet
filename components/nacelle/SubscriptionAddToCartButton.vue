@@ -83,6 +83,10 @@ export default {
         return {}
       }
     },
+    variants: {
+      type: Array,
+      default: () => []
+    },
     metafields: {
       type: Array,
       default: () => {
@@ -108,7 +112,8 @@ export default {
       subPrice: 0,
       defaultText: `Add to Cart - ${this.displayPrice}`,
       buttonText: `Add to Cart - ${this.displayPrice}`,
-      buttonClass: ''
+      buttonClass: '',
+      allVariants: this.variants.length ? this.variants : this.product.variants
     }
   },
   computed: {
@@ -149,14 +154,30 @@ export default {
         return undefined
       }
       const decodedId = this.decodeBase64VariantId(this.variant.id)
-      const variantSubscriptionPrice =
+      let variantSubscriptionPrice =
         decodedId &&
         this.hasSubscription &&
         this.discountVariantMap &&
         this.discountVariantMap[decodedId]
-      return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
-        ? variantSubscriptionPrice.discount_variant_price
-        : this.variant.price
+
+      if (this.variant.sku === 'variety-pack') {
+        variantSubscriptionPrice = 0
+        this.allVariants.forEach(v => {
+          if (v.availableForSale) {
+            const id = this.decodeBase64VariantId(v.id)
+            if (this.discountVariantMap[id]) {
+              variantSubscriptionPrice += Number(this.discountVariantMap[id].discount_variant_price)
+            }
+          }
+        })
+      }
+      if (this.variant.sku !== 'variety-pack') {
+        return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
+          ? variantSubscriptionPrice.discount_variant_price
+          : this.variant.price
+      } else {
+        return variantSubscriptionPrice || this.variant.price
+      }
     }
   },
   watch: {
@@ -167,6 +188,9 @@ export default {
       if (newValue.id && newValue.id !== oldValue.id) {
         this.getDisplayPrice()
       }
+    },
+    variants() {
+      this.allVariants = this.variants.length ? this.variants : this.product.variants
     },
     subscriptionPrice(newValue, oldValue) {
       this.getDisplayPrice()
@@ -190,6 +214,25 @@ export default {
       'getLineItems'
     ]),
     ...mapMutations('cart', ['showCart']),
+    getSubscriptionPrice(variant) {
+      if (!variant) {
+        return undefined
+      }
+      const decodedId = this.decodeBase64VariantId(variant.id)
+      const variantSubscriptionPrice =
+        decodedId &&
+        this.hasSubscription &&
+        this.discountVariantMap &&
+        this.discountVariantMap[decodedId]
+
+      if (variant.sku !== 'variety-pack') {
+        return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
+          ? variantSubscriptionPrice.discount_variant_price
+          : variant.price
+      } else {
+        return variantSubscriptionPrice || variant.price
+      }
+    },
     decodeBase64VariantId(encodedId) {
       // This is wrapped in a try/catch because in some instances it's attempted to be run during
       // the nuxt build (somehow in advance of the browser), therefore the `window.atob` method
@@ -217,7 +260,10 @@ export default {
         JSON.stringify([
           {
             Price: _vprice,
-            Tag: this.decodeBase64VariantId(this.variant.id)
+            Tag:
+              this.variant.sku !== 'variety-pack'
+                ? this.decodeBase64VariantId(this.variant.id)
+                : this.decodeBase64VariantId(this.allVariants?.[0]?.id)
           }
         ])
       )
@@ -303,20 +349,41 @@ export default {
             value: 'day'
           }
         ]
+        if (this.variant.sku === 'variety-pack') {
+          this.allVariants &&
+            this.allVariants.forEach(v => {
+              if (v.availableForSale && v.sku !== 'variety-pack') {
+                const lineItem = {
+                  image: this.product.featuredMedia,
+                  title: this.product.title,
+                  variant: subscribed ? { ...v, price: this.getSubscriptionPrice(v) } : v,
+                  quantity: this.quantity || 1,
+                  productId: this.product.id,
+                  handle: this.product.handle,
+                  vendor: this.product.vendor,
+                  tags: this.product.tags,
+                  metafields: subscribed ? [...rechargeFields] : []
+                }
 
-        const lineItem = {
-          image: this.product.featuredMedia,
-          title: this.product.title,
-          variant: subscribed ? { ...this.variant, price: this.subscriptionPrice } : this.variant,
-          quantity: this.quantity || 1,
-          productId: this.product.id,
-          handle: this.product.handle,
-          vendor: this.product.vendor,
-          tags: this.product.tags,
-          metafields: subscribed ? [...rechargeFields] : []
+                this.addLineItem(lineItem)
+              }
+            })
+        } else {
+          const lineItem = {
+            image: this.product.featuredMedia,
+            title: this.product.title,
+            variant: subscribed ? { ...this.variant, price: this.subscriptionPrice } : this.variant,
+            quantity: this.quantity || 1,
+            productId: this.product.id,
+            handle: this.product.handle,
+            vendor: this.product.vendor,
+            tags: this.product.tags,
+            metafields: subscribed ? [...rechargeFields] : []
+          }
+
+          this.addLineItem(lineItem)
         }
 
-        this.addLineItem(lineItem)
         this.setButtonText()
         this.showCart()
 
@@ -355,32 +422,69 @@ export default {
         .toString('binary')
         .split('/')
         .pop()
-      window.dataLayer.push({
-        event: 'dl_add_to_cart',
-        event_id: uuid,
-        ecommerce: {
-          currencyCode: this.product.priceRange.currencyCode,
-          add: {
-            actionField: { list: referrer },
-            products: [
-              {
-                name: this.product.title.replace("'", ''),
-                id: (variant && variant.sku) || '',
-                product_id: productId,
-                variant_id: (variant && variantId) || '',
-                image: this.product.featuredMedia.src,
-                price: variant.price,
-                brand: this.product.vendor.replace("'", ''),
-                variant: (variant && variant.title && variant.title.replace("'", '')) || '',
-                category: this.product.productType,
-                inventory: this.quantity,
-                list: referrer,
-                source: source
-              }
-            ]
+      if (variant.sku !== 'variety-pack') {
+        window.dataLayer.push({
+          event: 'dl_add_to_cart',
+          event_id: uuid,
+          ecommerce: {
+            currencyCode: this.product.priceRange.currencyCode,
+            add: {
+              actionField: { list: referrer },
+              products: [
+                {
+                  name: this.product.title.replace("'", ''),
+                  id: (variant && variant.sku) || '',
+                  product_id: productId,
+                  variant_id: (variant && variantId) || '',
+                  image: this.product.featuredMedia.src,
+                  price: variant.price,
+                  brand: this.product.vendor.replace("'", ''),
+                  variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                  category: this.product.productType,
+                  inventory: this.quantity,
+                  list: referrer,
+                  source: source
+                }
+              ]
+            }
           }
-        }
-      })
+        })
+      } else {
+        this.allVariants.forEach(v => {
+          if (v.availableForSale && v.sku !== 'variety-pack') {
+            variantId = Buffer.from(v.id, 'base64')
+              .toString('binary')
+              .split('/')
+              .pop()
+            window.dataLayer.push({
+              event: 'dl_add_to_cart',
+              event_id: uuid,
+              ecommerce: {
+                currencyCode: this.product.priceRange.currencyCode,
+                add: {
+                  actionField: { list: referrer },
+                  products: [
+                    {
+                      name: this.product.title.replace("'", ''),
+                      id: (v && v.sku) || '',
+                      product_id: productId,
+                      variant_id: (v && variantId) || '',
+                      image: this.product.featuredMedia.src,
+                      price: v.price,
+                      brand: this.product.vendor.replace("'", ''),
+                      variant: (v && v.title && v.title.replace("'", '')) || '',
+                      category: this.product.productType,
+                      inventory: this.quantity,
+                      list: referrer,
+                      source: source
+                    }
+                  ]
+                }
+              }
+            })
+          }
+        })
+      }
       // console.log('wdl_atc:', window.dataLayer)
     }
   }
