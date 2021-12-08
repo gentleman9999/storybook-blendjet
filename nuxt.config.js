@@ -191,7 +191,8 @@ export default {
     '~/plugins/pinterest-pixel.client.js',
     '~/plugins/snap-pixel.client.js',
     '~/plugins/vue-mq.js',
-    '~/plugins/nuxt-jsonld'
+    '~/plugins/nuxt-jsonld',
+    { src: '~/plugins/shopifyCheckout.js', mode: 'client' }
   ],
 
   router: {
@@ -248,7 +249,7 @@ export default {
   },
 
   gtm: {
-    id: 'GTM-NLRSLWR',
+    id: 'GTM-NLRSLWR'
 
     // uncomment these for debugging on localhost
     // enabled: true,
@@ -287,7 +288,10 @@ export default {
   publicRuntimeConfig: {
     gtm: {
       id: process.env.GOOGLE_TAG_MANAGER_ID
-    }
+    },
+    myshopifyDomain: process.env.SHOPIFY_DOMAIN,
+    shopifyStorefrontCheckoutToken: process.env.STOREFRONT_CHECKOUT_TOKEN,
+    shopifyStorefrontApiVersion: '2021-07'
   },
 
   polyfill: {
