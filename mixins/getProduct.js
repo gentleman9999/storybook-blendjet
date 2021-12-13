@@ -12,79 +12,82 @@ export function getBundledProductsFromFile(
   bundleCollectionMedia = []
 ) {
   const bundlesPromise = []
-  bundles.forEach((bundle, index) => {
-    let productHandle = bundle?.fields?.product?.fields?.handle
-    if (isVarietyPack) {
-      productHandle = bundle?.fields?.handle
-    }
-    const variantId = bundle?.fields?.variant?.fields?.title
-    bundlesPromise.push(
-      new Promise((resolve, reject) => {
-        try {
-          const file = fs.readFileSync(
-            `./static/data/products/${productHandle}--${productObj.locale}/static.json`,
-            'utf-8'
-          )
-          const bundledProduct = JSON.parse(file)
-          let variantsAvailableForSale = 0
-          if (bundledProduct?.variants?.length) {
-            bundledProduct.variants = bundledProduct.variants.filter(variant => {
-              if (variant.availableForSale) {
-                variantsAvailableForSale++
+  bundles &&
+    bundles.forEach((bundle, index) => {
+      let productHandle = bundle?.fields?.product?.fields?.handle
+      if (isVarietyPack) {
+        productHandle = bundle?.fields?.handle
+      }
+      const variantId = bundle?.fields?.variant?.fields?.title
+      bundlesPromise.push(
+        new Promise((resolve, reject) => {
+          try {
+            const file = fs.readFileSync(
+              `./static/data/products/${productHandle}--${productObj.locale}/static.json`,
+              'utf-8'
+            )
+            const bundledProduct = JSON.parse(file)
+            let variantsAvailableForSale = 0
+            if (bundledProduct?.variants?.length) {
+              bundledProduct.variants = bundledProduct.variants.filter(variant => {
+                if (variant.availableForSale) {
+                  variantsAvailableForSale++
+                  return variant
+                }
+              })
+            }
+            let bundledVariant = bundledProduct?.variants?.filter(variant => {
+              if (
+                variant &&
+                variant?.title?.toLowerCase()?.replace(/\s/g, '') === variantId?.toLowerCase() &&
+                variant?.availableForSale
+              ) {
                 return variant
               }
             })
-          }
-          let bundledVariant = bundledProduct?.variants?.filter(variant => {
+            if (!bundledVariant?.length) {
+              // Either variant is not available for sale or the product has Single variant.
+              // Get the first variant that is available for sale
+              bundledVariant = bundledProduct?.variants?.filter(variant => {
+                if (variant && variant?.availableForSale) {
+                  return variant
+                }
+              })
+            }
             if (
-              variant &&
-              variant?.title?.toLowerCase()?.replace(/\s/g, '') === variantId?.toLowerCase() &&
-              variant?.availableForSale
+              bundledProduct?.availableForSale &&
+              bundledVariant?.length &&
+              bundledVariant[0]?.availableForSale &&
+              checkProductShippingEligibility(bundledProduct)
             ) {
-              return variant
-            }
-          })
-          if (!bundledVariant?.length) {
-            // Either variant is not available for sale or the product has Single variant.
-            // Get the first variant that is available for sale
-            bundledVariant = bundledProduct?.variants?.filter(variant => {
-              if (variant && variant?.availableForSale) {
-                return variant
+              if (!isVarietyPack) {
+                // push selected variant or first available variant for sale if no variant was selected from contentful
+                return resolve({
+                  product: bundledProduct,
+                  variant: bundledVariant.length ? bundledVariant[0] : {},
+                  title: title,
+                  clickAction: bundle?.fields?.clickAction,
+                  media: bundle?.fields?.media,
+                  variantsAvailableForSale: variantsAvailableForSale
+                })
+              } else {
+                // push all varients available for sale
+                return resolve({
+                  product: bundledProduct,
+                  variants: bundledVariant,
+                  title: title,
+                  media: bundleCollectionMedia?.[index]
+                })
               }
-            })
-          }
-          if (
-            bundledProduct?.availableForSale &&
-            bundledVariant?.length &&
-            bundledVariant[0]?.availableForSale &&
-            checkProductShippingEligibility(bundledProduct)
-          ) {
-            if (!isVarietyPack) {
-              // push selected variant or first available variant for sale if no variant was selected from contentful
-              return resolve({
-                product: bundledProduct,
-                variant: bundledVariant.length ? bundledVariant[0] : {},
-                title: title,
-                clickAction: bundle?.fields?.clickAction,
-                media: bundle?.fields?.media,
-                variantsAvailableForSale: variantsAvailableForSale
-              })
             } else {
-              // push all varients available for sale
-              return resolve({
-                product: bundledProduct,
-                variants: bundledVariant,
-                title: title,
-                media: bundleCollectionMedia?.[index]
-              })
+              return resolve({})
             }
+          } catch (err) {
+            reject(err)
           }
-        } catch (err) {
-          reject(err)
-        }
-      })
-    )
-  })
+        })
+      )
+    })
   return bundlesPromise
 }
 
@@ -96,70 +99,72 @@ export function getbundledProductsFromNacelle(
   bundleCollectionMedia = []
 ) {
   const bundledProducts = []
-  bundles.forEach(async (bundle, index) => {
-    let productHandle = bundle?.fields?.product?.fields?.handle
-    if (isVarietyPack) {
-      productHandle = bundle?.fields?.handle
-    }
-    const variantId = bundle?.fields?.variant?.fields?.title
-    let bundledProduct = allBundledProductList.filter(item => {
-      return productHandle === item.handle
-    })
-    bundledProduct = bundledProduct.length ? bundledProduct[0] : {}
-    let variantsAvailableForSale = 0
-    if (bundledProduct?.variants?.length) {
-      bundledProduct.variants = bundledProduct.variants.filter(variant => {
-        if (variant.availableForSale) {
-          variantsAvailableForSale++
+  if (bundles?.length) {
+    bundles.forEach(async (bundle, index) => {
+      let productHandle = bundle?.fields?.product?.fields?.handle
+      if (isVarietyPack) {
+        productHandle = bundle?.fields?.handle
+      }
+      const variantId = bundle?.fields?.variant?.fields?.title
+      let bundledProduct = allBundledProductList.filter(item => {
+        return productHandle === item.handle
+      })
+      bundledProduct = bundledProduct.length ? bundledProduct[0] : {}
+      let variantsAvailableForSale = 0
+      if (bundledProduct?.variants?.length) {
+        bundledProduct.variants = bundledProduct.variants.filter(variant => {
+          if (variant.availableForSale) {
+            variantsAvailableForSale++
+            return variant
+          }
+        })
+      }
+      let bundledVariant = bundledProduct?.variants?.filter(variant => {
+        if (
+          variant &&
+          variant?.title?.toLowerCase()?.replace(/\s/g, '') === variantId?.toLowerCase() &&
+          variant?.availableForSale
+        ) {
           return variant
         }
       })
-    }
-    let bundledVariant = bundledProduct?.variants?.filter(variant => {
+      if (!bundledVariant?.length) {
+        // Either variant is not available for sale or the product has Single variant.
+        // Get the variants that is available for sale
+        bundledVariant = bundledProduct?.variants?.filter(variant => {
+          if (variant && variant?.availableForSale) {
+            return variant
+          }
+        })
+      }
       if (
-        variant &&
-        variant?.title?.toLowerCase()?.replace(/\s/g, '') === variantId?.toLowerCase() &&
-        variant?.availableForSale
+        bundledProduct?.availableForSale &&
+        bundledVariant?.length &&
+        bundledVariant[0]?.availableForSale &&
+        checkProductShippingEligibility(bundledProduct)
       ) {
-        return variant
+        if (!isVarietyPack) {
+          // push selected variant or first available variant for sale if no variant was selected from contentful
+          bundledProducts.push({
+            product: bundledProduct,
+            variant: bundledVariant.length ? bundledVariant[0] : {},
+            title: title,
+            clickAction: bundle?.fields?.clickAction,
+            media: bundle?.fields?.media,
+            variantsAvailableForSale: variantsAvailableForSale
+          })
+        } else {
+          // push all varients available for sale
+          bundledProducts.push({
+            product: bundledProduct,
+            variants: bundledVariant,
+            title: title,
+            media: bundleCollectionMedia?.[index]
+          })
+        }
       }
     })
-    if (!bundledVariant?.length) {
-      // Either variant is not available for sale or the product has Single variant.
-      // Get the variants that is available for sale
-      bundledVariant = bundledProduct?.variants?.filter(variant => {
-        if (variant && variant?.availableForSale) {
-          return variant
-        }
-      })
-    }
-    if (
-      bundledProduct?.availableForSale &&
-      bundledVariant?.length &&
-      bundledVariant[0]?.availableForSale &&
-      checkProductShippingEligibility(bundledProduct)
-    ) {
-      if (!isVarietyPack) {
-        // push selected variant or first available variant for sale if no variant was selected from contentful
-        bundledProducts.push({
-          product: bundledProduct,
-          variant: bundledVariant.length ? bundledVariant[0] : {},
-          title: title,
-          clickAction: bundle?.fields?.clickAction,
-          media: bundle?.fields?.media,
-          variantsAvailableForSale: variantsAvailableForSale
-        })
-      } else {
-        // push all varients available for sale
-        bundledProducts.push({
-          product: bundledProduct,
-          variants: bundledVariant,
-          title: title,
-          media: bundleCollectionMedia?.[index]
-        })
-      }
-    }
-  })
+  }
   return bundledProducts
 }
 
@@ -227,13 +232,21 @@ export default (config = {}) => {
           // get product data for bundled products
           const bundles = page?.fields?.bundles?.fields?.bundleGroup
           try {
-            const resolvedBundles = await Promise.all(
-              getBundledProductsFromFile(
-                bundles,
-                productObj,
-                fs,
-                page?.fields?.bundles?.fields?.title
+            let resolvedBundles
+            if (bundles?.length) {
+              resolvedBundles = await Promise.all(
+                getBundledProductsFromFile(
+                  bundles,
+                  productObj,
+                  fs,
+                  page?.fields?.bundles?.fields?.title
+                )
               )
+            } else {
+              resolvedBundles = []
+            }
+            resolvedBundles = resolvedBundles.filter(
+              bundleItem => bundleItem.title && bundleItem.product
             )
             productObj.bundles = resolvedBundles
           } catch (err) {
@@ -246,15 +259,23 @@ export default (config = {}) => {
           const bundles = page?.fields?.bundles?.fields?.bundleCollection
           const bundleCollectionMedia = page?.fields?.bundles?.fields?.bundleCollectionMedia
           try {
-            const resolvedBundles = await Promise.all(
-              getBundledProductsFromFile(
-                bundles,
-                productObj,
-                fs,
-                page?.fields?.bundles?.fields?.title,
-                true,
-                bundleCollectionMedia
+            let resolvedBundles
+            if (bundles?.length) {
+              resolvedBundles = await Promise.all(
+                getBundledProductsFromFile(
+                  bundles,
+                  productObj,
+                  fs,
+                  page?.fields?.bundles?.fields?.title,
+                  true,
+                  bundleCollectionMedia
+                )
               )
+            } else {
+              resolvedBundles = []
+            }
+            resolvedBundles = resolvedBundles.filter(
+              bundleItem => bundleItem.title && bundleItem.product
             )
             productObj.bundleVarietyPack = resolvedBundles
           } catch (err) {
@@ -277,7 +298,12 @@ export default (config = {}) => {
                   variant?.fields?.bundles?.fields?.title
                 )
               ).then(res => {
-                productObj.variantSpecificBundles[variant.fields.title.toLowerCase()] = res
+                const resolvedBundles = res.filter(
+                  bundleItem => bundleItem.title && bundleItem.product
+                )
+                productObj.variantSpecificBundles[
+                  variant.fields.title.toLowerCase()
+                ] = resolvedBundles
               })
             }
             if (bundleCollection?.length) {
@@ -291,7 +317,12 @@ export default (config = {}) => {
                   bundleCollectionMedia
                 )
               ).then(res => {
-                productObj.variantBundleVarietyPack[variant.fields.title.toLowerCase()] = res
+                const resolvedBundles = res.filter(
+                  bundleItem => bundleItem.title && bundleItem.product
+                )
+                productObj.variantBundleVarietyPack[
+                  variant.fields.title.toLowerCase()
+                ] = resolvedBundles
               })
             }
           })
@@ -305,25 +336,31 @@ export default (config = {}) => {
           .catch(() => {
             productObj.noProductData = true
           })
-        if (page?.fields?.bundles?.fields?.bundleGroup?.length) {
+
+        if (
+          page?.fields?.bundles?.fields?.bundleGroup?.length ||
+          page?.fields?.bundles?.fields?.bundleCollection?.length
+        ) {
           // get product data for bundled products
           const productHandles = []
           const bundles = page?.fields?.bundles?.fields?.bundleGroup
           const bundleCollection = page?.fields?.bundles?.fields?.bundleCollection
           const bundleCollectionMedia = page?.fields?.bundles?.fields?.bundleCollectionMedia
-          bundles.forEach(bundle => {
-            // Get productIds of the main product bundle
-            if (bundle?.fields?.product?.fields?.handle) {
-              productHandles.push(bundle?.fields?.product?.fields?.handle)
-            }
-          })
-          bundleCollection.forEach(product => {
-            // Get productIds of the main product bundle variety pack
-            const handle = product?.fields?.handle
-            if (handle && productHandles.indexOf(handle) === -1) {
-              productHandles.push(handle)
-            }
-          })
+          bundles &&
+            bundles.forEach(bundle => {
+              // Get productIds of the main product bundle
+              if (bundle?.fields?.product?.fields?.handle) {
+                productHandles.push(bundle?.fields?.product?.fields?.handle)
+              }
+            })
+          bundleCollection &&
+            bundleCollection.forEach(product => {
+              // Get productIds of the main product bundle variety pack
+              const handle = product?.fields?.handle
+              if (handle && productHandles.indexOf(handle) === -1) {
+                productHandles.push(handle)
+              }
+            })
           // get productIds of variant specific bundles
           if (page?.fields?.variants?.length) {
             page.fields.variants.forEach(variant => {
