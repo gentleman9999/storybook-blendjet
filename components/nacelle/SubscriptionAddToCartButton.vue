@@ -113,6 +113,7 @@ export default {
       defaultText: `Add to Cart - ${this.displayPrice}`,
       buttonText: `Add to Cart - ${this.displayPrice}`,
       buttonClass: '',
+      priceSaved: {},
       allVariants: this.variants.length ? this.variants : this.product.variants
     }
   },
@@ -214,6 +215,25 @@ export default {
       'getLineItems'
     ]),
     ...mapMutations('cart', ['showCart']),
+
+    getConfigURL(price) {
+      let config = null
+      if (document.cookie.includes('_rchcur')) {
+        config = {
+          method: 'get',
+          url:
+            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
+            document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
+            `&MerchantPrices=${price}`
+        }
+      } else {
+        config = {
+          method: 'get',
+          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+        }
+      }
+      return config
+    },
     getSubscriptionPrice(variant) {
       if (!variant) {
         return undefined
@@ -245,10 +265,87 @@ export default {
       }
       return decodedId
     },
+
+    async getVarietyPackDisplayPrice() {
+      if (!this.product.availableForSale) {
+        return
+      }
+      let currency = '$'
+      let currencyPosition = 'left'
+      let fetchedPrice = false
+      let totalPrice = 0
+      for (let i = 0; i < this.allVariants.length; i++) {
+        const variant = this.allVariants[i]
+        if (variant.availableForSale && variant.sku !== 'variety-pack') {
+          const _vprice =
+            this.hasSubscription && this.isSubscriptionOn && this.getSubscriptionPrice(variant)
+              ? this.getSubscriptionPrice(variant)
+              : variant.price
+          const price = encodeURIComponent(
+            JSON.stringify([
+              {
+                Price: _vprice,
+                Tag: this.decodeBase64VariantId(variant.id)
+              }
+            ])
+          )
+          const config = this.getConfigURL(price)
+          let response = {}
+          let foundPrice = false
+          if (this.priceSaved[_vprice]) {
+            response = this.priceSaved[_vprice]
+            foundPrice = true
+          } else {
+            await Axios(config)
+              .then(res => {
+                foundPrice = true
+                response = res
+                this.priceSaved[_vprice] = res
+              })
+              .catch(res => {
+                console.error('Currency Request Failed', res)
+                totalPrice += Number(variant.price) * this.quantity
+              })
+          }
+          if (foundPrice) {
+            if (!response.data.ConsumerPrices[0]) {
+              currency = response.data.Symbol
+              totalPrice += Number(_vprice) * this.quantity
+            } else {
+              if (response.data.Symbol == null) {
+                currency = response.data.Currency
+                currencyPosition = 'right'
+                totalPrice += Number(response.data.ConsumerPrices[0]) * this.quantity
+              } else {
+                currency = response.data.Symbol
+                totalPrice += Number(response.data.ConsumerPrices[0]) * this.quantity
+              }
+            }
+          }
+          fetchedPrice = true
+        }
+      }
+
+      if (fetchedPrice) {
+        if (currencyPosition === 'left') {
+          this.subPrice = currency + Number(totalPrice).toFixed(2)
+          this.defaultText = `Add to Cart - ${this.subPrice}`
+          this.buttonText = `Add to Cart - ${this.subPrice}`
+        } else {
+          this.subPrice = totalPrice + currency
+          this.defaultText = `Add to Cart - ${this.subPrice}`
+          this.buttonText = `Add to Cart - ${this.subPrice}`
+        }
+      }
+    },
     async getDisplayPrice() {
       // Bail if no variant is specified
       if (!this.variant || !this.variant.id) return undefined
 
+      if (this.variant.sku === 'variety-pack') {
+        this.getVarietyPackDisplayPrice()
+        return
+      }
       const _vprice =
         this.hasSubscription && this.isSubscriptionOn && this.subscriptionPrice
           ? this.subscriptionPrice
@@ -260,57 +357,49 @@ export default {
         JSON.stringify([
           {
             Price: _vprice,
-            Tag:
-              this.variant.sku !== 'variety-pack'
-                ? this.decodeBase64VariantId(this.variant.id)
-                : this.decodeBase64VariantId(this.allVariants?.[0]?.id)
+            Tag: this.decodeBase64VariantId(this.variant.id)
           }
         ])
       )
-
-      let config
-
       // START OF RYAN MOD to override currency
-
       // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
-      if (document.cookie.includes('_rchcur')) {
-        config = {
-          method: 'get',
-          url:
-            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
-            document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
-            `&MerchantPrices=${price}`
-        }
+      // in getConfigURL() function
+
+      const config = this.getConfigURL(price)
+      let response = {}
+      let foundPrice = false
+      if (this.priceSaved[_vprice]) {
+        response = this.priceSaved[_vprice]
+        foundPrice = true
       } else {
-        config = {
-          method: 'get',
-          url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
+        await Axios(config)
+          .then(res => {
+            foundPrice = true
+            response = res
+            this.priceSaved[_vprice] = res
+          })
+          .catch(res => {
+            console.error('Currency Request Failed', res)
+            this.subPrice = `$${Number(this.variant.price) * this.quantity}`
+          })
+      }
+      if (foundPrice) {
+        if (!response.data.ConsumerPrices[0]) {
+          vm.subPrice = `${response.data.Symbol}${(Number(_vprice) * this.quantity).toFixed(2)}`
+        } else {
+          if (response.data.Symbol == null) {
+            vm.subPrice = `${(Number(response.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)} ${
+              response.data.Currency
+            }`
+          } else {
+            vm.subPrice = `${response.data.Symbol}${(
+              Number(response.data.ConsumerPrices[0]) * vm.quantity
+            ).toFixed(2)}`
+          }
         }
       }
-      // END OF RYAN MOD
-
-      await Axios(config)
-        .then(res => {
-          if (!res.data.ConsumerPrices[0]) {
-            vm.subPrice = `${res.data.Symbol}${(Number(_vprice) * this.quantity).toFixed(2)}`
-          } else {
-            if (res.data.Symbol == null) {
-              vm.subPrice = `${(Number(res.data.ConsumerPrices[0]) * vm.quantity).toFixed(2)} ${
-                res.data.Currency
-              }`
-            } else {
-              vm.subPrice = `${res.data.Symbol}${(
-                Number(res.data.ConsumerPrices[0]) * vm.quantity
-              ).toFixed(2)}`
-            }
-          }
-          this.defaultText = `Add to Cart - ${vm.subPrice}`
-          this.buttonText = `Add to Cart - ${vm.subPrice}`
-        })
-        .catch(res => {
-          console.error('Currency Request Failed', res)
-          this.subPrice = `$${this.variant.price}`
-        })
+      this.defaultText = `Add to Cart - ${vm.subPrice}`
+      this.buttonText = `Add to Cart - ${vm.subPrice}`
     },
     setButtonText() {
       if (

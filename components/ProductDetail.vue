@@ -1321,12 +1321,6 @@ export default {
         )
         this.imageIndex++
         this.imageInterval = setInterval(() => {
-          console.log(
-            'interval',
-            this.variants,
-            this.variants[this.variants.length - 1],
-            this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia.src
-          )
           this.$set(
             this.variants[this.variants.length - 1].featuredMedia,
             'src',

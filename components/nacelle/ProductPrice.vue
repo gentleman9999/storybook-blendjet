@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 // import VueCurrencyFilter from 'vue-currency-filter'
 import axios from 'axios'
 // Vue.use(VueCurrencyFilter)
@@ -62,7 +62,7 @@ export default {
         return
       }
 
-      let priceData = [
+      const priceData = [
         {
           Price: vm.price
         }
@@ -75,7 +75,7 @@ export default {
         if (this.strikethrough) {
           decodedVariantId += ':compare'
         }
-        priceData[0]['Tag'] = decodedVariantId
+        priceData[0].Tag = decodedVariantId
       }
       const price = encodeURIComponent(JSON.stringify(priceData))
       /*
@@ -85,14 +85,14 @@ export default {
         }
 */
 
-      //START OF RYAN MOD to override currency
+      // START OF RYAN MOD to override currency
 
-      //if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
+      // if cookie for _rchcur is found - set in /static/scripts/currencycookie.js
       if (document.cookie.includes('_rchcur')) {
         var config = {
           method: 'get',
           url:
-            `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=` +
+            'https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&Currency=' +
             document.cookie.match('(^|;)\\s*' + '_rchcur' + '\\s*=\\s*([^;]+)').pop() +
             `&MerchantPrices=${price}`
         }
@@ -102,7 +102,7 @@ export default {
           url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
         }
       }
-      //END OF RYAN MOD
+      // END OF RYAN MOD
 
       await axios(config)
         .then(res => {
