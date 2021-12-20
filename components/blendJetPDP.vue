@@ -1143,7 +1143,7 @@ export default {
     ]),
     ...mapActions('checkout', ['processCheckout']),
     addHashToLocation() {
-      window.history.pushState(
+      window.history.replaceState(
         {},
         null,
         this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
