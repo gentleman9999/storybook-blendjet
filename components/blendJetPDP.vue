@@ -96,6 +96,12 @@
                     width: 2100
                   })
                 "
+                @mousedown.prevent="dragStart"
+                @mousemove.prevent="dragProgress"
+                @mouseleave.prevent="dragExit"
+                @mouseup.prevent="dragEnd(incrementVariant, decrementVariant)"
+                v-touch:swipe.right="decrementVariant"
+                v-touch:swipe.left="incrementVariant"
               />
             </picture>
           </transition>
@@ -999,6 +1005,7 @@ import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
+import carouselDragEvents from '~/mixins/carouselDragEvents'
 import ShippingTime from '~/components/shippingTime'
 import ProductMediaTile from '~/components/ProductMediaTile'
 
@@ -1092,7 +1099,7 @@ export default {
     ProductMediaTile,
     VideoContainer
   },
-  mixins: [imageOptimize, availableOptions, allOptionsSelected],
+  mixins: [imageOptimize, availableOptions, allOptionsSelected, carouselDragEvents],
   directives: {
     clickOutside: vClickOutside.directive
   },

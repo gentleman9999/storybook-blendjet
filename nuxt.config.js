@@ -193,6 +193,7 @@ export default {
     '~/plugins/snap-pixel.client.js',
     '~/plugins/vue-mq.js',
     '~/plugins/nuxt-jsonld',
+    '~/plugins/vueTouchEvents',
     { src: '~/plugins/shopifyCheckout.js', mode: 'client' }
   ],
 
