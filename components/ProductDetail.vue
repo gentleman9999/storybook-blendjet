@@ -981,7 +981,7 @@ export default {
      * TODO: This should be done using the vue-router...
      */
     addHashToLocation() {
-      window.history.pushState(
+      window.history.replaceState(
         {},
         null,
         this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
