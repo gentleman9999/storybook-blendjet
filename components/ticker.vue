@@ -93,9 +93,6 @@
   <img class="ticker__img" src="/images/asSeenOn/Parents.png" alt="Parents Logo"/>
 </span>
 <span class="ticker__item">
-  <img class="ticker__img" src="/images/asSeenOn/Elle.png" alt="Elle Logo"/>
-</span>
-<span class="ticker__item">
   <img class="ticker__img" src="/images/asSeenOn/Good-Housekeeping.png" alt="Good Housekeeping Logo"/>
 </span>
 <span class="ticker__item">

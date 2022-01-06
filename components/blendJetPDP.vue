@@ -1150,7 +1150,7 @@ export default {
     ]),
     ...mapActions('checkout', ['processCheckout']),
     addHashToLocation() {
-      window.history.pushState(
+      window.history.replaceState(
         {},
         null,
         this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
@@ -1398,7 +1398,7 @@ export default {
       })
     },
     updateBundle() {
-      const title = this.currentVariant.title.toLowerCase()
+      const title = this.currentVariant.title.toLowerCase()?.replace(/\s/g, '')
       if (this?.variantSpecificBundles?.[title]?.length) {
         this.selectedBundle = cloneDeep(this?.variantSpecificBundles[title])
         this.bundleTitle = this?.variantSpecificBundles?.[title]?.[0].title
@@ -1671,7 +1671,9 @@ export default {
       this.updateBundle()
     },
     quantity() {
-      this.elevarProductView()
+      // Outsmartly discussed with John and both agreed it doesn't make sense to fire a "ViewContent"
+      // event just because quantity changed. Removing this as noise.
+      // this.elevarProductView())
     }
   },
 
@@ -1811,7 +1813,7 @@ export default {
   flex-flow: row nowrap;
   min-height: 900px;
   &.has-bundle {
-    min-height: 980px;
+    min-height: 1070px;
     @include respond-to('small') {
       min-height: auto;
     }
@@ -1838,7 +1840,7 @@ export default {
                                   supported by Chrome, Edge, Opera and Firefox */
 
     &.has-bundle {
-      height: 980px;
+      height: 1070px;
       @include respond-to('small') {
         height: 400px;
       }
@@ -1882,7 +1884,7 @@ export default {
       object-position: center;
       width: 100%;
       &.has-bundle {
-        height: 980px;
+        height: 1070px;
         @include respond-to('small') {
           height: 400px;
         }
@@ -1904,7 +1906,7 @@ export default {
     padding: 0 75px 30px 75px;
     height: 900px;
     &.has-bundle {
-      height: 980px;
+      height: 1070px;
       @include respond-to('small') {
         height: auto;
       }
@@ -2104,7 +2106,7 @@ export default {
       padding: 10px;
       position: relative;
       width: 370px;
-      margin: 20px auto auto auto;
+      margin: 20px auto 5px auto;
       &__title {
         font-weight: bold;
         color: $primary-purple;

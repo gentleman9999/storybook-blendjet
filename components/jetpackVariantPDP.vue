@@ -556,7 +556,7 @@
 
       <div class="jetpacks">
         <!-- TODO: Make this dynamic using contentful -->
-        <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
+        <JetpackCrossSell :product="product" :heading="'You may also like these'" />
       </div>
     </div>
   </transition>
@@ -866,7 +866,9 @@ export default {
       this.elevarProductView()
     },
     quantity() {
-      this.elevarProductView()
+      // Outsmartly discussed with John and both agreed it doesn't make sense to fire a "ViewContent"
+      // event just because quantity changed. Removing this as noise.
+      // this.elevarProductView()
     }  
   },
   

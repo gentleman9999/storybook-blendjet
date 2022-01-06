@@ -1,30 +1,30 @@
 <template>
-  <div class="quantity-container">
+  <div class="dropdown-container">
     <div class="mobile-select-container" v-if="isMobile">
       <div class="select-cover" role="button">
-        <span class="select-cover__selected">{{ quantity }}</span>
+        <span class="option-label" style="margin-right:7px">{{ label }}:</span>
+        <span class="select-cover__selected">{{ formatTitle(items[currentOption].title) }}</span>
         <CaretDown :styleObj="{ marginLeft: '16px', marginBottom: '3px' }" :color="'#FFF'" />
       </div>
-      <select
-        class="mobile-select"
-        @change="updateQuantity(selectQuantity)"
-        v-model="selectQuantity"
-      >
-        <option v-for="(item, i) in items" :key="i" :value="item">{{ item }}</option>
+      <select class="mobile-select" @change="updateSelect(selectModel)" v-model="selectModel">
+        <option v-for="(item, i) in items" :key="i" :value="i">{{
+          formatTitle(item.title)
+        }}</option>
       </select>
     </div>
-
-    <div class="dropdown-cart" tabindex="0" @focusout="visible = false" v-if="!isMobile">
+    <div
+      class="dropdown-cart"
+      tabindex="0"
+      @focusout="visible = false"
+      role="menu"
+      v-if="!isMobile"
+    >
       <transition name="fade">
         <ul :is="type.main" v-if="visible" class="dropdown-content-cart">
-          <li
-            :is="type.item"
-            v-for="(item, i) in items"
-            :key="i"
-            @click.prevent="updateQuantity(item)"
-          >
+          <li :is="type.item" class="cart-title">{{ label }}</li>
+          <li :is="type.item" v-for="(item, i) in items" :key="i" @click.prevent="updateSelect(i)">
             <span class="check-selected-container">
-              <span class="check-selected" v-if="item === quantity">
+              <span class="check-selected" v-if="items[currentOption].title === item.title">
                 <svg
                   width="16px"
                   height="11px"
@@ -33,7 +33,6 @@
                   xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
                 >
-                  <title>Right</title>
                   <g id="PDP" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                     <g
                       id="D-BlendJet-PDP-BlendJet"
@@ -66,20 +65,20 @@
                 </svg>
               </span>
             </span>
-            <span class="options-cart">{{ item }}</span>
+            <span class="options-cart">{{ formatTitle(item.title) }}</span>
           </li>
           <li :is="type.item" class="selected-option">
-            <span class="swatch-container"></span><span class="options-cart">{{ quantity }}</span>
-            <span class="caret-container"
-              ><CaretDown :styleObj="{ marginRight: '10px', marginLeft: '15px' }"
-            /></span>
+            <div class="swatch-container"></div>
+            <div class="options-cart">{{ formatTitle(items[currentOption].title) }}</div>
+            <div class="caret-container"><CaretDown :styleObj="{ marginRight: '30px' }" /></div>
           </li>
         </ul>
       </transition>
 
       <div class="dropbtn" role="button" @click.prevent="toggleVisible" v-show="!visible">
-        <span class="selected-option">{{ quantity }}</span>
-        <CaretDown :styleObj="{ marginLeft: '23px' }" :color="'#FFF'" />
+        <span class="option-label" style="margin-right:7px">{{ label }}:</span>
+        <span class="selected-option">{{ formatTitle(items[currentOption].title) }}</span>
+        <CaretDown :styleObj="{ marginLeft: '16px' }" :color="'#FFF'" />
       </div>
     </div>
   </div>
@@ -93,15 +92,16 @@ export default {
   props: {
     items: {
       type: Array,
-      default: () => [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+      default: () => []
     },
+    currentOption: {
+      type: Number,
+      default: 0
+    },
+
     label: {
       type: String,
-      default: 'Quantity'
-    },
-    quantity: {
-      type: Number,
-      default: 1
+      default: ''
     }
   },
   components: {
@@ -116,29 +116,35 @@ export default {
         item: 'li'
       },
       isMobile: false,
-      selectQuantity: 0
-    }
-  },
-  watch: {
-    quantity(newVal) {
-      if (newVal !== this.selectQuantity) {
-        this.selectQuantity = newVal
-      }
+      selectModel: '',
+      selectVisible: false
     }
   },
   methods: {
     toggleVisible() {
       this.visible = !this.visible
     },
-    updateQuantity(item) {
-      console.log('quantity', item)
-      this.$emit('update:quantity', item)
+    toggleSelectVisible() {
+      this.selectVisible = !this.selectVisible
+    },
+    formatTitle(title) {
+      return title.split('-')[0].trim()
+    },
+    updateSelect(item) {
+      this.$emit('update', item)
       this.visible = false
+    },
+    formatSwatchName(value) {
+      const color = String(value)
+        .replace(/\s+/g, '-')
+        .toLowerCase()
+      return `swatch-color__${color}`
     }
   },
   mounted() {
-    this.selectQuantity = this.quantity
+    this.selectModel = this.currentOption
     if (window.innerWidth < 768) {
+      this.visible = true
       this.isMobile = true
     }
   }
@@ -146,10 +152,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.quantity-container {
-  width: 50px;
-}
-
 .dropbtn {
   color: $primary-purple;
   outline: none;
@@ -165,6 +167,7 @@ export default {
   align-items: center;
   height: 20px;
   align-items: center;
+  width: 320px;
   font-family: Bold;
   letter-spacing: 1.75px;
   line-height: 1.17;
@@ -178,6 +181,8 @@ export default {
 .dropdown-content-cart {
   background-color: $primary-purple-tint;
   border-radius: 12px;
+  width: 287px;
+  min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: flex-start;
@@ -211,7 +216,6 @@ export default {
 
 .mobile-select-container {
   display: flex;
-  align-items: center;
   position: relative;
 }
 
@@ -242,23 +246,31 @@ export default {
 }
 
 .check-selected-container {
-  width: 40px;
+  width: 46px;
 }
 
 .check-selected {
-  margin-left: 10px;
+  margin-left: 15px;
 }
 
 .swatch-container {
-  width: 40px;
+  width: 46px;
 }
 
 .caret-container {
   transform: rotate(180deg);
+  position: absolute;
+  right: 20px;
+}
+
+.banana-blueberry {
+  border-color: #f6f3bb;
+  background-color: #1e354d;
 }
 
 .options-cart {
   color: $primary-purple;
+  text-align: left;
   &:hover {
     @include hover-transition;
   }
@@ -275,13 +287,90 @@ export default {
   font-size: $text-small;
   letter-spacing: 0.5px;
   line-height: 1.17;
-  margin-right: 14px;
   color: $grayscale-white;
 }
 
 .selected-option {
   color: $grayscale-white;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.cart-jp-swatch {
+  border: 2px solid;
+  border-radius: 50%;
+  height: 23px;
+  width: 23px;
+  margin-left: 10px;
+}
+
+.swatch {
+  height: 17px;
+  width: 17px;
+  margin-left: 15px;
+  margin-right: 12px;
+  margin-bottom: 2px;
+  border-radius: 50%;
+}
+
+.swatch-color {
+  &__black {
+    background-color: black;
+  }
+
+  &__ocean {
+    background-color: #49a9e3;
+  }
+
+  &__blue {
+    background-color: #49a9e3;
+  }
+
+  &__purple {
+    background-color: #c345b3;
+  }
+
+  &__mint {
+    background-color: #56bab2;
+  }
+
+  &__green {
+    background-color: #9bcf02;
+  }
+
+  &__pink {
+    background-color: #e57e85;
+  }
+
+  &__white {
+    background-color: #fff;
+  }
+
+  &__lavender {
+    background-color: #f9cedf;
+  }
+
+  &__lemon {
+    background-color: #fff467;
+  }
+
+  &__red {
+    background-color: #c5343b;
+  }
+
+  &__coral {
+    background-color: #fa6d6e;
+  }
+
+  &__hot-pink {
+    background-color: #de438d;
+  }
+
+  &__blush {
+    background-color: #e57e85;
+  }
 }
 
 .fade-enter-active {

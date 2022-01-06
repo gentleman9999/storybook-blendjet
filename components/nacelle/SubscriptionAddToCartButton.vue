@@ -11,7 +11,7 @@
         Select Options
       </span>
       <span
-        v-if="
+        v-else-if="
           (!variantInLineItems && allOptionsSelected && variant == undefined) ||
             (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
             !product.availableForSale
@@ -20,7 +20,7 @@
         Out of Stock
       </span>
       <span
-        v-if="
+        v-else-if="
           !variantInLineItems && allOptionsSelected && variant && variant.availableForSale == true
         "
       >
@@ -40,11 +40,11 @@
         <span v-if="!onlyOneOption && product.availableForSale">
           Select Options
         </span>
-        <span class="inner-text" v-if="subPrice">
+        <span class="inner-text" v-else-if="subPrice && product.availableForSale">
           {{ buttonText }}
         </span>
         <span
-          v-if="
+          v-else-if="
             (!variantInLineItems && allOptionsSelected && variant == undefined) ||
               (!variantInLineItems && allOptionsSelected && variant.availableForSale === false) ||
               !product.availableForSale
@@ -194,7 +194,7 @@ export default {
       // This is wrapped in a try/catch because in some instances it's attempted to be run during
       // the nuxt build (somehow in advance of the browser), therefore the `window.atob` method
       // doesn't exist yet.
-      let decodedId = undefined
+      let decodedId
       try {
         decodedId = atob(encodedId).split('gid://shopify/ProductVariant/')[1]
       } catch (e) {
@@ -206,7 +206,7 @@ export default {
       // Bail if no variant is specified
       if (!this.variant || !this.variant.id) return undefined
 
-      let _vprice =
+      const _vprice =
         this.hasSubscription && this.isSubscriptionOn && this.subscriptionPrice
           ? this.subscriptionPrice
           : this.variant.price
@@ -319,28 +319,27 @@ export default {
         this.addLineItem(lineItem)
         this.setButtonText()
         this.showCart()
-        
+
         this.elevarAddToCart()
       }
     },
-    getSource(){
-      var location = window.location;
-      
-      if(location.pathname.includes('products')){
+    getSource() {
+      var location = window.location
+
+      if (location.pathname.includes('products')) {
         return 'productpage'
-      }else if( location.pathname.includes('marketplace') ){
+      } else if (location.pathname.includes('marketplace')) {
         return 'marketplace'
-      }else{
+      } else {
         return location.pathname
       }
-      
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarAddToCart() {
       window.dataLayer = window.dataLayer || []
@@ -349,34 +348,36 @@ export default {
       var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var source = this.getSource()
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       window.dataLayer.push({
-        "event": "dl_add_to_cart",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "add": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": productId,
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer,
-              "source": source, 
-            }]
+        event: 'dl_add_to_cart',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          add: {
+            actionField: { list: referrer },
+            products: [
+              {
+                name: this.product.title.replace("'", ''),
+                id: (variant && variant.sku) || '',
+                product_id: productId,
+                variant_id: (variant && variantId) || '',
+                image: this.product.featuredMedia.src,
+                price: variant.price,
+                brand: this.product.vendor.replace("'", ''),
+                variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                category: this.product.productType,
+                inventory: this.quantity,
+                list: referrer,
+                source: source
+              }
+            ]
           }
         }
       })

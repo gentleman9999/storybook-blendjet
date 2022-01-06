@@ -6,7 +6,10 @@
         <p v-if="subtitle">{{ subtitle }}</p>
       </div>
       <div class="image" v-if="productImage">
-        <img :src="optimizeSource({ url: productImage, width: 800 })" :alt="selectedVariant.title" />
+        <img
+          :src="optimizeSource({ url: productImage, width: 800 })"
+          :alt="selectedVariant.title"
+        />
       </div>
       <div class="add-to-cart">
         <CartDropdown
@@ -28,7 +31,28 @@
         />
         <div class="quantity">
           <p>Quantity:</p>
-          <QuantityDropdown :quantity="quantity" @update:quantity="updateQuantity" />
+          <QuantityDropdown
+            v-if="hasQuantityOption"
+            :items="quantityLength"
+            :quantity="quantity"
+            @update:quantity="updateQuantity"
+          />
+          <QuantityDropdown v-else :quantity="quantity" @update:quantity="updateQuantity" />
+        </div>
+        <div
+          v-if="allOptions.length <= 1 && quantityOptionSelected.quantity.length"
+          class="product-select__controls__quantity-set"
+        >
+          <div class="product-select__controls__quantity-set--label">
+            {{ quantityOptionSelected.title }}:
+          </div>
+          <Tabs
+            :tabItems="quantityOptionSelected.quantity"
+            :selected="quantity"
+            :no-select-start="true"
+            @activeTab="updateQuantity"
+            id="custom-tabs-cartupsell"
+          />
         </div>
 
         <div class="add-to-cart-button">
@@ -51,12 +75,14 @@
 <script>
 import { mapActions } from 'vuex'
 import { stringify } from 'querystring'
+import { cloneDeep } from 'lodash'
 
 // Components
 import CartDropdown from '~/components/cartDropdown'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
+import Tabs from '~/components/tabs'
 
 // Mixins
 import rechargeProperties from '~/mixins/rechargeMixin'
@@ -64,8 +90,17 @@ import productMetafields from '~/mixins/productMetafields'
 import imageOptimize from '~/mixins/imageOptimize'
 import availableOptions from '~/mixins/availableOptions'
 
+import { createClient } from '~/plugins/contentful.js'
+const client = createClient()
+
 export default {
-  components: { CartDropdown, QuantityDropdown, Checkbox, CartDropdownMultiOptions },
+  components: {
+    CartDropdown,
+    QuantityDropdown,
+    Checkbox,
+    CartDropdownMultiOptions,
+    Tabs
+  },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
     return {
@@ -78,7 +113,18 @@ export default {
       localized: false,
       imageInterval: null,
       imageIndex: 0,
-      subscriptionDiscountVariant: null
+      subscriptionDiscountVariant: null,
+      hasQuantityOption: false,
+      quantityOptionVariant: {},
+      quantityOptionDefault: {
+        quantity: [],
+        title: ''
+      },
+      quantityOptionSelected: {
+        quantity: [],
+        title: ''
+      },
+      quantityLength: []
     }
   },
   props: {
@@ -91,11 +137,15 @@ export default {
     withVarietyPack: {
       type: Boolean,
       default: false
+    },
+    productContentful: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
     subscribeLabel() {
-      return this.discountPercentage > 0 ? `& Save ${this.discountPercentage}%` : ""
+      return this.discountPercentage > 0 ? `& Save ${this.discountPercentage}%` : ''
     },
     currentOption() {
       return this.selectedVariant?.selectedOptions?.[0]?.value || ''
@@ -164,6 +214,19 @@ export default {
     }
   },
   watch: {
+    selectedVariant: {
+      handler(newVal) {
+        if (this.hasQuantityOption) {
+          const title = newVal?.title?.toLowerCase()?.replace(/\s/g, '')
+          if (this.quantityOptionVariant[title]) {
+            this.quantityOptionSelected = cloneDeep(this.quantityOptionVariant[title])
+          } else {
+            this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+          }
+        }
+      },
+      immediate: true
+    },
     isBundleVariant(is) {
       if (is) {
         this.imageInterval = setInterval(() => {
@@ -177,10 +240,13 @@ export default {
       }
     }
   },
-  mounted() {
-    this.variants = this.product.variants
-      .filter(v => v.availableForSale)
-      .map(v => {
+  async mounted() {
+    for (let i = 30; i > 0; i--) {
+      this.quantityLength.push(i)
+    }
+    this.variants = this.product?.variants
+      ?.filter(v => v.availableForSale)
+      ?.map(v => {
         const variantId = atob(v.id)
           .split('/')
           .pop()
@@ -205,8 +271,19 @@ export default {
       })
     }
 
-    this.selectedVariant = this.variants[0]
+    if (this.productContentful?.quantityOption?.fields) {
+      this.hasQuantityOption = true
+      const qtyOption = this.productContentful?.quantityOption?.fields
+      this.quantityOptionDefault.title = qtyOption.title
+      this.quantityOptionDefault.quantity = qtyOption.quantity?.split(',')
+      this.quantityOptionDefault.quantity = this.quantityOptionDefault.quantity.map(item =>
+        Number(item)
+      )
+      this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+    }
+    await this.fetchQuantityOptions()
 
+    this.selectedVariant = this.variants?.[0]
     this.initLocalizedPrice()
     this.$emit('ready')
   },
@@ -217,6 +294,36 @@ export default {
     ...mapActions('cart', ['addLineItem']),
     updateSelectedVariant(newVariant) {
       this.selectedVariant = newVariant
+    },
+    async fetchQuantityOptions() {
+      if (this.productContentful?.variants?.length) {
+        const variants = this.productContentful?.variants
+        for (let i = 0; i < variants.length; i++) {
+          const variant = variants[i]
+          const title = variant?.fields?.title?.toLowerCase()
+          if (variant?.fields?.quantityOption?.fields?.quantity) {
+            const qtyOption = {
+              title: variant?.fields?.quantityOption?.fields?.title,
+              quantity: variant?.fields?.quantityOption?.fields?.quantity
+                ?.split(',')
+                ?.map(item => Number(item))
+            }
+            this.$set(this.quantityOptionVariant, title, qtyOption)
+          } else if (variant?.fields?.quantityOption?.sys) {
+            let response = null
+            await client.getEntry(variant?.fields?.quantityOption?.sys.id).then(res => {
+              response = res
+            })
+            if (response) {
+              const qtyOption = {
+                title: response?.fields?.title,
+                quantity: response?.fields?.quantity?.split(',')?.map(item => Number(item))
+              }
+              this.$set(this.quantityOptionVariant, title, qtyOption)
+            }
+          }
+        }
+      }
     },
     /**
      * Formats a Storefront API encoded ID to a plain-language variant ID
@@ -232,8 +339,8 @@ export default {
     handleSubscriptionCheck(check) {
       this.subscriptionChecked = check
     },
-    //Set the currentVaraint using the options selected
-    //If there is only one option selected, it will take the first varaint with that option
+    // Set the currentVaraint using the options selected
+    // If there is only one option selected, it will take the first varaint with that option
     setSelectedOption(opt) {
       let variant = null
 
@@ -295,7 +402,7 @@ export default {
     },
     async initLocalizedPrice() {
       // Create array of all variant prices to get localized values
-      const pricesArray = this.variants.reduce(
+      const pricesArray = this.variants?.reduce(
         (arr, v) =>
           [
             ...arr,
@@ -351,45 +458,47 @@ export default {
       }
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarAddToCart(variant) {
       window.dataLayer = window.dataLayer || []
       var uuid = this.createUUID()
-      var referrer = document.referrer.includes('marketplace') ? document.referrer : '';
+      var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
+        .toString('binary')
+        .split('/')
+        .pop()
       window.dataLayer.push({
-        "event": "dl_add_to_cart",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": this.product.priceRange.currencyCode,
-          "add": {
-            "actionField": {'list': referrer}, 
-            "products": [{
-              "name": this.product.title.replace("'", ''),
-              "id": ((variant && variant.sku) || ""),
-              "product_id": productId,
-              "variant_id": ((variant && variantId) || ""),
-              "image": this.product.featuredMedia.src,
-              "price": variant.price,
-              "brand": this.product.vendor.replace("'", ''),
-              "variant": (variant && variant.title && (variant.title.replace("'", '')) || ""),
-              "category": this.product.productType,
-              "inventory": this.quantity,
-              "list": referrer, 
-              "source": "minicart", 
-            }]
+        event: 'dl_add_to_cart',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: this.product.priceRange.currencyCode,
+          add: {
+            actionField: { list: referrer },
+            products: [
+              {
+                name: this.product.title.replace("'", ''),
+                id: (variant && variant.sku) || '',
+                product_id: productId,
+                variant_id: (variant && variantId) || '',
+                image: this.product.featuredMedia.src,
+                price: variant.price,
+                brand: this.product.vendor.replace("'", ''),
+                variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                category: this.product.productType,
+                inventory: this.quantity,
+                list: referrer,
+                source: 'minicart'
+              }
+            ]
           }
         }
       })
@@ -405,7 +514,7 @@ export default {
   padding: 80px 52px 120px;
   min-width: 375px;
   @media (max-width: 1024px) {
-    padding: 15px 40px 40px;
+    padding: 15px 25px 40px;
     &:last-child {
       padding-bottom: 150px;
     }
@@ -476,6 +585,7 @@ export default {
   padding-top: 14px;
 
   button {
+    min-width: 250px;
     border-radius: 40px;
     height: 40px;
     display: flex;
@@ -497,5 +607,62 @@ export default {
 .subscribe-select {
   display: flex;
   justify-content: center;
+}
+
+.product-select__controls__quantity-set {
+  width: 100%;
+  &--label {
+    font-family: Regular;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    line-height: 1.17;
+    color: #ffffff;
+    text-align: center;
+  }
+}
+</style>
+<style lang="scss">
+#custom-tabs-cartupsell {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  .tab-container {
+    width: 100%;
+    max-width: 250px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid #fff;
+    background: #fff;
+    .tab-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      a {
+        height: 100%;
+        width: 100%;
+        color: $primary-purple;
+        font-family: Bold;
+        line-height: 1.17;
+        letter-spacing: 1.75px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-size: 12px;
+        &:hover {
+          background: none;
+        }
+      }
+      &.is-active {
+        a {
+          background: #e0e0ff;
+          border: 2px solid $primary-purple;
+          &:hover {
+            background: #e0e0ff;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

@@ -21,6 +21,7 @@
     "@nacelle/nacelle-klaviyo-nuxt-module": "^0.0.12",
     "@nacelle/nacelle-loox-nuxt-module": "^0.0.1",
     "@nacelle/nacelle-nuxt-module": "5.6.0",
+    "@nacelle/shopify-checkout": "^0.0.7",
     "@nuxt/core": "^2.14.7",
     "@nuxtjs/axios": "^5.9.5",
     "@nuxtjs/bulma": "^1.2.7",

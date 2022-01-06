@@ -128,7 +128,8 @@ export default {
       { src: '/scripts/currencycookie.js' },
       // { src: 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=NhVDeY', async: true},
       { src: 'https://cdn.weglot.com/weglot.min.js', async: true },
-      { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true }
+      { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true },
+      { src: '/scripts/useway.js', defer: true }
     ]
   },
   /*
@@ -192,7 +193,8 @@ export default {
     '~/plugins/snap-pixel.client.js',
     '~/plugins/vue-mq.js',
     '~/plugins/nuxt-jsonld',
-    '~/plugins/vueTouchEvents'
+    '~/plugins/vueTouchEvents',
+    { src: '~/plugins/shopifyCheckout.js', mode: 'client' }
   ],
 
   router: {
@@ -250,6 +252,10 @@ export default {
 
   gtm: {
     id: 'GTM-NLRSLWR'
+
+    // uncomment these for debugging on localhost
+    // enabled: true,
+    // debug: true
   },
 
   // Replaces gtag plugin and makes gtag available to nuxt for additional methods
@@ -284,7 +290,10 @@ export default {
   publicRuntimeConfig: {
     gtm: {
       id: process.env.GOOGLE_TAG_MANAGER_ID
-    }
+    },
+    myshopifyDomain: process.env.SHOPIFY_DOMAIN,
+    shopifyStorefrontCheckoutToken: process.env.STOREFRONT_CHECKOUT_TOKEN,
+    shopifyStorefrontApiVersion: '2021-07'
   },
 
   polyfill: {
@@ -351,7 +360,8 @@ export default {
     gaID: process.env.NACELLE_GA_ID,
 
     // Facebook Pixel Tracking ID
-    fbID: process.env.NACELLE_FB_ID,
+    // we don't want Nacelle also loading this - it happens through gtag
+    // fbID: process.env.NACELLE_FB_ID,
 
     // Set the default internationalization locale string for Nacelle to use
     // locale: 'en-us',

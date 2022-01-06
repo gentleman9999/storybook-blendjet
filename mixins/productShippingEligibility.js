@@ -13,6 +13,18 @@ const getShippingMetafield = product => {
   return metafield?.value
 }
 
+export function checkProductShippingEligibility(product) {
+  /**
+   * Provided a product, checks the shipping eligibility of the product in
+   * relation to the user's detected country.
+   * @param {Object} product - a product object from the Nacelle SDK
+   * @returns {Boolean}
+   */
+  const eligCountriesStr = getShippingMetafield(product)
+  const eligCountriesArr = eligCountriesStr ? eligCountriesStr.split('|') : []
+  return eligCountriesArr.length ? eligCountriesArr.indexOf(this.userCountry) !== -1 : true
+}
+
 /**
  * This mixin exposes a computed prop indicating whether a given product is shippable to the user
  */
@@ -37,16 +49,6 @@ export default {
     }
   },
   methods: {
-    /**
-     * Provided a product, checks the shipping eligibility of the product in
-     * relation to the user's detected country.
-     * @param {Object} product - a product object from the Nacelle SDK
-     * @returns {Boolean}
-     */
-    checkProductShippingEligibility(product) {
-      const eligCountriesStr = getShippingMetafield(product)
-      const eligCountriesArr = eligCountriesStr ? eligCountriesStr.split('|') : []
-      return eligCountriesArr.length ? eligCountriesArr.indexOf(this.userCountry) !== -1 : true
-    }
+    checkProductShippingEligibility
   }
 }

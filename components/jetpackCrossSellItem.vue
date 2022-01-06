@@ -33,9 +33,9 @@
                     WE SHOULD FIND A WAY TO DO THIS -->
             <loox-product-rating :product="product" />
           </div>
-          <div class="category">
+<!--           <div class="category">
             <div class="category__tag">{{ category }}</div>
-          </div>
+          </div> -->
           <div class="add-to-cart">
             <div class="add-to-cart__quantity">
               <quantity-selector :quantity.sync="quantity" />
@@ -53,7 +53,7 @@
               />
             </div>
           </div>
-          <div class="subscribe-select">
+<!--           <div class="subscribe-select">
             <SubscriptionToggle
               :product="product"
               :checkbox="true"
@@ -61,7 +61,7 @@
             />
             <div class="info" @click="openRechargeModal">
               <Info />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

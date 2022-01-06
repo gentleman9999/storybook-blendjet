@@ -60,7 +60,7 @@
               <h1>{{ product.title }}</h1>
             </div>
             <div
-              v-if="currentVariant.title !== 'Default Title'"
+              v-if="currentVariant.title !== 'Default Title' && !hasColorVariants"
               class="product-select__controls__category"
             >
               {{ currentVariant.title }}
@@ -131,7 +131,7 @@
                   <h1>{{ product.title }}</h1>
                 </div>
                 <div
-                  v-if="currentVariant.title !== 'Default Title'"
+                  v-if="currentVariant.title !== 'Default Title' && !hasColorVariants"
                   class="product-select__controls__category"
                 >
                   {{ currentVariant.title }}
@@ -727,7 +727,7 @@
       </div>
       -->
       <div class="jetpacks">
-        <JetpackCrossSell :product="product" :heading="'You may also like these jetpack flavors'" />
+        <JetpackCrossSell :product="product" :heading="'You may also like these'" />
       </div>
     </div>
   </transition>
@@ -989,7 +989,7 @@ export default {
      * TODO: This should be done using the vue-router...
      */
     addHashToLocation() {
-      window.history.pushState(
+      window.history.replaceState(
         {},
         null,
         this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)
@@ -1122,6 +1122,12 @@ export default {
       } else {
         this.productImage = newVariant.featuredMedia.src
       }
+      if (vMedia && !this.bannerText) {
+        this.bannerText = this.product.description
+      }
+      if (vMedia && !this.productImage) {
+        this.productImage = newVariant.featuredMedia.src
+      }
       this.setProductDetails()
       // console.log('newVariant:', newVariant);
       this.elevarProductView() // needs flag to only fire once
@@ -1130,7 +1136,9 @@ export default {
       // If show desktop header gets toggled to false, hide the variant selector menu too
     },
     quantity() {
-      this.elevarProductView()
+      // Outsmartly discussed with John and both agreed it doesn't make sense to fire a "ViewContent"
+      // event just because quantity changed. Removing this as noise.
+      // this.elevarProductView()
     }
   },
   created() {
@@ -1346,7 +1354,6 @@ export default {
       }
       @include respond-to('small') {
         object-fit: contain;
-        position: absolute;
         top: 0;
         left: 0;
       }
