@@ -12,14 +12,24 @@
         />
       </div>
       <div class="add-to-cart">
-        <CartDropdown
-          v-if="variants.length > 1 && allOptions.length <= 1"
-          productType="any"
-          :label="variantLabel"
-          :items="variants"
-          :product="selectedVariant"
-          @update:any="updateSelectedVariant"
-        />
+        <template v-if="variants.length > 1 && allOptions.length <= 1">
+          <CartDropdownColor
+            v-if="variantLabel.toLowerCase().includes('color')"
+            :label="variantLabel"
+            :items="variants"
+            :product="selectedVariant"
+            @update="updateSelectedVariant($event, 'color')"
+            :options="allOptions"
+          />
+          <CartDropdown
+            v-else
+            productType="any"
+            :label="variantLabel"
+            :items="variants"
+            :product="selectedVariant"
+            @update:any="updateSelectedVariant"
+          />
+        </template>
         <CartDropdownMultiOptions
           v-else-if="variants.length > 1 && allOptions.length > 1"
           :options="allOptions"
@@ -30,12 +40,12 @@
           :currentOption="currentOption"
         />
         <div class="quantity">
-          <p>Quantity:</p>
           <QuantityDropdown
             v-if="hasQuantityOption"
             :items="quantityLength"
             :quantity="quantity"
             @update:quantity="updateQuantity"
+            label="Quantity"
           />
           <QuantityDropdown v-else :quantity="quantity" @update:quantity="updateQuantity" />
         </div>
@@ -79,6 +89,7 @@ import { cloneDeep } from 'lodash'
 
 // Components
 import CartDropdown from '~/components/cartDropdown'
+import CartDropdownColor from '~/components/cartDropdownColor'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
@@ -96,6 +107,7 @@ const client = createClient()
 export default {
   components: {
     CartDropdown,
+    CartDropdownColor,
     QuantityDropdown,
     Checkbox,
     CartDropdownMultiOptions,
@@ -292,8 +304,15 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['addLineItem']),
-    updateSelectedVariant(newVariant) {
-      this.selectedVariant = newVariant
+    updateSelectedVariant(newVariant, optionType = '') {
+      if (optionType === 'color') {
+        const foundVariant = this.variants.find(
+          variant => variant.selectedOptions[0].value === newVariant.value
+        )
+        this.selectedVariant = foundVariant
+      } else {
+        this.selectedVariant = newVariant
+      }
     },
     async fetchQuantityOptions() {
       if (this.productContentful?.variants?.length) {
