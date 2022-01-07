@@ -22,6 +22,7 @@
             :subtitle="upsell.subtitle"
             :product="upsell.product"
             :with-variety-pack="upsell.withVarietyPack"
+            :product-contentful="upsell.productContentful"
           />
           <UpsellBundle
             v-if="upsell.withBundle"
@@ -71,6 +72,7 @@ import Close from '~/components/svg/modalClose'
 import productShippingEligibility from '~/mixins/productShippingEligibility'
 
 import { getbundledProductsFromNacelle } from '~/mixins/getProduct'
+
 export default {
   components: { UpsellItem, UpsellBundle, BiChevron, Close, CartFlyoutCheckoutButton },
   data() {
@@ -116,7 +118,6 @@ export default {
 
       if (queue) {
         this.title = queue.title
-
         // get bundles
         this.bundleItems = queue?.fields?.items?.map(item => {
           if (item?.fields?.bundleCollection?.length || item?.fields?.bundleGroup?.length) {
@@ -166,7 +167,8 @@ export default {
               ...acc,
               {
                 ...curr.fields,
-                product: product
+                product: product,
+                productContentful: curr?.fields?.product?.fields
               }
             ]
           } else if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {

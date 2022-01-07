@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown-container">
-    <div class="mobile-select-container" v-if="isMobile">
+    <div class="mobile-select-container">
       <div class="select-cover" role="button">
         <span class="option-label" style="margin-right:7px">{{ label }}:</span>
         <span class="select-cover__selected">{{ formatTitle(items[currentOption].title) }}</span>
@@ -12,7 +12,7 @@
         }}</option>
       </select>
     </div>
-    <div
+    <!-- <div
       class="dropdown-cart"
       tabindex="0"
       @focusout="visible = false"
@@ -80,7 +80,7 @@
         <span class="selected-option">{{ formatTitle(items[currentOption].title) }}</span>
         <CaretDown :styleObj="{ marginLeft: '16px' }" :color="'#FFF'" />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -243,6 +243,11 @@ export default {
   right: 0;
   position: absolute;
   font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  option {
+    margin-left: 5px;
+  }
 }
 
 .check-selected-container {
