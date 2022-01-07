@@ -1311,33 +1311,35 @@ export default {
         varietyPackVariant.featuredMedia = {}
       })
 
-      this.variants.push({ ...varietyPackVariant, price: varietyPackVariant.price.toString() })
+      this.variants.unshift({ ...varietyPackVariant, price: varietyPackVariant.price.toString() })
 
       if (this.variants?.length > 2) {
         // update once before calling settimeout so its available at setInitialVariant()
         clearInterval(this.imageInterval)
         this.$set(
-          this.variants[this.variants.length - 1].featuredMedia,
+          this.variants[0].featuredMedia,
           'src',
-          this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia.src
+          this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
+            .src
         )
         this.$set(
-          this.variants[this.variants.length - 1].featuredMedia,
+          this.variants[0].featuredMedia,
           'thumbnailSrc',
-          this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia
+          this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
             .thumbnailSrc
         )
         this.imageIndex++
         this.imageInterval = setInterval(() => {
           this.$set(
-            this.variants[this.variants.length - 1].featuredMedia,
+            this.variants[0].featuredMedia,
             'src',
-            this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia.src
+            this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
+              .src
           )
           this.$set(
-            this.variants[this.variants.length - 1].featuredMedia,
+            this.variants[0].featuredMedia,
             'thumbnailSrc',
-            this.variants?.[(this.imageIndex + 1) % (this.variants.length - 1)]?.featuredMedia
+            this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
               .thumbnailSrc
           )
           this.imageIndex++

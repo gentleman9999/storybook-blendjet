@@ -1,5 +1,5 @@
 <template>
-  <div class="product-card" v-if="isShippableToUser" >
+  <div class="product-card" v-if="isShippableToUser">
     <nuxt-link :to="productUrl">
       <figure class="product-card__picture">
         <img
@@ -83,11 +83,16 @@ export default {
   },
   computed: {
     featuredImage() {
-      //This may fail since some variants does not have an image in shopify
-      //I will move this and prioritize the product image
-      return this.variantBased ? this.variant?.featuredMedia || this.product?.featuredMedia : this.product?.featuredMedia || this.variant?.featuredMedia
+      // This may fail since some variants does not have an image in shopify
+      // I will move this and prioritize the product image
+      return this.variantBased
+        ? this.variant?.featuredMedia || this.product?.featuredMedia
+        : this.product?.featuredMedia || this.variant?.featuredMedia
     },
     productUrl() {
+      if (this.product.handle.toLowerCase().includes('jetpack')) {
+        return `/products/${this.product.handle}?variant=variety-pack`
+      }
       const variantId = this.variant && this.decodeBase64VariantId(this.variant.id)
       return `/products/${this.product.handle}${variantId ? `?variant=${variantId}` : ''}`
     },
@@ -102,21 +107,21 @@ export default {
       return decodedId.split('gid://shopify/ProductVariant/')[1]
     },
     createUUID() {
-        var result = ''
-        var length = 16
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+      var result = ''
+      var length = 16
+      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+      return result
     },
     elevarProductClick(product, variant) {
       window.dataLayer = window.dataLayer || []
       var uuid = this.createUUID()
       var idx = 'NA'
-      var clickedProduct =  {
+      var clickedProduct = {
         name: product.title.replace("'", ''),
-        id: ((variant && variant.sku) || ""),
+        id: (variant && variant.sku) || '',
         product_id: product.id,
-        variant_id: ((variant && variant.id) || ""),
+        variant_id: (variant && variant.id) || '',
         price: variant.price,
         brand: product.vendor.replace("'", ''),
         position: idx,
@@ -125,13 +130,13 @@ export default {
       }
 
       window.dataLayer.push({
-        "event": "dl_select_item",
-        "event_id": uuid,
-        "ecommerce": {
-          "currencyCode": 'USD',
-          "click": {
-            "actionField": { "list": location.pathname },
-            "products": clickedProduct 
+        event: 'dl_select_item',
+        event_id: uuid,
+        ecommerce: {
+          currencyCode: 'USD',
+          click: {
+            actionField: { list: location.pathname },
+            products: clickedProduct
           }
         }
       })
