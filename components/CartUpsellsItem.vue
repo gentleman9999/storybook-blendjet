@@ -253,7 +253,7 @@ export default {
     }
   },
   async mounted() {
-    for (let i = 30; i > 0; i--) {
+    for (let i = 1; i <= 30; i++) {
       this.quantityLength.push(i)
     }
     this.variants = this.product?.variants

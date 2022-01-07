@@ -110,6 +110,7 @@ export default {
   .dropdown {
     display: flex;
     flex-flow: column;
+    outline: none !important;
     .dropbtn {
       display: flex;
       justify-content: center;
