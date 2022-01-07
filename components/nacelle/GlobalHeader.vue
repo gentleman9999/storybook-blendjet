@@ -1,6 +1,7 @@
 <template>
   <div class="global-header" :class="headerClass">
     <div class="free-shipping-banner">
+      <img id="accessibilityWidget" class="useway-icon" src="/images/body_wh.svg" />
       <span class="free-shipping-banner__text">{{ freeShippingMessage }}</span>
     </div>
     <!-- Main Nav -->
@@ -535,6 +536,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  .useway-icon {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 10px;
+    cursor: pointer;
+  }
 
   &__text {
     color: $grayscale-white;

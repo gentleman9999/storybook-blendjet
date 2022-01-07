@@ -163,10 +163,10 @@ $checkbox-border-color: $grayscale-white;
   height: 50px;
   font-size: 12px;
 
-  @include respond-to('small') {
-    --width: 300px;
-    font-size: 10px;
-  }
+  // @include respond-to('small') {
+  //   --width: 300px;
+  //   font-size: 10px;
+  // }
 }
 
 .text-container {

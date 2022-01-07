@@ -30,11 +30,26 @@ export const actions = {
     const id = await localforage.getItem('checkout-id')
     const url = await localforage.getItem('checkout-url')
     if (id && url) {
-      const { completed } = await this.$nacelle.checkout.get({ id, url })
-      if (completed) {
-        await dispatch('resetCheckout')
-      } else {
-        commit('setCheckout', { id, url })
+      try {
+        const { completed } = await this.$nacelle.checkout.get({ id, url })
+        if (completed) {
+          await dispatch('resetCheckout')
+        } else {
+          commit('setCheckout', { id, url })
+        }
+      } catch (err) {
+        // nacelle checkout failed, try shopify checkout instead
+        console.log('nacelle checkout failed at initializeCheckout')
+        try {
+          const { completed } = await this.$shopifyCheckout.get({ id })
+          if (completed) {
+            await dispatch('resetCheckout')
+          } else {
+            commit('setCheckout', { id, url })
+          }
+        } catch (err) {
+          throw new Error('Error during checkout')
+        }
       }
     }
   },
@@ -64,23 +79,54 @@ export const actions = {
       throw new Error('Cannot checkout with an empty cart')
     }
 
-    //fix for uBlock breaking checkout recommended by CJ from Nacelle
+    // fix for uBlock breaking checkout recommended by CJ from Nacelle
     const recartMetafields = this.$recart.getMetafieldsForCheckout() || []
 
     // __capi__.metafields are provided by Outsmartly for first-party tracking
-    const outsmartlyMetafields = (typeof window !== "undefined" && window.__capi__ && Array.isArray(__capi__.metafields)) ? __capi__.metafields : []
+    const outsmartlyMetafields = // eslint-disable-next-line no-undef
+      typeof window !== 'undefined' && window.__capi__ && Array.isArray(__capi__.metafields) // eslint-disable-next-line no-undef
+        ? __capi__.metafields
+        : []
 
-    let checkout = await this.$nacelle.checkout.process({
-      cartItems,
-      checkoutId,
-      metafields: [...recartMetafields, ...outsmartlyMetafields]
-    })
-    if (checkout && checkout.completed) {
-      checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
+    let checkoutStatus = ''
+    let checkout = {}
+    try {
+      checkout = await this.$nacelle.checkout.process({
+        cartItems,
+        checkoutId,
+        metafields: [...recartMetafields, ...outsmartlyMetafields]
+      })
+      if (checkout && checkout.completed) {
+        checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
+      }
+
+      if (!checkout || !checkout.id || !checkout.url) {
+        checkoutStatus = 'failed'
+      }
+    } catch (err) {
+      checkoutStatus = 'failed'
     }
 
-    if (!checkout || !checkout.id || !checkout.url) {
-      throw new Error('Checkout Failure')
+    if (checkoutStatus === 'failed') {
+      // nacelle checkout failed, try shopify checkout instead
+      console.log('nacelle checkout failed at checkoutCreate')
+      try {
+        checkout = await this.$shopifyCheckout.process({
+          cartItems,
+          checkoutId,
+          metafields: [...recartMetafields, ...outsmartlyMetafields]
+        })
+        if (checkout && checkout.completed) {
+          checkout = await this.$shopifyCheckout.process({ cartItems, checkoutId: '' })
+        }
+
+        if (!checkout || !checkout.id || !checkout.url) {
+          throw new Error('Checkout Failure')
+        }
+      } catch (err) {
+        console.log('err', err)
+        throw new Error('Checkout Failure')
+      }
     }
 
     // Intercept ReCharge checkout hostname URL to 'checkout.blendjet.com'
@@ -124,10 +170,7 @@ export const actions = {
       const discountCode = await localforage.getItem('discount')
       let url = state.url
       if (url.includes('rechargeapps.com')) {
-        url = url.replace(
-          'checkout.rechargeapps.com',
-          'checkout.blendjet.com'
-        )
+        url = url.replace('checkout.rechargeapps.com', 'checkout.blendjet.com')
       }
       window.location = discountCode ? url + '&discount=' + discountCode : url
     }

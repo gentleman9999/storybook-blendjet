@@ -10,6 +10,7 @@
         :selectedOptions="selectedOptions"
         :clearOptionValue="clearOptionValue"
         :upsellStyle="true"
+        selectType="native"
       />
     </div>
     <div class="option">
@@ -21,6 +22,7 @@
         :selectedOptions="selectedOptions"
         :clearOptionValue="clearOptionValue"
         :upsellStyle="true"
+        selectType="native"
       />
     </div>
   </div>
@@ -28,7 +30,6 @@
 
 <script>
 import ProductOptionsDropdown from '~/components/ProductOptionsDropdown'
-import CartDropdown from '~/components/cartDropdown'
 
 export default {
   props: {
@@ -58,8 +59,7 @@ export default {
     }
   },
   components: {
-    ProductOptionsDropdown,
-    CartDropdown
+    ProductOptionsDropdown
   },
   mounted() {
     this.setSelectedOptions({ name: this.options[0].name, value: this.options[0].values[0].value })
@@ -76,7 +76,7 @@ export default {
     }
   },
   methods: {
-    //An array of the options selected by the user.
+    // An array of the options selected by the user.
     setSelectedOptions(selectedOption) {
       const vm = this
       const searchOptions = this.selectedOptions.filter(option => {
@@ -97,26 +97,26 @@ export default {
     // Gets the selected option using the selectedOptions of the current variant
     getOptionFromVariant(option) {
       if (this.variant.selectedOptions && option) {
-        let currentOption = this.variant.selectedOptions.filter(opt => {
-          if (opt.name == option.name) {
-            return opt.value
+        const currentOption = this.variant.selectedOptions.filter(opt => {
+          if (opt.name === option.name) {
+            return opt
           }
         })
         if (currentOption) {
-          if (option.name == 'Flavor') {
-            let optionValue = option.values.filter(opt => {
-              if (opt.value == currentOption[0].value) {
+          if (option.name === 'Flavor') {
+            const optionValue = option.values.filter(opt => {
+              if (opt.value === currentOption[0].value) {
                 return opt
               }
             })
-            return optionValue[0].value
-          } else if (option.name == 'Size') {
-            return currentOption[0].value
+            return optionValue[0]
+          } else if (option.name === 'Size') {
+            return currentOption[0]
           }
         }
       }
     },
-    //Updates the options available depending the first option selected
+    // Updates the options available depending the first option selected
     updateAvailableOptions(options) {
       this.availableOptions = options
     },
@@ -129,7 +129,7 @@ export default {
 
 <style lang="scss" scoped>
 .option {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   display: flex;
   justify-content: center;
 }
