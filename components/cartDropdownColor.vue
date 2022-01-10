@@ -1,6 +1,6 @@
 <template>
   <div class="cart-dropdown-color">
-    <div class="dropdown" tabindex="0" @focusout="showVariantSelector = false">
+    <div class="dropdown" tabindex="100" @focusout="showVariantSelector = false">
       <div class="dropbtn" role="button" @click="toggleVisible">
         <span class="option-label" style="margin-right:7px">{{ label }}:</span>
         <div class="dropbtn__swatch">

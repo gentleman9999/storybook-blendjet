@@ -1,11 +1,14 @@
 <template>
   <div v-if="variants && variants.length">
-    <div class="dropdown" tabindex="0" @focusout="isOpen = false" :style="styleObj">
+    <div class="dropdown" tabindex="100" @focusout="isOpen = false" :style="styleObj">
       <!-- MENU TRIGGER -->
       <div class="dropbtn" role="button" @click.prevent="toggleOpen" v-show="!isOpen">
         <!-- THUMBNAIL - Variant Image (if configured) -->
         <div v-if="variantImage" class="dropdown-thumb">
-          <img class="dropdown-thumb-image" :src="optimizeSource({ url: variantImage, width: 800 })" />
+          <img
+            class="dropdown-thumb-image"
+            :src="optimizeSource({ url: variantImage, width: 800 })"
+          />
         </div>
         <!-- LABEL -->
         <div>{{ formatTitle(currentVariant.title) }}</div>
@@ -25,7 +28,10 @@
             @click.prevent="setSelectedVariant(variant)"
           >
             <div v-if="variant.featuredMedia.thumbnailSrc" class="dropdown-thumb">
-              <img class="dropdown-thumb-image" :src="optimizeSource({ url: variant.featuredMedia.thumbnailSrc, width: 800 })" />
+              <img
+                class="dropdown-thumb-image"
+                :src="optimizeSource({ url: variant.featuredMedia.thumbnailSrc, width: 800 })"
+              />
             </div>
             <div>{{ formatTitle(variant.title) }}</div>
           </li>

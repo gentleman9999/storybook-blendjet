@@ -5,7 +5,7 @@
         'dropdown-upsell': upsellStyle,
         dropdown: !upsellStyle
       }"
-      tabindex="0"
+      tabindex="100"
       @focusout="focusOut"
       :style="styleObj"
     >
