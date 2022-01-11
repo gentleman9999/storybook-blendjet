@@ -56,19 +56,22 @@
         </div>
       </div>
 
-<!-- START BFCM -->
+      <!-- START BFCM -->
 
-<div class="outer-canvas-bfcm" style="margin-bottom: unset;">
-<div class="canvas-bfcm">
-<div class="col-bfcm">
-<span class="entry-title-bfcm">New Year's Sale!</span>
-<span class="content-split-element-bfcm">10% Off 1</span>
-<span class="content-split-element-bfcm">12% Off 2</span>
-<span class="content-split-element-bfcm">15% Off 3+</span>
-<span class="simple-text-bfcm">BlendJet - JetPack - Sleeve - Book <b class="b-hide-bfcm">|</b> <span>Automatically Applied at Checkout</span></span>
-</div>
-</div>
-</div>
+      <div class="outer-canvas-bfcm" style="margin-bottom: unset;">
+        <div class="canvas-bfcm">
+          <div class="col-bfcm">
+            <span class="entry-title-bfcm">New Year's Sale!</span>
+            <span class="content-split-element-bfcm">10% Off 1</span>
+            <span class="content-split-element-bfcm">12% Off 2</span>
+            <span class="content-split-element-bfcm">15% Off 3+</span>
+            <span class="simple-text-bfcm"
+              >BlendJet - JetPack - Sleeve - Book <b class="b-hide-bfcm">|</b>
+              <span>Automatically Applied at Checkout</span></span
+            >
+          </div>
+        </div>
+      </div>
 
       <!-- END BFCM -->
 
@@ -83,15 +86,11 @@
       </div>
 
       <div class="section section__jetpacks">
-        <transition name="fade">
-          <Jetpacks />
-        </transition>
+        <Jetpacks />
       </div>
 
-      <div class="section section__jetpacks">
-        <transition name="fade">
-          <Jetsetter />
-        </transition>
+      <div class="section section__jetsetter">
+        <Jetsetter />
       </div>
 
       <div class="section section__recipes">
@@ -427,6 +426,14 @@ export default nmerge({
   }
 
   &__jetpacks {
+    background-color: $primary-purple-tint;
+    min-height: 730px;
+    @include respond-to('small') {
+      height: auto;
+    }
+  }
+
+  &__jetsetter {
     background-color: $primary-purple-tint;
     min-height: 730px;
     @include respond-to('small') {

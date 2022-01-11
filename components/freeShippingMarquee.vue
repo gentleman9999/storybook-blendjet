@@ -1,5 +1,5 @@
 <template>
-  <div  class="marquee-container" v-if="loaded">
+  <div class="marquee-container" v-if="loaded">
     <marquee-text :repeat="50" :duration="5">
       <span class="item">Free&nbsp;Shipping</span>
     </marquee-text>
@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -15,12 +14,14 @@ export default {
     }
   },
   mounted() {
-    this.loaded = true;
+    this.loaded = true
   },
   components: {
     MarqueeText: () =>
-    process.client ? import('vue-marquee-text-component') : Promise.resolve({ render: (h) => h('div') }),
-  },
+      process.client
+        ? import('vue-marquee-text-component')
+        : Promise.resolve({ render: h => h('div') })
+  }
 }
 </script>
 
@@ -40,5 +41,4 @@ export default {
     margin: 0 15px;
   }
 }
-
 </style>
