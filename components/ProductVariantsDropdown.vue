@@ -1,8 +1,8 @@
 <template>
   <div v-if="variants && variants.length">
-    <div class="dropdown" tabindex="100" @focusout="isOpen = false" :style="styleObj">
+    <div class="dropdown" role="button" tabindex="0" @focusout="isOpen = false" :style="styleObj">
       <!-- MENU TRIGGER -->
-      <div class="dropbtn" role="button" @click.prevent="toggleOpen" v-show="!isOpen">
+      <div class="dropbtn" @click.prevent="toggleOpen" v-show="!isOpen">
         <!-- THUMBNAIL - Variant Image (if configured) -->
         <div v-if="variantImage" class="dropdown-thumb">
           <img

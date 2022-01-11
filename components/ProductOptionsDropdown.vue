@@ -5,7 +5,8 @@
         'dropdown-upsell': upsellStyle,
         dropdown: !upsellStyle
       }"
-      tabindex="100"
+      tabindex="0"
+      role="button"
       @focusout="focusOut"
       :style="styleObj"
     >
@@ -16,7 +17,6 @@
           'dropbtn-upsell': upsellStyle,
           dropbtn: !upsellStyle
         }"
-        role="button"
         @click.prevent="toggleOpen"
         v-show="!isOpen"
       >
