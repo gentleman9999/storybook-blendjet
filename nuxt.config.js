@@ -251,7 +251,8 @@ export default {
   },
 
   gtm: {
-    id: 'GTM-NLRSLWR'
+    id: 'GTM-NLRSLWR',
+    respectDoNotTrack: false
 
     // uncomment these for debugging on localhost
     // enabled: true,
