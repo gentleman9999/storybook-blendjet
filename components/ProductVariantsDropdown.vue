@@ -108,6 +108,8 @@ export default {
   outline: none;
   display: flex;
   align-items: center;
+  width: 100%;
+  justify-content: center;
 }
 
 /* The container <div> - needed to position the dropdown content */
