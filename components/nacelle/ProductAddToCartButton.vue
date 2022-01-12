@@ -1,5 +1,9 @@
 <template>
-  <div :class="{ 'has-bundle-add': bundles.length }">
+  <div
+    :class="{
+      'has-bundle-add': bundles.length || (bundleVarietyPack && bundleVarietyPack.variants)
+    }"
+  >
     <button
       v-if="isProductVariantSelectChild"
       :disabled="disableAtcButton"

@@ -285,67 +285,69 @@
                   @click.self="bundleItemClicked(currentVariant, true)"
                 />
               </div>
-              <div
-                v-for="(bundle, index) in selectedBundle"
-                :key="bundle.product.id"
-                class="product-select__controls__bundles__bundle-product-container"
-                :class="[
-                  {
-                    blur:
-                      (varietyBundleSelectorActive || bundleSelectorVisible) &&
-                      !bundleOptionsSelectorActive[index]
-                  },
-                  {
-                    'no-blur': !(
-                      (varietyBundleSelectorActive || bundleSelectorVisible) &&
-                      !bundleOptionsSelectorActive[index]
-                    )
-                  }
-                ]"
-              >
-                <img
-                  v-if="bundle.variant && bundle.variant.featuredMedia"
-                  :src="bundle.variant.featuredMedia.thumbnailSrc"
-                  :alt="bundle.variant.featuredMedia.altText"
-                  class="product-select__controls__bundles__bundle-product-image"
+              <template v-if="selectedBundle.length">
+                <div
+                  v-for="(bundle, index) in selectedBundle"
+                  :key="bundle.product.id"
+                  class="product-select__controls__bundles__bundle-product-container"
                   :class="[
-                    { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
                     {
-                      'item-blurred':
+                      blur:
                         (varietyBundleSelectorActive || bundleSelectorVisible) &&
                         !bundleOptionsSelectorActive[index]
                     },
                     {
-                      'item-not-blurred': !(
+                      'no-blur': !(
                         (varietyBundleSelectorActive || bundleSelectorVisible) &&
                         !bundleOptionsSelectorActive[index]
                       )
                     }
                   ]"
-                  @click.self="bundleItemClicked(bundle, false, index)"
-                />
-                <img
-                  v-else
-                  :src="bundle.product.featuredMedia.thumbnailSrc"
-                  :alt="bundle.product.featuredMedia.altText"
-                  class="product-select__controls__bundles__bundle-product-image"
-                  :class="[
-                    { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
-                    {
-                      'item-blurred':
-                        (varietyBundleSelectorActive || bundleSelectorVisible) &&
-                        !bundleOptionsSelectorActive[index]
-                    },
-                    {
-                      'item-not-blurred': !(
-                        (varietyBundleSelectorActive || bundleSelectorVisible) &&
-                        !bundleOptionsSelectorActive[index]
-                      )
-                    }
-                  ]"
-                  @click.self="bundleItemClicked(bundle, false, index)"
-                />
-              </div>
+                >
+                  <img
+                    v-if="bundle.variant && bundle.variant.featuredMedia"
+                    :src="bundle.variant.featuredMedia.thumbnailSrc"
+                    :alt="bundle.variant.featuredMedia.altText"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    :class="[
+                      { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
+                      {
+                        'item-blurred':
+                          (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                          !bundleOptionsSelectorActive[index]
+                      },
+                      {
+                        'item-not-blurred': !(
+                          (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                          !bundleOptionsSelectorActive[index]
+                        )
+                      }
+                    ]"
+                    @click.self="bundleItemClicked(bundle, false, index)"
+                  />
+                  <img
+                    v-else
+                    :src="bundle.product.featuredMedia.thumbnailSrc"
+                    :alt="bundle.product.featuredMedia.altText"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    :class="[
+                      { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
+                      {
+                        'item-blurred':
+                          (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                          !bundleOptionsSelectorActive[index]
+                      },
+                      {
+                        'item-not-blurred': !(
+                          (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                          !bundleOptionsSelectorActive[index]
+                        )
+                      }
+                    ]"
+                    @click.self="bundleItemClicked(bundle, false, index)"
+                  />
+                </div>
+              </template>
               <div
                 v-if="
                   selectedBundleVarietyPack &&
