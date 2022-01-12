@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home-jetpacks">
     <div class="title-container">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -15,10 +15,7 @@
               values="0 0 0 0 0.215686 0 0 0 0 0.215686 0 0 0 0 0.584314 0 0 0 1.000000 0"
             />
           </filter>
-          <path
-            id="3nr89l9qzb"
-            d="M1.155 0.38L21.663 0.38 21.663 37.079 1.155 37.079z"
-          />
+          <path id="3nr89l9qzb" d="M1.155 0.38L21.663 0.38 21.663 37.079 1.155 37.079z" />
         </defs>
         <g fill="none" fill-rule="evenodd" transform="translate(-622 -47)">
           <g>
@@ -47,10 +44,7 @@
       Ready-to-Blend Smoothies from Just ${{ productPrice }}
     </div>
     <div class="jetpack-tabs">
-      <Tabs
-        :tabItems="['protein smoothies', 'smoothies']"
-        @activeTab="jetpackTabChange"
-      />
+      <Tabs :tabItems="['protein smoothies', 'smoothies']" @activeTab="jetpackTabChange" />
     </div>
     <div class="blendjet-carousel">
       <b-carousel-list
@@ -101,24 +95,9 @@
     <div class="carousel-indicator-container" v-if="indicatorVisible">
       <div class="carousel-indicator">
         <div class="carousel-indicator__left" @click="back">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="29"
-            height="29"
-            viewBox="0 0 29 29"
-          >
-            <g
-              fill="none"
-              fill-rule="evenodd"
-              transform="matrix(-1 0 0 1 28 1)"
-            >
-              <circle
-                cx="13.5"
-                cy="13.5"
-                r="13.5"
-                stroke="#373795"
-                stroke-width="1.5"
-              />
+          <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
+            <g fill="none" fill-rule="evenodd" transform="matrix(-1 0 0 1 28 1)">
+              <circle cx="13.5" cy="13.5" r="13.5" stroke="#373795" stroke-width="1.5" />
               <g fill="#373795">
                 <path
                   d="M0 3.6L9 3.6 9 5.4 0 5.4z"
@@ -132,27 +111,13 @@
             </g>
           </svg>
         </div>
-        <progress
-          class="progress is-small"
-          :value="jetpackIndex + 1"
-          :max="jetpacks.length"
+        <progress class="progress is-small" :value="jetpackIndex + 1" :max="jetpacks.length"
           >15%</progress
         >
         <div class="carousel-indicator__right" @click="forward">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="29"
-            height="29"
-            viewBox="0 0 29 29"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
             <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
-              <circle
-                cx="13.5"
-                cy="13.5"
-                r="13.5"
-                stroke="#373795"
-                stroke-width="1.5"
-              />
+              <circle cx="13.5" cy="13.5" r="13.5" stroke="#373795" stroke-width="1.5" />
               <g fill="#373795">
                 <path
                   d="M0 3.6L9 3.6 9 5.4 0 5.4z"
@@ -173,7 +138,7 @@
 
 <script>
 import Tabs from './tabs'
-// import JetpackPDPModal from '~/components/jetpackPDPModal'
+import JetpackPDPModal from '~/components/jetpackPDPModal'
 import imageOptimize from '~/mixins/imageOptimize'
 
 export default {
@@ -192,7 +157,7 @@ export default {
       cardStyle: {
         background: 'transparent',
         boxShadow: 'none',
-		borderRadius: '0px'
+        borderRadius: '0px'
       },
       cardContentStyle: {
         height: '440px',
@@ -223,9 +188,7 @@ export default {
       this.jetpackIndex > 0 ? this.jetpackIndex-- : (this.jetpackIndex = 0)
     },
     forward() {
-      this.jetpackIndex < this.jetpacks.length
-        ? this.jetpackIndex++
-        : (this.jetpackIndex = 0)
+      this.jetpackIndex < this.jetpacks.length ? this.jetpackIndex++ : (this.jetpackIndex = 0)
     },
     openPDP(data) {
       this.$modal.show(
@@ -272,9 +235,9 @@ export default {
       }
     },
 
-    //Needs update for additional colors
+    // Needs update for additional colors
     getBGColor(item) {
-      let title = item.toLowerCase()
+      const title = item.toLowerCase()
       if (title.includes('banana')) {
         return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'
       } else if (title.includes('raspberry')) {
@@ -293,7 +256,7 @@ export default {
         return 'linear-gradient(146deg, rgba(197,197,224,1) 0%, rgba(27,19,24,1) 100%)'
       } else if (title.includes('very')) {
         return 'linear-gradient(146deg, rgba(229,128,140,1) 0%, rgba(219,30,53,1) 100%)'
-      }else {
+      } else {
         return 'none'
       }
     },
@@ -311,23 +274,24 @@ export default {
     },
     async fetchProducts() {
       const product = await this.$nacelle.data.product({
-      handle: this.activeProductHandle
-    })
+        handle: this.activeProductHandle
+      })
 
-    if (product) {
-      this.productPrice = product.priceRange.min
-      if (product.availableForSale) {
-        this.jetpacks = product.variants.filter(v=>v.availableForSale).map(variant => {
-          const variantId = this.formatVariantId(variant.id)
-          return {
-            ...variant,
-            formattedId: variantId,
-            url: `/products/${product.handle}?variant=${variantId}`
-          }
-          
-        })
+      if (product) {
+        this.productPrice = product.priceRange.min
+        if (product.availableForSale) {
+          this.jetpacks = product.variants
+            .filter(v => v.availableForSale)
+            .map(variant => {
+              const variantId = this.formatVariantId(variant.id)
+              return {
+                ...variant,
+                formattedId: variantId,
+                url: `/products/${product.handle}?variant=${variantId}`
+              }
+            })
+        }
       }
-    }
     }
   },
 
@@ -339,11 +303,11 @@ export default {
     this.screenWidth = window.innerWidth
     const vm = this
 
-    //Get products by handle
+    // Get products by handle
     this.fetchProducts()
 
     this.setWidthData()
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
       if (window.innerWidth < 1024) {
         vm.itemsToShow = 1
         vm.indicatorVisible = true

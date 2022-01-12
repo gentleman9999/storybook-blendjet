@@ -1,16 +1,22 @@
 <template>
   <div class="dropdown-container">
-    <div class="mobile-select-container" v-if="isMobile">
-      <div class="select-cover" role="button" >
-        <span class="option-label" :style="`margin-right:${productType === 'jetpacks' ? '7px' : '14px'}`">{{label}}:</span>
-        <span class="select-cover__selected" >{{formatTitle(product.title)}}</span>
-        <CaretDown :styleObj="{marginLeft: '16px', marginBottom: '3px'}" :color="'#FFF'"/>
+    <div class="mobile-select-container">
+      <div class="select-cover" role="button">
+        <span
+          class="option-label"
+          :style="`margin-right:${productType === 'jetpacks' ? '7px' : '14px'}`"
+          >{{ label }}:</span
+        >
+        <span class="select-cover__selected">{{ formatTitle(product.title) }}</span>
+        <CaretDown :styleObj="{ marginLeft: '16px', marginBottom: '3px' }" :color="'#FFF'" />
       </div>
-      <select class="mobile-select" @change="updateSelect(selectModel)" v-model="selectModel" >
-        <option v-for="(item, i) in items" :key="i" :value="item">{{formatTitle(item.title)}}</option>
+      <select class="mobile-select" @change="updateSelect(selectModel)" v-model="selectModel">
+        <option v-for="(item, i) in items" :key="i" :value="item">{{
+          formatTitle(item.title)
+        }}</option>
       </select>
     </div>
-   <div class="dropdown-cart" tabindex="0"  @focusout="visible = false" role="menu" v-if="!isMobile">
+    <!-- <div class="dropdown-cart" tabindex="0"  @focusout="visible = false" role="menu" v-if="!isMobile">
        <transition name="fade">
         <ul :is="type.main" v-if="visible" class="dropdown-content-cart">
           <li :is="type.item" class="cart-title">{{label}}</li>
@@ -51,7 +57,7 @@
         <span class="selected-option" >{{formatTitle(product.title)}}</span>
         <CaretDown :styleObj="{marginLeft: '16px'}" :color="'#FFF'"/>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -94,12 +100,11 @@ export default {
       isMobile: false,
       selectModel: '',
       selectVisible: false
-      
     }
   },
   methods: {
     toggleVisible() {
-      this.visible = !this.visible;
+      this.visible = !this.visible
     },
     toggleSelectVisible() {
       this.selectVisible = !this.selectVisible
@@ -109,25 +114,26 @@ export default {
     },
     updateSelect(item) {
       this.$emit(`update:${this.productType}`, item)
-      this.visible = false;
+      this.visible = false
     },
     formatSwatchName(value) {
-      const color = String(value).replace(/\s+/g, '-').toLowerCase()
+      const color = String(value)
+        .replace(/\s+/g, '-')
+        .toLowerCase()
       return `swatch-color__${color}`
     }
   },
   mounted() {
-    this.selectModel = {...this.product}
-    if(window.innerWidth < 768 ) {
-      this.visible = true;
-      this.isMobile = true;
-    } 
+    this.selectModel = { ...this.product }
+    if (window.innerWidth < 768) {
+      this.visible = true
+      this.isMobile = true
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .dropbtn {
   color: $primary-purple;
   outline: none;
@@ -154,13 +160,12 @@ export default {
   }
 }
 
-
 .dropdown-content-cart {
   background-color: $primary-purple-tint;
   border-radius: 12px;
   width: 287px;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: flex-start;
   flex-flow: column nowrap;
@@ -180,7 +185,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    
+
     &:nth-child(even) {
       background-color: $secondary-purple-4;
     }
@@ -197,29 +202,34 @@ export default {
 }
 
 .select-cover {
-    pointer-events: none;
-    display: flex;
-    align-items: center;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
 
-    &__selected {
-      text-align: center;
-      color: $grayscale-white;
-      border: none;
-      box-shadow: none;
-      text-transform: uppercase;
-      font-family: Bold;
-      letter-spacing: 1.75px;
-      line-height: 1.17;
-      font-size: $text-small;
-    }
+  &__selected {
+    text-align: center;
+    color: $grayscale-white;
+    border: none;
+    box-shadow: none;
+    text-transform: uppercase;
+    font-family: Bold;
+    letter-spacing: 1.75px;
+    line-height: 1.17;
+    font-size: $text-small;
+  }
 }
 
 .mobile-select {
   opacity: 0;
-  top:0;
+  top: 0;
   right: 0;
   position: absolute;
   font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  option {
+    margin-left: 5px;
+  }
 }
 
 .check-selected-container {
@@ -241,15 +251,15 @@ export default {
 }
 
 .banana-blueberry {
-  border-color: #F6F3BB;
-  background-color:  #1E354D;
+  border-color: #f6f3bb;
+  background-color: #1e354d;
 }
 
 .options-cart {
   color: $primary-purple;
   &:hover {
-      @include hover-transition;
-    }
+    @include hover-transition;
+  }
 }
 
 .cart-title {
@@ -274,7 +284,7 @@ export default {
 }
 
 .cart-jp-swatch {
-  border: 2px solid ;
+  border: 2px solid;
   border-radius: 50%;
   height: 23px;
   width: 23px;
@@ -295,8 +305,8 @@ export default {
     background-color: black;
   }
 
-  &__ocean { 
-    background-color:  #49a9e3;
+  &__ocean {
+    background-color: #49a9e3;
   }
 
   &__blue {
@@ -304,7 +314,7 @@ export default {
   }
 
   &__purple {
-    background-color: #c345b3
+    background-color: #c345b3;
   }
 
   &__mint {
@@ -320,11 +330,11 @@ export default {
   }
 
   &__white {
-    background-color: #FFF;
+    background-color: #fff;
   }
 
   &__lavender {
-    background-color: #f9cedf
+    background-color: #f9cedf;
   }
 
   &__lemon {
@@ -332,7 +342,7 @@ export default {
   }
 
   &__red {
-    background-color: #c5343b
+    background-color: #c5343b;
   }
 
   &__coral {
@@ -348,12 +358,9 @@ export default {
   }
 }
 
-
-
 .fade-enter-active {
-  animation: fadeIn;  
+  animation: fadeIn;
   animation-duration: 0.6s;
-
 }
 .fade-leave-active {
   animation: fadeOut;

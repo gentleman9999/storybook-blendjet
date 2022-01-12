@@ -2,16 +2,16 @@
   <div class="jetpack-pdp-container" v-if="productData && jetpacks.length">
     <div class="close" @click="$modal.hideAll">X</div>
     <div class="jetpack-title">
-      {{formatTitle(productData.title)}}
+      {{ formatTitle(productData.title) }}
     </div>
     <div class="rating">
-        <loox-product-rating :product="productData" />
+      <loox-product-rating :product="productData" />
     </div>
     <div class="category">
-      <div class="category__tag">{{category}}</div>
+      <div class="category__tag">{{ category }}</div>
     </div>
     <div class="price-container">
-      <product-price :price="productData.variants[0].price" /> 
+      <product-price :price="productData.variants[0].price" />
     </div>
     <div class="image-carousel">
       <b-carousel
@@ -25,35 +25,43 @@
         <b-carousel-item v-for="(image, i) in productData.media" :key="i">
           <figure class="is-image image-carousel__slide">
             <picture>
-              <img :style="imageStyle" :src="optimizeSource({url:image.src})" :alt="`${image.altText}`">
+              <img
+                :style="imageStyle"
+                :src="optimizeSource({ url: image.src })"
+                :alt="`${image.altText}`"
+              />
             </picture>
           </figure>
         </b-carousel-item>
       </b-carousel>
     </div>
     <div class="jetpack-dropdown-container">
-      <JetpackDropdown 
+      <JetpackDropdown
         v-if="jetpacks"
         :items="jetpacks"
         :product="productData"
         @update="updateJetpack"
       />
-       
     </div>
     <div class="subscribe-select">
       <div class="subscribe-select__selector">
-        <SubscriptionToggle 
+        <SubscriptionToggle
           :product="productData"
           :variant="productData.variants[0]"
           :metafields.sync="productData.metafields"
           :frequency.sync="frequency"
-          
         />
       </div>
       <div class="subscribe-select__info">
-        <div>How do subscriptions work? </div>
+        <div>How do subscriptions work?</div>
         <div class="subscribe-select__info__icon">
-          <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0V0z" fill="none"/><path fill="#373975" d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              fill="#373975"
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
         </div>
       </div>
     </div>
@@ -62,7 +70,7 @@
         <quantity-selector :quantity.sync="quantity" />
       </div>
 
-      <div class="add-to-cart-container__add-button"  @click="$modal.hideAll">
+      <div class="add-to-cart-container__add-button" @click="$modal.hideAll">
         <SubscriptionAddToCartButton
           :product="productData"
           :variant="productData.variants[0]"
@@ -70,21 +78,15 @@
           :all-options-selected="true"
           :only-one-option="true"
           :quantity="quantity"
-          
         />
       </div>
     </div>
-     <div class="shipping-notification">
-      <div class="shipping-notification__label">
-        Want it by {{shippingTime}}?
-      </div>
-      <div class="shipping-notification__countdown">
-        Order within {{shippingCountdown}}
-      </div>
+    <div class="shipping-notification">
+      <div class="shipping-notification__label">Want it by {{ shippingTime }}?</div>
+      <div class="shipping-notification__countdown">Order within {{ shippingCountdown }}</div>
     </div>
     <div class="learn-more">
-      <a>Learn More
-      </a>
+      <a>Learn More </a>
     </div>
   </div>
 </template>
@@ -93,25 +95,21 @@
 import imageOptimize from '~/mixins/imageOptimize'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import SubscriptionToggle from '~/components/subscriptionToggle'
-import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton';
+import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton'
 import JetpackDropdown from '~/components/jetpackDropdown'
 
 export default {
   props: {
     initialProduct: {
       type: Object,
-      default: {},
       required: true
     },
     jetpackProps: {
       type: Array,
-      default: [],
       required: true
     }
   },
-  mixins: [
-    imageOptimize
-  ],
+  mixins: [imageOptimize],
   components: {
     QuantitySelector,
     SubscriptionAddToCartButton,
@@ -121,12 +119,12 @@ export default {
   data() {
     return {
       imageStyle: {
-        height: '252px', 
-        width:'auto'
+        height: '252px',
+        width: 'auto'
       },
       currency: '$',
       currentIndex: 0,
-      productData: {...this.initialProduct},
+      productData: { ...this.initialProduct },
       jetpackMenuVisible: false,
       shippingTime: 'saturday, October 23rd',
       shippingCountdown: '1 hr, 23 minutes',
@@ -140,16 +138,16 @@ export default {
   },
   methods: {
     formatList() {
-      for(let i = 0; i < this.jetpacks.length; i++) {
-        if(this.jetpacks[i].title === this.initialProduct.title) {
+      for (let i = 0; i < this.jetpacks.length; i++) {
+        if (this.jetpacks[i].title === this.initialProduct.title) {
           this.jetpacks.splice(i, 1)
           this.jetpacks.unshift(this.initialProduct)
         }
       }
     },
     updateJetpack(jetpack) {
-      this.productData = this.jetpacks.filter((item) => {
-        return item.title === jetpack.title;
+      this.productData = this.jetpacks.filter(item => {
+        return item.title === jetpack.title
       })[0]
     },
     toggleJetpackMenu() {
@@ -159,12 +157,14 @@ export default {
       return title.split('-')[0].trim()
     },
     handleJetpackMenu() {
-      this.jetpackMenuVisible ? this.jetpackMenuVisible = !this.jetpackMenuVisible : null;
+      if (this.jetpackMenuVisible) {
+        this.jetpackMenuVisible = !this.jetpackMenuVisible
+      }
     }
   },
   mounted() {
-    this.formatList();
-    if(screen.width < 768) {
+    this.formatList()
+    if (screen.width < 768) {
       this.imageStyle.height = '232px'
     }
   }
@@ -172,7 +172,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .jetpack-pdp-container {
   padding: 0.5rem 1rem 1rem 1rem;
 }
@@ -192,7 +191,6 @@ export default {
   text-align: center;
   line-height: 1.17;
   margin-bottom: 5px;
-  
 }
 
 .rating {
@@ -235,7 +233,7 @@ export default {
 
   &__compare-at {
     text-decoration: line-through;
-    color: $secondary-purple-2
+    color: $secondary-purple-2;
   }
 }
 
@@ -263,7 +261,7 @@ export default {
 }
 
 .jetpack-dropdown-container {
-  display:flex;
+  display: flex;
   justify-content: center;
   margin-top: 15px;
 }
@@ -278,7 +276,6 @@ export default {
     margin-bottom: 20px;
   }
   &__info {
-  
     display: flex;
     justify-content: center;
     line-height: 1.38;
@@ -337,7 +334,7 @@ export default {
 }
 
 .fade-enter-active {
-  animation: fadeIn;  
+  animation: fadeIn;
   animation-duration: 0.6s;
 }
 
@@ -345,5 +342,4 @@ export default {
   animation: fadeOut;
   animation-duration: 0.6s;
 }
-
 </style>

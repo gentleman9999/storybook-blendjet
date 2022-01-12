@@ -98,6 +98,12 @@
             <img
               :class="['product-select__image-carousel__img', { jetpack: isJetpack }]"
               :src="optimizeSource({ url: productImage, height: 1200 })"
+              @mousedown.prevent="dragStart"
+              @mousemove.prevent="dragProgress"
+              @mouseleave.prevent="dragExit"
+              @mouseup.prevent="dragEnd(incrementVariant, decrementVariant)"
+              v-touch:swipe.right="decrementVariant"
+              v-touch:swipe.left="incrementVariant"
             />
           </transition>
         </div>
@@ -747,6 +753,7 @@ import rechargeProperties from '~/mixins/rechargeMixin'
 import productMetafields from '~/mixins/productMetafields'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
+import carouselDragEvents from '~/mixins/carouselDragEvents'
 import Guarantee from '~/components/svg/30dayGuarantee'
 import Close from '~/components/svg/modalClose'
 import Tabs from '~/components/tabs'
@@ -821,7 +828,8 @@ export default {
     rechargeProperties,
     productMetafields,
     availableOptions,
-    allOptionsSelected
+    allOptionsSelected,
+    carouselDragEvents
   ],
   props: {
     product: {
@@ -981,7 +989,7 @@ export default {
      * TODO: This should be done using the vue-router...
      */
     addHashToLocation() {
-      window.history.pushState(
+      window.history.replaceState(
         {},
         null,
         this.$route.path + '?variant=' + this.formatVariantId(this.currentVariant.id)

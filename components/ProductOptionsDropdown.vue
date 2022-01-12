@@ -1,11 +1,12 @@
 <template>
-  <div v-if="option && option.values.length">
+  <div v-if="option && option.values.length && selectType !== 'native'">
     <div
       :class="{
         'dropdown-upsell': upsellStyle,
         dropdown: !upsellStyle
       }"
       tabindex="0"
+      role="button"
       @focusout="focusOut"
       :style="styleObj"
     >
@@ -16,7 +17,6 @@
           'dropbtn-upsell': upsellStyle,
           dropbtn: !upsellStyle
         }"
-        role="button"
         @click.prevent="toggleOpen"
         v-show="!isOpen"
       >
@@ -68,6 +68,31 @@
       </transition>
     </div>
   </div>
+  <div v-else-if="option && option.values.length">
+    <div class="dropdown-container">
+      <div class="mobile-select-container">
+        <div class="select-cover" role="button">
+          <span class="option-label" style="margin-right:14px"> {{ option.name }}: </span>
+          <span class="select-cover__selected"
+            ><span v-if="selectedOptionValue && selectedOptionValue.value">
+              {{ selectedOptionValue.value }}
+            </span>
+            <span v-else>{{ selectedOptionValue }}</span></span
+          >
+          <CaretDown :styleObj="{ marginLeft: '16px', marginBottom: '3px' }" :color="'#FFF'" />
+        </div>
+        <select
+          class="mobile-select"
+          :value="selectedOptionValue.value"
+          @change="setOptionValue(option.values[$event.target.selectedIndex])"
+        >
+          <option v-for="(optionItem, i) in option.values" :key="i" :value="optionItem.value">
+            {{ optionItem.value }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -114,6 +139,10 @@ export default {
     alwaysOpen: {
       type: Boolean,
       default: false
+    },
+    selectType: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -127,7 +156,7 @@ export default {
     }
   },
   mounted() {
-    if (this.option.name === 'Flavor') this.setOptionValue(this.option.values[0].value)
+    if (this.option.name === 'Flavor') this.setOptionValue(this.option.values[0])
     if (this.alwaysOpen) {
       this.isOpen = this.alwaysOpen
     }
@@ -226,6 +255,57 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.mobile-select-container {
+  display: flex;
+  position: relative;
+}
+
+.select-cover {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+
+  &__selected {
+    text-align: center;
+    color: $grayscale-white;
+    border: none;
+    box-shadow: none;
+    text-transform: uppercase;
+    font-family: Bold;
+    letter-spacing: 1.75px;
+    line-height: 1.17;
+    font-size: $text-small;
+  }
+}
+
+.mobile-select {
+  opacity: 0;
+  top: 0;
+  right: 0;
+  position: absolute;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  option {
+    margin-left: 5px;
+  }
+}
+
+.option-label {
+  font-family: Regular;
+  font-size: $text-small;
+  letter-spacing: 0.5px;
+  line-height: 1.17;
+  color: $grayscale-white;
+}
+
+.selected-option {
+  color: $grayscale-white;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+}
+
 /* Dropdown Button */
 .dropbtn {
   color: $primary-purple;
@@ -233,6 +313,9 @@ export default {
   display: flex;
   align-items: center;
   margin: 0 auto;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 .dropbtn-upsell {

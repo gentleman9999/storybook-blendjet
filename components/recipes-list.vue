@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-container"> 
+  <div class="recipe-container">
     <div class="heading">
       Never. Ending. Blending.
     </div>
@@ -17,16 +17,16 @@
         <li><a>Toppings</a></li>
         <li><a>Desserts</a></li>
 
-        <li> <a aria-hidden="true">Smoothies</a></li>
-        <li> <a aria-hidden="true">Shakes</a></li>
-        <li> <a aria-hidden="true">Cocktails</a></li>
-        <li> <a aria-hidden="true">Dips</a></li>
-        <li> <a aria-hidden="true">Mousse</a></li>
-        <li> <a aria-hidden="true">Dressings</a></li>
-        <li> <a aria-hidden="true">Juices</a></li>
-        <li> <a aria-hidden="true">Pasta Sauce</a></li>
-        <li> <a aria-hidden="true">Toppings</a></li>
-        <li> <a aria-hidden="true">Desserts</a></li>
+        <li><a aria-hidden="true">Smoothies</a></li>
+        <li><a aria-hidden="true">Shakes</a></li>
+        <li><a aria-hidden="true">Cocktails</a></li>
+        <li><a aria-hidden="true">Dips</a></li>
+        <li><a aria-hidden="true">Mousse</a></li>
+        <li><a aria-hidden="true">Dressings</a></li>
+        <li><a aria-hidden="true">Juices</a></li>
+        <li><a aria-hidden="true">Pasta Sauce</a></li>
+        <li><a aria-hidden="true">Toppings</a></li>
+        <li><a aria-hidden="true">Desserts</a></li>
       </ul>
       <!-- <div class="opacity-block-bottom"></div> -->
     </div>
@@ -34,9 +34,7 @@
 </template>
 
 <script>
-export default {
-  
-}
+export default {}
 </script>
 
 <style scoped lang="scss">
@@ -44,7 +42,7 @@ $duration: 10s;
 
 @keyframes scroll {
   from {
-    transform: traslateY(0)
+    transform: traslateY(0);
   }
   to {
     transform: translateY(-100%);
@@ -74,24 +72,23 @@ $duration: 10s;
   align-items: center;
   flex-flow: column nowrap;
   height: 100%;
-
 }
 
 .opacity-block-top {
   position: absolute;
-  top:0em;
-  left:0em;
+  top: 0em;
+  left: 0em;
   width: 100%;
   height: 150px;
 }
 
 .opacity-block-bottom {
   position: absolute;
-  bottom:0em;
-  left:0em;
+  bottom: 0em;
+  left: 0em;
   width: 100%;
-  background: linear-gradient(to top, rgba(55,55,149,1) 0%, rgba(30,144,187,0) 100%);
-  height:  150px;
+  background: linear-gradient(to top, rgba(55, 55, 149, 1) 0%, rgba(30, 144, 187, 0) 100%);
+  height: 150px;
 }
 
 .list-wrapper {
@@ -118,15 +115,12 @@ $duration: 10s;
 
   &:hover,
   &:active,
-  &:focus
-   {
+  &:focus {
     animation-play-state: paused;
-    
   }
 
   a {
     color: $grayscale-white;
   }
 }
-
 </style>

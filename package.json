@@ -21,6 +21,7 @@
     "@nacelle/nacelle-klaviyo-nuxt-module": "^0.0.12",
     "@nacelle/nacelle-loox-nuxt-module": "^0.0.1",
     "@nacelle/nacelle-nuxt-module": "5.6.0",
+    "@nacelle/shopify-checkout": "^0.0.7",
     "@nuxt/core": "^2.14.7",
     "@nuxtjs/axios": "^5.9.5",
     "@nuxtjs/bulma": "^1.2.7",
@@ -82,7 +83,7 @@
     "vue-observe-visibility": "^0.4.6",
     "vue-social-sharing": "^3.0.2",
     "vue-timeago": "^5.1.2",
-    "vue2-touch-events": "^2.3.1"
+    "vue2-touch-events": "^3.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

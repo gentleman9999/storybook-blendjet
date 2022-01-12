@@ -29,10 +29,10 @@
     >
       <div class="canvas-bfcm">
         <div class="col-bfcm">
-          <span class="entry-title-bfcm">Holiday Sale!</span>
+          <span class="entry-title-bfcm">New Year's Sale!</span>
           <span class="content-split-element-bfcm">10% Off 1</span>
-          <span class="content-split-element-bfcm">15% Off 2</span>
-          <span class="content-split-element-bfcm">20% Off 3+</span>
+          <span class="content-split-element-bfcm">12% Off 2</span>
+          <span class="content-split-element-bfcm">15% Off 3+</span>
           <span class="simple-text-bfcm"
             >BlendJet - JetPack - Sleeve - Book <b class="b-hide-bfcm">|</b>
             <span>Automatically Applied at Checkout</span></span

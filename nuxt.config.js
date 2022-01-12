@@ -128,7 +128,8 @@ export default {
       { src: '/scripts/currencycookie.js' },
       // { src: 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=NhVDeY', async: true},
       { src: 'https://cdn.weglot.com/weglot.min.js', async: true },
-      { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true }
+      { src: 'https://js.afterpay.com/afterpay-1.x.js', defer: true },
+      { src: '/scripts/useway.js', defer: true }
     ]
   },
   /*
@@ -191,7 +192,9 @@ export default {
     '~/plugins/pinterest-pixel.client.js',
     '~/plugins/snap-pixel.client.js',
     '~/plugins/vue-mq.js',
-    '~/plugins/nuxt-jsonld'
+    '~/plugins/nuxt-jsonld',
+    '~/plugins/vueTouchEvents',
+    { src: '~/plugins/shopifyCheckout.js', mode: 'client' }
   ],
 
   router: {
@@ -249,6 +252,7 @@ export default {
 
   gtm: {
     id: 'GTM-NLRSLWR',
+    respectDoNotTrack: false
 
     // uncomment these for debugging on localhost
     // enabled: true,
@@ -287,7 +291,10 @@ export default {
   publicRuntimeConfig: {
     gtm: {
       id: process.env.GOOGLE_TAG_MANAGER_ID
-    }
+    },
+    myshopifyDomain: process.env.SHOPIFY_DOMAIN,
+    shopifyStorefrontCheckoutToken: process.env.STOREFRONT_CHECKOUT_TOKEN,
+    shopifyStorefrontApiVersion: '2021-07'
   },
 
   polyfill: {

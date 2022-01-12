@@ -12,14 +12,24 @@
         />
       </div>
       <div class="add-to-cart">
-        <CartDropdown
-          v-if="variants.length > 1 && allOptions.length <= 1"
-          productType="any"
-          :label="variantLabel"
-          :items="variants"
-          :product="selectedVariant"
-          @update:any="updateSelectedVariant"
-        />
+        <template v-if="variants.length > 1 && allOptions.length <= 1">
+          <CartDropdownColor
+            v-if="variantLabel.toLowerCase().includes('color')"
+            :label="variantLabel"
+            :items="variants"
+            :product="selectedVariant"
+            @update="updateSelectedVariant($event, 'color')"
+            :options="allOptions"
+          />
+          <CartDropdown
+            v-else
+            productType="any"
+            :label="variantLabel"
+            :items="variants"
+            :product="selectedVariant"
+            @update:any="updateSelectedVariant"
+          />
+        </template>
         <CartDropdownMultiOptions
           v-else-if="variants.length > 1 && allOptions.length > 1"
           :options="allOptions"
@@ -30,8 +40,29 @@
           :currentOption="currentOption"
         />
         <div class="quantity">
-          <p>Quantity:</p>
-          <QuantityDropdown :quantity="quantity" @update:quantity="updateQuantity" />
+          <QuantityDropdown
+            v-if="hasQuantityOption"
+            :items="quantityLength"
+            :quantity="quantity"
+            @update:quantity="updateQuantity"
+            label="Quantity"
+          />
+          <QuantityDropdown v-else :quantity="quantity" @update:quantity="updateQuantity" />
+        </div>
+        <div
+          v-if="allOptions.length <= 1 && quantityOptionSelected.quantity.length"
+          class="product-select__controls__quantity-set"
+        >
+          <div class="product-select__controls__quantity-set--label">
+            {{ quantityOptionSelected.title }}:
+          </div>
+          <Tabs
+            :tabItems="quantityOptionSelected.quantity"
+            :selected="quantity"
+            :no-select-start="true"
+            @activeTab="updateQuantity"
+            id="custom-tabs-cartupsell"
+          />
         </div>
 
         <div class="add-to-cart-button">
@@ -54,12 +85,15 @@
 <script>
 import { mapActions } from 'vuex'
 import { stringify } from 'querystring'
+import { cloneDeep } from 'lodash'
 
 // Components
 import CartDropdown from '~/components/cartDropdown'
+import CartDropdownColor from '~/components/cartDropdownColor'
 import QuantityDropdown from '~/components/quantityDropdown'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
+import Tabs from '~/components/tabs'
 
 // Mixins
 import rechargeProperties from '~/mixins/rechargeMixin'
@@ -67,12 +101,17 @@ import productMetafields from '~/mixins/productMetafields'
 import imageOptimize from '~/mixins/imageOptimize'
 import availableOptions from '~/mixins/availableOptions'
 
+import { createClient } from '~/plugins/contentful.js'
+const client = createClient()
+
 export default {
   components: {
     CartDropdown,
+    CartDropdownColor,
     QuantityDropdown,
     Checkbox,
-    CartDropdownMultiOptions
+    CartDropdownMultiOptions,
+    Tabs
   },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
@@ -86,7 +125,18 @@ export default {
       localized: false,
       imageInterval: null,
       imageIndex: 0,
-      subscriptionDiscountVariant: null
+      subscriptionDiscountVariant: null,
+      hasQuantityOption: false,
+      quantityOptionVariant: {},
+      quantityOptionDefault: {
+        quantity: [],
+        title: ''
+      },
+      quantityOptionSelected: {
+        quantity: [],
+        title: ''
+      },
+      quantityLength: []
     }
   },
   props: {
@@ -99,6 +149,10 @@ export default {
     withVarietyPack: {
       type: Boolean,
       default: false
+    },
+    productContentful: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
@@ -172,6 +226,19 @@ export default {
     }
   },
   watch: {
+    selectedVariant: {
+      handler(newVal) {
+        if (this.hasQuantityOption) {
+          const title = newVal?.title?.toLowerCase()?.replace(/\s/g, '')
+          if (this.quantityOptionVariant[title]) {
+            this.quantityOptionSelected = cloneDeep(this.quantityOptionVariant[title])
+          } else {
+            this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+          }
+        }
+      },
+      immediate: true
+    },
     isBundleVariant(is) {
       if (is) {
         this.imageInterval = setInterval(() => {
@@ -185,7 +252,10 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
+    for (let i = 1; i <= 30; i++) {
+      this.quantityLength.push(i)
+    }
     this.variants = this.product?.variants
       ?.filter(v => v.availableForSale)
       ?.map(v => {
@@ -213,8 +283,19 @@ export default {
       })
     }
 
-    this.selectedVariant = this.variants?.[0]
+    if (this.productContentful?.quantityOption?.fields) {
+      this.hasQuantityOption = true
+      const qtyOption = this.productContentful?.quantityOption?.fields
+      this.quantityOptionDefault.title = qtyOption.title
+      this.quantityOptionDefault.quantity = qtyOption.quantity?.split(',')
+      this.quantityOptionDefault.quantity = this.quantityOptionDefault.quantity.map(item =>
+        Number(item)
+      )
+      this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+    }
+    await this.fetchQuantityOptions()
 
+    this.selectedVariant = this.variants?.[0]
     this.initLocalizedPrice()
     this.$emit('ready')
   },
@@ -223,8 +304,45 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['addLineItem']),
-    updateSelectedVariant(newVariant) {
-      this.selectedVariant = newVariant
+    updateSelectedVariant(newVariant, optionType = '') {
+      if (optionType === 'color') {
+        const foundVariant = this.variants.find(
+          variant => variant.selectedOptions[0].value === newVariant.value
+        )
+        this.selectedVariant = foundVariant
+      } else {
+        this.selectedVariant = newVariant
+      }
+    },
+    async fetchQuantityOptions() {
+      if (this.productContentful?.variants?.length) {
+        const variants = this.productContentful?.variants
+        for (let i = 0; i < variants.length; i++) {
+          const variant = variants[i]
+          const title = variant?.fields?.title?.toLowerCase()
+          if (variant?.fields?.quantityOption?.fields?.quantity) {
+            const qtyOption = {
+              title: variant?.fields?.quantityOption?.fields?.title,
+              quantity: variant?.fields?.quantityOption?.fields?.quantity
+                ?.split(',')
+                ?.map(item => Number(item))
+            }
+            this.$set(this.quantityOptionVariant, title, qtyOption)
+          } else if (variant?.fields?.quantityOption?.sys) {
+            let response = null
+            await client.getEntry(variant?.fields?.quantityOption?.sys.id).then(res => {
+              response = res
+            })
+            if (response) {
+              const qtyOption = {
+                title: response?.fields?.title,
+                quantity: response?.fields?.quantity?.split(',')?.map(item => Number(item))
+              }
+              this.$set(this.quantityOptionVariant, title, qtyOption)
+            }
+          }
+        }
+      }
     },
     /**
      * Formats a Storefront API encoded ID to a plain-language variant ID
@@ -486,6 +604,7 @@ export default {
   padding-top: 14px;
 
   button {
+    min-width: 250px;
     border-radius: 40px;
     height: 40px;
     display: flex;
@@ -507,5 +626,62 @@ export default {
 .subscribe-select {
   display: flex;
   justify-content: center;
+}
+
+.product-select__controls__quantity-set {
+  width: 100%;
+  &--label {
+    font-family: Regular;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    line-height: 1.17;
+    color: #ffffff;
+    text-align: center;
+  }
+}
+</style>
+<style lang="scss">
+#custom-tabs-cartupsell {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  .tab-container {
+    width: 100%;
+    max-width: 250px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid #fff;
+    background: #fff;
+    .tab-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      a {
+        height: 100%;
+        width: 100%;
+        color: $primary-purple;
+        font-family: Bold;
+        line-height: 1.17;
+        letter-spacing: 1.75px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-size: 12px;
+        &:hover {
+          background: none;
+        }
+      }
+      &.is-active {
+        a {
+          background: #e0e0ff;
+          border: 2px solid $primary-purple;
+          &:hover {
+            background: #e0e0ff;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

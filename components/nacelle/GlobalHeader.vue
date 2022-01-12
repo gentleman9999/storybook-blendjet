@@ -1,6 +1,7 @@
 <template>
   <div class="global-header" :class="headerClass">
     <div class="free-shipping-banner">
+      <img id="accessibilityWidget" class="useway-icon" src="/images/body_wh.svg" />
       <span class="free-shipping-banner__text">{{ freeShippingMessage }}</span>
     </div>
     <!-- Main Nav -->
@@ -363,7 +364,7 @@ import MainNavCart from '~/components/nacelle/MainNavCart'
 import MainNavBurger from '~/components/nacelle/MainNavBurger'
 import Axios from 'axios'
 import Cart from '~/components/nacelle/Cart'
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 import customerChat from '~/mixins/customerChat'
 import optimonk from '~/mixins/optimonk'
@@ -470,7 +471,7 @@ export default {
         method: 'get',
         url: `https://checkout.gointerpay.net/v2.21/localize?MerchantId=3af65681-4f06-46e4-805a-f2cb8bdaf1d4&MerchantPrices=${price}`
       }
-      const localPrice = await Axios(config)
+      await Axios(config)
         .then(res => {
           if (res.data.Country !== 'US') {
             this.freeShippingMessage = 'FREE WORLDWIDE SHIPPING'
@@ -506,7 +507,9 @@ export default {
       this.jetpackMenuVisible = !this.jetpackMenuVisible
     },
     handleJetpackMenu() {
-      this.jetpackMenuVisible ? (this.jetpackMenuVisible = !this.jetpackMenuVisible) : null
+      if (this.jetpackMenuVisible) {
+        this.jetpackMenuVisible = !this.jetpackMenuVisible
+      }
     }
   }
 }
@@ -533,6 +536,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  .useway-icon {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 10px;
+    cursor: pointer;
+  }
 
   &__text {
     color: $grayscale-white;

@@ -1,159 +1,157 @@
 <template>
-  <transition name="fade">
-    <div class="cart-container" v-show="cartVisible">
-      <CartUpsells
-        :closeUpsellModal="closeUpsellModal"
-        :checkoutDisabled="checkoutDisabled"
-        :showUpsell="showUpsell"
-        :isMobile="isMobile"
-      />
+  <div class="cart-container" v-show="cartVisible">
+    <CartUpsells
+      :closeUpsellModal="closeUpsellModal"
+      :checkoutDisabled="checkoutDisabled"
+      :showUpsell="showUpsell"
+      :isMobile="isMobile"
+    />
 
-      <div class="flyout">
-        <cart-flyout-header @close="handleClose" />
+    <div class="flyout">
+      <cart-flyout-header @close="handleClose" />
 
-        <div class="cart-items">
-          <cart-item
-            v-for="item in lineItems"
-            :key="item.variant.id"
-            :item="item"
-            @checkoutDisabled="handleCheckoutDisable"
-          />
-        </div>
-        <div class="cart-message">{{ cartMessage }}</div>
-        <!-- <div class="free-shipping" v-if="country === 'US'"> -->
-        <div class="free-shipping">
-          <div class="free-shipping__svg">
-            <svg
-              width="356px"
-              height="26px"
-              viewBox="0 0 356 26"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-            >
-              <title>FREE SHIPPING</title>
-              <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <g id="D-BlendJet-Cart_Picker" transform="translate(-1065.000000, -532.000000)">
-                  <g id="Cart" transform="translate(1046.000000, 0.000000)">
-                    <g id="FREE-SHIPPING" transform="translate(20.000000, 533.000000)">
-                      <rect
-                        id="Rectangle"
-                        stroke="#373795"
-                        fill="#FFFFFF"
-                        x="0"
-                        y="0"
-                        width="354"
-                        height="24"
-                        rx="6"
-                      ></rect>
-                      <g id="Group-4" transform="translate(110.000000, 8.000000)"></g>
-                      <g id="Group" transform="translate(80.000000, 5.000000)">
-                        <text
-                          id="FREE-2-DAY-SHIPPING"
-                          font-family="Helvetica"
-                          font-size="10"
-                          font-weight="normal"
-                          line-spacing="14"
-                          letter-spacing="1.45833333"
+      <div class="cart-items">
+        <cart-item
+          v-for="item in lineItems"
+          :key="item.variant.id"
+          :item="item"
+          @checkoutDisabled="handleCheckoutDisable"
+        />
+      </div>
+      <div class="cart-message">{{ cartMessage }}</div>
+      <!-- <div class="free-shipping" v-if="country === 'US'"> -->
+      <div class="free-shipping">
+        <div class="free-shipping__svg">
+          <svg
+            width="356px"
+            height="26px"
+            viewBox="0 0 356 26"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <title>FREE SHIPPING</title>
+            <g id="Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="D-BlendJet-Cart_Picker" transform="translate(-1065.000000, -532.000000)">
+                <g id="Cart" transform="translate(1046.000000, 0.000000)">
+                  <g id="FREE-SHIPPING" transform="translate(20.000000, 533.000000)">
+                    <rect
+                      id="Rectangle"
+                      stroke="#373795"
+                      fill="#FFFFFF"
+                      x="0"
+                      y="0"
+                      width="354"
+                      height="24"
+                      rx="6"
+                    ></rect>
+                    <g id="Group-4" transform="translate(110.000000, 8.000000)"></g>
+                    <g id="Group" transform="translate(80.000000, 5.000000)">
+                      <text
+                        id="FREE-2-DAY-SHIPPING"
+                        font-family="Helvetica"
+                        font-size="10"
+                        font-weight="normal"
+                        line-spacing="14"
+                        letter-spacing="1.45833333"
+                        fill="#373795"
+                      >
+                        <tspan x="39.5" y="10">FREE EXPRESS SHIPPING</tspan>
+                      </text>
+                      <g>
+                        <path
+                          d="M31.7462908,6.80922432 L30.5059347,2.90566038 C30.3931751,2.55345912 30.0548961,2.28930818 29.6884273,2.28930818 L25.8545994,2.28930818 L25.8545994,0.410901468 C25.8545994,0.176100629 25.6854599,0 25.4881306,0 L13.3664688,0 C13.1691395,0 13,0.176100629 13,0.410901468 L13,11.0943396 C13,11.2997904 13.1691395,11.475891 13.3664688,11.475891 L15.227003,11.475891 C15.227003,11.475891 15.227003,11.475891 15.227003,11.475891 C15.227003,12.884696 16.3264095,14 17.6513353,14 C18.9762611,14 20.0756677,12.8553459 20.0756677,11.475891 C20.0756677,11.475891 20.0756677,11.475891 20.0756677,11.475891 L24.8961424,11.475891 C24.8961424,11.475891 24.8961424,11.475891 24.8961424,11.475891 C24.8961424,12.884696 25.995549,14 27.3204748,14 C28.6454006,14 29.7448071,12.8553459 29.7448071,11.475891 C29.7448071,11.475891 29.7448071,11.475891 29.7448071,11.475891 L31.5771513,11.475891 C31.8026706,11.475891 32,11.2704403 32,11.0356394 L32,8.5115304 C32,7.9245283 31.9154303,7.36687631 31.7462908,6.80922432 Z M17.6513353,12.6792453 C17.0311573,12.6792453 16.495549,12.1509434 16.495549,11.475891 C16.495549,10.8301887 17.0029674,10.2725367 17.6513353,10.2725367 C18.2715134,10.2725367 18.8071217,10.8008386 18.8071217,11.475891 C18.8071217,12.1509434 18.2997033,12.6792453 17.6513353,12.6792453 Z M27.3486647,12.6792453 C26.7284866,12.6792453 26.1928783,12.1509434 26.1928783,11.475891 C26.1928783,10.8301887 26.7002967,10.2725367 27.3486647,10.2725367 C27.9970326,10.2725367 28.4762611,10.8301887 28.4762611,11.475891 C28.4762611,12.1509434 27.9688427,12.6792453 27.3486647,12.6792453 Z M29.9985163,6.31027254 L26.2210682,6.31027254 C26.0237389,6.31027254 25.8827893,6.16352201 25.8827893,5.95807128 L25.8827893,3.99161426 C25.8827893,3.78616352 26.0237389,3.639413 26.2210682,3.639413 L29.1246291,3.639413 C29.2655786,3.639413 29.4065282,3.72746331 29.462908,3.87421384 L30.1676558,6.0754717 C30.1958457,6.19287212 30.111276,6.31027254 29.9985163,6.31027254 Z"
+                          id="Shape"
                           fill="#373795"
-                        >
-                          <tspan x="39.5" y="10">FREE EXPRESS SHIPPING</tspan>
-                        </text>
-                        <g>
-                          <path
-                            d="M31.7462908,6.80922432 L30.5059347,2.90566038 C30.3931751,2.55345912 30.0548961,2.28930818 29.6884273,2.28930818 L25.8545994,2.28930818 L25.8545994,0.410901468 C25.8545994,0.176100629 25.6854599,0 25.4881306,0 L13.3664688,0 C13.1691395,0 13,0.176100629 13,0.410901468 L13,11.0943396 C13,11.2997904 13.1691395,11.475891 13.3664688,11.475891 L15.227003,11.475891 C15.227003,11.475891 15.227003,11.475891 15.227003,11.475891 C15.227003,12.884696 16.3264095,14 17.6513353,14 C18.9762611,14 20.0756677,12.8553459 20.0756677,11.475891 C20.0756677,11.475891 20.0756677,11.475891 20.0756677,11.475891 L24.8961424,11.475891 C24.8961424,11.475891 24.8961424,11.475891 24.8961424,11.475891 C24.8961424,12.884696 25.995549,14 27.3204748,14 C28.6454006,14 29.7448071,12.8553459 29.7448071,11.475891 C29.7448071,11.475891 29.7448071,11.475891 29.7448071,11.475891 L31.5771513,11.475891 C31.8026706,11.475891 32,11.2704403 32,11.0356394 L32,8.5115304 C32,7.9245283 31.9154303,7.36687631 31.7462908,6.80922432 Z M17.6513353,12.6792453 C17.0311573,12.6792453 16.495549,12.1509434 16.495549,11.475891 C16.495549,10.8301887 17.0029674,10.2725367 17.6513353,10.2725367 C18.2715134,10.2725367 18.8071217,10.8008386 18.8071217,11.475891 C18.8071217,12.1509434 18.2997033,12.6792453 17.6513353,12.6792453 Z M27.3486647,12.6792453 C26.7284866,12.6792453 26.1928783,12.1509434 26.1928783,11.475891 C26.1928783,10.8301887 26.7002967,10.2725367 27.3486647,10.2725367 C27.9970326,10.2725367 28.4762611,10.8301887 28.4762611,11.475891 C28.4762611,12.1509434 27.9688427,12.6792453 27.3486647,12.6792453 Z M29.9985163,6.31027254 L26.2210682,6.31027254 C26.0237389,6.31027254 25.8827893,6.16352201 25.8827893,5.95807128 L25.8827893,3.99161426 C25.8827893,3.78616352 26.0237389,3.639413 26.2210682,3.639413 L29.1246291,3.639413 C29.2655786,3.639413 29.4065282,3.72746331 29.462908,3.87421384 L30.1676558,6.0754717 C30.1958457,6.19287212 30.111276,6.31027254 29.9985163,6.31027254 Z"
-                            id="Shape"
-                            fill="#373795"
-                            fill-rule="nonzero"
-                          ></path>
-                          <line
-                            x1="10"
-                            y1="9.5"
-                            x2="-1.06858966e-14"
-                            y2="9.5"
-                            id="Line-2"
-                            stroke="#373795"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                          ></line>
-                          <line
-                            x1="10"
-                            y1="3.5"
-                            x2="5.5"
-                            y2="3.5"
-                            id="Line-2-Copy"
-                            stroke="#373795"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                          ></line>
-                          <line
-                            x1="10"
-                            y1="6.5"
-                            x2="3.5"
-                            y2="6.5"
-                            id="Line-2-Copy-2"
-                            stroke="#373795"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                          ></line>
-                        </g>
+                          fill-rule="nonzero"
+                        ></path>
+                        <line
+                          x1="10"
+                          y1="9.5"
+                          x2="-1.06858966e-14"
+                          y2="9.5"
+                          id="Line-2"
+                          stroke="#373795"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        ></line>
+                        <line
+                          x1="10"
+                          y1="3.5"
+                          x2="5.5"
+                          y2="3.5"
+                          id="Line-2-Copy"
+                          stroke="#373795"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        ></line>
+                        <line
+                          x1="10"
+                          y1="6.5"
+                          x2="3.5"
+                          y2="6.5"
+                          id="Line-2-Copy-2"
+                          stroke="#373795"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        ></line>
                       </g>
                     </g>
                   </g>
                 </g>
               </g>
-            </svg>
-          </div>
+            </g>
+          </svg>
         </div>
-        <div class="cart-checkout">
-          <cart-flyout-checkout-button
-            @Country="setCountry"
-            @DisplayPrice="setDisplayPrice"
-            @click.native="handleCheckoutClick"
-            :preventCheckout="isMobile"
-            :class="[checkoutDisabled ? 'checkout-disabled' : null]"
-            :key="2"
-          />
-        </div>
+      </div>
+      <div class="cart-checkout">
+        <cart-flyout-checkout-button
+          @Country="setCountry"
+          @DisplayPrice="setDisplayPrice"
+          @click.native="handleCheckoutClick"
+          :preventCheckout="isMobile"
+          :class="[checkoutDisabled ? 'checkout-disabled' : null]"
+          :key="2"
+        />
+      </div>
 
-        <div class="value-props">
-          <div class="value-props__badges">
-            <div class="value-props__badges__img">
-              <a
-                href="https://www.trustedsite.com/verify?host=blendjet.com"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-              >
-                <img
-                  :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
-                  alt="TrustedSite Seal"
-                  style="border: 1px solid #ccc;border-radius: 3px;"
-                />
-              </a>
-            </div>
-            <div class="value-props__badges__img">
-              <a
-                href="https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-              >
-                <img :src="optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })" />
-              </a>
-            </div>
-            <div class="value-props__badges__img">
-              <a
-                href="https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-              >
-                <img :src="optimizeSource({ url: '/images/blendjetPDP/BBB-Seal.svg' })" />
-              </a>
-            </div>
+      <div class="value-props">
+        <div class="value-props__badges">
+          <div class="value-props__badges__img">
+            <a
+              href="https://www.trustedsite.com/verify?host=blendjet.com"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <img
+                :src="optimizeSource({ url: '/images/blendjetPDP/TrustedSite.svg' })"
+                alt="TrustedSite Seal"
+                style="border: 1px solid #ccc;border-radius: 3px;"
+              />
+            </a>
+          </div>
+          <div class="value-props__badges__img">
+            <a
+              href="https://seal.digicert.com/seals/popup/?tag=6CDZP5Ti&url=blendjet.com"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <img :src="optimizeSource({ url: '/images/blendjetPDP/nortonsiteseal.svg' })" />
+            </a>
+          </div>
+          <div class="value-props__badges__img">
+            <a
+              href="https://www.bbb.org/us/ca/concord/profile/online-shopping/blendjet-1116-882016/#sealclick"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <img :src="optimizeSource({ url: '/images/blendjetPDP/BBB-Seal.svg' })" />
+            </a>
           </div>
         </div>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
