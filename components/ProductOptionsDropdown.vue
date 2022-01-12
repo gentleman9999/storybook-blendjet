@@ -313,6 +313,9 @@ export default {
   display: flex;
   align-items: center;
   margin: 0 auto;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 .dropbtn-upsell {
