@@ -139,7 +139,9 @@ export const actions = {
     if (checkoutStatus === 'failed') {
       try {
         if (hasSubscriptionProduct) {
-          console.log('Nacelle Normal checkout failed, Issue would be with Nacelle API')
+          console.log(
+            'Nacelle Normal checkout failed for cart with subscription, Issue would be with Nacelle API or Recharge'
+          )
           console.log('Try Nacelle shopify checkout instead')
           checkout = await this.$shopifyCheckout.process({
             cartItems,
@@ -179,7 +181,7 @@ export const actions = {
           }
         }
       } catch (err) {
-        console.log('err', err)
+        console.log('err', err, err?.response)
         throw new Error('Checkout Failure')
       }
     }
