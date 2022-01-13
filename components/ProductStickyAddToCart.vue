@@ -4,7 +4,10 @@
     <!-- INFO - Thumbnail image, title, price (Desktop Only)-->
     <div class="sticky-product-select__info-container">
       <div class="header-product-select__thumbnail">
-        <img class="header-product-select__thumbnail__img" :src="optimizeSource({ url: variantImage, width: 80 })" />
+        <img
+          class="header-product-select__thumbnail__img"
+          :src="optimizeSource({ url: variantImage, width: 80 })"
+        />
       </div>
       <div class="sticky-product-select__title-container">
         <div class="sticky-product-select__title-container__title">
@@ -15,6 +18,9 @@
             v-if="currentVariant"
             :price="isSubscriptionOn ? subscriptionPrice : currentVariant.price"
             :variantId="currentVariant.id"
+            :product="product"
+            :isVarietyPack="currentVariant.sku === 'variety-pack'"
+            :isSubscriptionOn="isSubscriptionOn"
           />
           <ProductPrice
             v-if="
@@ -79,7 +85,7 @@ import imageOptimize from '~/mixins/imageOptimize'
 // Components
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
-import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
+// import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import ProductVariantsDropdown from '~/components/ProductVariantsDropdown'
 import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton'
 
@@ -129,7 +135,7 @@ export default {
     }
   },
   components: {
-    ProductAddToCartButton,
+    // ProductAddToCartButton,
     ProductPrice,
     ProductVariantsDropdown,
     QuantitySelector,
@@ -153,14 +159,34 @@ export default {
         return undefined
       }
       const decodedId = this.decodeBase64VariantId(this.currentVariant.id)
-      const variantSubscriptionPrice =
-        decodedId &&
-        this.isSubscriptionOn &&
-        this.discountVariantMap &&
-        this.discountVariantMap[decodedId]
-      return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
-        ? variantSubscriptionPrice.discount_variant_price
-        : this.currentVariant.price
+      let variantSubscriptionPrice = 0
+      if (this.currentVariant.sku === 'variety-pack') {
+        variantSubscriptionPrice = 0
+        this?.product?.variants?.length &&
+          this.product.variants.forEach(v => {
+            if (v.availableForSale) {
+              const id = this.decodeBase64VariantId(v.id)
+              if (this.discountVariantMap[id]) {
+                variantSubscriptionPrice += Number(
+                  this.discountVariantMap[id].discount_variant_price
+                )
+              }
+            }
+          })
+      }
+
+      if (this.currentVariant.sku !== 'variety-pack') {
+        variantSubscriptionPrice =
+          decodedId &&
+          this.isSubscriptionOn &&
+          this.discountVariantMap &&
+          this.discountVariantMap[decodedId]
+        return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
+          ? variantSubscriptionPrice.discount_variant_price
+          : this.currentVariant.price
+      } else {
+        return variantSubscriptionPrice || this.currentVariant.price
+      }
     }
   },
   mounted() {
@@ -191,7 +217,7 @@ export default {
       // This is wrapped in a try/catch because in some instances it's attempted to be run during
       // the nuxt build (somehow in advance of the browser), therefore the `window.atob` method
       // doesn't exist yet.
-      let decodedId = undefined
+      let decodedId
       try {
         decodedId = atob(encodedId).split('gid://shopify/ProductVariant/')[1]
       } catch (e) {

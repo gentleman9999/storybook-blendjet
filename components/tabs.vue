@@ -66,6 +66,11 @@ export default {
     } else if (this.tabItems.indexOf(this.selected) !== -1) {
       this.active = this.selected
     }
+  },
+  updated() {
+    if (this.tabItems.indexOf(this.selected) !== -1) {
+      this.active = this.selected
+    }
   }
 }
 </script>

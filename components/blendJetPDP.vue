@@ -1797,7 +1797,11 @@ export default {
       })
     }
   },
+  beforeRouteLeave() {
+    clearInterval(this.imageInterval)
+  },
   beforeDestroy() {
+    clearInterval(this.imageInterval)
     if (process.client) {
       window.removeEventListener('scroll', this.handleDebouncedScroll)
     }
