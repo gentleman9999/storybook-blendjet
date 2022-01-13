@@ -1,6 +1,7 @@
 import localforage from 'localforage'
-const isFunc = func => typeof func === 'function'
+import { cloneDeep } from 'lodash'
 
+const isFunc = func => typeof func === 'function'
 export const state = () => ({
   id: null,
   url: null
@@ -90,27 +91,34 @@ export const actions = {
 
     let checkoutStatus = ''
     let checkout = {}
-    try {
-      checkout = await this.$nacelle.checkout.process({
-        cartItems,
-        checkoutId,
-        metafields: [...recartMetafields, ...outsmartlyMetafields]
+    let hasSubscriptionProduct = false
+    cartItems.forEach(item => {
+      item.metafields.forEach(metaField => {
+        if (
+          metaField.key === 'order_interval_unit' ||
+          metaField.key === 'order_interval_frequency' ||
+          metaField.key === 'charge_interval_frequency'
+        ) {
+          hasSubscriptionProduct = true
+        }
       })
-      if (checkout && checkout.completed) {
-        checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
-      }
+    })
+    console.log('has subscription Product', hasSubscriptionProduct)
+    try {
+      if (hasSubscriptionProduct) {
+        checkout = await this.$nacelle.checkout.process({
+          cartItems,
+          checkoutId,
+          metafields: [...recartMetafields, ...outsmartlyMetafields]
+        })
+        if (checkout && checkout.completed) {
+          checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
+        }
 
-      if (!checkout || !checkout.id || !checkout.url) {
-        checkoutStatus = 'failed'
-      }
-    } catch (err) {
-      checkoutStatus = 'failed'
-    }
-
-    if (checkoutStatus === 'failed') {
-      // nacelle checkout failed, try shopify checkout instead
-      console.log('nacelle checkout failed at checkoutCreate')
-      try {
+        if (!checkout || !checkout.id || !checkout.url) {
+          checkoutStatus = 'failed'
+        }
+      } else {
         checkout = await this.$shopifyCheckout.process({
           cartItems,
           checkoutId,
@@ -121,10 +129,59 @@ export const actions = {
         }
 
         if (!checkout || !checkout.id || !checkout.url) {
-          throw new Error('Checkout Failure')
+          checkoutStatus = 'failed'
+        }
+      }
+    } catch (err) {
+      checkoutStatus = 'failed'
+    }
+
+    if (checkoutStatus === 'failed') {
+      try {
+        if (hasSubscriptionProduct) {
+          console.log(
+            'Nacelle Normal checkout failed for cart with subscription, Issue would be with Nacelle API or Recharge'
+          )
+          console.log('Try Nacelle shopify checkout instead')
+          checkout = await this.$shopifyCheckout.process({
+            cartItems,
+            checkoutId,
+            metafields: [...recartMetafields, ...outsmartlyMetafields]
+          })
+          if (checkout && checkout.completed) {
+            checkout = await this.$shopifyCheckout.process({ cartItems, checkoutId: '' })
+          }
+
+          if (!checkout || !checkout.id || !checkout.url) {
+            console.log('Checkout Failed at Nacelle/Shopify')
+            throw new Error('Checkout Failure')
+          }
+        } else {
+          console.log('Nacelle Shopify checkout failed, Shopify might be down')
+          console.log('Try recharge checkout instead')
+          // Add 'order_interval_unit' recharge field to metafields of products to make it recharge compatible
+          const cartItemsModified = cloneDeep(cartItems)
+          cartItemsModified.forEach(item => {
+            item.metafields.push({ key: 'order_interval_unit' })
+          })
+          checkout = await this.$nacelle.checkout.process({
+            cartItems: cartItemsModified,
+            checkoutId,
+            metafields: [...recartMetafields, ...outsmartlyMetafields]
+          })
+          if (checkout && checkout.completed) {
+            checkout = await this.$nacelle.checkout.process({
+              cartItems: cartItemsModified,
+              checkoutId: ''
+            })
+          }
+          if (!checkout || !checkout.id || !checkout.url) {
+            console.log('Checkout Failed at Nacelle/Recharge')
+            throw new Error('Checkout Failure')
+          }
         }
       } catch (err) {
-        console.log('err', err)
+        console.log('err', err, err?.response)
         throw new Error('Checkout Failure')
       }
     }
