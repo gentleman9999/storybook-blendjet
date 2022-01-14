@@ -289,16 +289,13 @@ export default {
         this.checkoutDisabled = false
       }
     },
-    cartVisible: {
-      handler: function (newValue) {
-        if (this.cartVisible) {
-          this.elevarViewCart()
-        }
+    cartVisible(newValue) {
+      if (this.cartVisible) {
+        this.elevarViewCart()
+      }
 
-        this.toggleCustomerChat('cart')
-        this.toggleOptimonkPopup('cart')
-      },
-      immediate: true
+      this.toggleCustomerChat('cart')
+      this.toggleOptimonkPopup('cart')
     },
     cartSubtotal() {
       // console.log('cart balance getter', this.cartBalance)
