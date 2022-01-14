@@ -7,6 +7,8 @@
     <div class="image" :class="productCount">
       <img
         v-for="bundle in selectedBundle"
+        class="bundle-item"
+        tabindex="-1"
         :key="bundle.product.id"
         :src="
           optimizeSource({
