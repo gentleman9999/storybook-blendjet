@@ -810,7 +810,7 @@
                   </div>
                   <div class="dropbtn__text">
                     <div class="dropbtn__text__color">
-                      {{ currentVariant.title }}
+                      {{ currentVariant.title.replace('Lisa Frank ', '') }}
                     </div>
                     <div class="dropbtn__text__shipping">
                       <ShippingTime :size="'short'" :product="'blendjet-2'" :country="country" />
