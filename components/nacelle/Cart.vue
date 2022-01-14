@@ -1,5 +1,5 @@
 <template>
-  <div class="cart-container" v-show="cartVisible">
+  <div class="cart-container">
     <CartUpsells
       :closeUpsellModal="closeUpsellModal"
       :checkoutDisabled="checkoutDisabled"
@@ -289,13 +289,16 @@ export default {
         this.checkoutDisabled = false
       }
     },
-    cartVisible(newValue) {
-      if (this.cartVisible) {
-        this.elevarViewCart()
-      }
+    cartVisible: {
+      handler: function (newValue) {
+        if (this.cartVisible) {
+          this.elevarViewCart()
+        }
 
-      this.toggleCustomerChat('cart')
-      this.toggleOptimonkPopup('cart')
+        this.toggleCustomerChat('cart')
+        this.toggleOptimonkPopup('cart')
+      },
+      immediate: true
     },
     cartSubtotal() {
       // console.log('cart balance getter', this.cartBalance)

@@ -5,6 +5,7 @@ import isEqual from 'lodash.isequal'
 export const state = () => ({
   lineItems: [],
   cartVisible: false,
+  cartVisibleAbsolute: false,
   freeShippingThreshold: null,
   error: null
 })
@@ -19,10 +20,7 @@ export const getters = {
 
   cartSubtotal(state) {
     if (state.lineItems.length >= 1) {
-      return state.lineItems.reduce(
-        (acc, item) => acc + item.variant.price * item.quantity,
-        0
-      )
+      return state.lineItems.reduce((acc, item) => acc + item.variant.price * item.quantity, 0)
     }
 
     return 0
@@ -47,31 +45,34 @@ export const getters = {
   },
 
   cartBalance(state) {
-    let obj = {}
-    state.lineItems.forEach((item)=> {
-      if(item.vendor.toLowerCase() === 'extend') {
-        if(!obj[item.metafields[0].value]) {
+    const obj = {}
+    state.lineItems.forEach(item => {
+      if (item.vendor.toLowerCase() === 'extend') {
+        if (!obj[item.metafields[0].value]) {
           obj[item.metafields[0].value] = {}
         }
-        obj[item.metafields[0].value].warranties = obj[item.metafields[0].value].warranties + item.quantity || item.quantity
+        obj[item.metafields[0].value].warranties =
+          obj[item.metafields[0].value].warranties + item.quantity || item.quantity
         // console.log('obj', obj)
       }
 
-      if(item.handle === 'blendjet-2' || item.handle === 'blendjet-one') {
-        let id = atob(item.variant.id).split('/').pop()
-        if(!obj[id]) {
+      if (item.handle === 'blendjet-2' || item.handle === 'blendjet-one') {
+        const id = atob(item.variant.id)
+          .split('/')
+          .pop()
+        if (!obj[id]) {
           obj[id] = {}
         }
         obj[id].blendjets = obj[id].blendjets + item.quantity || item.quantity
         // console.log('obj', obj)
       }
     })
-    for(let key in obj) {
-      if(!obj[key].blendjets || obj[key].warranties > obj[key].blendjets) {
+    for (const key in obj) {
+      if (!obj[key].blendjets || obj[key].warranties > obj[key].blendjets) {
         return false
       }
     }
-  
+
     return true
   },
 
@@ -86,12 +87,12 @@ export const getters = {
     } else {
       return []
     }
-  },
+  }
 }
 
 export const mutations = {
   addLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex((lineItem) => {
+    const index = state.lineItems.findIndex(lineItem => {
       if (lineItem.variant.id === payload.variant.id) {
         const areMetafieldsEqual = isEqual(payload.metafields, lineItem.metafields)
 
@@ -108,25 +109,19 @@ export const mutations = {
   },
 
   removeLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(
-      lineItem => lineItem.id === payload
-    )
+    const index = state.lineItems.findIndex(lineItem => lineItem.id === payload)
     state.lineItems.splice(index, 1)
   },
 
   incrementLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(
-      lineItem => lineItem.id === payload
-    )
+    const index = state.lineItems.findIndex(lineItem => lineItem.id === payload)
     if (index !== -1) {
       state.lineItems[index].quantity++
     }
   },
 
   decrementLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(
-      lineItem => lineItem.id === payload
-    )
+    const index = state.lineItems.findIndex(lineItem => lineItem.id === payload)
     if (index !== -1 && state.lineItems[index].quantity >= 1) {
       state.lineItems[index].quantity--
       if (state.lineItems[index].quantity === 0) {
@@ -141,6 +136,7 @@ export const mutations = {
   },
 
   showCart(state) {
+    state.cartVisibleAbsolute = true
     state.cartVisible = true
   },
 
@@ -149,6 +145,7 @@ export const mutations = {
   },
 
   toggleCart(state) {
+    state.cartVisibleAbsolute = true
     state.cartVisible = !state.cartVisible
   },
 
@@ -180,9 +177,7 @@ export const actions = {
 
   async removeLineItem({ state, rootState, dispatch, commit }, payload) {
     if (rootState.events) {
-      const lineItem = state.lineItems.find(
-        item => item.variant.id === payload
-      )
+      const lineItem = state.lineItems.find(item => item.variant.id === payload)
       dispatch(
         'events/removeFromCart',
         {
