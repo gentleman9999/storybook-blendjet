@@ -1,7 +1,9 @@
 <template>
   <div class="global-header" :class="headerClass">
     <div class="free-shipping-banner">
-      <img id="accessibilityWidget" class="useway-icon" src="/images/body_wh.svg" />
+      <span id="accessibilityWidget" tabindex="0">
+        <img class="useway-icon" src="/images/body_wh.svg"
+      /></span>
       <span class="free-shipping-banner__text">{{ freeShippingMessage }}</span>
     </div>
     <!-- Main Nav -->
@@ -354,7 +356,7 @@
     </transition>
 
     <!-- Cart Flyout -->
-    <cart v-if="cartVisibleAbsolute" v-show="cartVisible" />
+    <cart v-show="cartVisible" />
   </div>
 </template>
 
@@ -434,7 +436,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('cart', ['cartVisible', 'cartVisibleAbsolute']),
+    ...mapState('cart', ['cartVisible']),
     ...mapState('space', ['id', 'name', 'linklists']),
     ...mapState('menu', ['menuVisible']),
     mainNavClass() {

@@ -8,7 +8,6 @@
       <img
         v-for="bundle in selectedBundle"
         class="bundle-item"
-        ref="bundleItem"
         tabindex="-1"
         :key="bundle.product.id"
         :src="
@@ -181,21 +180,11 @@ export default {
     //   ]?.featuredMedia.src
     // }, 1000)
     this.updateVarietyPackOptions()
-    this.removeUsewayArribute()
   },
   beforeDestroy() {
     clearInterval(this.tabIndexInterval)
   },
   methods: {
-    removeUsewayArribute() {
-      // remove useway attribute which causes scroll issues.
-      this.tabIndexInterval = setInterval(() => {
-        this.$refs.bundleItem &&
-          this.$refs.bundleItem.forEach(item => {
-            item && item.removeAttribute && item.removeAttribute('data-uw-cer-popup-close')
-          })
-      }, 1000)
-    },
     updateQuantity(newQuantity) {
       this.quantity = newQuantity
     },
