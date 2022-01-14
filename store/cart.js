@@ -5,7 +5,6 @@ import isEqual from 'lodash.isequal'
 export const state = () => ({
   lineItems: [],
   cartVisible: false,
-  cartVisibleAbsolute: false,
   freeShippingThreshold: null,
   error: null
 })
@@ -136,7 +135,6 @@ export const mutations = {
   },
 
   showCart(state) {
-    state.cartVisibleAbsolute = true
     state.cartVisible = true
   },
 
@@ -145,7 +143,6 @@ export const mutations = {
   },
 
   toggleCart(state) {
-    state.cartVisibleAbsolute = true
     state.cartVisible = !state.cartVisible
   },
 
