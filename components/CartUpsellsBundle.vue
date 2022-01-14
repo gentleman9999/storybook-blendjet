@@ -194,10 +194,7 @@ export default {
           this.$refs.bundleItem.forEach(item => {
             item && item.removeAttribute && item.removeAttribute('data-uw-cer-popup-close')
           })
-      }, 2000)
-      setTimeout(() => {
-        clearInterval(this.tabIndexInterval)
-      }, 20 * 1000)
+      }, 1000)
     },
     updateQuantity(newQuantity) {
       this.quantity = newQuantity
