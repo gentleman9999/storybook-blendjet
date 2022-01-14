@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown-container">
     <div class="mobile-select-container">
-      <div class="select-cover" role="button">
+      <div class="select-cover">
         <span
           class="option-label"
           :style="`margin-right:${productType === 'jetpacks' ? '7px' : '14px'}`"
