@@ -1,7 +1,7 @@
 <template>
   <div class="global-header" :class="headerClass">
     <div class="free-shipping-banner">
-      <span id="accessibilityWidget" tabindex="0">
+      <span id="accessibilityWidget" tabindex="0" class="useway-container">
         <img class="useway-icon" src="/images/body_wh.svg"
       /></span>
       <span class="free-shipping-banner__text">{{ freeShippingMessage }}</span>
@@ -539,10 +539,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  .useway-container {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+  }
   .useway-icon {
     width: 24px;
     height: 24px;
-    position: absolute;
     left: 10px;
     cursor: pointer;
   }
