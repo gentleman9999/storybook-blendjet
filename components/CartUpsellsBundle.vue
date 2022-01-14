@@ -9,7 +9,7 @@
         v-for="bundle in selectedBundle"
         class="bundle-item"
         ref="bundleItem"
-        tabindex="100"
+        tabindex="-1"
         :key="bundle.product.id"
         :src="
           optimizeSource({
@@ -181,19 +181,23 @@ export default {
     //   ]?.featuredMedia.src
     // }, 1000)
     this.updateVarietyPackOptions()
-    this.updateTabindex()
+    this.removeUsewayArribute()
   },
   beforeDestroy() {
     clearInterval(this.tabIndexInterval)
   },
   methods: {
-    updateTabindex() {
+    removeUsewayArribute() {
+      // remove useway attribute which causes scroll issues.
       this.tabIndexInterval = setInterval(() => {
         this.$refs.bundleItem &&
           this.$refs.bundleItem.forEach(item => {
-            item.tabIndex = -1
+            item && item.removeAttribute && item.removeAttribute('data-uw-cer-popup-close')
           })
       }, 2000)
+      setTimeout(() => {
+        clearInterval(this.tabIndexInterval)
+      }, 20 * 1000)
     },
     updateQuantity(newQuantity) {
       this.quantity = newQuantity

@@ -354,7 +354,7 @@
     </transition>
 
     <!-- Cart Flyout -->
-    <cart />
+    <cart v-if="cartVisibleAbsolute" v-show="cartVisible" />
   </div>
 </template>
 
@@ -434,6 +434,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('cart', ['cartVisible', 'cartVisibleAbsolute']),
     ...mapState('space', ['id', 'name', 'linklists']),
     ...mapState('menu', ['menuVisible']),
     mainNavClass() {
