@@ -3,6 +3,7 @@
     <div
       v-if="ready && (!isMobile || showUpsell)"
       :class="['cart-upsells', { 'cart-upsells--mobile': isMobile }]"
+      tabindex="0"
     >
       <!-- UPSELL HEADER -->
       <div>
