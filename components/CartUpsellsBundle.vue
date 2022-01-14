@@ -8,7 +8,8 @@
       <img
         v-for="bundle in selectedBundle"
         class="bundle-item"
-        :tabindex="tabindex"
+        ref="bundleItem"
+        tabindex="100"
         :key="bundle.product.id"
         :src="
           optimizeSource({
@@ -146,7 +147,7 @@ export default {
       selectedBundle: cloneDeep(this.bundles),
       selectedBundleVarietyPack: cloneDeep(this.bundleVarietyPack),
       varietyPackSelectorOptions: [],
-      tabindex: -1
+      tabIndexInterval: ''
     }
   },
   computed: {
@@ -180,21 +181,20 @@ export default {
     //   ]?.featuredMedia.src
     // }, 1000)
     this.updateVarietyPackOptions()
+    this.updateTabindex()
   },
-  mounted() {
-    this.tabindex = -1
-  },
-  updated() {
-    this.tabindex = -1
-  },
-  watch: {
-    tabindex(newVal) {
-      if (newVal !== '-1' || newVal !== -1) {
-        this.tabindex = -1
-      }
-    }
+  beforeDestroy() {
+    clearInterval(this.tabIndexInterval)
   },
   methods: {
+    updateTabindex() {
+      this.tabIndexInterval = setInterval(() => {
+        this.$refs.bundleItem &&
+          this.$refs.bundleItem.forEach(item => {
+            item.tabIndex = -1
+          })
+      }, 2000)
+    },
     updateQuantity(newQuantity) {
       this.quantity = newQuantity
     },
