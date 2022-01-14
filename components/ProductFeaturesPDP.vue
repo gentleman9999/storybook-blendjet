@@ -77,6 +77,7 @@ export default {
   margin: auto;
   justify-content: center;
   align-items: center;
+  max-width: 550px;
 
   // @include respond-to('medium') {
   //   flex-direction: column;

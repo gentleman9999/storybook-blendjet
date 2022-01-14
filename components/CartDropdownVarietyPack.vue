@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown-container">
     <div class="mobile-select-container">
-      <div class="select-cover" role="button">
+      <div class="select-cover">
         <span class="option-label" style="margin-right:7px">{{ label }}:</span>
         <span class="select-cover__selected">{{ formatTitle(items[currentOption].title) }}</span>
         <CaretDown :styleObj="{ marginLeft: '16px', marginBottom: '3px' }" :color="'#FFF'" />
