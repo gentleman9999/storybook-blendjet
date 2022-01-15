@@ -2,6 +2,7 @@
   <transition name="fade">
     <div
       class="pdp-container"
+      :class="[{ 'has-special-edition': specialEdition }, specialEdition]"
       v-if="currentVariant"
       :style="[!currentVariant ? 'height:100vh' : 'auto']"
     >
@@ -818,7 +819,7 @@
                   </div>
                   <div class="dropbtn__text">
                     <div class="dropbtn__text__color">
-                      {{ currentVariant.title }}
+                      {{ currentVariant.title.replace('Lisa Frank ', '') }}
                     </div>
                     <div class="dropbtn__text__shipping">
                       <ShippingTime
@@ -1095,7 +1096,8 @@ export default {
       variantShippingOffset: null,
       variantShippingDate: null,
       productShippingOffset: null,
-      productShippingDate: null
+      productShippingDate: null,
+      specialEdition: ''
     }
   },
   components: {
@@ -1417,6 +1419,12 @@ export default {
         return index === 0 ? match.toLowerCase() : match.toUpperCase()
       })
     },
+    kebabCase(str) {
+      if (str && typeof str === 'string') {
+        return str.toLowerCase().replace(' ', '-')
+      }
+      return ''
+    },
     updateBundle() {
       const title = this.currentVariant.title.toLowerCase()?.replace(/\s/g, '')
       if (this?.variantSpecificBundles?.[title]?.length) {
@@ -1685,6 +1693,9 @@ export default {
         this.heroImages = []
       }
       this.heroIndex = 0
+      this.specialEdition = this.variantMedia?.[
+        this.camelize(this.currentVariant.title)
+      ].specialEdition
 
       // const variantId = atob(this.currentVariant.id)
       //   .split('/')
@@ -1751,6 +1762,7 @@ export default {
                   heroImages: node.fields.heroImages.map(image => {
                     return `${image.fields.file.url}?w=2100`
                   }),
+                  specialEdition: this.kebabCase(node.fields.specialEdition),
                   shippingOffset: node.fields.shippingOffset || null,
                   shippingDate: node.fields.shippingDate || null
                 }
@@ -1842,7 +1854,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .price {
   margin-bottom: 1rem;
@@ -3122,6 +3133,19 @@ h1 {
 }
 </style>
 <style lang="scss">
+.has-special-edition {
+  &.lisa-frank {
+    .blendjet-banner {
+      background: linear-gradient(to bottom right, #e9008d 0, #05aded);
+    }
+    .media-content__main__features {
+      background: #05aded;
+    }
+    .add-to-cart-button {
+      background: #05aded;
+    }
+  }
+}
 .variant-dropdown {
   .dropdown-content {
     padding: 0 !important;

@@ -1,18 +1,11 @@
 <template>
-  <div class="svg-container">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="70" height="70" viewBox="0 0 70 70">
-      <defs>
-          <path id="v3u9cewgta" d="M23 15L45 15 45 51 23 51z"/>
-      </defs>
-      <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
-          <circle cx="34" cy="34" r="34" stroke="#FFF" stroke-width="1.5"/>
-          <circle cx="34" cy="34" r="30" fill="#FFF"/>
-          <mask id="tp3i71p06b" fill="#fff">
-              <use xlink:href="#v3u9cewgta"/>
-          </mask>
-          <path :fill="location ==='homepage' ? '#2B77AF' : '#32499D'" d="M34 51c-6.075 0-11-4.958-11-11.074C23 30.71 34 15 34 15s11 15.709 11 24.926C45 46.042 40.075 51 34 51" mask="url(#tp3i71p06b)"/>
-      </g>
-    </svg>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   width="70px" height="70px" viewBox="0 0 70 70" style="enable-background:new 0 0 70 70;" xml:space="preserve">
+<circle style="fill:none;stroke:#FFFFFF;stroke-width:1.5;" cx="35" cy="35" r="34"/>
+<path style="fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;" d="M35,5C18.4,5,5,18.4,5,35s13.4,30,30,30s30-13.4,30-30
+  S51.6,5,35,5z M35,52c-6.1,0-11-5-11-11.1C24,31.7,35,16,35,16s11,15.7,11,24.9C46,47,41.1,52,35,52z"/>
+</svg>
+
   </div>
 </template>
 <script>export default {}</script>

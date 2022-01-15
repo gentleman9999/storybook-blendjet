@@ -16,7 +16,7 @@
         </div>
         <div class="dropbtn__text">
           <div class="dropbtn__text__color">
-            {{ product.title }}
+            {{ product.title.replace('Lisa Frank ', '') }}
           </div>
         </div>
         <div class="dropbtn__caret-down">
