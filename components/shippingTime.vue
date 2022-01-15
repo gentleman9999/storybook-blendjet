@@ -53,6 +53,14 @@ export default {
     country: {
       type: String,
       default: ''
+    },
+    shippingOffset: {
+      type: Number,
+      default: null
+    },
+    shippingDate: {
+      type: String,
+      default: null
     }
   },
   data() {
