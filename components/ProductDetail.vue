@@ -276,7 +276,12 @@
             </div>
             -->
             <div v-if="isJetpack" class="product-select__controls__shipping-notification">
-              <ShippingTime :product="'jetpack'" :country="country" />
+              <ShippingTime
+                :product="'jetpack'"
+                :country="country"
+                :shipping-offset="variantShippingOffset || productShippingOffset"
+                :shipping-date="variantShippingDate || productShippingDate"
+              />
             </div>
             <hr class="product-select__controls__divider" />
 
@@ -803,7 +808,11 @@ export default {
       quantityOption: {
         quantity: [],
         title: ''
-      }
+      },
+      variantShippingOffset: null,
+      variantShippingDate: null,
+      productShippingOffset: null,
+      productShippingDate: null
     }
   },
   components: {
@@ -1050,6 +1059,8 @@ export default {
       if (this.media[variantTitle]?.headerText) {
         this.headerText = this.media[variantTitle]?.headerText
       }
+      this.variantShippingOffset = this.media[variantTitle].shippingOffset
+      this.variantShippingDate = this.media[variantTitle].shippingDate
       if (this.media[variantTitle]?.quantityOption) {
         this.quantityOption.quantity = this.media[variantTitle]?.quantityOption?.quantity?.split(
           ','
@@ -1212,6 +1223,12 @@ export default {
     if (fields.metaDescription) {
       this.metaDescription = this.page.fields.metaDescription
     }
+    if (fields.shippingOffset) {
+      this.productShippingOffset = fields.shippingOffset
+    }
+    if (fields.shippingDate) {
+      this.productShippingDate = fields.shippingDate
+    }
     // Get 'Header' (product description beneath the product form)
     this.headerText = fields.headerText
     this.headerBackground =
@@ -1245,7 +1262,9 @@ export default {
             : [],
           bannerText: node?.fields?.description,
           headerText: node?.fields?.headerText,
-          nutritionFactsTile: node?.fields?.nutritionFactsTile
+          nutritionFactsTile: node?.fields?.nutritionFactsTile,
+          shippingOffset: node?.fields?.shippingOffset || null,
+          shippingDate: node?.fields?.shippingDate || null
         }
 
         // set Quantity Set if available
