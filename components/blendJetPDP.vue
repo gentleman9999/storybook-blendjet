@@ -489,7 +489,11 @@
           </div>
 
           <div v-else class="product-select__controls__shipping-notification">
-            <ShippingTime :country="country" />
+            <ShippingTime
+              :country="country"
+              :shipping-offset="variantShippingOffset || productShippingOffset"
+              :shipping-date="variantShippingDate || productShippingDate"
+            />
           </div>
           <div class="product-select__controls__value-props">
             <div
@@ -597,7 +601,11 @@
                 :key="3"
               />
               <div class="mobile-variant-select__shipping">
-                <ShippingTime :country="country" />
+                <ShippingTime
+                  :country="country"
+                  :shipping-offset="variantShippingOffset || productShippingOffset"
+                  :shipping-date="variantShippingDate || productShippingDate"
+                />
               </div>
             </div>
           </transition>
@@ -814,7 +822,13 @@
                       {{ currentVariant.title.replace('Lisa Frank ', '') }}
                     </div>
                     <div class="dropbtn__text__shipping">
-                      <ShippingTime :size="'short'" :product="'blendjet-2'" :country="country" />
+                      <ShippingTime
+                        :size="'short'"
+                        :product="'blendjet-2'"
+                        :country="country"
+                        :shipping-offset="variantShippingOffset || productShippingOffset"
+                        :shipping-date="variantShippingDate || productShippingDate"
+                      />
                     </div>
                   </div>
                   <div class="dropbtn__caret-down">
@@ -1079,6 +1093,10 @@ export default {
       varietyBundleSelectorActive: false,
       bundleSelectorVisible: false,
       varietyPackSelectorOptions: [],
+      variantShippingOffset: null,
+      variantShippingDate: null,
+      productShippingOffset: null,
+      productShippingDate: null,
       specialEdition: ''
     }
   },
@@ -1663,6 +1681,12 @@ export default {
           : this.currentVariant.featuredMedia.src
         this.productImage = variantImage
         this.heroImages = this.variantMedia[this.camelize(this.currentVariant.title)].heroImages
+        this.variantShippingOffset = this.variantMedia[
+          this.camelize(this.currentVariant.title)
+        ].shippingOffset
+        this.variantShippingDate = this.variantMedia[
+          this.camelize(this.currentVariant.title)
+        ].shippingDate
       } else {
         this.productImage =
           'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
@@ -1738,7 +1762,9 @@ export default {
                   heroImages: node.fields.heroImages.map(image => {
                     return `${image.fields.file.url}?w=2100`
                   }),
-                  specialEdition: this.kebabCase(node.fields.specialEdition)
+                  specialEdition: this.kebabCase(node.fields.specialEdition),
+                  shippingOffset: node.fields.shippingOffset || null,
+                  shippingDate: node.fields.shippingDate || null
                 }
               })
             }
@@ -1753,6 +1779,14 @@ export default {
 
             if (item.fields.metaDescription) {
               this.metaDescription = item.fields.metaDescription
+            }
+
+            if (item.fields.shippingOffset) {
+              this.productShippingOffset = item.fields.shippingOffset
+            }
+
+            if (item.fields.shippingDate) {
+              this.productShippingDate = item.fields.shippingDate
             }
 
             this.currentVariant = this.setDefaultVariant()

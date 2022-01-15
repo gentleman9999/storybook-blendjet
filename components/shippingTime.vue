@@ -53,6 +53,14 @@ export default {
     country: {
       type: String,
       default: ''
+    },
+    shippingOffset: {
+      type: Number,
+      default: null
+    },
+    shippingDate: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -79,7 +87,16 @@ export default {
       now.setHours(16)
       now.setMinutes(0)
       now.setMilliseconds(0)
-      return this.businessDaysFromDate(now, transitTime).toLocaleString(this.locale, this.options)
+      let calculated = this.businessDaysFromDate(now, transitTime)
+      if (this.shippingDate && !this.isDateBeforeToday(new Date(this.shippingDate))) {
+        calculated = new Date(this.shippingDate)
+      } else if (this.shippingOffset) {
+        const dateWithOffset = this.businessDaysFromDate(now, transitTime, this.shippingOffset)
+        if (!this.isDateBeforeToday(dateWithOffset)) {
+          calculated = dateWithOffset
+        }
+      }
+      return calculated.toLocaleString(this.locale, this.options)
     },
     shortDate() {
       var now = new Date()
@@ -88,7 +105,16 @@ export default {
       now.setMinutes(0)
       now.setMilliseconds(0)
 
-      return this.businessDaysFromDate(now, transitTime).toLocaleString(this.locale, {
+      let calculated = this.businessDaysFromDate(now, transitTime)
+      if (this.shippingDate && !this.isDateBeforeToday(new Date(this.shippingDate))) {
+        calculated = new Date(this.shippingDate)
+      } else if (this.shippingOffset) {
+        const dateWithOffset = this.businessDaysFromDate(now, transitTime, this.shippingOffset)
+        if (!this.isDateBeforeToday(dateWithOffset)) {
+          calculated = dateWithOffset
+        }
+      }
+      return calculated.toLocaleString(this.locale, {
         day: 'numeric',
         month: 'numeric'
       })
@@ -96,13 +122,16 @@ export default {
   },
 
   methods: {
+    isDateBeforeToday(date) {
+      return new Date(date.toDateString()) < new Date(new Date().toDateString())
+    },
     shippingTimer() {
       this.intervalID = setInterval(() => {
         this.shippingCountdown()
       }, 30000)
     },
 
-    businessDaysFromDate(date, businessDays) {
+    businessDaysFromDate(date, businessDays, offset = 0) {
       var counter = 0
       var tmp = new Date(date)
       while (businessDays >= 0) {
@@ -111,6 +140,12 @@ export default {
           --businessDays
         }
         ++counter
+      }
+      if (offset) {
+        tmp.setDate(tmp.getDate() + offset)
+        while (!this.isBusinessDay(tmp)) {
+          tmp.setDate(tmp.getDate() + 1)
+        }
       }
       return tmp
     },
