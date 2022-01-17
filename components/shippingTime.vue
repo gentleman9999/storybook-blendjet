@@ -75,7 +75,8 @@ export default {
       options: {
         weekday: 'long',
         day: 'numeric',
-        month: 'long'
+        month: 'long',
+        timeZone: 'UTC'
       },
       disabled: false
     }
@@ -116,7 +117,8 @@ export default {
       }
       return calculated.toLocaleString(this.locale, {
         day: 'numeric',
-        month: 'numeric'
+        month: 'numeric',
+        timeZone: 'UTC'
       })
     }
   },
