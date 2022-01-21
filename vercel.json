@@ -321,6 +321,31 @@
       "permanent": true
     },
     {
+      "source": "/Zoom",
+      "destination": "https://zoom.us/j/8464547693?pwd=b0kxODhIOU9HVEFOZmI2SEd6eEQ3QT09",
+      "permanent": true
+    },
+    {
+      "source": "/ZOOM",
+      "destination": "https://zoom.us/j/8464547693?pwd=b0kxODhIOU9HVEFOZmI2SEd6eEQ3QT09",
+      "permanent": true
+    },
+    {
+      "source": "/zoom2",
+      "destination": "https://zoom.us/j/9207535662?pwd=QjJzY2M0MitGRDIyRi8zY1ZSaUloZz09",
+      "permanent": true
+    },
+    {
+      "source": "/Zoom2",
+      "destination": "https://zoom.us/j/9207535662?pwd=QjJzY2M0MitGRDIyRi8zY1ZSaUloZz09",
+      "permanent": true
+    },
+    {
+      "source": "/ZOOM2",
+      "destination": "https://zoom.us/j/9207535662?pwd=QjJzY2M0MitGRDIyRi8zY1ZSaUloZz09",
+      "permanent": true
+    },
+    {
       "source": "/tropical-blue-jetpack-smoothie",
       "destination": "/products/tropical-blue-jetpack-smoothie",
       "permanent": true
