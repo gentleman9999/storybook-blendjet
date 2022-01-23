@@ -9,6 +9,7 @@ import FlashingRed from '~/components/svg/FlashingRed'
 import SolidRedLights from '~/components/svg/SolidRedLights'
 import Globe from '~/components/svg/Globe'
 import Lightning from '~/components/svg/Lightning'
+import Lightning2 from '~/components/svg/Lightning2'
 import Charge from '~/components/svg/Charge'
 import Drop from '~/components/svg/Drop'
 import Leaf from '~/components/svg/Leaf'
@@ -78,6 +79,10 @@ export default {
         }
         case 'Lightning': {
           mode = 'Lightning'
+          break
+        }
+        case 'Lightning2': {
+          mode = 'Lightning2'
           break
         }
         case 'Charge': {
@@ -221,6 +226,7 @@ export default {
     SolidRedLights,
     Globe,
     Lightning,
+    Lightning2,
     Charge,
     Drop,
     Leaf,
