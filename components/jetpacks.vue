@@ -263,17 +263,17 @@ export default {
       } else if (title.includes('very berry')) {
         return 'linear-gradient(146deg, rgba(229,128,140,1) 0%, rgba(219,30,53,1) 100%)'
       }else if (title.includes('vanilla')) {
-return 'linear-gradient(146deg, rgba(249,214,97,1) 0%, rgba(255,243,202,1) 100%)'        
-      }else if (title.includes('mocha')) {
-return 'linear-gradient(202deg, rgba(197,197,224,1) 0%, rgba(94,63,54,1) 100%)'        
-      }else if (title.includes('matcha green tea')) {
-return 'linear-gradient(146deg, rgba(242,226,213,1) 0%, rgba(240,186,138,1) 100%)'                
-      }else if (title.includes('caramel')) {
-return 'linear-gradient(146deg, rgba(234,133,0,1) 0%, rgba(249,221,12,1) 100%)'        
+return 'linear-gradient(146deg, #e8ca99 8%, #cea262 88%)'
+      }else if (title.includes('matcha green tea')) {               
+      return 'linear-gradient(146deg, #c2c486 8%, #8eaa1b 88%)'
+      }else if (title.includes('caramel')) {     
+return 'linear-gradient(146deg, #eddab6 8%, #d9a067 88%)'
       }else if (title.includes('chai')) {
-return 'linear-gradient(146deg, #f8f6bb 8%, #efea3b 88%)'        
+return 'linear-gradient(146deg, #db8f56 8%, #bc6a33 88%)'
       }else if (title.includes('cinnamon dolce')) {
-return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'        
+return 'linear-gradient(146deg, #dec698 8%, #c08429 88%)'
+}else if (title.includes('mocha')) {      
+return 'linear-gradient(146deg, #ceb9ac 8%, #986c5b 88%)'
       } else {
         return 'none'
       }
