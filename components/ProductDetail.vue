@@ -123,7 +123,7 @@
               <template v-if="isJetpack">
                 <div class="product-select__controls__title">{{ currentVariant.title }}</div>
                 <div class="product-select__controls__category">
-                  <h1>JetPack Smoothie</h1>
+                  <h1>{{ product.title }}</h1>
                 </div>
               </template>
               <template v-else>
@@ -1173,14 +1173,14 @@ export default {
     // Once nacelle-nuxt-module is upgrade to 5.5.7, replace the contentful API with a call to the SDK!
     this.client = createClient()
 
-    const isProteinJetPack = this.product.handle.includes('protein')
+    const isLatteJetPack = this.product.handle.includes('latte')
 
     // Assemble cross sell link data
     this.crossSell = {
-      url: isProteinJetPack ? '/products/jetpack-smoothies' : '/products/jetpack-protein-smoothie',
-      text: isProteinJetPack
-        ? 'Try Our Original JetPack Smoothies'
-        : 'Try our NEW Protein Smoothies'
+      url: isLatteJetPack ? '/products/jetpack-protein-smoothie' : '/products/jetpack-latte',
+      text: isLatteJetPack
+        ? 'Try Our Protein Smooties'
+        : 'Try Our NEW JetPack Lattes'
     }
 
     // Check to see if Contentful data is present in page

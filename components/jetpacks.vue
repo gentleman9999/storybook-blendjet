@@ -41,10 +41,10 @@
       </svg>
     </div>
     <div class="title-container__subheading">
-      Ready-to-Blend Smoothies from Just ${{ productPrice }}
+      Ready-to-Blend Beverages from Just ${{ productPrice }}
     </div>
     <div class="jetpack-tabs">
-      <Tabs :tabItems="['protein smoothies', 'smoothies']" @activeTab="jetpackTabChange" />
+      <Tabs :tabItems="['lattes', 'protein smoothies', 'smoothies']" @activeTab="jetpackTabChange" />
     </div>
     <div class="blendjet-carousel">
       <b-carousel-list
@@ -149,8 +149,8 @@ export default {
       jetpackIndex: 0,
       itemsToShow: 1,
       indicatorVisible: false,
-      productPrice: 3.95,
-      activeProductHandle: 'jetpack-protein-smoothie',
+      productPrice: 3.99,
+      activeProductHandle: 'jetpack-latte',
       carouselStyle: {
         boxShadow: 'none'
       },
@@ -238,30 +238,52 @@ export default {
     // Needs update for additional colors
     getBGColor(item) {
       const title = item.toLowerCase()
-      if (title.includes('banana')) {
+      if (title.includes('strawberry banana')) {
         return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'
-      } else if (title.includes('raspberry')) {
+      } else if (title.includes('raspberry dragon fruit')) {
         return 'linear-gradient(146deg, #f098b3 8%, #f50e7d 88%)'
-      } else if (title.includes('mango')) {
+      } else if (title.includes('mango matcha')) {
         return 'linear-gradient(146deg, rgba(234,133,0,1) 0%, rgba(249,221,12,1) 100%)'
-      } else if (title.includes('tropical')) {
+      } else if (title.includes('orange mango pineapple')) {
+      return 'linear-gradient(146deg, rgba(234,133,0,1) 0%, rgba(249,221,12,1) 100%)'
+      } else if (title.includes('banana blueberry')) {
+        return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'      
+      } else if (title.includes('tropical blue')) {
         return 'linear-gradient(146deg, #f8f6bb 8%, #efea3b 88%)'
-      } else if (title.includes('green')) {
+      } else if (title.includes('green peach ginger')) {
         return 'linear-gradient(146deg, rgba(249,214,97,1) 0%, rgba(255,243,202,1) 100%)'
-      } else if (title.includes('mocha')) {
+      } else if (title.includes('mocha chia')) {
         return 'linear-gradient(202deg, rgba(197,197,224,1) 0%, rgba(94,63,54,1) 100%)'
-      } else if (title.includes('peanut')) {
+      } else if (title.includes('peanut butter power breakfast')) {
         return 'linear-gradient(146deg, rgba(242,226,213,1) 0%, rgba(240,186,138,1) 100%)'
-      } else if (title.includes('acai')) {
+      } else if (title.includes('chocolate peanut butter')) {
+      return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'
+      } else if (title.includes('blueberry acai')) {
         return 'linear-gradient(146deg, rgba(197,197,224,1) 0%, rgba(27,19,24,1) 100%)'
-      } else if (title.includes('very')) {
+      } else if (title.includes('very berry')) {
         return 'linear-gradient(146deg, rgba(229,128,140,1) 0%, rgba(219,30,53,1) 100%)'
+      }else if (title.includes('vanilla')) {
+return 'linear-gradient(146deg, rgba(249,214,97,1) 0%, rgba(255,243,202,1) 100%)'        
+      }else if (title.includes('mocha')) {
+return 'linear-gradient(202deg, rgba(197,197,224,1) 0%, rgba(94,63,54,1) 100%)'        
+      }else if (title.includes('matcha green tea')) {
+return 'linear-gradient(146deg, rgba(242,226,213,1) 0%, rgba(240,186,138,1) 100%)'                
+      }else if (title.includes('caramel')) {
+return 'linear-gradient(146deg, rgba(234,133,0,1) 0%, rgba(249,221,12,1) 100%)'        
+      }else if (title.includes('chai')) {
+return 'linear-gradient(146deg, #f8f6bb 8%, #efea3b 88%)'        
+      }else if (title.includes('cinnamon dolce')) {
+return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'        
       } else {
         return 'none'
       }
     },
     async jetpackTabChange(value) {
       switch (value) {
+        case 'lattes':
+        this.activeProductHandle = 'jetpack-latte'
+        await this.fetchProducts()
+        break
         case 'smoothies':
           this.activeProductHandle = 'jetpack-smoothies'
           await this.fetchProducts()

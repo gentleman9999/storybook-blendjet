@@ -1486,7 +1486,9 @@ export default {
         let title = product?.title
         if (title?.toLowerCase()?.includes('protein')) {
           title = variants.length + ' JETPACK PROTEIN SMOOTHIES'
-        } else if (title?.toLowerCase()?.includes('jetpack')) {
+        } else if (title?.toLowerCase()?.includes('latte')) {
+          title = variants.length + ' JETPACK LATTES'
+        }else if (title?.toLowerCase()?.includes('jetpack')) {
           title = variants.length + ' JETPACK SMOOTHIES'
         }
         this.varietyPackSelectorOptions.push({
