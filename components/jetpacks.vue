@@ -41,7 +41,7 @@
       </svg>
     </div>
     <div class="title-container__subheading">
-      Ready-to-Blend Beverages from Just ${{ productPrice }}
+      Ready-to-Blend Beverages
     </div>
     <div class="jetpack-tabs">
       <Tabs :tabItems="['lattes', 'protein smoothies', 'smoothies']" @activeTab="jetpackTabChange" />
