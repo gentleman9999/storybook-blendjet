@@ -103,9 +103,6 @@
           />
         </span>
         <span class="ticker__item">
-          <img class="ticker__img" src="/images/asSeenOn/GQ.png" alt="GQ Logo" />
-        </span>
-        <span class="ticker__item">
           <img class="ticker__img" src="/images/asSeenOn/Refinery29.png" alt="Refinery29 Logo" />
         </span>
         <span class="ticker__item">
