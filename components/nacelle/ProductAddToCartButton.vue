@@ -135,7 +135,8 @@ export default {
       buttonText: `Add to Cart - ${this.displayPrice}`,
       buttonClass: '',
       priceSaved: {},
-      bundleVariants: []
+      bundleVariants: [],
+      allVariants: this.product.variants
     }
   },
   computed: {
@@ -495,6 +496,7 @@ export default {
       }
     },
     addToCart(calledfrom = '') {
+      let lineItem = {}
       console.log('called', calledfrom)
       if (this.discount) {
         const _dvar = JSON.parse(JSON.stringify(this.variant))
@@ -502,16 +504,45 @@ export default {
       } else {
       }
       if (this.allOptionsSelected && this?.product?.availableForSale) {
-        const lineItem = {
-          image: this.product.featuredMedia,
-          title: this.product.title,
-          variant: this.variant,
-          quantity: this.quantity || 1,
-          productId: this.product.id,
-          handle: this.product.handle,
-          vendor: this.product.vendor,
-          tags: this.product.tags,
-          metafields: this.metafields
+        if (this.variant.sku === 'variety-pack') {
+          this.allVariants &&
+            this.allVariants.forEach(v => {
+              if (v.availableForSale && v.sku !== 'variety-pack') {
+                lineItem = {
+                  image: this.product.featuredMedia,
+                  title: this.product.title,
+                  variant: v,
+                  quantity: this.quantity || 1,
+                  productId: this.product.id,
+                  handle: this.product.handle,
+                  vendor: this.product.vendor,
+                  tags: this.product.tags,
+                  metafields: [
+                    {
+                      key: 'Ref',
+                      value: atob(v.id)
+                        .split('/')
+                        .pop()
+                    }
+                  ]
+                }
+                this.addLineItem(lineItem)
+              }
+            })
+        } else {
+          lineItem = {
+            image: this.product.featuredMedia,
+            title: this.product.title,
+            variant: this.variant,
+            quantity: this.quantity || 1,
+            productId: this.product.id,
+            handle: this.product.handle,
+            vendor: this.product.vendor,
+            tags: this.product.tags,
+            metafields: this.metafields
+          }
+
+          this.addLineItem(lineItem)
         }
         if (this.hasWarranty()) {
           const warrantyItem = {
@@ -534,23 +565,43 @@ export default {
           }
           this.addLineItem(warrantyItem)
         }
-        this.addLineItem(lineItem)
         if (this.bundles.length) {
           this.bundles.forEach(bundle => {
             const variant = bundle?.variant
             const product = bundle?.product
-            const lineItem = {
-              image: product?.featuredMedia,
-              title: product?.title,
-              variant: variant,
-              quantity: this.quantity || 1,
-              productId: product?.id,
-              handle: product?.handle,
-              vendor: product?.vendor,
-              tags: product?.tags,
-              metafields: []
+            const variantsList = bundle?.product?.variants
+            if (variant.sku === 'variety-pack') {
+              variantsList &&
+                variantsList.forEach(v => {
+                  if (v.availableForSale && v.sku !== 'variety-pack') {
+                    lineItem = {
+                      image: product?.featuredMedia,
+                      title: product?.title,
+                      variant: variant,
+                      quantity: this.quantity || 1,
+                      productId: product?.id,
+                      handle: product?.handle,
+                      vendor: product?.vendor,
+                      tags: product?.tags,
+                      metafields: []
+                    }
+                    this.addLineItem(lineItem)
+                  }
+                })
+            } else {
+              const lineItem = {
+                image: product?.featuredMedia,
+                title: product?.title,
+                variant: variant,
+                quantity: this.quantity || 1,
+                productId: product?.id,
+                handle: product?.handle,
+                vendor: product?.vendor,
+                tags: product?.tags,
+                metafields: []
+              }
+              this.addLineItem(lineItem)
             }
-            this.addLineItem(lineItem)
           })
         }
         if (this.bundleVarietyPack?.variants) {
@@ -820,9 +871,6 @@ export default {
 
 .clicked {
   @include hover-transition;
-}
-
-.unclicked {
 }
 
 .inner-text {
