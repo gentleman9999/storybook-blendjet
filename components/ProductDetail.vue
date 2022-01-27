@@ -10,6 +10,7 @@
     >
       <ProductStickyAddToCart
         :product="product"
+        :variants="variants"
         :currentVariant.sync="currentVariant"
         :quantity.sync="quantity"
         :updateVariant="setSelectedVariant"
@@ -1178,9 +1179,7 @@ export default {
     // Assemble cross sell link data
     this.crossSell = {
       url: isLatteJetPack ? '/products/jetpack-protein-smoothie' : '/products/jetpack-latte',
-      text: isLatteJetPack
-        ? 'Try Our Protein Smooties'
-        : 'Try Our NEW JetPack Lattes'
+      text: isLatteJetPack ? 'Try Our Protein Smooties' : 'Try Our NEW JetPack Lattes'
     }
 
     // Check to see if Contentful data is present in page
