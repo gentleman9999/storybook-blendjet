@@ -1867,6 +1867,10 @@ export default {
   }
   &.has-bundle {
     max-height: 1180px;
+    @include respond-to('small') {
+      max-height: 300px;
+      height: 300px;
+    }
   }
 }
 .media-content__main__features {
@@ -1886,6 +1890,9 @@ export default {
     height: 980px;
     &.has-bundle {
       height: 1180px;
+      @include respond-to('small') {
+        height: auto;
+      }
     }
 
     @include respond-to('small') {
@@ -1951,6 +1958,9 @@ export default {
     }
     &.has-bundle {
       height: 1180px;
+      @include respond-to('small') {
+        height: auto;
+      }
     }
     @include respond-to('small') {
       width: 100%;
