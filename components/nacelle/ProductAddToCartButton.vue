@@ -811,6 +811,11 @@ export default {
       max-width: 360px;
     }
   }
+  &.other-products {
+    .add-to-cart-button {
+      width: 356px;
+    }
+  }
 }
 
 .clicked {

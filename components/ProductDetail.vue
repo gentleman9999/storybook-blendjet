@@ -17,7 +17,7 @@
         :optionsQty="allOptions.length"
       />
 
-      <div class="product-select">
+      <div class="product-select" :class="{ 'has-bundle': hasBundle }">
         <!-- TODO: Figure out what this component's purpose is...? -->
         <div class="hidden-product-price" v-show="false">
           <product-price
@@ -79,7 +79,13 @@
         </div>
 
         <!-- GALLERY -->
-        <div :class="['product-select__image-carousel', { jetpack: isJetpack }]">
+        <div
+          :class="[
+            'product-select__image-carousel',
+            { jetpack: isJetpack },
+            { 'has-bundle': hasBundle }
+          ]"
+        >
           <div
             v-if="variants.length > 1 && isJetpack"
             class="product-select__image-carousel__prev-variant"
@@ -96,7 +102,11 @@
           </div>
           <transition name="fade" mode="out-in">
             <img
-              :class="['product-select__image-carousel__img', { jetpack: isJetpack }]"
+              :class="[
+                'product-select__image-carousel__img',
+                { jetpack: isJetpack },
+                { 'has-bundle': hasBundle }
+              ]"
               :src="optimizeSource({ url: productImage, height: 1200 })"
               @mousedown.prevent="dragStart"
               @mousemove.prevent="dragProgress"
@@ -108,7 +118,9 @@
           </transition>
         </div>
 
-        <div :class="['product-select__controls', { jetpack: isJetpack }]">
+        <div
+          :class="['product-select__controls', { jetpack: isJetpack }, { 'has-bundle': hasBundle }]"
+        >
           <div class="product-select__controls__container">
             <!-- DESKTOP PRODUCT INFO - Title, Variant Title, Ratings -->
             <div class="product-select__controls__title-container">
@@ -267,6 +279,216 @@
                       marginRight: '6px'
                     }"
                   />
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-if="selectedBundle.length || selectedBundleVarietyPack.length"
+              class="product-select__controls__bundles"
+            >
+              <div
+                v-if="page && page.fields.bundles"
+                class="product-select__controls__bundles__title normal-size"
+              >
+                {{ bundleTitle }}
+              </div>
+              <div class="product-select__controls__bundles__bundle-products">
+                <div
+                  class="product-select__controls__bundles__bundle-product-container"
+                  :class="{
+                    blur: varietyBundleSelectorActive || bundleSelectorVisible
+                  }"
+                >
+                  <img
+                    v-if="currentVariant && currentVariant.featuredMedia"
+                    :src="currentVariant.featuredMedia.thumbnailSrc"
+                    :alt="currentVariant.featuredMedia.altText"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    :class="{
+                      'item-blurred': varietyBundleSelectorActive || bundleSelectorVisible
+                    }"
+                    @click.self="bundleItemClicked(currentVariant, true)"
+                  />
+                </div>
+                <template v-if="selectedBundle.length">
+                  <div
+                    v-for="(bundle, index) in selectedBundle"
+                    :key="bundle.product.id"
+                    class="product-select__controls__bundles__bundle-product-container"
+                    :class="[
+                      {
+                        blur:
+                          (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                          !bundleOptionsSelectorActive[index]
+                      },
+                      {
+                        'no-blur': !(
+                          (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                          !bundleOptionsSelectorActive[index]
+                        )
+                      }
+                    ]"
+                  >
+                    <img
+                      v-if="bundle.variant && bundle.variant.featuredMedia"
+                      :src="bundle.variant.featuredMedia.thumbnailSrc"
+                      :alt="bundle.variant.featuredMedia.altText"
+                      class="product-select__controls__bundles__bundle-product-image"
+                      :class="[
+                        { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
+                        {
+                          'item-blurred':
+                            (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                            !bundleOptionsSelectorActive[index]
+                        },
+                        {
+                          'item-not-blurred': !(
+                            (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                            !bundleOptionsSelectorActive[index]
+                          )
+                        }
+                      ]"
+                      @click.self="bundleItemClicked(bundle, false, index)"
+                    />
+                    <img
+                      v-else
+                      :src="bundle.product.featuredMedia.thumbnailSrc"
+                      :alt="bundle.product.featuredMedia.altText"
+                      class="product-select__controls__bundles__bundle-product-image"
+                      :class="[
+                        { 'no-pointer': !bundle.clickAction || bundle.clickAction === 'none' },
+                        {
+                          'item-blurred':
+                            (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                            !bundleOptionsSelectorActive[index]
+                        },
+                        {
+                          'item-not-blurred': !(
+                            (varietyBundleSelectorActive || bundleSelectorVisible) &&
+                            !bundleOptionsSelectorActive[index]
+                          )
+                        }
+                      ]"
+                      @click.self="bundleItemClicked(bundle, false, index)"
+                    />
+                  </div>
+                </template>
+                <div
+                  v-if="
+                    selectedBundleVarietyPack &&
+                      selectedBundleVarietyPack[selectedVarieryPackIndex] &&
+                      selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length
+                  "
+                  class="product-select__controls__bundles__bundle-product-container"
+                  :class="{
+                    blur: bundleSelectorVisible && !varietyBundleSelectorActive,
+                    'no-blur': !(bundleSelectorVisible && !varietyBundleSelectorActive)
+                  }"
+                >
+                  <img
+                    :src="varietyPackImage[selectedVarieryPackIndex]"
+                    alt="variety pack"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    :class="{
+                      'item-blurred': bundleSelectorVisible && !varietyBundleSelectorActive,
+                      'item-not-blurred': !(bundleSelectorVisible && !varietyBundleSelectorActive)
+                    }"
+                    @click.self="
+                      bundleVarietyPackClicked(
+                        selectedBundleVarietyPack[selectedVarieryPackIndex],
+                        selectedBundleVarietyPack.length > 1
+                      )
+                    "
+                  />
+                </div>
+              </div>
+              <div class="product-select__controls__bundles__add-to-cart-bundle">
+                <product-add-to-cart-button
+                  class="other-products"
+                  :quantity="quantity"
+                  :product="product"
+                  :variant="currentVariant"
+                  :allOptionsSelected="true"
+                  :onlyOneOption="true"
+                  @addedToCart="quantity = 1"
+                  :bundles="selectedBundle"
+                  :bundle-variety-pack="selectedBundleVarietyPack[selectedVarieryPackIndex]"
+                />
+              </div>
+
+              <div class="variant-select-container" @click.stop>
+                <div
+                  v-for="(bundle, index) in selectedBundle"
+                  :key="bundle.product.id"
+                  class="variant-select bundle-item"
+                  :class="{ 'single-variant': bundle.variantsAvailableForSale <= 1 }"
+                  v-show="bundleOptionsSelectorActive[index]"
+                >
+                  <div
+                    v-click-outside="hideVariantSelector"
+                    v-if="bundleOptionsSelectorActive[index]"
+                  >
+                    <div
+                      v-if="bundle.media"
+                      class="media-tile__media"
+                      :class="{ 'variety-bundle-item-video': bundleOptionsSelectorActive[index] }"
+                    >
+                      <Close :on-click="hideVariantSelector" color="white" />
+                      <VideoContainer
+                        v-if="bundle.media.fields.file"
+                        :source="bundle.media.fields.file.url"
+                        class="media-tile__media__video bundle-item-video"
+                        :show-loader="true"
+                        :loader-height="360"
+                      />
+                    </div>
+                    <product-options
+                      v-if="bundle.variantsAvailableForSale > 1"
+                      :options="getAllOptions(bundle.product.variants)"
+                      :variant="bundle.variant"
+                      :variants="bundle.product.variants"
+                      :currentOption="bundle.variant.selectedOptions[0].value"
+                      :key="5"
+                      @selectedOption="setBundleVariant($event, index)"
+                      @click.stop
+                      class="bundle-variant-select-color"
+                    />
+                    <div class="bundle-overlay" @click.prevent.stop="hideVariantSelector"></div>
+                  </div>
+                </div>
+                <div
+                  v-if="
+                    selectedBundleVarietyPack &&
+                      selectedBundleVarietyPack[selectedVarieryPackIndex] &&
+                      selectedBundleVarietyPack[selectedVarieryPackIndex].variants.length &&
+                      varietyBundleSelectorActive
+                  "
+                  class="variant-select"
+                  tabindex="2"
+                  v-click-outside="hideVariantSelector"
+                >
+                  <div
+                    v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media"
+                    class="media-tile__media variety-bundle-item-video"
+                  >
+                    <Close :on-click="hideVariantSelector" color="white" />
+                    <VideoContainer
+                      v-if="selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file"
+                      :source="
+                        selectedBundleVarietyPack[selectedVarieryPackIndex].media.fields.file.url
+                      "
+                      :show-loader="true"
+                      :loader-height="360"
+                      class="media-tile__media__video"
+                    />
+                  </div>
+                  <VarietySelect
+                    tabindex="0"
+                    :options="varietyPackSelectorOptions"
+                    @updateOptions="updateSelectedVarietyPack"
+                  />
+                  <div class="bundle-overlay" @click.prevent.stop="hideVariantSelector"></div>
                 </div>
               </div>
             </div>
@@ -741,13 +963,14 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import { cloneDeep } from 'lodash'
+import vClickOutside from 'v-click-outside'
 import RichTextRenderer from 'contentful-rich-text-vue-renderer'
 
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductFeatures from '~/components/ProductFeaturesPDP'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import CustomProductOptions from '~/components/CustomProductOptions'
-import ProductOptions from '~/components/nacelle/ProductOptions'
 import SubscriptionToggle from '~/components/subscriptionToggle'
 import SubscriptionAddToCartButton from '~/components/nacelle/SubscriptionAddToCartButton'
 import ProductVariantsDropdown from '~/components/ProductVariantsDropdown'
@@ -765,9 +988,13 @@ import Close from '~/components/svg/modalClose'
 import Tabs from '~/components/tabs'
 import NextSlide from '~/components/svg/NextSlide'
 import PrevSlide from '~/components/svg/PrevSlide'
+import VarietySelect from '~/components/VarietySelect'
+import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
+import ProductOptions from '~/components/nacelle/ProductOptions'
 
 import { createClient } from '~/plugins/contentful.js'
 const JetpackCrossSell = () => import('~/components/jetpackCrossSellVariants')
+const VideoContainer = () => import('~/components/VideoContainer')
 export default {
   data() {
     return {
@@ -804,11 +1031,23 @@ export default {
       metaDescription: null,
       imageInterval: null,
       imageIndex: 0,
+      imageIntervalProduct: null,
+      imageIndexProduct: 0,
       crossSell: {},
       quantityOption: {
         quantity: [],
         title: ''
       },
+      selectedBundle: cloneDeep(this.bundles),
+      selectedBundleVarietyPack: cloneDeep(this.bundleVarietyPack),
+      bundleTitle: this?.page?.fields?.bundles?.fields?.title,
+      bundleVarietyOptions: [],
+      selectedVarieryPackIndex: 0,
+      varietyPackImage: [],
+      bundleOptionsSelectorActive: {},
+      varietyBundleSelectorActive: false,
+      bundleSelectorVisible: false,
+      varietyPackSelectorOptions: [],
       variantShippingOffset: null,
       variantShippingDate: null,
       productShippingOffset: null,
@@ -833,7 +1072,10 @@ export default {
     ShippingTime,
     Tabs,
     PrevSlide,
-    NextSlide
+    NextSlide,
+    VideoContainer,
+    VarietySelect,
+    ProductAddToCartButton
   },
   mixins: [
     imageOptimize,
@@ -843,6 +1085,9 @@ export default {
     allOptionsSelected,
     carouselDragEvents
   ],
+  directives: {
+    clickOutside: vClickOutside.directive
+  },
   props: {
     product: {
       type: Object,
@@ -853,6 +1098,22 @@ export default {
       default: () => ({})
     },
     country: {
+      type: Object,
+      default: () => {}
+    },
+    bundles: {
+      type: Array,
+      default: () => []
+    },
+    variantSpecificBundles: {
+      type: Object,
+      default: () => {}
+    },
+    bundleVarietyPack: {
+      type: Array,
+      default: () => []
+    },
+    variantBundleVarietyPack: {
       type: Object,
       default: () => {}
     }
@@ -916,10 +1177,225 @@ export default {
     },
     isJetpack() {
       return this?.product?.productType?.toLowerCase().includes('jetpack')
+    },
+    hasBundle() {
+      return !!this.bundles.length
     }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
+    hideVariantSelector(event = {}) {
+      if (
+        event &&
+        event?.target?.className?.includes &&
+        event?.target?.className?.includes('item-not-blurred')
+      ) {
+        return
+      }
+      this.bundleSelectorVisible = false
+      this.varietyBundleSelectorActive = false
+      console.log('outside click called')
+      for (let i = 0; i < 10; i++) {
+        if (this.bundleOptionsSelectorActive[i]) {
+          this.$set(this.bundleOptionsSelectorActive, i, false)
+        }
+      }
+    },
+    focusOutCalled(event = {}) {
+      console.log('focus out called')
+      if (
+        event &&
+        event?.target?.className?.includes &&
+        event?.target?.className?.includes('item-not-blurred')
+      ) {
+        return
+      }
+      this.varietyBundleSelectorActive = false
+    },
+    bundleVarietyPackClicked(bundle, hasMultipleProducts) {
+      console.log('Bundle variety pack clicked')
+      if (hasMultipleProducts) {
+        this.varietyBundleSelectorActive = !this.varietyBundleSelectorActive
+        this.varietyBundleSelectorActive &&
+          this.$nextTick(() => {
+            const media = document.querySelector('.variety-bundle-item-video')
+            const mediaOffset = media?.getBoundingClientRect()?.top || 0
+            if (this.$mq === 'sm' || this.$mq === 'md') {
+              window.scroll({
+                top: window.scrollY + mediaOffset - 140,
+                behavior: 'smooth'
+              })
+            } else {
+              const bundleElement = document.querySelector(
+                '.product-select__controls__bundles__bundle-products'
+              )
+              const bundleOffset = bundleElement?.getBoundingClientRect()?.top
+              if (bundleOffset - 380 - 140 < 0) {
+                window.scroll({
+                  top: window.scrollY + mediaOffset - 140,
+                  behavior: 'smooth'
+                })
+              }
+            }
+          })
+      } else {
+        const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
+        this.$router.push({
+          name: 'products-productHandle',
+          params: {
+            productHandle: bundle.product.handle
+          },
+          query: {
+            variant: this.formatVariantId(variant.id)
+          }
+        })
+      }
+    },
+    bundleItemClicked(bundle, isCurrentProduct, index = 0) {
+      console.log('Bundle item clicked')
+      if (!isCurrentProduct) {
+        if (bundle?.clickAction === 'variant') {
+          if (this.bundleOptionsSelectorActive[index]) {
+            this.hideVariantSelector()
+            return
+          }
+          console.log('show variant')
+          for (let i = 0; i < 10; i++) {
+            this.$set(this.bundleOptionsSelectorActive, i, false)
+          }
+          this.varietyBundleSelectorActive = false
+          this.bundleSelectorVisible = true
+          this.$set(this.bundleOptionsSelectorActive, index, true)
+          setTimeout(() => {
+            this.$set(this.bundleOptionsSelectorActive, index, true)
+            this.bundleSelectorVisible = true
+            console.log('visible set')
+            this.$nextTick(() => {
+              const media = document.querySelector('.variety-bundle-item-video')
+              const mediaOffset = media?.getBoundingClientRect()?.top || 0
+              if (this.$mq === 'sm' || this.$mq === 'md') {
+                window.scroll({
+                  top: window.scrollY + mediaOffset - 140,
+                  behavior: 'smooth'
+                })
+              } else {
+                const bundleElement = document.querySelector(
+                  '.product-select__controls__bundles__bundle-products'
+                )
+                const bundleOffset = bundleElement?.getBoundingClientRect()?.top
+                if (bundleOffset - 380 - 140 < 0) {
+                  window.scroll({
+                    top: window.scrollY + mediaOffset - 140,
+                    behavior: 'smooth'
+                  })
+                }
+              }
+            })
+          }, 100)
+        } else if (bundle.clickAction === 'link') {
+          const variant = bundle?.variants?.length ? bundle.variants[0] : bundle.variant
+          this.$router.push({
+            name: 'products-productHandle',
+            params: {
+              productHandle: bundle.product.handle
+            },
+            query: {
+              variant: this.formatVariantId(variant.id)
+            }
+          })
+        }
+      } else {
+        this.bundleSelectorVisible = false
+        if (this.$mq === 'sm' || this.$mq === 'md') {
+          const element = this.$refs.swatch
+          const top = element.offsetTop
+          window &&
+            window.scroll({
+              top: Number(top) - 130,
+              behavior: 'smooth'
+            })
+        } else {
+          window &&
+            window.scroll({
+              top: 0,
+              behavior: 'smooth'
+            })
+        }
+      }
+    },
+    setBundleVariant(option, index) {
+      const bundleToUpdate = this.selectedBundle[index]
+      const newVariant = bundleToUpdate.product.variants.filter(variant => {
+        if (variant.selectedOptions[0].value === option.value) {
+          return variant
+        }
+      })
+      if (newVariant.length) {
+        this.selectedBundle[index].variant = cloneDeep(...newVariant)
+        this.$set(this.bundleOptionsSelectorActive, index, false)
+        this.bundleSelectorVisible = false
+      }
+    },
+    updateSelectedVarietyPack(index) {
+      this.selectedVarieryPackIndex = index
+      this.updateBundle()
+      this.varietyBundleSelectorActive = false
+    },
+    updateBundle() {
+      const title = this.currentVariant.title.toLowerCase()?.replace(/\s/g, '')
+      if (this?.variantSpecificBundles?.[title]?.length) {
+        this.selectedBundle = cloneDeep(this?.variantSpecificBundles[title])
+        this.bundleTitle = this?.variantSpecificBundles?.[title]?.[0].title
+      } else if (this.bundles.length) {
+        this.selectedBundle = cloneDeep(this.bundles)
+        this.bundleTitle = this.bundles[0].title
+      }
+      if (this?.variantBundleVarietyPack?.[title]?.length) {
+        this.selectedBundleVarietyPack = cloneDeep(this?.variantBundleVarietyPack?.[title])
+      } else if (this.bundleVarietyPack.length) {
+        this.selectedBundleVarietyPack = cloneDeep(this.bundleVarietyPack)
+      } else {
+        this.selectedBundleVarietyPack = []
+      }
+      if (this.selectedBundleVarietyPack?.length) {
+        if (this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex]) {
+          const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
+          const imageIndex = []
+          for (let i = 0; i < this.selectedBundleVarietyPack?.length; i++) {
+            imageIndex[i] = 0
+          }
+          this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
+            this.$set(
+              this.varietyPackImage,
+              index,
+              variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
+            )
+            imageIndex[index]++
+          })
+          if (variants?.length) {
+            clearInterval(this.imageInterval)
+            this.imageInterval = setInterval(() => {
+              this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
+                this.$set(
+                  this.varietyPackImage,
+                  index,
+                  variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
+                )
+                imageIndex[index]++
+              })
+              this.updateVarietyPackOptions()
+              // this.varietyPackImage =
+              //   variants?.[(imageIndex + 1) % variants.length]?.featuredMedia.thumbnailSrc
+              // imageIndex++
+            }, 1000)
+          }
+        }
+        this.updateVarietyPackOptions()
+      } else {
+        this.varietyPackSelectorOptions = []
+        clearInterval(this.imageInterval)
+      }
+    },
     incrementVariant() {
       if (this.variantIndex === this.variants.length - 1) {
         this.variantIndex = 0
@@ -1145,6 +1621,7 @@ export default {
       this.setProductDetails()
       // console.log('newVariant:', newVariant);
       this.elevarProductView() // needs flag to only fire once
+      this.updateBundle()
     },
     'currentVariant.featuredMedia.src'(newImage) {
       const key = this.currentVariant.title.toLowerCase().replace(/\s/g, '')
@@ -1178,9 +1655,7 @@ export default {
     // Assemble cross sell link data
     this.crossSell = {
       url: isLatteJetPack ? '/products/jetpack-protein-smoothie' : '/products/jetpack-latte',
-      text: isLatteJetPack
-        ? 'Try Our Protein Smooties'
-        : 'Try Our NEW JetPack Lattes'
+      text: isLatteJetPack ? 'Try Our Protein Smooties' : 'Try Our NEW JetPack Lattes'
     }
 
     // Check to see if Contentful data is present in page
@@ -1334,34 +1809,34 @@ export default {
 
       if (this.variants?.length > 2) {
         // update once before calling settimeout so its available at setInitialVariant()
-        clearInterval(this.imageInterval)
+        clearInterval(this.imageIntervalProduct)
         this.$set(
           this.variants[0].featuredMedia,
           'src',
-          this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
-            .src
+          this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
+            ?.featuredMedia.src
         )
         this.$set(
           this.variants[0].featuredMedia,
           'thumbnailSrc',
-          this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
-            .thumbnailSrc
+          this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
+            ?.featuredMedia.thumbnailSrc
         )
-        this.imageIndex++
-        this.imageInterval = setInterval(() => {
+        this.imageIndexProduct++
+        this.imageIntervalProduct = setInterval(() => {
           this.$set(
             this.variants[0].featuredMedia,
             'src',
-            this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
-              .src
+            this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
+              ?.featuredMedia.src
           )
           this.$set(
             this.variants[0].featuredMedia,
             'thumbnailSrc',
-            this.variants?.[((this.imageIndex + 1) % (this.variants.length - 1)) + 1]?.featuredMedia
-              .thumbnailSrc
+            this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
+              ?.featuredMedia.thumbnailSrc
           )
-          this.imageIndex++
+          this.imageIndexProduct++
         }, 1000)
       }
     }
@@ -1369,9 +1844,11 @@ export default {
     this.setInitialVariant()
   },
   beforeDestroy() {
+    clearInterval(this.imageIntervalProduct)
     clearInterval(this.imageInterval)
   },
   beforeRouteLeave() {
+    clearInterval(this.imageIntervalProduct)
     clearInterval(this.imageInterval)
   }
 }
@@ -1387,6 +1864,9 @@ export default {
       max-height: 300px;
       height: 300px;
     }
+  }
+  &.has-bundle {
+    max-height: 1180px;
   }
 }
 .media-content__main__features {
@@ -1404,6 +1884,9 @@ export default {
     background-image: linear-gradient(to bottom, #ededf5 1%, #ffffff 49%);
     width: 65%;
     height: 980px;
+    &.has-bundle {
+      height: 1180px;
+    }
 
     @include respond-to('small') {
       height: auto;
@@ -1465,6 +1948,9 @@ export default {
       @include respond-to('small') {
         height: auto;
       }
+    }
+    &.has-bundle {
+      height: 1180px;
     }
     @include respond-to('small') {
       width: 100%;
@@ -1688,6 +2174,76 @@ export default {
         &__quantity {
           margin-right: 6px;
         }
+      }
+    }
+
+    &__bundles {
+      padding: 10px;
+      position: relative;
+      width: 370px;
+      margin: 20px auto 5px auto;
+      &__title {
+        font-weight: bold;
+        color: $primary-purple;
+        margin-bottom: 10px;
+        font-size: 12px;
+        font-family: Bold;
+        letter-spacing: 1.75px;
+        text-align: center;
+        line-height: 1.33;
+        text-transform: uppercase;
+      }
+      &__bundle-products {
+        display: flex;
+        margin: auto auto 15px auto;
+        justify-content: center;
+        max-width: 370px;
+        position: relative;
+      }
+      .product-image-dummy {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        cursor: pointer;
+        z-index: 9;
+      }
+      &__bundle-product-container {
+        height: 60px;
+        width: 90px;
+        position: relative;
+        &.blur {
+          opacity: 0.25;
+        }
+        &:not(:last-child)::after {
+          content: '+';
+          font-size: 30px;
+          color: $primary-purple;
+          position: absolute;
+          right: calc(0% - 7px);
+          top: 10px;
+          opacity: 1;
+        }
+      }
+      .blur + .no-blur {
+        &::after {
+          opacity: 0.25;
+        }
+      }
+      &__bundle-product-image {
+        height: 100%;
+        max-height: 60px;
+        width: auto;
+        cursor: pointer;
+        position: relative;
+        z-index: 10;
+        filter: drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.3));
+        &.no-pointer {
+          cursor: default;
+        }
+      }
+      &__add-to-cart-bundle {
+        display: flex;
+        justify-content: center;
       }
     }
 
@@ -1953,6 +2509,34 @@ h1 {
   line-height: inherit;
   letter-spacing: inherit;
 }
+.variant-select-container {
+  position: absolute;
+  top: 108px;
+  left: 0;
+  width: 370px;
+  .variant-select {
+    &.bundle-item {
+      background: white;
+      width: 370px;
+      border: 2px solid black;
+      border-radius: 25px;
+      overflow: hidden;
+      &.single-variant {
+        border: 0;
+      }
+    }
+    .option {
+      margin-bottom: 0;
+    }
+  }
+  .bundle-variant-select-color {
+    z-index: 10;
+    position: relative;
+    background: white;
+    padding: 10px;
+    border-radius: 22px;
+  }
+}
 </style>
 <style lang="scss">
 #custom-tabs {
@@ -1990,6 +2574,50 @@ h1 {
           &:hover {
             background: #e0e0ff;
           }
+        }
+      }
+    }
+  }
+}
+
+.variant-dropdown {
+  .dropdown-content {
+    padding: 0 !important;
+  }
+}
+.variant-select-container {
+  .variant-select {
+    .option {
+      margin-bottom: 0;
+    }
+  }
+  .bundle-overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
+  .media-tile__media {
+    position: absolute;
+    z-index: 10;
+    top: -485px;
+    border-radius: 5px;
+    overflow: hidden;
+    &.variety-bundle-item-video {
+      height: 360px;
+      width: 380px;
+      left: -6px;
+      @include respond-to('small') {
+        width: 100%;
+        left: 0;
+      }
+      video {
+        min-height: 360px;
+        @include respond-to('small') {
+          width: auto;
         }
       }
     }
