@@ -50,7 +50,7 @@
       >
         <ProductVariantsDropdown
           v-if="hasVariants"
-          :variants="product.variants"
+          :variants="variants || product.variants"
           :currentVariant="currentVariant"
           @update="updateVariant"
           :direction="$mq === 'sm' ? 'up' : 'down'"
@@ -125,7 +125,11 @@ export default {
       type: Number,
       default: 300
     },
-    isSubscriptionOn: { type: Boolean, default: true }
+    isSubscriptionOn: { type: Boolean, default: true },
+    variants: {
+      type: Array,
+      default: null
+    }
   },
   data() {
     return {

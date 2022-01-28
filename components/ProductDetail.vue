@@ -10,6 +10,7 @@
     >
       <ProductStickyAddToCart
         :product="product"
+        :variants="variants"
         :currentVariant.sync="currentVariant"
         :quantity.sync="quantity"
         :updateVariant="setSelectedVariant"
