@@ -52,7 +52,7 @@
           <template v-if="isJetpack">
             <div class="product-select__controls__title">{{ currentVariant.title }}</div>
             <div class="product-select__controls__category">
-              <h1>JetPack Smoothie</h1>
+              <h1>{{ product.title }}</h1>
             </div>
           </template>
           <template v-else>
