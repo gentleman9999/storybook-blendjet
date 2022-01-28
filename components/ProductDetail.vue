@@ -414,6 +414,7 @@
                   :variants="variants"
                   :isSubscriptionOn="isSubscriptionActive"
                   @addedToCart="quantity = 1"
+                  :bundleQuantity="1"
                   :bundles="selectedBundle"
                   :bundle-variety-pack="selectedBundleVarietyPack[selectedVarieryPackIndex]"
                 />

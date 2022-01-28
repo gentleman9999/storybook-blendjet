@@ -126,6 +126,9 @@ export default {
     onlyBundle: {
       type: Boolean,
       default: false
+    },
+    bundleQuantity: {
+      type: Number
     }
   },
 
@@ -459,7 +462,7 @@ export default {
               response = this.priceSaved[variantPrice]
               foundPriceVariant = true
             } catch (err) {
-              totalPrice += Number(variantPrice * this.quantity)
+              totalPrice += Number(variantPrice * (this.bundleQuantity || this.quantity))
             }
           } else {
             foundPriceVariant = true
@@ -468,10 +471,12 @@ export default {
           if (foundPriceVariant) {
             if (!response.data.ConsumerPrices[0]) {
               symbol = '$'
-              totalPrice += Number(variantPrice * this.quantity)
+              totalPrice += Number(variantPrice * (this.bundleQuantity || this.quantity))
             } else {
               symbol = response.data.Symbol
-              totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
+              totalPrice += Number(
+                response.data.ConsumerPrices[0] * (this.bundleQuantity || this.quantity)
+              )
             }
           }
         }
@@ -504,7 +509,7 @@ export default {
                 foundPriceVariant = true
               } catch (err) {
                 symbol = '$'
-                totalPrice += Number(variantPrice * this.quantity)
+                totalPrice += Number(variantPrice * (this.bundleQuantity || this.quantity))
               }
             } else {
               foundPriceVariant = true
@@ -513,10 +518,12 @@ export default {
             if (foundPriceVariant) {
               if (!response.data.ConsumerPrices[0]) {
                 symbol = '$'
-                totalPrice += Number(variantPrice * this.quantity)
+                totalPrice += Number(variantPrice * (this.bundleQuantity || this.quantity))
               } else {
                 symbol = response.data.Symbol
-                totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
+                totalPrice += Number(
+                  response.data.ConsumerPrices[0] * (this.bundleQuantity || this.quantity)
+                )
               }
             }
           }
@@ -687,7 +694,7 @@ export default {
                       image: product?.featuredMedia,
                       title: product?.title,
                       variant: variant,
-                      quantity: this.quantity || 1,
+                      quantity: this.bundleQuantity || this.quantity || 1,
                       productId: product?.id,
                       handle: product?.handle,
                       vendor: product?.vendor,
@@ -702,7 +709,7 @@ export default {
                 image: product?.featuredMedia,
                 title: product?.title,
                 variant: variant,
-                quantity: this.quantity || 1,
+                quantity: this.bundleQuantity || this.quantity || 1,
                 productId: product?.id,
                 handle: product?.handle,
                 vendor: product?.vendor,
@@ -722,7 +729,7 @@ export default {
                 image: product?.featuredMedia,
                 title: product?.title,
                 variant: variant,
-                quantity: this.quantity || 1,
+                quantity: this.bundleQuantity || this.quantity || 1,
                 productId: product?.id,
                 handle: product?.handle,
                 vendor: product?.vendor,
@@ -824,31 +831,65 @@ export default {
       var referrer = document.referrer.includes('marketplace') ? document.referrer : ''
       var source = this.getSource()
       if (!this.onlyBundle) {
-        var variant = this.variant
-        var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
-        var variantId = Buffer.from(variant.id, 'base64')
-          .toString('binary')
-          .split('/')
-          .pop()
-        productList = [
-          {
-            name: this.product.title.replace("'", ''),
-            id: (variant && variant.sku) || '',
-            product_id: productId,
-            variant_id: (variant && variantId) || '',
-            image: this.product.featuredMedia.src,
-            price: variant.price,
-            brand: this.product.vendor.replace("'", ''),
-            variant: (variant && variant.title && variant.title.replace("'", '')) || '',
-            category: this.product.productType,
-            inventory: this.quantity,
-            list: referrer,
-            source: source
-          }
-        ]
+        if (this.variant.sku !== 'variery-pack') {
+          var variant = this.variant
+          var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+            .toString('binary')
+            .split('/')
+            .pop()
+          var variantId = Buffer.from(variant.id, 'base64')
+            .toString('binary')
+            .split('/')
+            .pop()
+          productList = [
+            {
+              name: this.product.title.replace("'", ''),
+              id: (variant && variant.sku) || '',
+              product_id: productId,
+              variant_id: (variant && variantId) || '',
+              image: this.product.featuredMedia.src,
+              price: variant.price,
+              brand: this.product.vendor.replace("'", ''),
+              variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+              category: this.product.productType,
+              inventory: this.quantity,
+              list: referrer,
+              source: source
+            }
+          ]
+        } else {
+          this.allVariants &&
+            this.allVariants.forEach(v => {
+              if (v.sku !== 'variety-pack') {
+                var variant = v
+                var productId = Buffer.from(this.product.pimSyncSourceProductId, 'base64')
+                  .toString('binary')
+                  .split('/')
+                  .pop()
+                var variantId = Buffer.from(variant.id, 'base64')
+                  .toString('binary')
+                  .split('/')
+                  .pop()
+                const product = [
+                  {
+                    name: this.product.title.replace("'", ''),
+                    id: (variant && variant.sku) || '',
+                    product_id: productId,
+                    variant_id: (variant && variantId) || '',
+                    image: this.product.featuredMedia.src,
+                    price: variant.price,
+                    brand: this.product.vendor.replace("'", ''),
+                    variant: (variant && variant.title && variant.title.replace("'", '')) || '',
+                    category: this.product.productType,
+                    inventory: this.quantity,
+                    list: referrer,
+                    source: source
+                  }
+                ]
+                productList.push(product)
+              }
+            })
+        }
       }
 
       if (this.bundles && this.bundles.length) {
@@ -871,7 +912,7 @@ export default {
             brand: product?.vendor.replace("'", ''),
             variant: (variant && variant.title && variant.title.replace("'", '')) || '',
             category: product?.productType,
-            inventory: this.quantity || 1,
+            inventory: this.bundleQuantity || this.quantity || 1,
             list: referrer,
             source: source
           }
@@ -900,7 +941,7 @@ export default {
               brand: product?.vendor.replace("'", ''),
               variant: (variant && variant.title && variant.title.replace("'", '')) || '',
               category: product?.productType,
-              inventory: this.quantity || 1,
+              inventory: this.bundleQuantity || this.quantity || 1,
               list: referrer,
               source: source
             }
