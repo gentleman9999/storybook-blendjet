@@ -236,7 +236,7 @@ export default {
   position: fixed;
   width: 100%;
   top: 100px;
-  z-index: 10;
+  z-index: 12;
   padding: 1rem 45px;
   opacity: 0;
   pointer-events: none;
