@@ -85,6 +85,9 @@ export default {
     variant: {
       type: Object
     },
+    variants: {
+      type: Array
+    },
     discount: {
       type: Boolean
     },
@@ -135,12 +138,15 @@ export default {
       buttonText: `Add to Cart - ${this.displayPrice}`,
       buttonClass: '',
       priceSaved: {},
-      bundleVariants: [],
-      allVariants: this.product.variants
+      bundleVariants: []
     }
   },
   computed: {
     ...mapState('cart', ['lineItems']),
+
+    allVariants() {
+      return this.variants?.length ? this.variants : this.product.variants
+    },
     /**
      * Get the subscription price for the current variant.
      */
@@ -296,59 +302,130 @@ export default {
     //       (this.buttonText = `Add to Cart - ${this.displayPrice}`)
     //     })
     // },
+    async getVarietyPackDisplayPrice() {
+      let config = ''
+      let totalPrice = 0
+      let symbol = null
+      let currency = null
+
+      for (let i = 0; i < this.allVariants.length; i++) {
+        const variant = this.allVariants[i]
+        if (variant.availableForSale && variant.sku !== 'variety-pack') {
+          const _price = this.isSubscriptionOn ? this.getSubscriptionPrice(variant) : variant.price
+
+          const decodedId = atob(variant.id)
+            .split('/')
+            .pop()
+          const price = encodeURIComponent(
+            JSON.stringify([
+              {
+                Price: _price,
+                Tag: decodedId
+              }
+            ])
+          )
+
+          config = this.getConfigURL(price)
+          let response = {}
+          let foundPrice = false
+          if (this.priceSaved[_price]) {
+            foundPrice = true
+            response = this.priceSaved[_price]
+          } else {
+            try {
+              response = await Axios(config)
+              this.priceSaved[_price] = response
+              foundPrice = true
+            } catch (err) {
+              symbol = '$'
+              totalPrice += Number(variant.price * this.quantity)
+            }
+          }
+
+          if (foundPrice) {
+            if (response.data.Symbol) {
+              symbol = response.data.Symbol
+            }
+            if (response.data.currency) {
+              currency = response.data.currency
+            }
+            if (!response.data.ConsumerPrices[0]) {
+              totalPrice += Number(_price) * this.quantity
+            } else {
+              totalPrice += Number(response.data.ConsumerPrices[0] * this.quantity)
+            }
+          }
+        }
+      }
+      return Promise.resolve({
+        totalPrice,
+        symbol,
+        currency
+      })
+    },
     async getDisplayBundlePrice() {
       let config = ''
       let totalPrice = 0
       let symbol = null
       let currency = null
       let bundleVariantCount = 0
+
       if (!this.onlyBundle) {
         if (!this.variant || !this.variant.id) {
           return undefined
         }
 
-        const _price = this.isSubscriptionOn ? this.subscriptionPrice : this.variant.price
-
-        const decodedId = atob(this.variant.id)
-          .split('/')
-          .pop()
-        const price = encodeURIComponent(
-          JSON.stringify([
-            {
-              Price: _price,
-              Tag: decodedId
-            }
-          ])
-        )
-
-        config = this.getConfigURL(price)
-        let response = {}
-        let foundPrice = false
-        if (this.priceSaved[_price]) {
-          foundPrice = true
-          response = this.priceSaved[_price]
+        if (this.variant.sku === 'variety-pack') {
+          const fetchedValue = await this.getVarietyPackDisplayPrice()
+          totalPrice = fetchedValue.totalPrice
+          symbol = fetchedValue.symbol
+          currency = fetchedValue.currency
         } else {
-          try {
-            response = await Axios(config)
-            this.priceSaved[_price] = response
-            foundPrice = true
-          } catch (err) {
-            symbol = '$'
-            totalPrice = Number(this.variant.price * this.quantity)
-          }
-        }
+          const _price = this.isSubscriptionOn
+            ? this.getSubscriptionPrice(this.variant)
+            : this.variant.price
 
-        if (foundPrice) {
-          if (response.data.Symbol) {
-            symbol = response.data.Symbol
-          }
-          if (response.data.currency) {
-            currency = response.data.currency
-          }
-          if (!response.data.ConsumerPrices[0]) {
-            totalPrice = Number(_price) * this.quantity
+          const decodedId = atob(this.variant.id)
+            .split('/')
+            .pop()
+          const price = encodeURIComponent(
+            JSON.stringify([
+              {
+                Price: _price,
+                Tag: decodedId
+              }
+            ])
+          )
+
+          config = this.getConfigURL(price)
+          let response = {}
+          let foundPrice = false
+          if (this.priceSaved[_price]) {
+            foundPrice = true
+            response = this.priceSaved[_price]
           } else {
-            totalPrice = Number(response.data.ConsumerPrices[0] * this.quantity)
+            try {
+              response = await Axios(config)
+              this.priceSaved[_price] = response
+              foundPrice = true
+            } catch (err) {
+              symbol = '$'
+              totalPrice = Number(this.variant.price * this.quantity)
+            }
+          }
+
+          if (foundPrice) {
+            if (response.data.Symbol) {
+              symbol = response.data.Symbol
+            }
+            if (response.data.currency) {
+              currency = response.data.currency
+            }
+            if (!response.data.ConsumerPrices[0]) {
+              totalPrice = Number(_price) * this.quantity
+            } else {
+              totalPrice = Number(response.data.ConsumerPrices[0] * this.quantity)
+            }
           }
         }
       }
@@ -495,6 +572,25 @@ export default {
         }, 2000)
       }
     },
+    getSubscriptionPrice(variant) {
+      if (!variant) {
+        return undefined
+      }
+      const decodedId = this.decodeBase64VariantId(variant.id)
+      const variantSubscriptionPrice =
+        decodedId &&
+        this.hasSubscription &&
+        this.discountVariantMap &&
+        this.discountVariantMap[decodedId]
+
+      if (variant.sku !== 'variety-pack') {
+        return variantSubscriptionPrice && variantSubscriptionPrice.discount_variant_price
+          ? variantSubscriptionPrice.discount_variant_price
+          : variant.price
+      } else {
+        return variantSubscriptionPrice || variant.price
+      }
+    },
     addToCart(calledfrom = '') {
       let lineItem = {}
       console.log('called', calledfrom)
@@ -502,6 +598,24 @@ export default {
         const _dvar = JSON.parse(JSON.stringify(this.variant))
         _dvar.price = 0.0
       } else {
+      }
+      const subscribed = this.isSubscriptionOn && this.hasSubscription
+      let rechargeFields = []
+      if (!this.onlyBundle) {
+        rechargeFields = [
+          {
+            key: 'charge_interval_frequency',
+            value: this.getMetafield('subscriptions', 'shipping_interval_frequency')
+          },
+          {
+            key: 'order_interval_frequency',
+            value: this.getMetafield('subscriptions', 'shipping_interval_frequency')
+          },
+          {
+            key: 'order_interval_unit',
+            value: 'day'
+          }
+        ]
       }
       if (this.allOptionsSelected && this?.product?.availableForSale) {
         if (this.variant.sku === 'variety-pack') {
@@ -511,20 +625,13 @@ export default {
                 lineItem = {
                   image: this.product.featuredMedia,
                   title: this.product.title,
-                  variant: v,
+                  variant: subscribed ? { ...v, price: this.getSubscriptionPrice(v) } : v,
                   quantity: this.quantity || 1,
                   productId: this.product.id,
                   handle: this.product.handle,
                   vendor: this.product.vendor,
                   tags: this.product.tags,
-                  metafields: [
-                    {
-                      key: 'Ref',
-                      value: atob(v.id)
-                        .split('/')
-                        .pop()
-                    }
-                  ]
+                  metafields: subscribed ? [...rechargeFields] : []
                 }
                 this.addLineItem(lineItem)
               }
@@ -533,13 +640,15 @@ export default {
           lineItem = {
             image: this.product.featuredMedia,
             title: this.product.title,
-            variant: this.variant,
+            variant: subscribed
+              ? { ...this.variant, price: this.getSubscriptionPrice(this.variant) }
+              : this.variant,
             quantity: this.quantity || 1,
             productId: this.product.id,
             handle: this.product.handle,
             vendor: this.product.vendor,
             tags: this.product.tags,
-            metafields: this.metafields
+            metafields: subscribed ? [...rechargeFields] : []
           }
 
           this.addLineItem(lineItem)

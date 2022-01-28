@@ -411,6 +411,8 @@
                   :variant="currentVariant"
                   :allOptionsSelected="true"
                   :onlyOneOption="true"
+                  :variants="variants"
+                  :isSubscriptionOn="isSubscriptionActive"
                   @addedToCart="quantity = 1"
                   :bundles="selectedBundle"
                   :bundle-variety-pack="selectedBundleVarietyPack[selectedVarieryPackIndex]"
