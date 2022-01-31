@@ -105,7 +105,15 @@ export default {
     quantity: { type: Number, default: 1 },
     allOptionsSelected: { type: Boolean, default: false },
     confirmedSelection: { type: Boolean, default: false },
-    onlyOneOption: { type: Boolean, default: false }
+    onlyOneOption: { type: Boolean, default: false },
+    bundles: {
+      type: Array,
+      default: () => []
+    },
+    bundleVarietyPack: {
+      type: Object,
+      default: () => {}
+    }
   },
   data() {
     return {
