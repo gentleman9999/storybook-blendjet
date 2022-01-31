@@ -357,17 +357,17 @@
     },
     {
       "source": "/tv",
-      "destination": "/products/blendjet-one?utm_source=MuteSix&utm_medium=TV&utm_campaign=connectedTV1",
+      "destination": "/products/blendjet-2?utm_source=MuteSix&utm_medium=TV&utm_campaign=connectedTV1",
       "permanent": true
     },
     {
       "source": "/jen",
-      "destination": "/products/blendjet-one?utm_source=Jen",
+      "destination": "/products/blendjet-2?utm_source=Jen",
       "permanent": true
     },
     {
       "source": "/Jen",
-      "destination": "/products/blendjet-one?utm_source=Jen",
+      "destination": "/products/blendjet-2?utm_source=Jen",
       "permanent": true
     },
     { "source": "/tutorials", "destination": "/user-guide", "permanent": true },
@@ -2165,11 +2165,6 @@
     {
       "source": "/products/green-peach-ginger-jetpack-ready-to-blend-smoothie",
       "destination": "/products/jetpack-smoothies?variant=39289167347778",
-      "permanent": true
-    },
-    {
-      "source": "/products/blendjet-2?variant=39652989239362",
-      "destination": "/products/blendjet-2?variant=39652989272130",
       "permanent": true
     }
   ]
