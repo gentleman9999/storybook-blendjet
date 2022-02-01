@@ -11,7 +11,7 @@
           />
         </div>
         <!-- LABEL -->
-        <div>{{ formatTitle(currentVariant.title) }}</div>
+        <div>{{ formatTitle(currentVariant.displayName || currentVariant.title) }}</div>
         <!-- DROPDOWN INDICATOR -->
         <CaretDown :styleObj="{ marginLeft: '10px', marginRight: '10px' }" />
       </div>
@@ -33,7 +33,7 @@
                 :src="optimizeSource({ url: variant.featuredMedia.thumbnailSrc, width: 800 })"
               />
             </div>
-            <div>{{ formatTitle(variant.title) }}</div>
+            <div>{{ formatTitle(variant.displayName || variant.title) }}</div>
           </li>
         </ul>
       </transition>

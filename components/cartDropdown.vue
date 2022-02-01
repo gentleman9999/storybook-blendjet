@@ -7,12 +7,14 @@
           :style="`margin-right:${productType === 'jetpacks' ? '7px' : '14px'}`"
           >{{ label }}:</span
         >
-        <span class="select-cover__selected">{{ formatTitle(product.title) }}</span>
+        <span class="select-cover__selected">{{
+          formatTitle(product.displayName || product.title)
+        }}</span>
         <CaretDown :styleObj="{ marginLeft: '16px', marginBottom: '3px' }" :color="'#FFF'" />
       </div>
       <select class="mobile-select" @change="updateSelect(selectModel)" v-model="selectModel">
         <option v-for="(item, i) in items" :key="i" :value="item">{{
-          formatTitle(item.title)
+          formatTitle(item.displayName || item.title)
         }}</option>
       </select>
     </div>

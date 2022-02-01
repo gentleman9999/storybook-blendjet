@@ -51,7 +51,9 @@
             </div>
           </nuxt-link>
           <template v-if="isJetpack">
-            <div class="product-select__controls__title">{{ currentVariant.title }}</div>
+            <div class="product-select__controls__title">
+              {{ currentVariant.displayName || currentVariant.title }}
+            </div>
             <div class="product-select__controls__category">
               <h1>{{ product.title }}</h1>
             </div>
@@ -134,7 +136,9 @@
                 </div>
               </nuxt-link>
               <template v-if="isJetpack">
-                <div class="product-select__controls__title">{{ currentVariant.title }}</div>
+                <div class="product-select__controls__title">
+                  {{ currentVariant.displayName || currentVariant.title }}
+                </div>
                 <div class="product-select__controls__category">
                   <h1>{{ product.title }}</h1>
                 </div>
@@ -1797,7 +1801,8 @@ export default {
         id: 'dmFyaWV0eXBhY2s=', // encoded string for 'varietypack'
         sku: 'variety-pack',
         title: 'Variety Pack',
-        plainId: 'varietypack',
+        displayName: `Variety Pack (${this.variants.length})`,
+        plainId: 'varietyPack',
         price: 0,
         weight: 0
       }

@@ -279,6 +279,7 @@ export default {
     if (this.withVarietyPack && this.variants.length) {
       this.variants.unshift({
         title: 'Variety Pack',
+        displayName: `Variety Pack (${this.variants.length})`,
         subVariants: [...this.variants]
       })
     }
