@@ -38,18 +38,7 @@
 
         <!-- MOBILE PRODUCT INFO - Title, Variant Title, Rating -->
         <div class="product-select__controls__mobile-title-container">
-          <nuxt-link
-            :to="crossSell.url"
-            v-if="crossSell.url && crossSell.text && isJetpack"
-            class="cross-sell__mobile"
-          >
-            <div
-              class="inner-text"
-              style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
-            >
-              {{ crossSell.text }}
-            </div>
-          </nuxt-link>
+          <TabLinks :tab-items="jetpackCrossSell" v-if="isJetpack" class="tab-links" />
           <template v-if="isJetpack">
             <div class="product-select__controls__title">
               {{ currentVariant.displayName || currentVariant.title }}
@@ -127,16 +116,9 @@
           <div class="product-select__controls__container">
             <!-- DESKTOP PRODUCT INFO - Title, Variant Title, Ratings -->
             <div class="product-select__controls__title-container">
-              <nuxt-link :to="crossSell.url" v-if="crossSell.url && crossSell.text && isJetpack">
-                <div
-                  class="inner-text"
-                  style="color: #373975;height: 50px;border: 2px solid #373975;border-radius: 200px;margin-top:35px;background-color: lightyellow;line-height: 46px;text-align: center;font-family: Bold;letter-spacing: 1.75px;font-size: 12px;margin-bottom: -35px;text-transform: uppercase;cursor: pointer;"
-                >
-                  {{ crossSell.text }}
-                </div>
-              </nuxt-link>
+              <TabLinks :tab-items="jetpackCrossSell" v-if="isJetpack" class="tab-links" />
               <template v-if="isJetpack">
-                <div class="product-select__controls__title">
+                <div class="product-select__controls__title" :class="{ jetpack: isJetpack }">
                   {{ currentVariant.displayName || currentVariant.title }}
                 </div>
                 <div class="product-select__controls__category">
@@ -997,6 +979,7 @@ import Tabs from '~/components/tabs'
 import NextSlide from '~/components/svg/NextSlide'
 import PrevSlide from '~/components/svg/PrevSlide'
 import VarietySelect from '~/components/VarietySelect'
+import TabLinks from '~/components/TabLinks'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 
@@ -1041,7 +1024,6 @@ export default {
       imageIndex: 0,
       imageIntervalProduct: null,
       imageIndexProduct: 0,
-      crossSell: {},
       quantityOption: {
         quantity: [],
         title: ''
@@ -1059,7 +1041,21 @@ export default {
       variantShippingOffset: null,
       variantShippingDate: null,
       productShippingOffset: null,
-      productShippingDate: null
+      productShippingDate: null,
+      jetpackCrossSell: [
+        {
+          text: 'Lattes',
+          url: '/products/jetpack-latte'
+        },
+        {
+          text: 'Protein',
+          url: '/products/jetpack-protein-smoothie'
+        },
+        {
+          text: 'Smoothies',
+          url: '/products/jetpack-smoothies'
+        }
+      ]
     }
   },
   components: {
@@ -1083,7 +1079,8 @@ export default {
     NextSlide,
     VideoContainer,
     VarietySelect,
-    ProductAddToCartButton
+    ProductAddToCartButton,
+    TabLinks
   },
   mixins: [
     imageOptimize,
@@ -1658,14 +1655,6 @@ export default {
     // Once nacelle-nuxt-module is upgrade to 5.5.7, replace the contentful API with a call to the SDK!
     this.client = createClient()
 
-    const isLatteJetPack = this.product.handle.includes('latte')
-
-    // Assemble cross sell link data
-    this.crossSell = {
-      url: isLatteJetPack ? '/products/jetpack-protein-smoothie' : '/products/jetpack-latte',
-      text: isLatteJetPack ? 'Try Our Protein Smooties' : 'Try Our NEW JetPack Lattes'
-    }
-
     // Check to see if Contentful data is present in page
     if (!this?.page?.fields) {
       // If page data doesn't exist, fail
@@ -1983,6 +1972,9 @@ export default {
 
     &__mobile-title-container {
       width: 100%;
+      .tab-links {
+        margin-top: 30px;
+      }
 
       @media screen and (min-width: 768px) {
         display: none;
@@ -1992,6 +1984,9 @@ export default {
     &__title-container {
       @include respond-to('small') {
         display: none;
+      }
+      .tab-links {
+        margin-top: 30px;
       }
     }
 
@@ -2005,6 +2000,9 @@ export default {
       margin-bottom: 7px;
       text-transform: uppercase;
       text-align: center;
+      &.jetpack {
+        margin-top: 45px;
+      }
 
       @include respond-to('small') {
         font-size: 24px;
