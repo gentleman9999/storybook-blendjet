@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="page-heading">
-      FAQs
+      {{ title }}
     </div>
 
     <div class="faq-container">
@@ -35,7 +35,11 @@ export default {
     const faqPage = await client.getEntry('14wksLiEhIb1GivTNvi8pZ').then(async res => {
       return res
     })
-    return { faqList: faqPage?.fields?.faqList, metaInfo: faqPage?.fields?.metaInfo }
+    return {
+      title: faqPage?.fields?.title,
+      faqList: faqPage?.fields?.faqList,
+      metaInfo: faqPage?.fields?.metaInfo
+    }
   },
 
   head() {
