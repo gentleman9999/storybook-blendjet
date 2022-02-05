@@ -249,17 +249,17 @@ export default {
       } else if (title.includes('banana blueberry')) {
         return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'      
       } else if (title.includes('tropical blue')) {
-        return 'linear-gradient(146deg, #f8f6bb 8%, #efea3b 88%)'
+        return 'linear-gradient(146deg, #9ad4e5 8%, #dcd372 88%)'
       } else if (title.includes('green peach ginger')) {
         return 'linear-gradient(146deg, rgba(249,214,97,1) 0%, rgba(255,243,202,1) 100%)'
       } else if (title.includes('mocha chia')) {
-        return 'linear-gradient(202deg, rgba(197,197,224,1) 0%, rgba(94,63,54,1) 100%)'
+        return 'linear-gradient(147deg, #dbd3e8 0%, #cab0b2 100%)'
       } else if (title.includes('peanut butter power breakfast')) {
-        return 'linear-gradient(146deg, rgba(242,226,213,1) 0%, rgba(240,186,138,1) 100%)'
+        return 'linear-gradient(146deg, #f89d4a 0%, #f1d7be 100%)'
       } else if (title.includes('chocolate peanut butter')) {
       return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'
       } else if (title.includes('blueberry acai')) {
-        return 'linear-gradient(146deg, rgba(197,197,224,1) 0%, rgba(27,19,24,1) 100%)'
+        return 'linear-gradient(146deg, #3d3d78 0%, #8786c3 100%)'
       } else if (title.includes('very berry')) {
         return 'linear-gradient(146deg, rgba(229,128,140,1) 0%, rgba(219,30,53,1) 100%)'
       }else if (title.includes('vanilla')) {
