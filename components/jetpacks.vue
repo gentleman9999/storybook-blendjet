@@ -253,7 +253,7 @@ export default {
       } else if (title.includes('green peach ginger')) {
         return 'linear-gradient(146deg, rgba(249,214,97,1) 0%, rgba(255,243,202,1) 100%)'
       } else if (title.includes('mocha chia')) {
-        return 'linear-gradient(147deg, #dbd3e8 0%, #cab0b2 100%)'
+        return 'linear-gradient(147deg, #cab0b2 0%, #dbd3e8 100%)'
       } else if (title.includes('peanut butter power breakfast')) {
         return 'linear-gradient(146deg, #f89d4a 0%, #f1d7be 100%)'
       } else if (title.includes('chocolate peanut butter')) {
