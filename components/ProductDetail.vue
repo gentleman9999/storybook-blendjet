@@ -1900,6 +1900,7 @@ export default {
       height: 100vh;
       max-height: 1180px;
       min-height: 300px;
+      display: flex;
       @include respond-to('small') {
         height: auto;
       }
