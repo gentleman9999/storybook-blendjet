@@ -1904,15 +1904,15 @@ export default {
       min-height: 300px;
       display: flex;
       max-height: 848px;
-      &.has-bundle {
-        max-height: 1180px;
+      &.jetpack {
+        max-height: 980px;
+        height: 100vh;
         @include respond-to('small') {
           height: auto;
         }
       }
-      &.jetpack {
+      &.has-bundle {
         max-height: 1180px;
-        height: 100vh;
         @include respond-to('small') {
           height: auto;
         }
