@@ -44,7 +44,10 @@
       Ready-to-Blend Beverages
     </div>
     <div class="jetpack-tabs">
-      <Tabs :tabItems="['lattes', 'protein smoothies', 'smoothies']" @activeTab="jetpackTabChange" />
+      <Tabs
+        :tabItems="['lattes', 'protein smoothies', 'smoothies']"
+        @activeTab="jetpackTabChange"
+      />
     </div>
     <div class="blendjet-carousel">
       <b-carousel-list
@@ -84,7 +87,7 @@
                   :to="props.list.url"
                   :style="titleStyle"
                 >
-                  {{ props.title }}
+                  {{ props.displayName || props.title }}
                 </nuxt-link>
               </div>
             </div>
@@ -180,7 +183,10 @@ export default {
         letterSpacing: '1.75px',
         textTransform: 'uppercase'
       },
-      modalWidth: '100%'
+      modalWidth: '100%',
+      varietyPackIndex: 0,
+      imageInterval: 1,
+      imageIndex: null
     }
   },
   methods: {
@@ -245,9 +251,9 @@ export default {
       } else if (title.includes('mango matcha')) {
         return 'linear-gradient(146deg, rgba(234,133,0,1) 0%, rgba(249,221,12,1) 100%)'
       } else if (title.includes('orange mango pineapple')) {
-      return 'linear-gradient(146deg, rgba(234,133,0,1) 0%, rgba(249,221,12,1) 100%)'
+        return 'linear-gradient(146deg, rgba(234,133,0,1) 0%, rgba(249,221,12,1) 100%)'
       } else if (title.includes('banana blueberry')) {
-        return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'      
+        return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'
       } else if (title.includes('tropical blue')) {
         return 'linear-gradient(146deg, #9ad4e5 8%, #dcd372 88%)'
       } else if (title.includes('green peach ginger')) {
@@ -257,23 +263,23 @@ export default {
       } else if (title.includes('peanut butter power breakfast')) {
         return 'linear-gradient(146deg, #f89d4a 0%, #f1d7be 100%)'
       } else if (title.includes('chocolate peanut butter')) {
-      return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'
+        return 'linear-gradient(146deg, rgba(126,128,217,1) 0%, rgba(55,55,149,1) 100%)'
       } else if (title.includes('blueberry acai')) {
         return 'linear-gradient(146deg, #3d3d78 0%, #8786c3 100%)'
       } else if (title.includes('very berry')) {
         return 'linear-gradient(146deg, rgba(229,128,140,1) 0%, rgba(219,30,53,1) 100%)'
-      }else if (title.includes('vanilla')) {
-return 'linear-gradient(146deg, #e8ca99 8%, #cea262 88%)'
-      }else if (title.includes('matcha green tea')) {               
-      return 'linear-gradient(146deg, #c2c486 8%, #8eaa1b 88%)'
-      }else if (title.includes('caramel')) {     
-return 'linear-gradient(146deg, #eddab6 8%, #d9a067 88%)'
-      }else if (title.includes('chai')) {
-return 'linear-gradient(146deg, #db8f56 8%, #bc6a33 88%)'
-      }else if (title.includes('cinnamon dolce')) {
-return 'linear-gradient(146deg, #dec698 8%, #c08429 88%)'
-}else if (title.includes('mocha')) {      
-return 'linear-gradient(146deg, #ceb9ac 8%, #986c5b 88%)'
+      } else if (title.includes('vanilla')) {
+        return 'linear-gradient(146deg, #e8ca99 8%, #cea262 88%)'
+      } else if (title.includes('matcha green tea')) {
+        return 'linear-gradient(146deg, #c2c486 8%, #8eaa1b 88%)'
+      } else if (title.includes('caramel')) {
+        return 'linear-gradient(146deg, #eddab6 8%, #d9a067 88%)'
+      } else if (title.includes('chai')) {
+        return 'linear-gradient(146deg, #db8f56 8%, #bc6a33 88%)'
+      } else if (title.includes('cinnamon dolce')) {
+        return 'linear-gradient(146deg, #dec698 8%, #c08429 88%)'
+      } else if (title.includes('mocha')) {
+        return 'linear-gradient(146deg, #ceb9ac 8%, #986c5b 88%)'
       } else {
         return 'none'
       }
@@ -281,9 +287,9 @@ return 'linear-gradient(146deg, #ceb9ac 8%, #986c5b 88%)'
     async jetpackTabChange(value) {
       switch (value) {
         case 'lattes':
-        this.activeProductHandle = 'jetpack-latte'
-        await this.fetchProducts()
-        break
+          this.activeProductHandle = 'jetpack-latte'
+          await this.fetchProducts()
+          break
         case 'smoothies':
           this.activeProductHandle = 'jetpack-smoothies'
           await this.fetchProducts()
@@ -312,6 +318,29 @@ return 'linear-gradient(146deg, #ceb9ac 8%, #986c5b 88%)'
                 url: `/products/${product.handle}?variant=${variantId}`
               }
             })
+          clearInterval(this.imageInterval)
+          this.imageIndex = this.jetpacks.length - 1
+          const varietyPackVariant = {
+            displayName: `Variety Pack (${this.jetpacks.length})`,
+            sku: 'variety-pack',
+            featuredMedia: this.jetpacks[this.imageIndex].featuredMedia,
+            title: this.jetpacks[this.imageIndex].title,
+            url: `/products/${product.handle}?variant=varietypack`
+          }
+
+          this.jetpacks.unshift(varietyPackVariant)
+
+          this.imageInterval = setInterval(() => {
+            this.imageIndex++
+            this.imageIndex = this.imageIndex % this.jetpacks.length
+            if (this.imageIndex === 0) {
+              this.imageIndex++
+            }
+            this.jetpacks[this.varietyPackIndex].featuredMedia = this.jetpacks[
+              this.imageIndex
+            ].featuredMedia
+            this.jetpacks[this.varietyPackIndex].title = this.jetpacks[this.imageIndex].title
+          }, 1000)
         }
       }
     }
@@ -344,6 +373,10 @@ return 'linear-gradient(146deg, #ceb9ac 8%, #986c5b 88%)'
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.setWidthData)
+    clearInterval(this.imageInterval)
+  },
+  beforeRouteLeave() {
+    clearInterval(this.imageInterval)
   }
 }
 </script>

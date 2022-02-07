@@ -106,6 +106,9 @@ export default {
 .tabs a {
   padding: 0 1.2rem;
 }
+.tabs.is-toggle li a {
+  background-color: transparent;
+}
 
 .tabs.is-toggle li.is-active a {
   background-color: $primary-purple;

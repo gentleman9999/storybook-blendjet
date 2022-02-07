@@ -243,6 +243,10 @@ export default {
   @include gradient-primary-purple-turquoise(to bottom);
 }
 
+.card {
+  border-radius: 0;
+}
+
 .carousel-list .carousel-slides .carousel-slide {
   border: none !important;
 }
