@@ -1939,6 +1939,10 @@ export default {
       height: 100%;
       object-position: center;
       object-fit: contain; // this was changed from cover -> contain at Ryan's request (BLEN-139)
+      &::selection {
+        background-color: transparent;
+      }
+
       &.jetpack {
         object-fit: cover;
         @include respond-to('small') {
