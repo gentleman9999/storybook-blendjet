@@ -78,36 +78,38 @@
             { 'has-bundle': hasBundle }
           ]"
         >
-          <div
-            v-if="variants.length > 1 && isJetpack"
-            class="product-select__image-carousel__prev-variant"
-            @click="decrementVariant"
-          >
-            <PrevSlide />
+          <div class="product-select__image-carousel__container">
+            <div
+              v-if="variants.length > 1 && isJetpack"
+              class="product-select__image-carousel__prev-variant"
+              @click="decrementVariant"
+            >
+              <PrevSlide />
+            </div>
+            <div
+              v-if="variants.length > 1 && isJetpack"
+              class="product-select__image-carousel__next-variant"
+              @click="incrementVariant"
+            >
+              <NextSlide />
+            </div>
+            <transition name="fade" mode="out-in">
+              <img
+                :class="[
+                  'product-select__image-carousel__img',
+                  { jetpack: isJetpack },
+                  { 'has-bundle': hasBundle }
+                ]"
+                :src="optimizeSource({ url: productImage, height: 1200 })"
+                @mousedown.prevent="dragStart"
+                @mousemove.prevent="dragProgress"
+                @mouseleave.prevent="dragExit"
+                @mouseup.prevent="dragEnd(incrementVariant, decrementVariant)"
+                v-touch:swipe.right="decrementVariant"
+                v-touch:swipe.left="incrementVariant"
+              />
+            </transition>
           </div>
-          <div
-            v-if="variants.length > 1 && isJetpack"
-            class="product-select__image-carousel__next-variant"
-            @click="incrementVariant"
-          >
-            <NextSlide />
-          </div>
-          <transition name="fade" mode="out-in">
-            <img
-              :class="[
-                'product-select__image-carousel__img',
-                { jetpack: isJetpack },
-                { 'has-bundle': hasBundle }
-              ]"
-              :src="optimizeSource({ url: productImage, height: 1200 })"
-              @mousedown.prevent="dragStart"
-              @mousemove.prevent="dragProgress"
-              @mouseleave.prevent="dragExit"
-              @mouseup.prevent="dragEnd(incrementVariant, decrementVariant)"
-              v-touch:swipe.right="decrementVariant"
-              v-touch:swipe.left="incrementVariant"
-            />
-          </transition>
         </div>
 
         <div
@@ -1646,7 +1648,7 @@ export default {
   },
   created() {
     // If this product has ReCharge metafields, toggle the subscription active state to true
-    this.isSubscriptionActive = this.hasSubscription
+    // this.isSubscriptionActive = this.hasSubscription
   },
   mounted() {
     const vm = this
@@ -1859,15 +1861,13 @@ export default {
   &.jetpack {
     max-height: 980px;
     @include respond-to('small') {
-      max-height: 300px;
-      height: 300px;
+      height: auto;
     }
   }
   &.has-bundle {
     max-height: 1180px;
     @include respond-to('small') {
-      max-height: 300px;
-      height: 300px;
+      height: auto;
     }
   }
 }
@@ -1888,6 +1888,18 @@ export default {
     height: 980px;
     &.has-bundle {
       height: 1180px;
+      @include respond-to('small') {
+        height: auto;
+      }
+    }
+
+    &__container {
+      position: sticky;
+      top: 1px;
+      width: 100%;
+      height: 100vh;
+      max-height: 1180px;
+      min-height: 300px;
       @include respond-to('small') {
         height: auto;
       }
@@ -1929,7 +1941,8 @@ export default {
       &.jetpack {
         object-fit: cover;
         @include respond-to('small') {
-          height: 300px;
+          height: auto;
+          min-height: 300px;
         }
       }
       @include respond-to('small') {
