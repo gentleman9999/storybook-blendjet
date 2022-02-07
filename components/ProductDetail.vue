@@ -78,7 +78,10 @@
             { 'has-bundle': hasBundle }
           ]"
         >
-          <div class="product-select__image-carousel__container">
+          <div
+            class="product-select__image-carousel__container"
+            :class="[{ jetpack: isJetpack }, { 'has-bundle': hasBundle }]"
+          >
             <div
               v-if="variants.length > 1 && isJetpack"
               class="product-select__image-carousel__prev-variant"
@@ -1897,10 +1900,24 @@ export default {
       position: sticky;
       top: 1px;
       width: 100%;
-      height: 100vh;
       max-height: 1180px;
       min-height: 300px;
       display: flex;
+      max-height: 848px;
+      &.has-bundle {
+        max-height: 1180px;
+        @include respond-to('small') {
+          height: auto;
+        }
+      }
+      &.jetpack {
+        max-height: 1180px;
+        height: 100vh;
+        @include respond-to('small') {
+          height: auto;
+        }
+      }
+
       @include respond-to('small') {
         height: auto;
       }
@@ -1936,7 +1953,6 @@ export default {
 
     &__img {
       width: 100%;
-      height: 100%;
       object-position: center;
       object-fit: contain; // this was changed from cover -> contain at Ryan's request (BLEN-139)
       &::selection {
