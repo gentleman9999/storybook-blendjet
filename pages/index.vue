@@ -99,7 +99,10 @@
         <Jetsetter />
       </div>
 
-      <div v-if="isVisibleToUserCountry(homeMarketPlaceSection)" class="section section__jetsetter">
+      <div
+        v-if="isVisibleToUserCountry(homeMarketPlaceSection) && homeProducts.length"
+        class="section section__jetsetter"
+      >
         <HomeMarketplace :page="homeMarketPlaceSection" :product-list="homeProducts" />
       </div>
 
@@ -290,14 +293,18 @@ export default nmerge({
     }
 
     const homeMarketPlaceSection = await client
-      .getEntry({ id: '7HgczAM1a1bZZVDiYfyRhl', include: 4 })
+      .getEntries({
+        content_type: 'homepageMarketplace',
+        include: 2
+      })
       .then(async res => {
         return res
       })
 
     const homeProducts = []
-    homeMarketPlaceSection?.fields?.products?.length &&
-      homeMarketPlaceSection.fields.products.forEach(async productItem => {
+    const products = homeMarketPlaceSection?.items?.[0]?.fields?.products
+    products &&
+      products.forEach(async productItem => {
         const fetched = await getProductDetails($nacelle, productItem)
         fetched.backgroundColor = productItem?.fields?.backgroundColor
         const variantId = formatVariantId(fetched?.variant?.id)
@@ -305,7 +312,12 @@ export default nmerge({
         homeProducts.push(fetched)
       })
 
-    return { demoImg, imgList, homeMarketPlaceSection, homeProducts }
+    return {
+      demoImg,
+      imgList,
+      homeMarketPlaceSection: homeMarketPlaceSection?.items?.[0] || {},
+      homeProducts
+    }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
