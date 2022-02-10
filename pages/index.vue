@@ -58,12 +58,28 @@
 
       <!-- START BFCM -->
 
-<div class="outer-canvas-bfcm" style="margin-bottom:unset" data-v-1b05d426=""><div class="canvas-bfcm" data-v-1b05d426=""><div class="col-bfcm" data-v-1b05d426=""><span class="entry-title-bfcm" data-v-1b05d426="">Valentine's Sale</span> <span class="content-split-element-bfcm" data-v-1b05d426="">Choose 3 Free JetPacks</span> <span class="simple-text-bfcm" data-v-1b05d426="">With Each BlendJet <b class="b-hide-bfcm" data-v-1b05d426="">|</b> <span data-v-1b05d426="">or 6 FREE WHEN YOU SUBSCRIBE</span></span></div></div></div>
+      <div class="outer-canvas-bfcm" style="margin-bottom:unset" data-v-1b05d426="">
+        <div class="canvas-bfcm" data-v-1b05d426="">
+          <div class="col-bfcm" data-v-1b05d426="">
+            <span class="entry-title-bfcm" data-v-1b05d426="">Valentine's Sale</span>
+            <span class="content-split-element-bfcm" data-v-1b05d426="">
+              Choose 3 Free JetPacks
+            </span>
+            <span class="simple-text-bfcm" data-v-1b05d426="">
+              With Each BlendJet
+              <b class="b-hide-bfcm" data-v-1b05d426="">|</b>
+              <span data-v-1b05d426="">
+                or 6 FREE WHEN YOU SUBSCRIBE
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
 
       <!-- END BFCM -->
 
       <div class="section section__as-seen-on">
-        <Ticker type="asSeenOn" />
+        <Ticker type="asSeenOn" :img-list="imgList" />
       </div>
       <div class="section section__blendjet-demo">
         <BlendJetDemo :demo="demoImg" />
@@ -76,8 +92,15 @@
         <Jetpacks />
       </div>
 
-      <div class="section section__jetsetter">
+      <div
+        class="section section__jetsetter"
+        :class="{ sm: isVisibleToUserCountry(homeMarketPlaceSection) }"
+      >
         <Jetsetter />
+      </div>
+
+      <div v-if="isVisibleToUserCountry(homeMarketPlaceSection)" class="section section__jetsetter">
+        <HomeMarketplace :page="homeMarketPlaceSection" :product-list="homeProducts" />
       </div>
 
       <div class="section section__recipes">
@@ -114,6 +137,7 @@
 </template>
 
 <script>
+import atob from 'atob'
 import nmerge from 'nuxt-merge-asyncdata'
 import getPage from '~/mixins/getPage'
 import { mapMutations } from 'vuex'
@@ -124,14 +148,75 @@ import debounce from 'lodash.debounce'
 import JetpacksProtein from '~/components/jetpacksProtein'
 import Jetpacks from '~/components/jetpacks'
 import Jetsetter from '~/components/jetsetter'
+import HomeMarketplace from '~/components/HomeMarketplace'
 import RecipesList from '~/components/recipes-list'
 import BlendJetDemo from '~/components/blendjetDemo'
 import imageOptimize from '~/mixins/imageOptimize'
 import FreeShippingMarquee from '~/components/freeShippingMarquee'
+import locationBasedRendering from '~/mixins/locationBasedRendering'
 
 import { createClient } from '~/plugins/contentful.js'
 const Instagram = () => import('~/components/instagram')
 const client = createClient()
+
+export async function getProductDetails($nacelle, productItem) {
+  const productObj = {
+    productHandle: productItem?.fields?.product?.fields?.handle,
+    product: null,
+    locale: $nacelle.locale,
+    variant: null
+  }
+  const selectedVariant = productItem?.fields?.variant?.fields
+
+  if (process.server) {
+    const fs = require('fs')
+    try {
+      const file = fs.readFileSync(
+        `./static/data/products/${productObj.productHandle}--${productObj.locale}/static.json`,
+        'utf-8'
+      )
+      productObj.product = JSON.parse(file)
+    } catch (err) {
+      productObj.noProductData = true
+    }
+  } else {
+    productObj.product = await $nacelle.data
+      .product({
+        handle: productObj.productHandle,
+        locale: productObj.locale
+      })
+      .catch(() => {
+        productObj.noProductData = true
+      })
+  }
+
+  // If a specific variant is selected, fetch that variant if available for sale or find the next available variant for sale
+  if (productObj.product && selectedVariant) {
+    productObj.product.variants.forEach(variant => {
+      if (
+        variant?.title?.toLowerCase()?.replace(/\s/g, '') === selectedVariant.title.toLowerCase() &&
+        variant.availableForSale
+      ) {
+        productObj.variant = variant
+      }
+    })
+  }
+
+  if (productObj.product && !productObj.variant) {
+    // get the first available variant eligible for sale
+    productObj.product.variants.forEach(variant => {
+      if (variant.availableForSale && !productObj.variant) {
+        productObj.variant = variant
+      }
+    })
+  }
+  return productObj
+}
+
+export function formatVariantId(value) {
+  const url = atob(value)
+  return url.replace('gid://shopify/ProductVariant/', '')
+}
 
 export default nmerge({
   data() {
@@ -158,7 +243,8 @@ export default nmerge({
     Jetsetter,
     Instagram,
     BlendJetDemo,
-    FreeShippingMarquee
+    FreeShippingMarquee,
+    HomeMarketplace
   },
   computed: {
     name() {
@@ -185,13 +271,41 @@ export default nmerge({
 
     return { ...properties, meta }
   },
-  async asyncData() {
+
+  async asyncData(context) {
+    const $nacelle = context.app.$nacelle
     // hard reference hero image for now
     const demoImg = await client
       .getAsset('2826IGPC4SeJ3ZxguhTAZ4')
       .then(val => val.fields?.file.url)
 
-    return { demoImg }
+    const asSeenOn = await client.getEntry('4v2ivlGIfJKH4R36emO0jo').then(async res => {
+      return res
+    })
+    const imgList = []
+    if (asSeenOn?.fields?.externalImages?.length) {
+      asSeenOn.fields.externalImages.forEach(item => {
+        imgList.push(item?.fields)
+      })
+    }
+
+    const homeMarketPlaceSection = await client
+      .getEntry({ id: '7HgczAM1a1bZZVDiYfyRhl', include: 4 })
+      .then(async res => {
+        return res
+      })
+
+    const homeProducts = []
+    homeMarketPlaceSection?.fields?.products?.length &&
+      homeMarketPlaceSection.fields.products.forEach(async productItem => {
+        const fetched = await getProductDetails($nacelle, productItem)
+        fetched.backgroundColor = productItem?.fields?.backgroundColor
+        const variantId = formatVariantId(fetched?.variant?.id)
+        fetched.url = `/products/${fetched?.product?.handle}?variant=${variantId}`
+        homeProducts.push(fetched)
+      })
+
+    return { demoImg, imgList, homeMarketPlaceSection, homeProducts }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
@@ -298,7 +412,8 @@ export default nmerge({
   mixins: [
     getPage({ pageHandle: 'homepage' }),
     getCollection({ collectionHandle: 'homepage' }),
-    imageOptimize
+    imageOptimize,
+    locationBasedRendering
   ]
 })
 </script>
@@ -379,10 +494,14 @@ export default nmerge({
       }
 
       &__desktop {
+        // video format 1920x748
+        // height: 38.95%
+        min-height: 38.95vw;
         @include respond-to('small') {
           display: none;
         }
         &__video {
+          min-height: 38.95vw;
           width: 100%;
           display: block;
           object-fit: cover;
@@ -423,6 +542,9 @@ export default nmerge({
   &__jetsetter {
     background-color: $primary-purple-tint;
     min-height: 730px;
+    &.sm {
+      min-height: 640px;
+    }
     @include respond-to('small') {
       height: auto;
     }

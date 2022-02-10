@@ -3,23 +3,13 @@
     <template v-if="page.sections">
       <template v-for="s in page.sections">
         <template v-if="isVisibleToUserCountry(s)" v-cloak>
-          <TextRibbon :key="s.fields.title" v-if="isOfType(s, 'textRibbon')" :section="s.fields" />
-          <ScrollingMarquee
-            :key="s.fields.title"
-            v-if="isOfType(s, 'scrollingMarquee')"
-            :section="s.fields"
-          />
-          <SubNavMenu :key="s.fields.title" v-if="isOfType(s, 'subNavMenu')" :section="s.fields" />
-          <LinkTileGrid
-            :key="s.fields.title"
-            v-if="isOfType(s, 'linkTileGrid')"
-            :section="s.fields"
-          />
-          <ProductGrid
-            :key="s.fields.title"
-            v-if="isOfType(s, 'productGrid')"
-            :section="s.fields"
-          />
+          <div :key="s.fields.title">
+            <TextRibbon v-if="isOfType(s, 'textRibbon')" :section="s.fields" />
+            <ScrollingMarquee v-if="isOfType(s, 'scrollingMarquee')" :section="s.fields" />
+            <SubNavMenu v-if="isOfType(s, 'subNavMenu')" :section="s.fields" />
+            <LinkTileGrid v-if="isOfType(s, 'linkTileGrid')" :section="s.fields" />
+            <ProductGrid v-if="isOfType(s, 'productGrid')" :section="s.fields" />
+          </div>
         </template>
       </template>
     </template>
@@ -99,9 +89,9 @@ export default {
       const anchorSections = document.querySelectorAll(anchorableSelectors)
       const enhancedAnchorSections = anchorSections
         ? Array.from(anchorSections).map(node => ({
-            node: node,
-            rect: node.getBoundingClientRect()
-          }))
+          node: node,
+          rect: node.getBoundingClientRect()
+        }))
         : []
 
       // If any anchor sections are present...

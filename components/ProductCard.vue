@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       quantity: 1,
-      isSubscriptionActive: true
+      isSubscriptionActive: false
     }
   },
   computed: {

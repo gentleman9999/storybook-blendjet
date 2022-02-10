@@ -8,7 +8,8 @@ module.exports = {
   extends: ['plugin:vue/essential', 'standard'],
   globals: {
     Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly'
+    SharedArrayBuffer: 'readonly',
+    Weglot: 'true'
   },
   parserOptions: {
     ecmaVersion: 2020,

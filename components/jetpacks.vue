@@ -55,7 +55,7 @@
         :data="jetpacks"
         :items-to-show="itemsToShow"
         :progress="false"
-        :arrows="false"
+        :arrow="itemsToShow < jetpacks.length"
         :style="carouselStyle"
         :animated="'fade'"
         :repeat="true"
@@ -114,7 +114,10 @@
             </g>
           </svg>
         </div>
-        <progress class="progress is-small" :value="jetpackIndex + 1" :max="jetpacks.length"
+        <progress
+          class="progress is-small"
+          :value="itemsToShow + jetpackIndex"
+          :max="jetpacks.length"
           >15%</progress
         >
         <div class="carousel-indicator__right" @click="forward">

@@ -1,7 +1,7 @@
 <template>
   <div class="home-jetsetter">
     <div class="title-container">
-      <h1 class="jetsetter-title">Accessories</h1>
+      <h1 class="jetsetter-title">{{ (page.fields && page.fields.title) || 'Products' }}</h1>
     </div>
     <!--
     <div class="title-container__subheading">
@@ -13,11 +13,11 @@
     </div> -->
     <div class="blendjet-carousel">
       <b-carousel-list
-        v-model="jetpackIndex"
-        :data="jetpacks"
+        v-model="productIndex"
+        :data="productList"
         :items-to-show="itemsToShow"
         :progress="false"
-        :arrow="itemsToShow < jetpacks.length"
+        :arrow="itemsToShow < productList.length"
         :style="carouselStyle"
         :animated="'fade'"
         :repeat="true"
@@ -26,9 +26,9 @@
           <div class="card" :style="cardStyle">
             <div
               class="card-image"
-              @click="$router.push(`/products/${props.list.handle}`)"
+              @click="$router.push(props.list.url)"
               :style="{
-                'background-image': getBGColor(props.list.title),
+                'background-image': getBGColor(props.list.backgroundColor),
                 height: '440px',
                 cursor: 'pointer'
               }"
@@ -37,8 +37,8 @@
                 <img
                   class="jetpack-image"
                   :style="imageStyle"
-                  :src="optimizeSource({ url: props.list.featuredMedia.src, width: 500 })"
-                  :alt="props.list.featuredMedia.altText"
+                  :src="optimizeSource({ url: props.list.variant.featuredMedia.src, width: 500 })"
+                  :alt="props.list.variant.featuredMedia.altText"
                 />
               </figure>
             </div>
@@ -47,9 +47,9 @@
                 <p
                   class="title is-6 jetpack-title"
                   :style="titleStyle"
-                  @click="$router.push(`/products/${props.list.handle}`)"
+                  @click="$router.push(`/products/${props.list.product.title}`)"
                 >
-                  {{ props.list.title }}
+                  {{ props.list.product.title }}
                 </p>
               </div>
             </div>
@@ -78,10 +78,11 @@
         </div>
         <progress
           class="progress is-small"
-          :value="itemsToShow + jetpackIndex"
-          :max="jetpacks.length"
-          >15%</progress
+          :value="itemsToShow + productIndex"
+          :max="productList.length"
         >
+          15%
+        </progress>
         <div class="carousel-indicator__right" @click="forward">
           <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
             <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
@@ -107,13 +108,21 @@
 <script>
 import imageOptimize from '~/mixins/imageOptimize'
 
-import JetpackPDPModal from '~/components/jetpackPDPModal'
 export default {
+  props: {
+    productList: {
+      type: Array,
+      default: () => []
+    },
+    page: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
-      jetpacks: [],
       screenWidth: null,
-      jetpackIndex: 0,
+      productIndex: 0,
       itemsToShow: 1,
       indicatorVisible: false,
       carouselStyle: {
@@ -150,32 +159,10 @@ export default {
   },
   methods: {
     back() {
-      this.jetpackIndex > 0 ? this.jetpackIndex-- : (this.jetpackIndex = 0)
+      this.productIndex > 0 ? this.productIndex-- : (this.productIndex = 0)
     },
     forward() {
-      this.jetpackIndex < this.jetpacks.length ? this.jetpackIndex++ : (this.jetpackIndex = 0)
-    },
-    openPDP(data) {
-      this.$modal.show(
-        JetpackPDPModal,
-        { initialProduct: data, jetpackProps: this.jetpacks },
-        { height: 'auto', width: this.modalWidth, scrollable: false, adaptive: true }
-      )
-    },
-    showIndicator(arr) {
-      if (this.screenWidth > 1024) {
-        if (arr.length > 2) {
-          this.indicatorVisible = false
-        } else {
-          this.indicatorVisible = false
-        }
-      } else {
-        if (arr.length > 1) {
-          this.indicatorVisible = true
-        } else {
-          this.indicatorVisible = false
-        }
-      }
+      this.productIndex < this.productList.length ? this.productIndex++ : (this.productIndex = 0)
     },
 
     setWidthData() {
@@ -184,57 +171,34 @@ export default {
         this.indicatorVisible = true
       } else if (window.innerWidth >= 1024 && window.innerWidth < 1400) {
         this.itemsToShow = 3
-        this.indicatorVisible = false
+        this.indicatorVisible = true
       } else {
-        this.itemsToShow = 3
+        this.itemsToShow = this.productList.length >= 4 ? 4 : 3
         this.indicatorVisible = false
       }
     },
 
     // Needs update for additional colors
-    getBGColor(item) {
-      const title = item.toLowerCase()
-      if (title.includes('book')) {
-        return 'linear-gradient(146deg, #7f7fd1 100%, #7f7fd1 100%)'
+    getBGColor(color) {
+      if (color) {
+        return `linear-gradient(146deg, ${color} 100%, ${color} 100%)`
       } else {
         return 'linear-gradient(146deg, #E0E0FF 100%, #E0E0FF 100%)'
       }
-    },
-    jetpackTabChange(value) {}
+    }
   },
   mixins: [imageOptimize],
   async mounted() {
     this.screenWidth = window.innerWidth
-    const vm = this
-    this.jetpacks = await this.$nacelle.data
-      .collectionPage({
-        handle: 'accessories',
-        paginate: false
-      })
-      .then(results => {
-        const arr = results.filter(item => {
-          return item.availableForSale
-        })
-        vm.showIndicator(arr)
-        return arr
-      })
-
     this.setWidthData()
-    window.addEventListener('resize', function () {
-      if (window.innerWidth < 1024) {
-        vm.itemsToShow = 1
-        vm.indicatorVisible = true
-      } else if (window.innerWidth >= 1024 && window.innerWidth < 1400) {
-        vm.itemsToShow = 3
-        vm.indicatorVisible = false
-      } else {
-        vm.itemsToShow = 3
-        vm.indicatorVisible = false
-      }
+    window.addEventListener('resize', () => {
+      this.setWidthData()
     })
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.setWidthData)
+    window.removeEventListener('resize', () => {
+      this.setWidthData()
+    })
   }
 }
 </script>
