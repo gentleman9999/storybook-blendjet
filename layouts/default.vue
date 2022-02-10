@@ -5,7 +5,7 @@
     <nuxt :style="{ 'min-height': '100vh' }" />
 
     <!-- <site-footer /> -->
-    <Footer />
+    <Footer v-if="showFooter" />
     <cookie-banner />
     <event-dispatcher />
     <error-modal />
@@ -14,10 +14,9 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import localforage from 'localforage'
 import GlobalHeader from '~/components/nacelle/GlobalHeader'
-import SiteFooter from '~/components/nacelle/SiteFooter'
 import EventDispatcher from '~/components/nacelle/EventDispatcher'
 import CookieBanner from '~/components/nacelle/CookieBanner'
 import ErrorModal from '~/components/nacelle/ErrorModal'
@@ -31,7 +30,6 @@ import { createClient } from '~/plugins/contentful.js'
 export default {
   components: {
     GlobalHeader,
-    SiteFooter,
     EventDispatcher,
     CookieBanner,
     ErrorModal,
@@ -61,7 +59,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('space', ['getMetatag'])
+    ...mapGetters('space', ['getMetatag']),
+    showFooter() {
+      const hideFooterPages = ['/recipes']
+      if (hideFooterPages.includes(this.$route.fullPath)) {
+        return false
+      }
+      return true
+    }
   },
   created() {
     // Discounts
@@ -78,7 +83,7 @@ export default {
     }
   },
   async mounted() {
-    this.setHeader($nuxt.$route.name)
+    this.setHeader(this.$nuxt.$route.name)
     await this.initializeCheckout()
     await this.initializeCart()
 
@@ -119,8 +124,8 @@ export default {
     const meta = []
     // Nacelle MetaTags
     const title = this.getMetatag('title')
-    const description = this.getMetatag('description')
-    const image = this.getMetatag('og:image')
+    // const description = this.getMetatag('description')
+    // const image = this.getMetatag('og:image')
 
     if (title) {
       // properties.title = 'Meet BlendJet® - The Next-Gen Blender'

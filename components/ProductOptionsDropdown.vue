@@ -156,7 +156,7 @@ export default {
     }
   },
   mounted() {
-    if (this.option.name === 'Flavor') this.setOptionValue(this.option.values[0])
+    // if (this.option.name === 'Flavor') this.setOptionValue(this.option.values[0])
     if (this.alwaysOpen) {
       this.isOpen = this.alwaysOpen
     }
