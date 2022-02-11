@@ -303,14 +303,17 @@ export default nmerge({
 
     const homeProducts = []
     const products = homeMarketPlaceSection?.items?.[0]?.fields?.products
-    products &&
-      products.forEach(async productItem => {
+    if (products?.length) {
+      for (let i = 0; i < products.length; i++) {
+        const productItem = products[i]
         const fetched = await getProductDetails($nacelle, productItem)
-        fetched.backgroundColor = productItem?.fields?.backgroundColor
+        fetched.gradiantColor1 = productItem?.fields?.gradiantColor1
+        fetched.gradiantColor2 = productItem?.fields?.gradiantColor2
         const variantId = formatVariantId(fetched?.variant?.id)
         fetched.url = `/products/${fetched?.product?.handle}?variant=${variantId}`
         homeProducts.push(fetched)
-      })
+      }
+    }
 
     return {
       demoImg,
