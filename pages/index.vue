@@ -193,6 +193,10 @@ export async function getProductDetails($nacelle, productItem) {
       })
   }
 
+  if (!productObj?.product?.availableForSale) {
+    return null
+  }
+
   // If a specific variant is selected, fetch that variant if available for sale or find the next available variant for sale
   if (productObj.product && selectedVariant) {
     productObj.product.variants.forEach(variant => {
@@ -307,6 +311,9 @@ export default nmerge({
       for (let i = 0; i < products.length; i++) {
         const productItem = products[i]
         const fetched = await getProductDetails($nacelle, productItem)
+        if (!fetched) {
+          continue
+        }
         fetched.gradiantColor1 = productItem?.fields?.gradiantColor1
         fetched.gradiantColor2 = productItem?.fields?.gradiantColor2
         const variantId = formatVariantId(fetched?.variant?.id)
