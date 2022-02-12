@@ -193,6 +193,10 @@ export async function getProductDetails($nacelle, productItem) {
       })
   }
 
+  if (!productObj?.product?.availableForSale) {
+    return null
+  }
+
   // If a specific variant is selected, fetch that variant if available for sale or find the next available variant for sale
   if (productObj.product && selectedVariant) {
     productObj.product.variants.forEach(variant => {
@@ -303,14 +307,20 @@ export default nmerge({
 
     const homeProducts = []
     const products = homeMarketPlaceSection?.items?.[0]?.fields?.products
-    products &&
-      products.forEach(async productItem => {
+    if (products?.length) {
+      for (let i = 0; i < products.length; i++) {
+        const productItem = products[i]
         const fetched = await getProductDetails($nacelle, productItem)
-        fetched.backgroundColor = productItem?.fields?.backgroundColor
+        if (!fetched) {
+          continue
+        }
+        fetched.gradiantColor1 = productItem?.fields?.gradiantColor1
+        fetched.gradiantColor2 = productItem?.fields?.gradiantColor2
         const variantId = formatVariantId(fetched?.variant?.id)
         fetched.url = `/products/${fetched?.product?.handle}?variant=${variantId}`
         homeProducts.push(fetched)
-      })
+      }
+    }
 
     return {
       demoImg,

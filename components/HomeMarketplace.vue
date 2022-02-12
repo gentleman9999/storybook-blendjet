@@ -28,7 +28,7 @@
               class="card-image"
               @click="$router.push(props.list.url)"
               :style="{
-                'background-image': getBGColor(props.list.backgroundColor),
+                'background-image': getBGColor(props.list),
                 height: '440px',
                 cursor: 'pointer'
               }"
@@ -179,11 +179,13 @@ export default {
     },
 
     // Needs update for additional colors
-    getBGColor(color) {
-      if (color) {
-        return `linear-gradient(146deg, ${color} 100%, ${color} 100%)`
+    getBGColor(product) {
+      const color1 = product?.gradiantColor1
+      const color2 = product?.gradiantColor2 || product?.gradiantColor1
+      if (color1) {
+        return `linear-gradient(146deg, ${color1} 0%, ${color2} 100%)`
       } else {
-        return 'linear-gradient(146deg, #E0E0FF 100%, #E0E0FF 100%)'
+        return 'linear-gradient(146deg, #E0E0FF 0%, #E0E0FF 100%)'
       }
     }
   },

@@ -36,7 +36,7 @@
         </button>
       </div> -->
       <div class="browse-recipes__load">
-        <h1 v-if="this.allRecipes.total > this.indexed || recipeLoading">Loading...</h1>
+        <Loading v-if="this.allRecipes.total > this.indexed || recipeLoading" />
       </div>
     </div>
     <Footer v-if="showFooter" />
@@ -46,12 +46,14 @@
 import imageOptimize from '~/mixins/imageOptimize'
 import _ from 'lodash'
 import Footer from '~/components/footer'
+import Loading from '~/components/Loading'
 import { createClient } from '~/plugins/contentful'
 const client = createClient()
 
 export default {
   components: {
-    Footer
+    Footer,
+    Loading
   },
   data() {
     return {
