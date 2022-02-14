@@ -112,13 +112,17 @@
         </div>
         <div class="section__recipes__explore">
           <div class="section__recipes__explore__container">
-            <picture>
-              <img
-                class="section__recipes__explore__image"
-                :src="optimizeSource({ url: `${images.blendEndlessly}?w=800` })"
-                alt="BlendJet 2 - The Portable Blender in different colors"
-              />
-            </picture>
+            <video
+              class="section__recipes__explore__image"
+              v-if="loaded"
+              autoplay="autoplay"
+              loop="loop"
+              muted=""
+              webkit-playsinline=""
+              playsinline=""
+            >
+              <source :src="videos.externalBlendEndlesslyVideoUrl" type="video/mp4" />
+            </video>
             <div class="section__recipes__explore__content">
               <div class="section__recipes__explore__content__text">
                 Blend
@@ -378,7 +382,7 @@ export default nmerge({
         this.metaDescription = entry.fields.metaDescription
         this.externalDesktopVideoUrl = entry.fields.externalDesktopVideoUrl
         this.externalMobileVideoUrl = entry.fields.externalMobileVideoUrl
-
+        this.videos.externalBlendEndlesslyVideoUrl = entry.fields.externalBlendEndlesslyVideoUrl
         entry.fields.blnPageImages.forEach(node => {
           this.images[node.fields.title] = `${node.fields.file.url}`
         })
