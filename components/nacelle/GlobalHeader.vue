@@ -481,7 +481,6 @@ export default {
     loadUserwayScript() {
       this.userwayLoading = true
       if (this.userwayScriptLoaded) {
-        console.log('here')
         this.userwayLoading = false
         return
       }
@@ -494,10 +493,10 @@ export default {
         console.log('script loaded')
         setTimeout(() => {
           this.userwayLoading = false
-        }, 1000)
+        }, 2000)
         setTimeout(() => {
           this.$refs.userway.click()
-        }, 1100)
+        }, 2100)
       }
       this.userwayScriptLoaded = true
     },
