@@ -1,22 +1,27 @@
 <template>
   <div class="marquee">
-    <div class="fade-block fade-block__left"></div>
     <div class="as-seen-on">
       As seen on:
     </div>
+
     <div class="ticker__container">
-      <marquee-text :repeat="2" :duration="90">
-        <span v-for="image in imgList" :key="image.altText" class="ticker__item">
+      <div class="fade-block fade-block__left"></div>
+      <custom-marquee :width="100" :height="60" :length="imgList.length">
+        <div class="marquee-item" v-for="image in imgList" :key="image.altText">
           <img class="ticker__img" :src="image.url" :alt="image.altText" />
-        </span>
-      </marquee-text>
+        </div>
+      </custom-marquee>
+      <div class="fade-block fade-block__right"></div>
     </div>
-    <div class="fade-block fade-block__right"></div>
   </div>
 </template>
 
 <script>
+import CustomMarquee from '~/components/CustomMarquee.vue'
 export default {
+  components: {
+    CustomMarquee
+  },
   props: {
     imgList: {
       type: Array,
@@ -34,18 +39,21 @@ export default {
     setTimeout(() => {
       this.loaded = true
     }, 1200)
-  },
-
-  components: {
-    MarqueeText: () =>
-      process.client
-        ? import('vue-marquee-text-component')
-        : Promise.resolve({ render: h => h('div') })
   }
 }
 </script>
 
 <style scoped lang="scss">
+.ticker__container {
+  width: 100%;
+  height: 60px;
+  .marquee-item {
+    margin: 0px 45px;
+    @include respond-to('small') {
+      margin: 0 26px;
+    }
+  }
+}
 .marquee {
   position: relative;
 }
@@ -79,9 +87,14 @@ export default {
 }
 
 .ticker__item {
-  margin: 0px 45px;
-  @include respond-to('small') {
-    margin: 0 26px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  img {
+    margin: 0px 45px;
+    @include respond-to('small') {
+      margin: 0 26px;
+    }
   }
 }
 
@@ -98,6 +111,6 @@ export default {
   text-transform: uppercase;
   line-height: 1.17;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 </style>
