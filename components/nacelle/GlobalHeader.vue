@@ -8,8 +8,10 @@
         tabindex="0"
         class="useway-container"
       >
-        <img class="useway-icon" src="/images/body_wh.svg"
-      /></span>
+        <img v-if="!userwayLoading" class="useway-icon" src="/images/body_wh.svg" />
+        <div v-else class="loader"></div>
+      </span>
+
       <span class="free-shipping-banner__text">{{ freeShippingMessage }}</span>
     </div>
     <!-- Main Nav -->
@@ -390,7 +392,8 @@ export default {
       scrollTarget: 200,
       headerClass: 'bg-transparent',
       isIndex: true,
-      userwayScriptLoaded: false
+      userwayScriptLoaded: false,
+      userwayLoading: false
     }
   },
   mounted() {
@@ -476,7 +479,10 @@ export default {
       }
     },
     loadUserwayScript() {
+      this.userwayLoading = true
       if (this.userwayScriptLoaded) {
+        console.log('here')
+        this.userwayLoading = false
         return
       }
       var s = document.createElement('script')
@@ -487,8 +493,11 @@ export default {
       s.onload = () => {
         console.log('script loaded')
         setTimeout(() => {
-          this.$refs.userway.click()
+          this.userwayLoading = false
         }, 1000)
+        setTimeout(() => {
+          this.$refs.userway.click()
+        }, 1100)
       }
       this.userwayScriptLoaded = true
     },
@@ -543,6 +552,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loader {
+  width: 20px;
+  height: 20px;
+}
+
 .bln-logo {
   margin-top: 8px;
 }
