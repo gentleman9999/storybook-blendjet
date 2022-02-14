@@ -8,7 +8,7 @@
       <div class="fade-block fade-block__left"></div>
       <custom-marquee :width="100" :height="60" :length="imgList.length">
         <div class="marquee-item" v-for="image in imgList" :key="image.altText">
-          <img class="ticker__img" :src="image.url" :alt="image.altText" data-not-lazy />
+          <img class="ticker__img" :src="image.url" :alt="image.altText" />
         </div>
       </custom-marquee>
       <div class="fade-block fade-block__right"></div>

@@ -177,7 +177,6 @@ export default {
     '@nuxtjs/google-gtag',
     '@nacelle/nacelle-klaviyo-nuxt-module',
     'nuxt-robots-module',
-    'nuxt-lazy-load',
     // ['nuxt-buefy', { css: false, materialDesignIcons: false }],
 
     ['@recart/nacelle-nuxt-module', { recartSiteId: '5b18bf7940348200075173e6' }]
