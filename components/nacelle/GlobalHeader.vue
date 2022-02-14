@@ -1,7 +1,13 @@
 <template>
   <div class="global-header" :class="headerClass">
     <div class="free-shipping-banner">
-      <span id="accessibilityWidget" tabindex="0" class="useway-container">
+      <span
+        @click="loadUserwayScript"
+        ref="userway"
+        id="accessibilityWidget"
+        tabindex="0"
+        class="useway-container"
+      >
         <img class="useway-icon" src="/images/body_wh.svg"
       /></span>
       <span class="free-shipping-banner__text">{{ freeShippingMessage }}</span>
@@ -383,7 +389,8 @@ export default {
       scrollY: 0,
       scrollTarget: 200,
       headerClass: 'bg-transparent',
-      isIndex: true
+      isIndex: true,
+      userwayScriptLoaded: false
     }
   },
   mounted() {
@@ -467,6 +474,23 @@ export default {
         this.navColor = 'white'
         this.headerClass = 'bg-transparent'
       }
+    },
+    loadUserwayScript() {
+      if (this.userwayScriptLoaded) {
+        return
+      }
+      var s = document.createElement('script')
+      s.setAttribute('data-trigger', 'accessibilityWidget')
+      s.setAttribute('data-account', 'rGS1KpZP6i')
+      s.setAttribute('src', 'https://cdn.userway.org/widget.js')
+      ;(document.body || document.head).appendChild(s)
+      s.onload = () => {
+        console.log('script loaded')
+        setTimeout(() => {
+          this.$refs.userway.click()
+        }, 1000)
+      }
+      this.userwayScriptLoaded = true
     },
     async getLocale() {
       const price = encodeURIComponent(JSON.stringify([{ Price: 1 }]))
