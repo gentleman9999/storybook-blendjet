@@ -487,7 +487,7 @@ export default {
         }
         setTimeout(() => {
           this.userwayLoading = false
-        }, 1000)
+        }, 1500)
         return
       }
       var s = document.createElement('script')
