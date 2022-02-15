@@ -393,7 +393,8 @@ export default {
       headerClass: 'bg-transparent',
       isIndex: true,
       userwayScriptLoaded: false,
-      userwayLoading: false
+      userwayLoading: false,
+      userwayFirstTime: true
     }
   },
   mounted() {
@@ -481,7 +482,12 @@ export default {
     loadUserwayScript() {
       this.userwayLoading = true
       if (this.userwayScriptLoaded) {
-        this.userwayLoading = false
+        if (!this.userwayFirstTime) {
+          this.userwayLoading = false
+        }
+        setTimeout(() => {
+          this.userwayLoading = false
+        }, 1000)
         return
       }
       var s = document.createElement('script')
@@ -492,11 +498,11 @@ export default {
       s.onload = () => {
         console.log('script loaded')
         setTimeout(() => {
-          this.userwayLoading = false
+          this.$refs.userway.click()
         }, 2000)
         setTimeout(() => {
-          this.$refs.userway.click()
-        }, 2100)
+          this.userwayFirstTime = false
+        }, 5000)
       }
       this.userwayScriptLoaded = true
     },
