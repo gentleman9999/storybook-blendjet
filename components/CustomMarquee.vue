@@ -3,13 +3,16 @@
     <div class="marquee-container">
       <div
         class="marquee-block"
-        :style="[{ width: width * length + 'px' }, { height: height ? height + 'px' : '60px' }]"
+        :style="[
+          { width: width * length * 2 - 1000 + 'px' },
+          { height: height ? height + 'px' : '60px' }
+        ]"
       >
         <div class="marquee-inner" :class="direction">
-          <span>
+          <span class="repeat">
             <slot></slot>
           </span>
-          <span>
+          <span class="repeat">
             <slot></slot>
           </span>
         </div>
@@ -49,6 +52,8 @@ export default {
 .marquee-inner span {
   float: left;
   width: 50%;
+  display: flex;
+  justify-content: space-evenly;
 }
 .marquee-wrapper .marquee-block {
   height: 60px;

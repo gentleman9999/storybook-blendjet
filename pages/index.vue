@@ -552,6 +552,7 @@ export default nmerge({
   }
 
   &__as-seen-on {
+    position: relative;
     height: 135px;
     background-color: $primary-purple;
     padding-top: 25px;

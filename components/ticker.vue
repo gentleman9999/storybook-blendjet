@@ -49,21 +49,24 @@ export default {
   height: 60px;
   .marquee-item {
     margin: 0px 40px;
+    box-sizing: border-box;
     @include respond-to('small') {
-      margin: 0 23px;
+      margin: 0 18px;
     }
   }
-}
-.marquee {
-  position: relative;
 }
 
 .fade-block {
   position: absolute;
   width: 75px;
   top: 0;
-  bottom: 0;
+  bottom: 1px;
+  top: 1px;
   z-index: 20;
+  height: 133px;
+  @include respond-to('small') {
+    width: 40px;
+  }
 
   &__left {
     left: 0;
@@ -100,6 +103,8 @@ export default {
 
 .ticker__img {
   height: 40px;
+  width: 100%;
+  object-fit: contain;
 }
 
 .as-seen-on {
