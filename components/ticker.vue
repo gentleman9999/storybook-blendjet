@@ -48,9 +48,9 @@ export default {
   width: 100%;
   height: 60px;
   .marquee-item {
-    margin: 0px 45px;
+    margin: 0px 40px;
     @include respond-to('small') {
-      margin: 0 26px;
+      margin: 0 23px;
     }
   }
 }

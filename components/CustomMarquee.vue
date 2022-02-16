@@ -74,7 +74,6 @@ export default {
 }
 .marquee-item {
   height: 60px;
-  min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
