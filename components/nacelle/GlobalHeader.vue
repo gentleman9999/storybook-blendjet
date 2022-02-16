@@ -1,9 +1,17 @@
 <template>
   <div class="global-header" :class="headerClass">
     <div class="free-shipping-banner">
-      <span id="accessibilityWidget" tabindex="0" class="useway-container">
-        <img class="useway-icon" src="/images/body_wh.svg"
-      /></span>
+      <span
+        @click="loadUserwayScript"
+        ref="userway"
+        id="accessibilityWidget"
+        tabindex="0"
+        class="useway-container"
+      >
+        <img v-if="!userwayLoading" class="useway-icon" src="/images/body_wh.svg" />
+        <div v-else class="loader"></div>
+      </span>
+
       <span class="free-shipping-banner__text">{{ freeShippingMessage }}</span>
     </div>
     <!-- Main Nav -->
@@ -383,7 +391,10 @@ export default {
       scrollY: 0,
       scrollTarget: 200,
       headerClass: 'bg-transparent',
-      isIndex: true
+      isIndex: true,
+      userwayScriptLoaded: false,
+      userwayLoading: false,
+      userwayFirstTime: true
     }
   },
   mounted() {
@@ -468,6 +479,33 @@ export default {
         this.headerClass = 'bg-transparent'
       }
     },
+    loadUserwayScript() {
+      this.userwayLoading = true
+      if (this.userwayScriptLoaded) {
+        if (!this.userwayFirstTime) {
+          this.userwayLoading = false
+        }
+        setTimeout(() => {
+          this.userwayLoading = false
+        }, 3000)
+        return
+      }
+      var s = document.createElement('script')
+      s.setAttribute('data-trigger', 'accessibilityWidget')
+      s.setAttribute('data-account', 'rGS1KpZP6i')
+      s.setAttribute('src', 'https://cdn.userway.org/widget.js')
+      ;(document.body || document.head).appendChild(s)
+      s.onload = () => {
+        console.log('script loaded')
+        setTimeout(() => {
+          this.$refs.userway.click()
+        }, 2000)
+        setTimeout(() => {
+          this.userwayFirstTime = false
+        }, 5000)
+      }
+      this.userwayScriptLoaded = true
+    },
     async getLocale() {
       const price = encodeURIComponent(JSON.stringify([{ Price: 1 }]))
       const config = {
@@ -519,6 +557,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loader {
+  width: 20px;
+  height: 20px;
+}
+
 .bln-logo {
   margin-top: 8px;
 }
