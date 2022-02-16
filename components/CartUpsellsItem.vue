@@ -12,6 +12,14 @@
         />
       </div>
       <div class="add-to-cart">
+        <CartDropdown
+          v-if="additionalProducts.length"
+          productType="any"
+          :product="product"
+          :label="page.selectorLabel || 'Product'"
+          :items="productList"
+          @update:any="updateSelectedProduct"
+        />
         <template v-if="variants.length > 1 && allOptions.length <= 1">
           <CartDropdownColor
             v-if="variantLabel.toLowerCase().includes('color')"
@@ -136,13 +144,14 @@ export default {
         quantity: [],
         title: ''
       },
-      quantityLength: []
+      quantityLength: [],
+      product: this.selectedProduct
     }
   },
   props: {
     title: String,
     subtitle: String,
-    product: {
+    selectedProduct: {
       type: Object,
       required: true
     },
@@ -152,6 +161,14 @@ export default {
     },
     productContentful: {
       type: Object,
+      default: () => {}
+    },
+    page: {
+      type: Object,
+      default: () => {}
+    },
+    additionalProducts: {
+      type: Array,
       default: () => {}
     }
   },
@@ -223,6 +240,14 @@ export default {
     },
     isBundleVariant() {
       return this.selectedVariant?.subVariants?.length
+    },
+    productList() {
+      let list = []
+      list.push(this.selectedProduct)
+      if (this.additionalProducts.length) {
+        list = list.concat(this.additionalProducts)
+      }
+      return list
     }
   },
   watch: {
@@ -256,55 +281,63 @@ export default {
     for (let i = 1; i <= 30; i++) {
       this.quantityLength.push(i)
     }
-    this.variants = this.product?.variants
-      ?.filter(v => v.availableForSale)
-      ?.map(v => {
-        const variantId = atob(v.id)
-          .split('/')
-          .pop()
-        this.subscriptionDiscountVariant =
-          this.hasSubscription && this.discountVariantMap && this.discountVariantMap[variantId]
-        return {
-          ...v,
-          discountPercentage: this.discountPercentage,
-          plainId: variantId,
-          url: `/products/${this.product.handle}?variant=${variantId}`,
-          price: parseFloat(v.price),
-          subscriptionPrice: this.subscriptionDiscountVariant
-            ? parseFloat(this.subscriptionDiscountVariant.discount_variant_price)
-            : null
-        }
-      })
-
-    if (this.withVarietyPack && this.variants.length) {
-      this.variants.unshift({
-        title: 'Variety Pack',
-        displayName: `Variety Pack (${this.variants.length})`,
-        subVariants: [...this.variants]
-      })
-    }
-
-    if (this.productContentful?.quantityOption?.fields) {
-      this.hasQuantityOption = true
-      const qtyOption = this.productContentful?.quantityOption?.fields
-      this.quantityOptionDefault.title = qtyOption.title
-      this.quantityOptionDefault.quantity = qtyOption.quantity?.split(',')
-      this.quantityOptionDefault.quantity = this.quantityOptionDefault.quantity.map(item =>
-        Number(item)
-      )
-      this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
-    }
-    await this.fetchQuantityOptions()
-
-    this.selectedVariant = this.variants?.[0]
-    this.initLocalizedPrice()
-    this.$emit('ready')
+    await this.variantSetup()
   },
   beforeDestroy() {
     clearInterval(this.imageInterval)
   },
   methods: {
     ...mapActions('cart', ['addLineItem']),
+    async variantSetup() {
+      this.variants = this.product?.variants
+        ?.filter(v => v.availableForSale)
+        ?.map(v => {
+          const variantId = atob(v.id)
+            .split('/')
+            .pop()
+          this.subscriptionDiscountVariant =
+            this.hasSubscription && this.discountVariantMap && this.discountVariantMap[variantId]
+
+          return {
+            ...v,
+            discountPercentage: this.discountPercentage,
+            plainId: variantId,
+            url: `/products/${this.product.handle}?variant=${variantId}`,
+            price: parseFloat(v.price),
+            subscriptionPrice: this.subscriptionDiscountVariant
+              ? parseFloat(this.subscriptionDiscountVariant.discount_variant_price)
+              : null
+          }
+        })
+      if (this.withVarietyPack && this.variants.length) {
+        this.variants.unshift({
+          title: 'Variety Pack',
+          displayName: `Variety Pack (${this.variants.length})`,
+          subVariants: [...this.variants]
+        })
+      }
+
+      if (this.productContentful?.quantityOption?.fields) {
+        this.hasQuantityOption = true
+        const qtyOption = this.productContentful?.quantityOption?.fields
+        this.quantityOptionDefault.title = qtyOption.title
+        this.quantityOptionDefault.quantity = qtyOption.quantity?.split(',')
+        this.quantityOptionDefault.quantity = this.quantityOptionDefault.quantity.map(item =>
+          Number(item)
+        )
+        this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+      }
+      await this.fetchQuantityOptions()
+
+      this.selectedVariant = this.variants?.[0]
+      this.initLocalizedPrice()
+      this.$emit('ready')
+    },
+    updateSelectedProduct(selected) {
+      this.product = selected
+      clearInterval(this.imageInterval)
+      this.variantSetup()
+    },
     updateSelectedVariant(newVariant, optionType = '') {
       if (optionType === 'color') {
         const foundVariant = this.variants.find(
