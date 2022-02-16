@@ -5,7 +5,6 @@
         @click="loadUserwayScript"
         ref="userway"
         id="accessibilityWidget"
-        tabindex="0"
         class="useway-container"
       >
         <img v-if="!userwayLoading" class="useway-icon" src="/images/body_wh.svg" />
@@ -586,6 +585,12 @@ export default {
     position: absolute;
     left: 10px;
     top: 8px;
+    &:focus {
+      outline: 0;
+    }
+    &:focus-visible {
+      outline: 0;
+    }
   }
   .useway-icon {
     width: 24px;
