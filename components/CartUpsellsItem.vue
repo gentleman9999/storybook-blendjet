@@ -1,9 +1,26 @@
 <template>
   <div class="cart-upsells-item">
     <template v-if="product && selectedVariant">
-      <div class="header">
+      <div
+        class="header"
+        :class="{
+          'has-tab-selector': additionalProducts.length && page.additionalProductsTabSelector
+        }"
+      >
         <nuxt-link :to="productUrl">{{ upsellTitle }}</nuxt-link>
         <p v-if="subtitle">{{ subtitle }}</p>
+      </div>
+      <div
+        v-if="additionalProducts.length && page.additionalProductsTabSelector"
+        class="additional-product-selector"
+      >
+        <AdditionalProductSelector
+          :tabItems="additionalProductsList"
+          :selected="additionalProductsList[0]"
+          :no-select-start="true"
+          @activeTab="updateSelectedProduct($event, 'topSelector')"
+          id="custom-tabs-cartupsell"
+        />
       </div>
       <div class="image" v-if="productImage">
         <img
@@ -13,7 +30,7 @@
       </div>
       <div class="add-to-cart">
         <CartDropdown
-          v-if="additionalProducts.length"
+          v-if="additionalProducts.length && !page.additionalProductsTabSelector"
           productType="any"
           :product="product"
           :label="page.selectorLabel || 'Product'"
@@ -99,6 +116,7 @@ import { cloneDeep } from 'lodash'
 import CartDropdown from '~/components/cartDropdown'
 import CartDropdownColor from '~/components/cartDropdownColor'
 import QuantityDropdown from '~/components/quantityDropdown'
+import AdditionalProductSelector from '~/components/AdditionalProductSelector'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
 import Tabs from '~/components/tabs'
@@ -119,7 +137,8 @@ export default {
     QuantityDropdown,
     Checkbox,
     CartDropdownMultiOptions,
-    Tabs
+    Tabs,
+    AdditionalProductSelector
   },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
@@ -248,6 +267,35 @@ export default {
         list = list.concat(this.additionalProducts)
       }
       return list
+    },
+    additionalProductsList() {
+      const list = []
+      if (this.productList.length > 1) {
+        this.productList.forEach(product => {
+          if (product.title.toLowerCase().includes('latte')) {
+            list.push({
+              product: product,
+              text: 'Latte'
+            })
+          } else if (product.title.toLowerCase().includes('protein')) {
+            list.push({
+              product: product,
+              text: 'Protein'
+            })
+          } else if (product.title.toLowerCase().includes('smoothie')) {
+            list.push({
+              product: product,
+              text: 'Smoothie'
+            })
+          } else {
+            list.push({
+              product: product,
+              text: product.title
+            })
+          }
+        })
+      }
+      return list
     }
   },
   watch: {
@@ -333,8 +381,13 @@ export default {
       this.initLocalizedPrice()
       this.$emit('ready')
     },
-    updateSelectedProduct(selected) {
-      this.product = selected
+    updateSelectedProduct(selected, location = null) {
+      this.imageIndex = 0
+      if (location === 'topSelector') {
+        this.product = selected.product
+      } else {
+        this.product = selected
+      }
       clearInterval(this.imageInterval)
       this.variantSetup()
     },
@@ -580,6 +633,12 @@ export default {
   letter-spacing: 0.7px;
   text-align: center;
   margin-bottom: 80px;
+  &.has-tab-selector {
+    margin-bottom: 30px;
+    @include respond-to('small') {
+      margin-bottom: 20px;
+    }
+  }
 
   a {
     color: #fff;
@@ -593,6 +652,13 @@ export default {
   @media (max-width: 1024px) {
     font-size: 16px;
     margin-bottom: 15px;
+  }
+}
+
+.additional-product-selector {
+  margin-bottom: 30px;
+  @include respond-to('small') {
+    margin-bottom: 20px;
   }
 }
 
@@ -681,7 +747,7 @@ export default {
   justify-content: center;
   .tab-container {
     width: 100%;
-    max-width: 250px;
+    max-width: 300px;
     height: 40px;
     padding: 0;
     border: 1px solid #fff;
@@ -702,6 +768,7 @@ export default {
         text-transform: uppercase;
         cursor: pointer;
         font-size: 12px;
+        padding: 5px;
         &:hover {
           background: none;
         }
