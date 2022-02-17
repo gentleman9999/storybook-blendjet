@@ -225,11 +225,13 @@ export const actions = {
   async checkoutRedirect({ state }) {
     if (process.browser) {
       const discountCode = await localforage.getItem('discount')
-      let url = state.url
-      if (url.includes('rechargeapps.com')) {
-        url = url.replace('checkout.rechargeapps.com', 'checkout.blendjet.com')
+      const url = new URL(state.url)
+      if (url.host.includes('rechargeapps.com')) {
+        url.host = 'checkout.blendjet.com'
+      } else if (url.host.includes('myshopify.com')) {
+        url.host = 'shop.blendjet.com'
       }
-      window.location = discountCode ? url + '&discount=' + discountCode : url
+      window.location.href = discountCode ? url.href + '&discount=' + discountCode : url.href
     }
   }
 }
