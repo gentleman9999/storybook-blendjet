@@ -20,6 +20,7 @@
           :no-select-start="true"
           @activeTab="updateSelectedProduct($event, 'topSelector')"
           id="custom-tabs-cartupsell"
+          class="product-tab"
         />
       </div>
       <div class="image" v-if="productImage">
@@ -745,9 +746,14 @@ export default {
   margin-top: 5px;
   display: flex;
   justify-content: center;
+  &.product-tab {
+    .tab-container {
+      max-width: 300px;
+    }
+  }
   .tab-container {
     width: 100%;
-    max-width: 300px;
+    max-width: 250px;
     height: 40px;
     padding: 0;
     border: 1px solid #fff;
