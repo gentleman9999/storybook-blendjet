@@ -1,9 +1,27 @@
 <template>
   <div class="cart-upsells-item">
     <template v-if="product && selectedVariant">
-      <div class="header">
+      <div
+        class="header"
+        :class="{
+          'has-tab-selector': additionalProducts.length && page.additionalProductsTabSelector
+        }"
+      >
         <nuxt-link :to="productUrl">{{ upsellTitle }}</nuxt-link>
         <p v-if="subtitle">{{ subtitle }}</p>
+      </div>
+      <div
+        v-if="additionalProducts.length && page.additionalProductsTabSelector"
+        class="additional-product-selector"
+      >
+        <AdditionalProductSelector
+          :tabItems="additionalProductsList"
+          :selected="additionalProductsList[0]"
+          :no-select-start="true"
+          @activeTab="updateSelectedProduct($event, 'topSelector')"
+          id="custom-tabs-cartupsell"
+          class="product-tab"
+        />
       </div>
       <div class="image" v-if="productImage">
         <img
@@ -12,6 +30,14 @@
         />
       </div>
       <div class="add-to-cart">
+        <CartDropdown
+          v-if="additionalProducts.length && !page.additionalProductsTabSelector"
+          productType="any"
+          :product="product"
+          :label="page.selectorLabel || 'Product'"
+          :items="productList"
+          @update:any="updateSelectedProduct"
+        />
         <template v-if="variants.length > 1 && allOptions.length <= 1">
           <CartDropdownColor
             v-if="variantLabel.toLowerCase().includes('color')"
@@ -91,6 +117,7 @@ import { cloneDeep } from 'lodash'
 import CartDropdown from '~/components/cartDropdown'
 import CartDropdownColor from '~/components/cartDropdownColor'
 import QuantityDropdown from '~/components/quantityDropdown'
+import AdditionalProductSelector from '~/components/AdditionalProductSelector'
 import Checkbox from '~/components/checkbox'
 import CartDropdownMultiOptions from '~/components/cartDropdownMultiOption'
 import Tabs from '~/components/tabs'
@@ -111,7 +138,8 @@ export default {
     QuantityDropdown,
     Checkbox,
     CartDropdownMultiOptions,
-    Tabs
+    Tabs,
+    AdditionalProductSelector
   },
   mixins: [rechargeProperties, productMetafields, imageOptimize, availableOptions],
   data() {
@@ -136,13 +164,14 @@ export default {
         quantity: [],
         title: ''
       },
-      quantityLength: []
+      quantityLength: [],
+      product: this.selectedProduct
     }
   },
   props: {
     title: String,
     subtitle: String,
-    product: {
+    selectedProduct: {
       type: Object,
       required: true
     },
@@ -152,6 +181,14 @@ export default {
     },
     productContentful: {
       type: Object,
+      default: () => {}
+    },
+    page: {
+      type: Object,
+      default: () => {}
+    },
+    additionalProducts: {
+      type: Array,
       default: () => {}
     }
   },
@@ -223,6 +260,43 @@ export default {
     },
     isBundleVariant() {
       return this.selectedVariant?.subVariants?.length
+    },
+    productList() {
+      let list = []
+      list.push(this.selectedProduct)
+      if (this.additionalProducts.length) {
+        list = list.concat(this.additionalProducts)
+      }
+      return list
+    },
+    additionalProductsList() {
+      const list = []
+      if (this.productList.length > 1) {
+        this.productList.forEach(product => {
+          if (product.title.toLowerCase().includes('latte')) {
+            list.push({
+              product: product,
+              text: 'Latte'
+            })
+          } else if (product.title.toLowerCase().includes('protein')) {
+            list.push({
+              product: product,
+              text: 'Protein'
+            })
+          } else if (product.title.toLowerCase().includes('smoothie')) {
+            list.push({
+              product: product,
+              text: 'Smoothie'
+            })
+          } else {
+            list.push({
+              product: product,
+              text: product.title
+            })
+          }
+        })
+      }
+      return list
     }
   },
   watch: {
@@ -256,55 +330,68 @@ export default {
     for (let i = 1; i <= 30; i++) {
       this.quantityLength.push(i)
     }
-    this.variants = this.product?.variants
-      ?.filter(v => v.availableForSale)
-      ?.map(v => {
-        const variantId = atob(v.id)
-          .split('/')
-          .pop()
-        this.subscriptionDiscountVariant =
-          this.hasSubscription && this.discountVariantMap && this.discountVariantMap[variantId]
-        return {
-          ...v,
-          discountPercentage: this.discountPercentage,
-          plainId: variantId,
-          url: `/products/${this.product.handle}?variant=${variantId}`,
-          price: parseFloat(v.price),
-          subscriptionPrice: this.subscriptionDiscountVariant
-            ? parseFloat(this.subscriptionDiscountVariant.discount_variant_price)
-            : null
-        }
-      })
-
-    if (this.withVarietyPack && this.variants.length) {
-      this.variants.unshift({
-        title: 'Variety Pack',
-        displayName: `Variety Pack (${this.variants.length})`,
-        subVariants: [...this.variants]
-      })
-    }
-
-    if (this.productContentful?.quantityOption?.fields) {
-      this.hasQuantityOption = true
-      const qtyOption = this.productContentful?.quantityOption?.fields
-      this.quantityOptionDefault.title = qtyOption.title
-      this.quantityOptionDefault.quantity = qtyOption.quantity?.split(',')
-      this.quantityOptionDefault.quantity = this.quantityOptionDefault.quantity.map(item =>
-        Number(item)
-      )
-      this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
-    }
-    await this.fetchQuantityOptions()
-
-    this.selectedVariant = this.variants?.[0]
-    this.initLocalizedPrice()
-    this.$emit('ready')
+    await this.variantSetup()
   },
   beforeDestroy() {
     clearInterval(this.imageInterval)
   },
   methods: {
     ...mapActions('cart', ['addLineItem']),
+    async variantSetup() {
+      this.variants = this.product?.variants
+        ?.filter(v => v.availableForSale)
+        ?.map(v => {
+          const variantId = atob(v.id)
+            .split('/')
+            .pop()
+          this.subscriptionDiscountVariant =
+            this.hasSubscription && this.discountVariantMap && this.discountVariantMap[variantId]
+
+          return {
+            ...v,
+            discountPercentage: this.discountPercentage,
+            plainId: variantId,
+            url: `/products/${this.product.handle}?variant=${variantId}`,
+            price: parseFloat(v.price),
+            subscriptionPrice: this.subscriptionDiscountVariant
+              ? parseFloat(this.subscriptionDiscountVariant.discount_variant_price)
+              : null
+          }
+        })
+      if (this.withVarietyPack && this.variants.length) {
+        this.variants.unshift({
+          title: 'Variety Pack',
+          displayName: `Variety Pack (${this.variants.length})`,
+          subVariants: [...this.variants]
+        })
+      }
+
+      if (this.productContentful?.quantityOption?.fields) {
+        this.hasQuantityOption = true
+        const qtyOption = this.productContentful?.quantityOption?.fields
+        this.quantityOptionDefault.title = qtyOption.title
+        this.quantityOptionDefault.quantity = qtyOption.quantity?.split(',')
+        this.quantityOptionDefault.quantity = this.quantityOptionDefault.quantity.map(item =>
+          Number(item)
+        )
+        this.quantityOptionSelected = cloneDeep(this.quantityOptionDefault)
+      }
+      await this.fetchQuantityOptions()
+
+      this.selectedVariant = this.variants?.[0]
+      this.initLocalizedPrice()
+      this.$emit('ready')
+    },
+    updateSelectedProduct(selected, location = null) {
+      this.imageIndex = 0
+      if (location === 'topSelector') {
+        this.product = selected.product
+      } else {
+        this.product = selected
+      }
+      clearInterval(this.imageInterval)
+      this.variantSetup()
+    },
     updateSelectedVariant(newVariant, optionType = '') {
       if (optionType === 'color') {
         const foundVariant = this.variants.find(
@@ -547,6 +634,12 @@ export default {
   letter-spacing: 0.7px;
   text-align: center;
   margin-bottom: 80px;
+  &.has-tab-selector {
+    margin-bottom: 30px;
+    @include respond-to('small') {
+      margin-bottom: 20px;
+    }
+  }
 
   a {
     color: #fff;
@@ -560,6 +653,13 @@ export default {
   @media (max-width: 1024px) {
     font-size: 16px;
     margin-bottom: 15px;
+  }
+}
+
+.additional-product-selector {
+  margin-bottom: 30px;
+  @include respond-to('small') {
+    margin-bottom: 20px;
   }
 }
 
@@ -646,6 +746,11 @@ export default {
   margin-top: 5px;
   display: flex;
   justify-content: center;
+  &.product-tab {
+    .tab-container {
+      max-width: 300px;
+    }
+  }
   .tab-container {
     width: 100%;
     max-width: 250px;
@@ -669,6 +774,7 @@ export default {
         text-transform: uppercase;
         cursor: pointer;
         font-size: 12px;
+        padding: 5px;
         &:hover {
           background: none;
         }

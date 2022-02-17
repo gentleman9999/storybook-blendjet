@@ -20,7 +20,9 @@
             :key="upsell.shopifyProductHandle"
             :title="upsell.title"
             :subtitle="upsell.subtitle"
-            :product="upsell.product"
+            :selected-product="upsell.product"
+            :page="upsell.page"
+            :additional-products="upsell.additionalProducts"
             :with-variety-pack="upsell.withVarietyPack"
             :product-contentful="upsell.productContentful"
           />
@@ -82,7 +84,9 @@ export default {
       title: '',
       items: [],
       bundleItems: [],
-      bundleItemsResolved: []
+      bundleItemsResolved: [],
+      additionalProducts: [],
+      additionalProductsResolved: []
     }
   },
   mixins: [productShippingEligibility],
@@ -135,6 +139,23 @@ export default {
           this.$set(this.bundleItemsResolved, index, resolvedBundle)
         })
 
+        // get additional products
+        this.additionalProducts = queue?.fields?.items?.map(item => {
+          if (item?.fields?.hasMultipleProducts && item?.fields?.additionalProducts?.length) {
+            return item
+          } else {
+            return null
+          }
+        })
+
+        this.additionalProducts.forEach(async (item, index) => {
+          let resolvedAdditionalProducts = {}
+          if (item) {
+            resolvedAdditionalProducts = await this.getAdditionalProducts(item)
+          }
+          this.$set(this.additionalProductsResolved, index, resolvedAdditionalProducts)
+        })
+
         // Get the queue's `items` array, filtering for just those with a shopifyProductHandle configured
         const items = Array.isArray(queue?.fields?.items) // if `items` is an array...
           ? queue.fields.items.filter(
@@ -168,7 +189,9 @@ export default {
               {
                 ...curr.fields,
                 product: product,
-                productContentful: curr?.fields?.product?.fields
+                productContentful: curr?.fields?.product?.fields,
+                page: curr?.fields,
+                additionalProducts: this.additionalProductsResolved[index] || []
               }
             ]
           } else if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
@@ -253,6 +276,22 @@ export default {
         )
       }
       return productObj
+    },
+    async getAdditionalProducts(item) {
+      const productHandles = []
+      const products = item?.fields?.additionalProducts
+      products &&
+        products.forEach(product => {
+          // Get productIds of the main product bundle
+          if (product?.fields?.handle) {
+            productHandles.push(product?.fields?.handle)
+          }
+        })
+      const allAdditionalProductList = await this.$nacelle.data.products({
+        handles: productHandles
+      })
+
+      return allAdditionalProductList
     },
     observeScroll() {
       setTimeout(() => {
