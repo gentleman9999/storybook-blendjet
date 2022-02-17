@@ -6,7 +6,7 @@
 
     <div class="ticker__container">
       <div class="fade-block fade-block__left"></div>
-      <custom-marquee :width="100" :height="60" :length="imgList.length">
+      <custom-marquee :width="this.$mq === 'sm' ? 80 : 100" :height="60" :length="imgList.length">
         <div class="marquee-item" v-for="image in imgList" :key="image.altText">
           <img class="ticker__img" :src="image.url" :alt="image.altText" />
         </div>
@@ -47,23 +47,19 @@ export default {
 .ticker__container {
   width: 100%;
   height: 60px;
-  .marquee-item {
-    margin: 0px 45px;
-    @include respond-to('small') {
-      margin: 0 26px;
-    }
-  }
-}
-.marquee {
-  position: relative;
 }
 
 .fade-block {
   position: absolute;
   width: 75px;
   top: 0;
-  bottom: 0;
+  bottom: 1px;
+  top: 1px;
   z-index: 20;
+  height: 133px;
+  @include respond-to('small') {
+    width: 40px;
+  }
 
   &__left {
     left: 0;
@@ -90,16 +86,11 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  img {
-    margin: 0px 45px;
-    @include respond-to('small') {
-      margin: 0 26px;
-    }
-  }
 }
 
 .ticker__img {
   height: 40px;
+  width: 100%;
 }
 
 .as-seen-on {
