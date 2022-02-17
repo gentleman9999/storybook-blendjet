@@ -312,18 +312,6 @@ export default {
         }
       },
       immediate: true
-    },
-    isBundleVariant(is) {
-      if (is) {
-        this.imageInterval = setInterval(() => {
-          this.imageIndex =
-            this.imageIndex === this.selectedVariant.subVariants.length - 1
-              ? 0
-              : this.imageIndex + 1
-        }, 1000)
-      } else {
-        clearInterval(this.imageInterval)
-      }
     }
   },
   async mounted() {
@@ -358,6 +346,14 @@ export default {
               : null
           }
         })
+      if (this.withVarietyPack) {
+        this.imageInterval = setInterval(() => {
+          this.imageIndex =
+            this.imageIndex === this.selectedVariant.subVariants.length - 1
+              ? 0
+              : this.imageIndex + 1
+        }, 1000)
+      }
       if (this.withVarietyPack && this.variants.length) {
         this.variants.unshift({
           title: 'Variety Pack',
