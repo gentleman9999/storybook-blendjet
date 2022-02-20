@@ -361,21 +361,29 @@
                   'no-blur': !(bundleSelectorVisible && !varietyBundleSelectorActive)
                 }"
               >
-                <img
-                  :src="varietyPackImage[selectedVarieryPackIndex]"
-                  alt="variety pack"
-                  class="product-select__controls__bundles__bundle-product-image"
-                  :class="{
-                    'item-blurred': bundleSelectorVisible && !varietyBundleSelectorActive,
-                    'item-not-blurred': !(bundleSelectorVisible && !varietyBundleSelectorActive)
-                  }"
-                  @click.self="
-                    bundleVarietyPackClicked(
-                      selectedBundleVarietyPack[selectedVarieryPackIndex],
-                      selectedBundleVarietyPack.length > 1
-                    )
-                  "
-                />
+                <template
+                  v-for="(variant, index) in selectedBundleVarietyPack[selectedVarieryPackIndex]
+                    .variants"
+                >
+                  <img
+                    :key="index"
+                    v-show="index === imageIndex[selectedVarieryPackIndex]"
+                    :test1="imageIndex[selectedVarieryPackIndex]"
+                    :src="variant.featuredMedia.thumbnailSrc"
+                    alt="variety pack"
+                    class="product-select__controls__bundles__bundle-product-image"
+                    :class="{
+                      'item-blurred': bundleSelectorVisible && !varietyBundleSelectorActive,
+                      'item-not-blurred': !(bundleSelectorVisible && !varietyBundleSelectorActive)
+                    }"
+                    @click.self="
+                      bundleVarietyPackClicked(
+                        selectedBundleVarietyPack[selectedVarieryPackIndex],
+                        selectedBundleVarietyPack.length > 1
+                      )
+                    "
+                  />
+                </template>
               </div>
             </div>
             <div class="product-select__controls__bundles__add-to-cart-bundle">
@@ -1097,7 +1105,8 @@ export default {
       variantShippingDate: null,
       productShippingOffset: null,
       productShippingDate: null,
-      specialEdition: ''
+      specialEdition: '',
+      imageIndex: []
     }
   },
   components: {
@@ -1444,28 +1453,24 @@ export default {
       if (this.selectedBundleVarietyPack?.length) {
         if (this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex]) {
           const variants = this.selectedBundleVarietyPack?.[this.selectedVarieryPackIndex].variants
-          const imageIndex = []
+          this.imageIndex = []
           for (let i = 0; i < this.selectedBundleVarietyPack?.length; i++) {
-            imageIndex[i] = 0
+            this.imageIndex[i] = 0
           }
           this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
             this.$set(
               this.varietyPackImage,
               index,
-              variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
+              variants?.[(this.imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
             )
-            imageIndex[index]++
+            this.imageIndex[index]++
           })
           if (variants?.length) {
             clearInterval(this.imageInterval)
             this.imageInterval = setInterval(() => {
               this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
-                this.$set(
-                  this.varietyPackImage,
-                  index,
-                  variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
-                )
-                imageIndex[index]++
+                this.$set(this.imageIndex, index, this.imageIndex[index] + 1)
+                this.$set(this.imageIndex, index, this.imageIndex[index] % variants.length)
               })
               this.updateVarietyPackOptions()
               // this.varietyPackImage =
@@ -1493,6 +1498,7 @@ export default {
         }
         this.varietyPackSelectorOptions.push({
           title: title,
+          variants: variants,
           image: this.varietyPackImage[index]
         })
       })

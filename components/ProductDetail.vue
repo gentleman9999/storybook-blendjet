@@ -191,6 +191,7 @@
                 />
                 <ProductVariantsDropdown
                   v-else
+                  :with-variety-pack="withVarietyPack"
                   :variants="variants"
                   :currentVariant="currentVariant"
                   @update="setSelectedVariant"
@@ -293,7 +294,11 @@
                   }"
                 >
                   <img
-                    v-if="currentVariant && currentVariant.featuredMedia"
+                    v-if="
+                      currentVariant &&
+                        currentVariant.featuredMedia &&
+                        !currentVariant.withVarietyPack
+                    "
                     :src="currentVariant.featuredMedia.thumbnailSrc"
                     :alt="currentVariant.featuredMedia.altText"
                     class="product-select__controls__bundles__bundle-product-image"
@@ -302,6 +307,24 @@
                     }"
                     @click.self="bundleItemClicked(currentVariant, true)"
                   />
+                  <template v-else v-for="(item, index) in variants">
+                    <img
+                      :key="index"
+                      v-show="index === imageIndexProduct"
+                      v-if="
+                        currentVariant &&
+                          currentVariant.featuredMedia &&
+                          currentVariant.withVarietyPack
+                      "
+                      :src="item.featuredMedia.thumbnailSrc"
+                      :alt="item.featuredMedia.altText"
+                      class="product-select__controls__bundles__bundle-product-image"
+                      :class="{
+                        'item-blurred': varietyBundleSelectorActive || bundleSelectorVisible
+                      }"
+                      @click.self="bundleItemClicked(currentVariant, true)"
+                    />
+                  </template>
                 </div>
                 <template v-if="selectedBundle.length">
                   <div
@@ -378,21 +401,29 @@
                     'no-blur': !(bundleSelectorVisible && !varietyBundleSelectorActive)
                   }"
                 >
-                  <img
-                    :src="varietyPackImage[selectedVarieryPackIndex]"
-                    alt="variety pack"
-                    class="product-select__controls__bundles__bundle-product-image"
-                    :class="{
-                      'item-blurred': bundleSelectorVisible && !varietyBundleSelectorActive,
-                      'item-not-blurred': !(bundleSelectorVisible && !varietyBundleSelectorActive)
-                    }"
-                    @click.self="
-                      bundleVarietyPackClicked(
-                        selectedBundleVarietyPack[selectedVarieryPackIndex],
-                        selectedBundleVarietyPack.length > 1
-                      )
-                    "
-                  />
+                  <template
+                    v-for="(variant, index) in selectedBundleVarietyPack[selectedVarieryPackIndex]
+                      .variants"
+                  >
+                    <img
+                      :key="index"
+                      v-show="index === imageIndex[selectedVarieryPackIndex]"
+                      :test1="imageIndex[selectedVarieryPackIndex]"
+                      :src="variant.featuredMedia.thumbnailSrc"
+                      alt="variety pack"
+                      class="product-select__controls__bundles__bundle-product-image"
+                      :class="{
+                        'item-blurred': bundleSelectorVisible && !varietyBundleSelectorActive,
+                        'item-not-blurred': !(bundleSelectorVisible && !varietyBundleSelectorActive)
+                      }"
+                      @click.self="
+                        bundleVarietyPackClicked(
+                          selectedBundleVarietyPack[selectedVarieryPackIndex],
+                          selectedBundleVarietyPack.length > 1
+                        )
+                      "
+                    />
+                  </template>
                 </div>
               </div>
               <div class="product-select__controls__bundles__add-to-cart-bundle">
@@ -995,6 +1026,7 @@ export default {
   data() {
     return {
       currentVariant: {},
+      withVarietyPack: false,
       variantIndex: 0,
       productImage: null,
       heroImages: [],
@@ -1386,12 +1418,8 @@ export default {
             clearInterval(this.imageInterval)
             this.imageInterval = setInterval(() => {
               this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
-                this.$set(
-                  this.varietyPackImage,
-                  index,
-                  variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
-                )
-                imageIndex[index]++
+                this.$set(this.imageIndex, index, this.imageIndex[index] + 1)
+                this.$set(this.imageIndex, index, this.imageIndex[index] % variants.length)
               })
               this.updateVarietyPackOptions()
               // this.varietyPackImage =
@@ -1405,6 +1433,24 @@ export default {
         this.varietyPackSelectorOptions = []
         clearInterval(this.imageInterval)
       }
+    },
+    updateVarietyPackOptions() {
+      this.varietyPackSelectorOptions = []
+      this.selectedBundleVarietyPack.forEach(({ product, variants }, index) => {
+        let title = product?.title
+        if (title?.toLowerCase()?.includes('protein')) {
+          title = variants.length + ' JETPACK PROTEIN SMOOTHIES'
+        } else if (title?.toLowerCase()?.includes('latte')) {
+          title = variants.length + ' JETPACK LATTES'
+        } else if (title?.toLowerCase()?.includes('jetpack')) {
+          title = variants.length + ' JETPACK SMOOTHIES'
+        }
+        this.varietyPackSelectorOptions.push({
+          title: title,
+          variants: variants,
+          image: this.varietyPackImage[index]
+        })
+      })
     },
     incrementVariant() {
       if (this.variantIndex === this.variants.length - 1) {
@@ -1798,7 +1844,8 @@ export default {
         displayName: `Variety Pack (${this.variants.length})`,
         plainId: 'varietyPack',
         price: 0,
-        weight: 0
+        weight: 0,
+        withVarietyPack: true
       }
       this.variants.forEach(v => {
         varietyPackVariant.price += Number(v.price)
@@ -1809,37 +1856,22 @@ export default {
       })
 
       this.variants.unshift({ ...varietyPackVariant, price: varietyPackVariant.price.toString() })
-
+      this.withVarietyPack = true
       if (this.variants?.length > 2) {
         // update once before calling settimeout so its available at setInitialVariant()
         clearInterval(this.imageIntervalProduct)
-        this.$set(
-          this.variants[0].featuredMedia,
-          'src',
-          this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
-            ?.featuredMedia.src
-        )
+        this.$set(this.variants[0].featuredMedia, 'src', this.variants?.[1]?.featuredMedia.src)
         this.$set(
           this.variants[0].featuredMedia,
           'thumbnailSrc',
-          this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
-            ?.featuredMedia.thumbnailSrc
+          this.variants?.[1]?.featuredMedia.thumbnailSrc
         )
-        this.imageIndexProduct++
         this.imageIntervalProduct = setInterval(() => {
-          this.$set(
-            this.variants[0].featuredMedia,
-            'src',
-            this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
-              ?.featuredMedia.src
-          )
-          this.$set(
-            this.variants[0].featuredMedia,
-            'thumbnailSrc',
-            this.variants?.[((this.imageIndexProduct + 1) % (this.variants.length - 1)) + 1]
-              ?.featuredMedia.thumbnailSrc
-          )
           this.imageIndexProduct++
+          this.imageIndexProduct = this.imageIndexProduct % this.variants.length
+          if (this.imageIndexProduct === 0) {
+            this.imageIndexProduct++
+          }
         }, 1000)
       }
     }

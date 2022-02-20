@@ -1,8 +1,15 @@
 <template>
   <ul class="variety-dropdown-content">
     <li v-for="(item, i) in options" :key="i" @click.stop.prevent="setOptionValue(i)">
-      <span v-if="item.image" class="dropdown-thumb">
-        <img class="dropdown-thumb-image" :src="item.image" />
+      <span class="dropdown-thumb">
+        <template v-for="(variant, index) in item.variants">
+          <img
+            v-show="index === imageIndex[i]"
+            :key="index"
+            class="dropdown-thumb-image"
+            :src="variant.featuredMedia.thumbnailSrc"
+          />
+        </template>
       </span>
       {{ item.title }}
     </li>
@@ -18,7 +25,31 @@ export default {
     }
   },
   mixins: [imageOptimize],
+  data() {
+    return {
+      imageIndex: [],
+      imageInterval: null
+    }
+  },
+  mounted() {
+    this.setImageInterval()
+  },
+  beforeDestroy() {
+    clearInterval(this.imageInterval)
+  },
   methods: {
+    setImageInterval() {
+      clearInterval(this.imageInterval)
+      this.options.forEach((option, index) => {
+        this.imageIndex[index] = 1
+      })
+      this.imageInterval = setInterval(() => {
+        this.options.forEach(({ variants }, index) => {
+          this.$set(this.imageIndex, index, this.imageIndex[index] + 1)
+          this.$set(this.imageIndex, index, this.imageIndex[index] % variants.length)
+        })
+      }, 1000)
+    },
     setOptionValue(index) {
       this.$emit('updateOptions', index)
     }

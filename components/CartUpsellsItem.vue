@@ -25,9 +25,19 @@
       </div>
       <div class="image" v-if="productImage">
         <img
+          v-if="!withVarietyPack"
           :src="optimizeSource({ url: productImage, width: 800 })"
           :alt="selectedVariant.title"
         />
+        <template v-else>
+          <img
+            v-for="(variant, index) in selectedVariant.subVariants"
+            :key="index"
+            v-show="imageIndex === index"
+            :src="optimizeSource({ url: variant.featuredMedia.src, width: 800 })"
+            :alt="selectedVariant.title"
+          />
+        </template>
       </div>
       <div class="add-to-cart">
         <CartDropdown

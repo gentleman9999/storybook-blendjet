@@ -66,18 +66,32 @@
               class="card-image"
               @click="$router.push(props.list.url)"
               :style="{
-                'background-image': getBGColor(props.title),
+                'background-image': !props.isVarietyPack
+                  ? getBGColor(props.title)
+                  : getBGColor(jetpacksWithoutVarietyPack[imageIndex].title),
                 height: '440px',
                 cursor: 'pointer'
               }"
             >
               <figure class="image" :style="cardContentStyle">
                 <img
+                  v-if="!props.isVarietyPack"
                   class="jetpack-image"
                   :style="imageStyle"
                   :alt="props.featuredMedia.altText"
                   :src="optimizeSource({ url: props.featuredMedia.src, width: 500 })"
                 />
+                <template v-else>
+                  <img
+                    v-for="(variant, index) in jetpacksWithoutVarietyPack"
+                    :key="index"
+                    v-show="index === imageIndex"
+                    class="jetpack-image"
+                    :style="imageStyle"
+                    :alt="variant.featuredMedia.altText"
+                    :src="optimizeSource({ url: variant.featuredMedia.src, width: 500 })"
+                  />
+                </template>
               </figure>
             </div>
             <div class="card-content">
@@ -151,6 +165,7 @@ export default {
   data() {
     return {
       jetpacks: [],
+      jetpacksWithoutVarietyPack: [],
       screenWidth: null,
       jetpackIndex: 0,
       itemsToShow: 1,
@@ -318,14 +333,17 @@ export default {
               return {
                 ...variant,
                 formattedId: variantId,
+                isVarietyPack: false,
                 url: `/products/${product.handle}?variant=${variantId}`
               }
             })
+          this.jetpacksWithoutVarietyPack = [...this.jetpacks]
           clearInterval(this.imageInterval)
           this.imageIndex = this.jetpacks.length - 1
           const varietyPackVariant = {
             displayName: `Variety Pack (${this.jetpacks.length})`,
             sku: 'variety-pack',
+            isVarietyPack: true,
             featuredMedia: this.jetpacks[this.imageIndex].featuredMedia,
             title: this.jetpacks[this.imageIndex].title,
             url: `/products/${product.handle}?variant=varietypack`
@@ -335,14 +353,7 @@ export default {
 
           this.imageInterval = setInterval(() => {
             this.imageIndex++
-            this.imageIndex = this.imageIndex % this.jetpacks.length
-            if (this.imageIndex === 0) {
-              this.imageIndex++
-            }
-            this.jetpacks[this.varietyPackIndex].featuredMedia = this.jetpacks[
-              this.imageIndex
-            ].featuredMedia
-            this.jetpacks[this.varietyPackIndex].title = this.jetpacks[this.imageIndex].title
+            this.imageIndex = this.imageIndex % this.jetpacksWithoutVarietyPack.length
           }, 1000)
         }
       }
