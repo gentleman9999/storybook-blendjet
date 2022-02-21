@@ -801,7 +801,8 @@ export default {
   &__social {
     height: 40px;
     display: flex;
-    align-items: flex-end;
+    margin-top: 5px;
+    align-items: center;
     justify-content: space-evenly;
     &__icon {
       // margin: auto;
