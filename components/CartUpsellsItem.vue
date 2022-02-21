@@ -25,7 +25,7 @@
       </div>
       <div class="image" v-if="productImage">
         <img
-          v-if="!withVarietyPack"
+          v-if="!withVarietyPack || !isBundleVariant"
           :src="optimizeSource({ url: productImage, width: 800 })"
           :alt="selectedVariant.title"
         />
