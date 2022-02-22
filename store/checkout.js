@@ -49,6 +49,7 @@ export const actions = {
             commit('setCheckout', { id, url })
           }
         } catch (err) {
+          await dispatch('resetCheckout')
           throw new Error('Error during checkout')
         }
       }
