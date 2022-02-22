@@ -105,7 +105,20 @@
       >
         <HomeMarketplace :page="homeMarketPlaceSection" :product-list="homeProducts" />
       </div>
-
+      <div class="section section__about-video">
+        <div class="title-container">
+          <h1 class="jetsetter-title">Our Story</h1>
+        </div>
+        <div style="position:relative;width:100%;height:0;padding-bottom:56.27198%;">
+          <iframe
+            style="position:absolute;top:0;left:0;width:100%;height:100%;"
+            width="500"
+            height="294"
+            src="https://www.youtube.com/embed/Eo4MMePM4R0?&theme=dark&color=white&autohide=1&modestbranding=1&showinfo=0&rel=0"
+            frameborder="0"
+          ></iframe>
+        </div>
+      </div>
       <div class="section section__recipes">
         <div class="section__recipes__list">
           <RecipesList />
@@ -568,12 +581,42 @@ export default nmerge({
 
   &__jetsetter {
     background-color: $primary-purple-tint;
-    min-height: 730px;
+    min-height: 640px;
     &.sm {
       min-height: 640px;
     }
     @include respond-to('small') {
       height: auto;
+    }
+  }
+
+  &__about-video {
+    background-color: #f6f5fd;
+    padding-bottom: 120px;
+    @include respond-to('small') {
+      padding-bottom: 100px;
+    }
+    .title-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 47px;
+      padding-bottom: 14px;
+
+      @include respond-to('small') {
+        padding-top: 30px;
+      }
+    }
+    .jetsetter-title {
+      line-height: 32px;
+      letter-spacing: 3.5px;
+      font-size: 28px;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-family: Bold;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #373975;
     }
   }
 
