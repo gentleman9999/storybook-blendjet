@@ -590,12 +590,6 @@ export default nmerge({
     }
   }
 
-  &__about-video {
-    background-color: #f6f5fd;
-    padding-bottom: 120px;
-    @include respond-to('small') {
-      padding-bottom: 100px;
-    }
     .title-container {
       display: flex;
       align-items: center;
