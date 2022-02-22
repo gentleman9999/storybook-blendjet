@@ -44,7 +44,7 @@
             <div class="card" :style="cardStyle">
               <div class="card-image">
                 <figure class="image" :style="cardContentStyle">
-                  <img :style="imageStyle" :src="props.list.image" />
+                  <img :style="imageStyle" :src="props.list.media_url" />
                 </figure>
               </div>
             </div>
@@ -177,31 +177,15 @@ export default {
   methods: {
     async instagramPhotos() {
       const res = []
-
       try {
-        const userInfoSource = await Axios.get('https://www.instagram.com/blendjet/')
-        // userInfoSource.data contains the HTML from Axios
-        const jsonObject = userInfoSource.data
-          .match(/<script type="text\/javascript">window\._sharedData = (.*)<\/script>/)[1]
-          .slice(0, -1)
+        const userInfoSource = await Axios.get('http://x.blendjet.com/ig-media/index.php')
 
-        const userInfo = JSON.parse(jsonObject)
-        // Retrieve only the first 10 results
-        const mediaArray = userInfo.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges.splice(
-          0,
-          10
-        )
-        // console.log('media array', mediaArray)
-        for (const media of mediaArray) {
-          const node = media.node
+        const media = userInfoSource?.data?.business_discovery?.media?.data
 
-          // Process only if is an image
-          if (node.__typename && node.__typename !== 'GraphImage') {
-            continue
-          }
-
-          // Push the thumbnail src in the array
-          res.push(node.thumbnail_src)
+        if (!media) {
+          return []
+        } else {
+          return media
         }
       } catch (e) {
         console.error('Unable to retrieve photos. Reason: ' + e.toString())
@@ -224,11 +208,8 @@ export default {
   },
   mounted() {
     this.instagramPhotos().then(res => {
-      this.items = res.map((item, i) => {
-        return {
-          title: i,
-          image: item
-        }
+      this.items = res.filter((item, i) => {
+        return item.media_type === 'IMAGE'
       })
     })
 
