@@ -612,7 +612,6 @@ export default nmerge({
       margin-bottom: 20px;
       color: #373975;
     }
-  }
 
   &__recipes {
     height: 680px;
