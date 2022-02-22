@@ -318,10 +318,13 @@ export default {
     }
 
     &__social-media {
-      margin-top: 20px;
-      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+      margin-top: 5px;
       &__icon {
-        margin: 15px;
+        margin: 18px;
       }
     }
 
