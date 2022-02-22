@@ -5,9 +5,18 @@
     <div class="sticky-product-select__info-container">
       <div class="header-product-select__thumbnail">
         <img
+          v-if="!currentVariant.withVarietyPack"
           class="header-product-select__thumbnail__img"
           :src="optimizeSource({ url: variantImage, width: 80 })"
         />
+        <template v-else v-for="(item, index) in variants">
+          <img
+            :key="index"
+            v-show="index === imageIndex"
+            class="header-product-select__thumbnail__img"
+            :src="optimizeSource({ url: item.featuredMedia.thumbnailSrc, width: 80 })"
+          />
+        </template>
       </div>
       <div class="sticky-product-select__title-container">
         <div class="sticky-product-select__title-container__title">
@@ -135,7 +144,9 @@ export default {
     return {
       isDesktop: false,
       isVisible: false,
-      variantSelectMenuIsOpen: false
+      variantSelectMenuIsOpen: false,
+      imageIndex: 0,
+      imageInterval: null
     }
   },
   components: {
@@ -194,6 +205,7 @@ export default {
     }
   },
   mounted() {
+    this.setImageInterval()
     const stickyBar = document.querySelector('.sticky-product-select')
     this.observer = new IntersectionObserver(
       ([entry]) => {
@@ -211,9 +223,26 @@ export default {
     this.observer.observe(document.querySelector('.product__scroll-pin'))
   },
   onBeforeDestroy() {
+    clearInterval(this.imageInterval)
     this.observer.disconnect()
   },
+  watch: {
+    variants() {
+      this.setImageInterval()
+    }
+  },
   methods: {
+    setImageInterval() {
+      this.imageIndex = 0
+      clearInterval(this.imageInterval)
+      this.imageInterval = setInterval(() => {
+        this.imageIndex++
+        this.imageIndex = this.imageIndex % this.variants.length
+        if (this.imageIndex === 0) {
+          this.imageIndex++
+        }
+      }, 1000)
+    },
     updateQuantity(qty) {
       this.$emit('update:quantity', qty)
     },

@@ -23,15 +23,19 @@
         }"
         @click="bundleImageClicked(bundle)"
       />
-      <img
-        v-if="varietyPackImage[selectedVarieryPackIndex]"
-        class="variety-pack"
-        :class="{
-          pointer: bundleCollectionClickAction === 'link'
-        }"
-        :src="optimizeSource({ url: varietyPackImage[selectedVarieryPackIndex], width: 200 })"
-        @click="bundleImageClicked(selectedBundleVarietyPack[selectedVarieryPackIndex])"
-      />
+      <template v-if="selectedBundleVarietyPack && selectedBundleVarietyPack.length">
+        <img
+          v-for="(variant, index) in selectedBundleVarietyPack[selectedVarieryPackIndex].variants"
+          :key="index"
+          v-show="imageIndexArray[selectedVarieryPackIndex] === index"
+          class="variety-pack"
+          :class="{
+            pointer: bundleCollectionClickAction === 'link'
+          }"
+          :src="optimizeSource({ url: variant.featuredMedia.thumbnailSrc, width: 200 })"
+          @click="bundleImageClicked(selectedBundleVarietyPack[selectedVarieryPackIndex])"
+        />
+      </template>
     </div>
     <div class="add-to-cart">
       <template v-for="(bundle, index) in selectedBundle">
@@ -140,6 +144,7 @@ export default {
     return {
       quantity: 1,
       imageInterval: null,
+      imageIndexArray: [],
       imageIndex: 0,
       varietyPackImage: [],
       selectedVarieryPackIndex: 0,
@@ -238,27 +243,20 @@ export default {
       return url.replace('gid://shopify/ProductVariant/', '')
     },
     updateVarietyPackOptions() {
-      const imageIndex = []
       for (let i = 0; i < this.selectedBundleVarietyPack?.length; i++) {
-        imageIndex[i] = 0
+        this.imageIndexArray[i] = 0
       }
       this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
-        this.$set(
-          this.varietyPackImage,
-          index,
-          variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
-        )
-        imageIndex[index]++
+        this.$set(this.imageIndexArray, index, this.imageIndexArray[index]++)
       })
       clearInterval(this.imageInterval)
       this.imageInterval = setInterval(() => {
         this.selectedBundleVarietyPack.forEach(({ variants }, index) => {
           this.$set(
-            this.varietyPackImage,
+            this.imageIndexArray,
             index,
-            variants?.[(imageIndex[index] + 1) % variants.length]?.featuredMedia.thumbnailSrc
+            (this.imageIndexArray[index] + 1) % variants.length
           )
-          imageIndex[index]++
         })
       }, 1000)
 

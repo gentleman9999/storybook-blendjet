@@ -4,11 +4,21 @@
       <!-- MENU TRIGGER -->
       <div class="dropbtn" @click.prevent="toggleOpen" v-show="!isOpen">
         <!-- THUMBNAIL - Variant Image (if configured) -->
-        <div v-if="variantImage" class="dropdown-thumb">
+        <div v-if="variantImage && !currentVariant.withVarietyPack" class="dropdown-thumb">
           <img
             class="dropdown-thumb-image"
             :src="optimizeSource({ url: variantImage, width: 800 })"
           />
+        </div>
+        <div v-else-if="currentVariant.withVarietyPack" class="dropdown-thumb">
+          <template v-for="(item, index) in variants">
+            <img
+              :key="index"
+              v-show="index === imageIndex"
+              class="dropdown-thumb-image"
+              :src="optimizeSource({ url: item.featuredMedia.thumbnailSrc, width: 800 })"
+            />
+          </template>
         </div>
         <!-- LABEL -->
         <div>{{ formatTitle(currentVariant.displayName || currentVariant.title) }}</div>
@@ -27,11 +37,27 @@
             :key="i"
             @click.prevent="setSelectedVariant(variant)"
           >
-            <div v-if="variant.featuredMedia.thumbnailSrc" class="dropdown-thumb">
+            <div
+              v-if="!variant.withVarietyPack && variant.featuredMedia.thumbnailSrc"
+              class="dropdown-thumb"
+            >
               <img
                 class="dropdown-thumb-image"
                 :src="optimizeSource({ url: variant.featuredMedia.thumbnailSrc, width: 800 })"
               />
+            </div>
+            <div
+              v-else-if="variant.withVarietyPack && variant.featuredMedia.thumbnailSrc"
+              class="dropdown-thumb"
+            >
+              <template v-for="(item, index) in variants">
+                <img
+                  :key="index"
+                  v-if="index === imageIndex"
+                  class="dropdown-thumb-image"
+                  :src="optimizeSource({ url: item.featuredMedia.thumbnailSrc, width: 800 })"
+                />
+              </template>
             </div>
             <div>{{ formatTitle(variant.displayName || variant.title) }}</div>
           </li>
@@ -50,6 +76,10 @@ export default {
     variants: {
       type: Array,
       default: () => []
+    },
+    withVarietyPack: {
+      type: Boolean,
+      default: false
     },
     currentVariant: {
       type: Object,
@@ -73,7 +103,9 @@ export default {
   mixins: [imageOptimize],
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      imageInterval: null,
+      imageIndex: 0
     }
   },
   computed: {
@@ -81,7 +113,29 @@ export default {
       return this.currentVariant?.featuredMedia?.thumbnailSrc
     }
   },
+  mounted() {
+    this.setImageInterval()
+  },
+  beforeDestroy() {
+    clearInterval(this.imageInterval)
+  },
+  watch: {
+    variants() {
+      this.setImageInterval()
+    }
+  },
   methods: {
+    setImageInterval() {
+      this.imageIndex = 0
+      clearInterval(this.imageInterval)
+      this.imageInterval = setInterval(() => {
+        this.imageIndex++
+        this.imageIndex = this.imageIndex % this.variants.length
+        if (this.imageIndex === 0) {
+          this.imageIndex++
+        }
+      }, 1000)
+    },
     toggleOpen() {
       this.isOpen = !this.isOpen
     },

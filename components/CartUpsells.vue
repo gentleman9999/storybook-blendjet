@@ -274,6 +274,10 @@ export default {
           bundleItem?.fields?.title,
           true
         )
+        productObj?.bundleVarietyPack?.length &&
+          productObj.bundleVarietyPack.forEach(item => {
+            item.isVarietyPack = true
+          })
       }
       return productObj
     },
