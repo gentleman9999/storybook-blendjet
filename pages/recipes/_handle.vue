@@ -135,7 +135,7 @@
     <div class="recipe__facebook facebook">
       <div class="facebook__icon"><FacebookFilled /></div>
       <h3 class="facebook__title">
-        JOIN {{ memberCountFormatted }} MEMBERS ON THE BLENDJET RECIPES GROUP
+        JOIN {{ formatFollowCount(memberCount, 2) }} MEMBERS ON THE BLENDJET RECIPES GROUP
       </h3>
       <div class="facebook__text">
         For more
@@ -170,6 +170,7 @@ import Twitter from '~/components/svg/Twitter'
 import NutritionModal from '~/components/modals/NutritionModal'
 import { createClient } from '~/plugins/contentful'
 import Axios from 'axios'
+import followCountFormatter from '~/mixins/followCountFormatter'
 const client = createClient()
 
 export default {
@@ -181,6 +182,7 @@ export default {
     Twitter,
     NutritionModal
   },
+  mixins: [followCountFormatter],
   data() {
     return {
       path: undefined,
@@ -325,12 +327,6 @@ export default {
         return this.page.fields.description
       }
       return {}
-    },
-    memberCountFormatted() {
-      let count = Number(this.memberCount)
-      count = count / 1000
-      count = count.toFixed(2)
-      return count + 'K'
     }
   },
   methods: {

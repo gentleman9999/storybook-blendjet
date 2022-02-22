@@ -90,7 +90,9 @@
 
 <script>
 import Axios from 'axios'
+import followCountFormatter from '~/mixins/followCountFormatter'
 export default {
+  mixins: [followCountFormatter],
   data() {
     return {
       cardStyle: {
@@ -190,9 +192,8 @@ export default {
 
         const media = userInfoSource?.data?.business_discovery?.media?.data
         const followers = userInfoSource?.data?.business_discovery?.followers_count
-        this.followers = followers / 1000
-        this.followers = this.followers.toFixed(0)
-        this.followers = this.followers + 'K'
+
+        this.followers = this.formatFollowCount(followers)
         if (!media) {
           return []
         } else {
