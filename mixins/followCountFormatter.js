@@ -8,10 +8,16 @@ export default {
       count = count / 1000
       if (count / 1000 >= 1) {
         count = count / 1000
-        count = count.toFixed(1)
+        count = count.toString().match(/^-?\d+(?:\.\d{0,1})?/)[0]
         count = count + 'M'
       } else {
-        count = count.toFixed(decimal)
+        const split = count.toString().split('.')
+        const units = split[1].substring(0, decimal)
+        if (units) {
+          count = split[0] + '.' + units
+        } else {
+          count = split[0]
+        }
         count = count + 'K'
       }
       return count
