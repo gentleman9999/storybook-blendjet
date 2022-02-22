@@ -186,7 +186,7 @@ export default {
     async instagramPhotos() {
       const res = []
       try {
-        const userInfoSource = await Axios.get('http://x.blendjet.com/ig-media/index.php')
+        const userInfoSource = await Axios.get('https://x.blendjet.com/ig-media/index.php')
 
         const media = userInfoSource?.data?.business_discovery?.media?.data
         const followers = userInfoSource?.data?.business_discovery?.followers_count
