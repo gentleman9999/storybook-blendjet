@@ -3,7 +3,14 @@
     <div class="instagram-text-block">
       <div class="instagram-text-block__title">
         @blendjet
+        <div class="instagram-text-block__icon-container">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0066/4433/4658/files/fb_verified_icon_6d38bcd0-60bf-4a6e-9271-e453e8b002ae.jpg?v=1645532318"
+            class="instagram-text-block__icon"
+          />
+        </div>
       </div>
+      <div class="instagram-text-block__on-instagram">{{ followers }} Followers</div>
       <div class="instagram-text-block__on-instagram">
         on instagram
       </div>
@@ -106,6 +113,7 @@ export default {
       perList: 1,
       repeat: false,
       items: [],
+      followers: null,
 
       testimonials: [
         {
@@ -181,7 +189,10 @@ export default {
         const userInfoSource = await Axios.get('http://x.blendjet.com/ig-media/index.php')
 
         const media = userInfoSource?.data?.business_discovery?.media?.data
-
+        const followers = userInfoSource?.data?.business_discovery?.followers_count
+        this.followers = followers / 1000
+        this.followers = this.followers.toFixed(0)
+        this.followers = this.followers + 'K'
         if (!media) {
           return []
         } else {
@@ -252,6 +263,15 @@ export default {
     text-align: center;
     margin-top: 60px;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__icon {
+    height: 40px;
+    position: relative;
+    top: 3px;
+    left: 8px;
   }
 
   &__on-instagram {
@@ -260,6 +280,7 @@ export default {
     letter-spacing: 1.75px;
     font-size: 12px;
     line-height: 1.17;
+    margin-top: 5px;
   }
 
   &__content {
