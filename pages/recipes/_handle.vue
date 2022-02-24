@@ -134,7 +134,9 @@
     </div>
     <div class="recipe__facebook facebook">
       <div class="facebook__icon"><FacebookFilled /></div>
-      <h3 class="facebook__title">Join the BlendJet Recipes Community</h3>
+      <h3 class="facebook__title">
+        JOIN {{ formatFollowCount(memberCount, 2) }} MEMBERS ON THE BLENDJET RECIPES GROUP
+      </h3>
       <div class="facebook__text">
         For more
         <span class="blendjet-receipes-facebook"><a href="/recipes">BlendJet recipes</a></span> like
@@ -167,6 +169,8 @@ import Pinterest from '~/components/svg/Pinterest'
 import Twitter from '~/components/svg/Twitter'
 import NutritionModal from '~/components/modals/NutritionModal'
 import { createClient } from '~/plugins/contentful'
+import Axios from 'axios'
+import followCountFormatter from '~/mixins/followCountFormatter'
 const client = createClient()
 
 export default {
@@ -178,6 +182,7 @@ export default {
     Twitter,
     NutritionModal
   },
+  mixins: [followCountFormatter],
   data() {
     return {
       path: undefined,
@@ -238,7 +243,10 @@ export default {
         return data
       })
 
-    return { page: recipe }
+    const fbMemberResponse = await Axios('https://x.blendjet.com/fb-member-count/index.php')
+    const memberCount = fbMemberResponse.data.member_count
+
+    return { page: recipe, memberCount }
   },
   jsonld() {
     // console.log(this.page);

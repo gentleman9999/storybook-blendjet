@@ -178,7 +178,29 @@ export default {
     'nuxt-robots-module',
     // ['nuxt-buefy', { css: false, materialDesignIcons: false }],
 
-    ['@recart/nacelle-nuxt-module', { recartSiteId: '5b18bf7940348200075173e6' }]
+    ['@recart/nacelle-nuxt-module', { recartSiteId: '5b18bf7940348200075173e6' }],
+    [
+      'nuxt-lazy-load',
+      {
+        // These are the default values
+        images: true,
+        videos: true,
+        audios: true,
+        iframes: true,
+        native: false,
+        directiveOnly: true,
+
+        // To remove class set value to false
+        loadingClass: 'isLoading',
+        loadedClass: 'isLoaded',
+        appendClass: 'lazyLoad',
+
+        observerConfig: {
+          threshold: 0
+          // See IntersectionObserver documentation
+        }
+      }
+    ]
   ],
 
   plugins: [
