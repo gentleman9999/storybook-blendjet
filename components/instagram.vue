@@ -2,18 +2,17 @@
   <div class="instagram-container">
     <div class="instagram-text-block">
       <div class="instagram-text-block__title">
-        @blendjet
-        <div class="instagram-text-block__icon-container">
-          <img
-            src="https://cdn.shopify.com/s/files/1/0066/4433/4658/files/fb_verified_icon_6d38bcd0-60bf-4a6e-9271-e453e8b002ae.jpg?v=1645532318"
-            class="instagram-text-block__icon"
-          />
-        </div>
+        <span @click="openInstagramURL('https://instagram.com/blendjet/')" class="title-click">
+          @blendjet
+          <div class="instagram-text-block__icon-container">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0066/4433/4658/files/fb_verified_icon_6d38bcd0-60bf-4a6e-9271-e453e8b002ae.jpg?v=1645532318"
+              class="instagram-text-block__icon"
+            />
+          </div>
+        </span>
       </div>
-      <div class="instagram-text-block__on-instagram">{{ followers }} Followers</div>
-      <div class="instagram-text-block__on-instagram">
-        on instagram
-      </div>
+      <div class="instagram-text-block__on-instagram">{{ followers }} Followers on instagram</div>
       <div class="instagram-text-block__content">
         Get inspired with recipes, tips, and tricks from fellow BlendJetters.
         <div class="instagram-text-block__hastag">
@@ -48,11 +47,9 @@
           style="box-shadow:none"
         >
           <template slot="item" slot-scope="props">
-            <div class="card" :style="cardStyle">
-              <div class="card-image">
-                <figure class="image" :style="cardContentStyle">
-                  <img :style="imageStyle" :src="props.list.media_url" />
-                </figure>
+            <div :style="cardStyle">
+              <div class="card-image" @click="openInstagramURL(props.list.permalink)">
+                <img :data-src="props.list.media_url" :alt="props.list.caption" v-lazy-load />
               </div>
             </div>
           </template>
@@ -96,7 +93,6 @@ export default {
   data() {
     return {
       cardStyle: {
-        margin: '0.5rem',
         backgroundColor: 'transparent',
         boxShadow: 'none'
       },
@@ -185,14 +181,19 @@ export default {
     }
   },
   methods: {
-    async instagramPhotos() {
+    openInstagramURL(url) {
+      window.open(url, '_blank')
+    },
+    async instagramData() {
       const res = []
       try {
-        const userInfoSource = await Axios.get('https://x.blendjet.com/ig-media/index.php')
+        const instaImages = await Axios.get('https://x.blendjet.com/ig-media/index.php')
+        const instaFollowers = await Axios.get(
+          'https://x.blendjet.com/ig-media/index.php?key=followers'
+        )
 
-        const media = userInfoSource?.data?.business_discovery?.media?.data
-        const followers = userInfoSource?.data?.business_discovery?.followers_count
-
+        const media = instaImages?.data
+        const followers = instaFollowers?.data
         this.followers = this.formatFollowCount(followers)
         if (!media) {
           return []
@@ -219,7 +220,7 @@ export default {
     }
   },
   mounted() {
-    this.instagramPhotos().then(res => {
+    this.instagramData().then(res => {
       this.items = res.filter((item, i) => {
         return item.media_type === 'IMAGE'
       })
@@ -264,8 +265,13 @@ export default {
     text-align: center;
     margin-top: 60px;
     margin-bottom: 10px;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
+    .title-click {
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+    }
   }
 
   &__icon {
@@ -320,7 +326,7 @@ export default {
   line-height: 1.17;
   letter-spacing: 1.75px;
   text-transform: uppercase;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 .testimonials-carousel-container {
   display: flex;
@@ -369,5 +375,9 @@ export default {
 
 .quote {
   margin: 36px;
+}
+
+.card-image {
+  cursor: pointer;
 }
 </style>
