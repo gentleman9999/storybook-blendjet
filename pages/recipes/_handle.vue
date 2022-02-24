@@ -135,7 +135,7 @@
     <div class="recipe__facebook facebook">
       <div class="facebook__icon"><FacebookFilled /></div>
       <h3 class="facebook__title">
-        JOIN {{ formatFollowCount(memberCount, 2) }} MEMBERS ON THE BLENDJET RECIPES GROUP
+        JOIN {{ formatFollowCount(memberCount) }} MEMBERS ON THE BLENDJET RECIPES GROUP
       </h3>
       <div class="facebook__text">
         For more
