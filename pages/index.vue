@@ -61,7 +61,7 @@
       <div class="outer-canvas-bfcm" style="margin-bottom:unset" data-v-1b05d426="">
         <div class="canvas-bfcm" data-v-1b05d426="">
           <div class="col-bfcm" data-v-1b05d426="">
-            <span class="entry-title-bfcm" data-v-1b05d426="">Valentine's Sale</span>
+            <span class="entry-title-bfcm" data-v-1b05d426="">Spring Sale</span>
             <span class="content-split-element-bfcm" data-v-1b05d426="">
               Choose 3 Free JetPacks
             </span>
