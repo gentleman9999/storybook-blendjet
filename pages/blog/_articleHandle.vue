@@ -10,7 +10,7 @@
   <div class="article-page">
     <article class="article">
       <div class="article-header">
-              <!--
+        <!--
                 /****
                 /* -- Edit Blog Article Header --
                 /* |       Available slots:      |
@@ -21,17 +21,18 @@
                 /* name: "date", data: "date"
                 /****
               -->
-              <blog-article-header
-                :title="article.title"
-                :author="article.author"
-                :tags="article.tags"
-                :publishDate="article.publishDate"
-              >
-              <!-- <template v-slot:tags>
+        <blog-article-header
+          :title="article.title"
+          :author="article.author"
+          :article="article"
+          :tags="article.tags"
+          :publishDate="article.publishDate"
+        >
+          <!-- <template v-slot:tags>
 
               </template> -->
-                <!-- Extra HTML markup can also be added below the default header content -->
-              </blog-article-header>
+          <!-- Extra HTML markup can also be added below the default header content -->
+        </blog-article-header>
       </div>
       <div class="article-hero">
         <transition name="fade">
@@ -45,7 +46,7 @@
         <transition name="fadeDelay">
           <div v-if="article" class="columns is-centered is-multiline">
             <!-- <div class="article-header column is-6 has-text-centered"> -->
-              <!--
+            <!--
                 /****
                 /* -- Edit Blog Article Header --
                 /* |       Available slots:      |
@@ -56,7 +57,7 @@
                 /* name: "date", data: "date"
                 /****
               -->
-              <!-- <blog-article-header
+            <!-- <blog-article-header
                 :title="article.title"
                 :author="article.author"
                 :tags="article.tags"
@@ -65,11 +66,15 @@
               </blog-article-header> -->
             <!-- </div> -->
             <div v-if="article.fields.youtubeUrl" class="article-embed-container">
-                  <iframe :src="`${article.fields.youtubeUrl}`" class="article-youtube-url" frameborder="0"></iframe>
+              <iframe
+                :src="`${article.fields.youtubeUrl}`"
+                class="article-youtube-url"
+                frameborder="0"
+              ></iframe>
             </div>
             <div class="column is-9 content">
               <blog-article-content :article="article" :products="products">
-              <div class="article-excerpt">{{ article.excerpt }}</div>
+                <div class="article-excerpt">{{ article.excerpt }}</div>
                 <!-- Extra HTML added after content -->
                 <nuxt-link :to="`/${blogHandle}/`" class="breadcrumb-back">Go Back</nuxt-link>
               </blog-article-content>
@@ -80,7 +85,6 @@
     </article>
   </div>
 </template>
-
 
 <script>
 import nmerge from 'nuxt-merge-asyncdata'
@@ -98,11 +102,7 @@ export default nmerge({
     BlogArticleHeader,
     BlogArticleContent
   },
-  mixins: [
-    getCollection(),
-    getBlogArticle(),
-    viewEvent('article')
-  ],
+  mixins: [getCollection(), getBlogArticle(), viewEvent('article')],
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },
@@ -194,13 +194,13 @@ export default nmerge({
 }
 
 .article-header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 60px 0 52px 0;
-    background-color: $primary-purple-tint;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 0 52px 0;
+  background-color: $primary-purple-tint;
 }
 
 .article .container {
@@ -218,6 +218,7 @@ export default nmerge({
   letter-spacing: 1.75px;
   text-transform: uppercase;
   color: $primary-purple;
+  cursor: pointer;
 }
 
 .article-tags {
@@ -242,14 +243,14 @@ export default nmerge({
   opacity: 0;
 }
 .article-embed-container {
-    height: 495px;
-    width: 100%;
+  height: 495px;
+  width: 100%;
 }
 iframe.article-youtube-url {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
-.article-excerpt{
+.article-excerpt {
   font-family: Regular;
   /*font-size: 14px; */
   line-height: 1.86;
