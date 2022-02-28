@@ -25,6 +25,7 @@
           :url="`https://blendjet.com/blog/${article.handle}`"
           :title="article.title"
           :description="article.excerpt"
+          tag="div"
         >
           <svg
             width="32px"
@@ -62,6 +63,7 @@
           network="twitter"
           :url="`https://blendjet.com/blog/${article.handle}`"
           :title="article.title"
+          tag="div"
         >
           <svg
             width="32px"
@@ -102,6 +104,7 @@
           network="linkedin"
           :url="`https://blendjet.com/blog/${article.handle}`"
           :title="article.title"
+          tag="div"
         >
           <svg
             width="32px"
