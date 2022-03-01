@@ -1,64 +1,77 @@
 <template>
   <div>
-
-    <div v-if="isFeatured" class="featured" :class="[isReversed ? 'featured__reversed' : 'featured__standard']">
+    <div
+      v-if="isFeatured"
+      class="featured"
+      :class="[isReversed ? 'featured__reversed' : 'featured__standard']"
+    >
       <div class="featured__image-container">
         <picture>
-         <div :style="`background-image: url('${featuredMedia.src}')`" class="featured__img"></div>
+          <nuxt-link
+            :to="link"
+            tag="div"
+            :style="`background-image: url('${featuredMedia.src}')`"
+            class="featured__img"
+          ></nuxt-link>
         </picture>
       </div>
       <div class="featured__content">
         <div class="featured__content__desc">
-        <div class="tags-date">
-          <div v-if="hasTags" class="tags-date__tags">
-            {{tags.join(', ')}}
+          <div class="tags-date">
+            <div v-if="hasTags" class="tags-date__tags">
+              {{ tags.join(', ') }}
+            </div>
+            <div v-if="hasTags" class="tags-date__divider">
+              |
+            </div>
+            <div class="tags-date__date">
+              {{ absoluteDate }}
+            </div>
           </div>
-          <div v-if="hasTags" class="tags-date__divider">
-            |
+          <div class="featured__content__title">
+            {{ title }}
           </div>
-          <div class="tags-date__date">
-            {{absoluteDate}}
+          <div class="featured__content__description">
+            {{ description }}
           </div>
-        </div>
-        <div class="featured__content__title">
-          {{title}}
-        </div>
-        <div class="featured__content__description">
-          {{description}}
-        </div>
-        <div class="featured__content__excerpt">
-          <!-- {{excerpt}} -->
-        </div>
-        <nuxt-link :to="link">
-          <div class="featured__content__read-more" role="button">
-            Read&nbsp;More
+          <div class="featured__content__excerpt">
+            <!-- {{excerpt}} -->
           </div>
-        </nuxt-link>
+          <nuxt-link :to="link">
+            <div class="featured__content__read-more" role="button">
+              Read&nbsp;More
+            </div>
+          </nuxt-link>
         </div>
       </div>
     </div>
 
     <div v-else-if="isLargeThumbnail" class="large-thumbnail">
-        <picture>
-         <div :style="`background-image: url('${featuredMedia.src}')`" class="featured__img"></div>
-        </picture>
+      <picture>
+        <nuxt-link
+          :to="link"
+          tag="div"
+          :style="`background-image: url('${featuredMedia.src}')`"
+          class="featured__img"
+        ></nuxt-link>
+      </picture>
       <div class="description">
         <div class="tags-date">
           <div v-if="hasTags" class="tags-date__tags">
-            {{tags.join(', ')}}
+            {{ tags.join(', ') }}
           </div>
           <div v-if="hasTags" class="tags-date__divider">
             |
           </div>
           <div class="tags-date__date">
-            {{absoluteDate}}
+            {{ absoluteDate }}
           </div>
         </div>
         <div class="featured__content__title">
-          {{title}}
+          {{ title }}
         </div>
         <div class="featured__content__description">
-          {{description}}
+          {{ description }}
         </div>
         <div class="featured__content__excerpt">
           <!-- {{excerpt}} -->
@@ -70,46 +83,48 @@
         </nuxt-link>
       </div>
     </div>
-    
+
     <div v-else class="article-preview" style="margin-left:20px;">
       <!-- <slot name="media" :featuredMedia="featuredMedia"> -->
-        <div class="article-preview__image-container">
-          <nuxt-link :to="link">
-              <div class="article-preview__img" :style="`background-image: url('${featuredMedia.src}')`"></div>
-              <!--<picture>
+      <div class="article-preview__image-container">
+        <nuxt-link :to="link">
+          <div
+            class="article-preview__img"
+            :style="`background-image: url('${featuredMedia.src}')`"
+          ></div>
+          <!--<picture>
                 <img :src="optimizeSource({url: featuredMedia.src})" class="article-preview__image-container__img">
               </picture> -->
-          </nuxt-link>
-        </div>
-          <!-- </slot> -->
-        <slot
-            name="details"
-            :title="title"
-            :excerpt="excerpt"
-            :handle="handle"
-            :readMoreText="readMoreText"
-            :link="link"
-            :tags="tags"
-            :publishDate="publishDate"
-          >
-        
-          <div class="article-preview__content">
-            <div class="article-preview__content__inner">
-              <div class="tags-date">
-                <div v-if="hasTags" class="tags-date__tags">
-                  {{tags.join(', ')}}
-                </div>
-                <div v-if="hasTags" class="tags-date__divider">
-                  |
-                </div>
-                <div class="tags-date__date">
-                  {{absoluteDate}}
-                </div>
+        </nuxt-link>
+      </div>
+      <!-- </slot> -->
+      <slot
+        name="details"
+        :title="title"
+        :excerpt="excerpt"
+        :handle="handle"
+        :readMoreText="readMoreText"
+        :link="link"
+        :tags="tags"
+        :publishDate="publishDate"
+      >
+        <div class="article-preview__content">
+          <div class="article-preview__content__inner">
+            <div class="tags-date">
+              <div v-if="hasTags" class="tags-date__tags">
+                {{ tags.join(', ') }}
               </div>
-              <nuxt-link :to="link" class="article-preview__content__title">
-                {{ title }}
-              </nuxt-link>
-              <!-- <p>
+              <div v-if="hasTags" class="tags-date__divider">
+                |
+              </div>
+              <div class="tags-date__date">
+                {{ absoluteDate }}
+              </div>
+            </div>
+            <nuxt-link :to="link" class="article-preview__content__title">
+              {{ title }}
+            </nuxt-link>
+            <!-- <p>
                 {{ excerpt }}
               </p>
               <p>
@@ -117,20 +132,18 @@
                   {{ readMoreText }}
                 </nuxt-link>
               </p> -->
-            </div>
           </div>
+        </div>
       </slot>
-      </div>
-    <hr class="mobile-divider">
+    </div>
+    <hr class="mobile-divider" />
   </div>
 </template>
 
 <script>
-import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
 import imageOptimize from '~/mixins/imageOptimize'
 import dayjs from 'dayjs'
 export default {
-  components: {InterfaceFeaturedMedia},
   mixins: [imageOptimize],
   props: {
     title: {
@@ -140,7 +153,7 @@ export default {
     },
     description: {
       type: String,
-      default: '',
+      default: ''
     },
     handle: {
       type: String,
@@ -207,18 +220,16 @@ export default {
 
       return ''
     }
-  },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .featured {
-  display: flex; 
+  display: flex;
   flex-wrap: wrap;
   // height: 500px;
   // border-radius: 12px;
-
 
   @include respond-to('small') {
     padding: 20px;
@@ -240,7 +251,7 @@ export default {
       flex-flow: row nowrap;
       height: auto;
     }
-    
+
     &__img {
       object-fit: cover;
       object-position: center;
@@ -256,10 +267,10 @@ export default {
 
   &__img {
     padding-bottom: 60%;
+    cursor: pointer;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    
   }
 
   &__content {
@@ -267,22 +278,22 @@ export default {
     flex-flow: column nowrap;
     justify-content: center;
     width: 35%;
-    padding:70px;
+    padding: 70px;
     background-color: $grayscale-white;
     //min-height: 600px;
-     @media screen and (min-width: 1024px) {
-          padding: 0px 70px !important;
-       }
+    @media screen and (min-width: 1024px) {
+      padding: 0px 70px !important;
+    }
     @include respond-to('small') {
-        height: auto;
-        padding:30px;
-        padding-top: 50px !important;
+      height: auto;
+      padding: 30px;
+      padding-top: 50px !important;
     }
     &__desc {
-        @media screen and (min-width: 1520px) {
-          margin-top: -200px !important;
-       }
+      @media screen and (min-width: 1520px) {
+        margin-top: -200px !important;
       }
+    }
 
     @include respond-to('small') {
       border-top-right-radius: 0;
@@ -328,7 +339,6 @@ export default {
     &__read-more {
       @include button-primary('purple-ghost');
       width: 145px;
-
     }
   }
 }
@@ -374,12 +384,11 @@ export default {
 //   object-fit: contain;
 // }
 .large-thumbnail {
-  background-color: #fff;;
+  background-color: #fff;
   border-radius: 10px;
 }
 
 .large-thumbnail .featured {
-
   &__img {
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
@@ -411,7 +420,6 @@ export default {
 
 .article-preview {
   padding: 25px 15px;
-  
 
   @include respond-to('small') {
     display: flex;
@@ -430,7 +438,7 @@ export default {
       width: 100%;
       border-radius: 12px;
       object-position: center;
-      object-fit:contain;
+      object-fit: contain;
       flex-direction: column;
       @include respond-to('small') {
         height: auto;
@@ -454,27 +462,25 @@ export default {
   }
 
   &__content {
-     width: 100%;
+    width: 100%;
     @include respond-to('small') {
       margin-left: 15px;
       width: 100%;
     }
     &__title {
       // & a {
-        font-family: Bold;
-        font-size: 18px;
-        line-height: 1.22;
-        letter-spacing: 2.5px;
-        color: $primary-purple;
-        text-transform: uppercase;
+      font-family: Bold;
+      font-size: 18px;
+      line-height: 1.22;
+      letter-spacing: 2.5px;
+      color: $primary-purple;
+      text-transform: uppercase;
 
-        @include respond-to('small') {
-          font-size: 16px;
-          line-height: 1.26;
-          
-        }
+      @include respond-to('small') {
+        font-size: 16px;
+        line-height: 1.26;
+      }
       // }
-      
     }
   }
 }
