@@ -215,7 +215,8 @@ export default {
     '~/plugins/vue-mq.js',
     '~/plugins/nuxt-jsonld',
     '~/plugins/vueTouchEvents',
-    { src: '~/plugins/shopifyCheckout.js', mode: 'client' }
+    { src: '~/plugins/shopifyCheckout.js', mode: 'client' },
+    { src: '~/plugins/flashTitle.js', mode: 'client' }
   ],
 
   router: {
