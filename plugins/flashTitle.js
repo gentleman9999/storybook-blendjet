@@ -22,7 +22,7 @@ if (typeof window !== 'undefined' || typeof window || null) {
         } else {
           document.title = attentionMessage
         }
-      }, 3000)
+      }, 2000)
     }
   }
 }
