@@ -1,5 +1,12 @@
 <template>
-  <div class="app nacelle" :style="`padding-top: ${headerHeight}px;`">
+  <div
+    class="app nacelle"
+    :style="
+      `padding-top: ${headerHeight}px; ${
+        cartVisible && ($mq === 'md' || $mq === 'sm') ? 'position: fixed' : ''
+      }`
+    "
+  >
     <global-header ref="header" />
     <!-- <nuxt :style="{ 'margin-top': `${headerHeight}px` }" /> -->
     <nuxt :style="{ 'min-height': '100vh' }" />
@@ -14,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import localforage from 'localforage'
 import GlobalHeader from '~/components/nacelle/GlobalHeader'
 import EventDispatcher from '~/components/nacelle/EventDispatcher'
@@ -60,6 +67,7 @@ export default {
   },
   computed: {
     ...mapGetters('space', ['getMetatag']),
+    ...mapState('cart', ['cartVisible']),
     showFooter() {
       const hideFooterPages = ['/recipes']
       if (hideFooterPages.includes(this.$route.fullPath)) {
