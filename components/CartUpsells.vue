@@ -149,7 +149,7 @@ export default {
         })
 
         this.additionalProducts.forEach(async (item, index) => {
-          let resolvedAdditionalProducts = {}
+          let resolvedAdditionalProducts = []
           if (item) {
             resolvedAdditionalProducts = await this.getAdditionalProducts(item)
           }
@@ -282,20 +282,24 @@ export default {
       return productObj
     },
     async getAdditionalProducts(item) {
-      const productHandles = []
-      const products = item?.fields?.additionalProducts
-      products &&
-        products.forEach(product => {
-          // Get productIds of the main product bundle
-          if (product?.fields?.handle) {
-            productHandles.push(product?.fields?.handle)
-          }
-        })
-      const allAdditionalProductList = await this.$nacelle.data.products({
-        handles: productHandles
+      return new Promise(resolve => {
+        const productHandles = []
+        const products = item?.fields?.additionalProducts
+        products &&
+          products.forEach(product => {
+            // Get productIds of the main product bundle
+            if (product?.fields?.handle) {
+              productHandles.push(product?.fields?.handle)
+            }
+          })
+        this.$nacelle.data
+          .products({
+            handles: productHandles
+          })
+          .then(res => {
+            return resolve(res)
+          })
       })
-
-      return allAdditionalProductList
     },
     observeScroll() {
       setTimeout(() => {
