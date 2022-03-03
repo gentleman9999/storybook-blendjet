@@ -36,7 +36,7 @@
       <div class="main-nav-center">
         <transition name="fade">
           <div class="bln-logo" v-if="screenWidth > 0">
-            <nuxt-link to="/" v-if="isIndex">
+            <nuxt-link to="/" v-if="isIndex" tag="div">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
