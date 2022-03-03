@@ -22,7 +22,7 @@
             :subtitle="upsell.subtitle"
             :selected-product="upsell.product"
             :page="upsell.page"
-            :additional-products="upsell.additionalProducts"
+            :additional-products="upsell.additionalProductsList"
             :with-variety-pack="upsell.withVarietyPack"
             :product-contentful="upsell.productContentful"
           />
@@ -191,7 +191,7 @@ export default {
                 product: product,
                 productContentful: curr?.fields?.product?.fields,
                 page: curr?.fields,
-                additionalProducts: this.additionalProductsResolved[index] || []
+                additionalProductsList: this.additionalProductsResolved[index] || []
               }
             ]
           } else if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
@@ -292,7 +292,7 @@ export default {
               productHandles.push(product?.fields?.handle)
             }
           })
-        this.$nacelle.data
+        return this.$nacelle.data
           .products({
             handles: productHandles
           })
