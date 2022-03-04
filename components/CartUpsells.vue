@@ -148,13 +148,14 @@ export default {
           }
         })
 
-        this.additionalProducts.forEach(async (item, index) => {
+        for (let i = 0; i < this.additionalProducts.length; i++) {
+          const item = this.additionalProducts[i]
           let resolvedAdditionalProducts = []
           if (item) {
             resolvedAdditionalProducts = await this.getAdditionalProducts(item)
           }
-          this.$set(this.additionalProductsResolved, index, resolvedAdditionalProducts)
-        })
+          this.$set(this.additionalProductsResolved, i, resolvedAdditionalProducts)
+        }
 
         // Get the queue's `items` array, filtering for just those with a shopifyProductHandle configured
         const items = Array.isArray(queue?.fields?.items) // if `items` is an array...
@@ -184,6 +185,11 @@ export default {
             this.checkProductShippingEligibility(product) && // product is available for the user's locale
             !(curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) // Should not be a bundle
           if (hasValidProduct) {
+            console.log(
+              this.additionalProductsResolved,
+              this.additionalProductsResolved[index],
+              index
+            )
             return [
               ...acc,
               {
