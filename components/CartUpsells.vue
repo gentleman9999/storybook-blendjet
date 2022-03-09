@@ -22,7 +22,7 @@
             :subtitle="upsell.subtitle"
             :selected-product="upsell.product"
             :page="upsell.page"
-            :additional-products="upsell.additionalProducts"
+            :additional-products="upsell.additionalProductsList"
             :with-variety-pack="upsell.withVarietyPack"
             :product-contentful="upsell.productContentful"
           />
@@ -148,13 +148,14 @@ export default {
           }
         })
 
-        this.additionalProducts.forEach(async (item, index) => {
+        for (let i = 0; i < this.additionalProducts.length; i++) {
+          const item = this.additionalProducts[i]
           let resolvedAdditionalProducts = []
           if (item) {
             resolvedAdditionalProducts = await this.getAdditionalProducts(item)
           }
-          this.$set(this.additionalProductsResolved, index, resolvedAdditionalProducts)
-        })
+          this.$set(this.additionalProductsResolved, i, resolvedAdditionalProducts)
+        }
 
         // Get the queue's `items` array, filtering for just those with a shopifyProductHandle configured
         const items = Array.isArray(queue?.fields?.items) // if `items` is an array...
@@ -184,6 +185,11 @@ export default {
             this.checkProductShippingEligibility(product) && // product is available for the user's locale
             !(curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) // Should not be a bundle
           if (hasValidProduct) {
+            console.log(
+              this.additionalProductsResolved,
+              this.additionalProductsResolved[index],
+              index
+            )
             return [
               ...acc,
               {
@@ -191,7 +197,7 @@ export default {
                 product: product,
                 productContentful: curr?.fields?.product?.fields,
                 page: curr?.fields,
-                additionalProducts: this.additionalProductsResolved[index] || []
+                additionalProductsList: this.additionalProductsResolved[index] || []
               }
             ]
           } else if (curr?.fields?.bundleCollection?.length || curr?.fields?.bundleGroup?.length) {
@@ -292,7 +298,7 @@ export default {
               productHandles.push(product?.fields?.handle)
             }
           })
-        this.$nacelle.data
+        return this.$nacelle.data
           .products({
             handles: productHandles
           })

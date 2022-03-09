@@ -3,7 +3,7 @@
     class="app nacelle"
     :style="
       `padding-top: ${headerHeight}px; ${
-        cartVisible && ($mq === 'md' || $mq === 'sm') ? 'position: fixed' : ''
+        cartVisible && ($mq === 'md' || $mq === 'sm') ? 'max-height: 100vh; overflow: hidden' : ''
       }`
     "
   >
