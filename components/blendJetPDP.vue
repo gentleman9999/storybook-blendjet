@@ -1354,9 +1354,14 @@ export default {
       } else if (this.product && this.product.variants && this.product.variants.length) {
         if (this.$route.query && this.$route.query.variant) {
           const variantId = btoa(`gid://shopify/ProductVariant/${this.$route.query.variant}`)
-          return this.product.variants.filter(variant => {
+          const foundVariant = this.product.variants.filter(variant => {
             return variant.id === variantId
-          })[0]
+          })
+          if (foundVariant?.length) {
+            return foundVariant[0]
+          } else {
+            return this.product.variants[0]
+          }
         } else {
           for (let i = 0; i < this.product.variants.length; i++) {
             if (this.product.variants[i].availableForSale === true) {
