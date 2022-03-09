@@ -26,7 +26,7 @@
       <div class="canvas-bfcm" data-v-1b05d426="">
         <div class="col-bfcm" data-v-1b05d426="">
           <span class="entry-title-bfcm" data-v-1b05d426="">Spring Sale</span>
-          <span class="content-split-element-bfcm" data-v-1b05d426="">Free Recipe Book - Save $19.95</span>
+          <span class="content-split-element-bfcm" data-v-1b05d426="">Free Next-Gen Recipe Book</span>
           <span class="simple-text-bfcm" data-v-1b05d426=""
             >With Each BlendJet <b class="b-hide-bfcm" data-v-1b05d426="">|</b>
             <span data-v-1b05d426="">Discount Applied at Checkout</span>
