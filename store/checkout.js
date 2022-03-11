@@ -229,8 +229,6 @@ export const actions = {
       const url = new URL(state.url)
       if (url.host.includes('rechargeapps.com')) {
         url.host = 'checkout.blendjet.com'
-      } else if (url.host.includes('myshopify.com')) {
-        url.host = 'shop.blendjet.com'
       }
       window.location.href = discountCode ? url.href + '&discount=' + discountCode : url.href
     }

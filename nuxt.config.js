@@ -315,6 +315,7 @@ export default {
       id: process.env.GOOGLE_TAG_MANAGER_ID
     },
     myshopifyDomain: process.env.SHOPIFY_DOMAIN,
+    shopifyCheckoutGraphQLEndpoint: process.env.SHOPIFY_CHECKOUT_GRAPHQL_ENDPOINT,
     shopifyStorefrontCheckoutToken: process.env.STOREFRONT_CHECKOUT_TOKEN,
     shopifyStorefrontApiVersion: '2021-07'
   },
