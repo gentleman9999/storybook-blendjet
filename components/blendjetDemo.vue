@@ -33,13 +33,11 @@
     </div>
     <div style="{height:300px}" v-if="screenWidth < 768"></div>
     <div class="blendjet-demo__buy-now">
-      <button
-        role="button"
-        class="blendjet-demo__buy-now__button"
-        @click="$router.push('/products/blendjet-2')"
-      >
-        Get yours now
-      </button>
+      <a href="/products/blendjet-2">
+        <button role="button" class="blendjet-demo__buy-now__button">
+          Get yours now
+        </button>
+      </a>
     </div>
   </div>
 </template>

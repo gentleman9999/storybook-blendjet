@@ -16,14 +16,11 @@
             </transition>
           </div>
           <transition name="slideUp">
-            <div
-              v-if="loaded"
-              class="section__hero-banner__cta__button"
-              role="button"
-              @click="$router.push('/products/blendjet-2')"
-            >
-              Get Yours Today
-            </div>
+            <a href="/products/blendjet-2">
+              <div v-if="loaded" class="section__hero-banner__cta__button" role="button">
+                Get Yours Today
+              </div>
+            </a>
           </transition>
         </div>
         <div class="section__hero-banner__media">

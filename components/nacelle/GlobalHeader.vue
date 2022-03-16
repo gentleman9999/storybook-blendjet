@@ -20,13 +20,13 @@
           <main-nav-burger :navColor="navColor" />
         </div>
         <div class="main-nav-desktop is-hidden-mobile">
-          <nuxt-link
-            to="/products/blendjet-2"
+          <a
+            href="/products/blendjet-2"
             class="nav-item nav-item__blendjet"
             :style="{ color: navColor }"
           >
             BlendJet 2
-          </nuxt-link>
+          </a>
           <nuxt-link to="/marketplace" class="nav-item" :style="{ color: navColor }"
             >Marketplace</nuxt-link
           >
@@ -230,9 +230,7 @@
 
         <div class="mobile-menu__body">
           <div class="mobile-menu__nav-links">
-            <nuxt-link @click.native="handleCloseMenu" to="/products/blendjet-2">
-              BlendJet 2</nuxt-link
-            >
+            <a href="/products/blendjet-2"> BlendJet 2</a>
             <nuxt-link @click.native="handleCloseMenu" to="/products/jetpack-smoothies"
               >JetPacks</nuxt-link
             >
