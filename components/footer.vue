@@ -149,7 +149,7 @@
 
     <div class="section__footer__links">
       <div class="section__footer__links__column">
-        <nuxt-link to="/products/blendjet-2">BlendJet&nbsp;2</nuxt-link>
+        <a href="/products/blendjet-2">BlendJet&nbsp;2</a>
         <nuxt-link to="/products/jetpack-smoothies">JetPack</nuxt-link>
         <nuxt-link to="/products/jetsetter-insulated-sleeve">Sleeve</nuxt-link>
         <nuxt-link to="/products/jetsetter-insulated-tote">Tote</nuxt-link>
